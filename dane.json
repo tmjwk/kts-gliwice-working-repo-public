@@ -1,0 +1,1752 @@
+{
+  "wygenerowano": "2026-09-27T20:20:19.699Z",
+  "sezon": "2026/27",
+  "zespoly": [
+    {
+      "nazwa": "KTS Gliwice I",
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "tryb": "PZTS · czytnik",
+      "stan": "1 zwycięstwo · 1 remis",
+      "url": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/"
+    },
+    {
+      "nazwa": "KTS II",
+      "liga": "2. Liga Mężczyzn",
+      "tryb": "ŚZTS · automat",
+      "stan": "8. miejsce · 2 pkt",
+      "url": "https://ligi.slzts.pl/liga/18/136/"
+    },
+    {
+      "nazwa": "KTS III",
+      "liga": "2. Liga Mężczyzn",
+      "tryb": "ŚZTS · automat",
+      "stan": "16. miejsce · 0 pkt",
+      "url": "https://ligi.slzts.pl/liga/18/136/"
+    },
+    {
+      "nazwa": "KTS IV",
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "tryb": "ŚZTS · automat",
+      "stan": "16. miejsce · 0 pkt",
+      "url": "https://ligi.slzts.pl/liga/18/138/"
+    },
+    {
+      "nazwa": "KTS V",
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "tryb": "ŚZTS · automat",
+      "stan": "3. miejsce · 0 pkt",
+      "url": "https://ligi.slzts.pl/liga/18/142/"
+    },
+    {
+      "nazwa": "KTS VI",
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "tryb": "ŚZTS · automat",
+      "stan": "10. miejsce · 0 pkt",
+      "url": "https://ligi.slzts.pl/liga/18/142/"
+    },
+    {
+      "nazwa": "KA Krokus VII",
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "tryb": "ŚZTS · automat",
+      "stan": "4. miejsce · 0 pkt",
+      "url": "https://ligi.slzts.pl/liga/18/142/"
+    },
+    {
+      "nazwa": "KTS Gliwice · amatorzy",
+      "liga": "2. Śląska Liga Amatorów",
+      "tryb": "ŚZTS · automat",
+      "stan": "3. miejsce · 2 pkt",
+      "url": "https://ligi.slzts.pl/liga/18/144/"
+    }
+  ],
+  "tabele": [
+    {
+      "klucz": "18/136",
+      "nazwa": "2. Liga Mężczyzn",
+      "wiersze": [
+        {
+          "pozycja": 1,
+          "nazwa": "KTS Olimpijczyk Zawiercie",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "18:2"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "MKS Czechowice Dziedzice",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "16:4"
+        },
+        {
+          "pozycja": 3,
+          "nazwa": "MKS Tajfun Ku?nia Raciborska",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "16:4"
+        },
+        {
+          "pozycja": 4,
+          "nazwa": "KS Mys?aw Mys?owice",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "15:5"
+        },
+        {
+          "pozycja": 5,
+          "nazwa": "LITS Meble Anders ?ywiec",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "15:5"
+        },
+        {
+          "pozycja": 6,
+          "nazwa": "MKS Skarbek Tarnowskie Góry",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "13:7"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "MUKS Jedynka Pszów",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "10:0"
+        },
+        {
+          "pozycja": 8,
+          "nazwa": "KTS II Gliwice",
+          "mecze": 2,
+          "punkty": 2,
+          "stosunek": "14:6"
+        },
+        {
+          "pozycja": 9,
+          "nazwa": "MKS II Czechowice Dziedzice",
+          "mecze": 2,
+          "punkty": 2,
+          "stosunek": "13:7"
+        },
+        {
+          "pozycja": 10,
+          "nazwa": "KS Naprzód II Borucin",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "8:12"
+        },
+        {
+          "pozycja": 11,
+          "nazwa": "MKS Skarbek II Tarnowskie Góry",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "5:15"
+        },
+        {
+          "pozycja": 12,
+          "nazwa": "LZS Chespa ?ywocice",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "0:10"
+        },
+        {
+          "pozycja": 13,
+          "nazwa": "GUKS Byczyna",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "3:17"
+        },
+        {
+          "pozycja": 14,
+          "nazwa": "LUKS W?gierska Górka",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "2:18"
+        },
+        {
+          "pozycja": 15,
+          "nazwa": "LUKS GK Logistics Bodzanów",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "1:19"
+        },
+        {
+          "pozycja": 16,
+          "nazwa": "KTS III Gliwice",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "1:19"
+        }
+      ],
+      "zaktualizowano": "2026-09-27T20:20:19.699Z"
+    },
+    {
+      "klucz": "18/138",
+      "nazwa": "3. Liga Mężczyzn · gr. II",
+      "wiersze": [
+        {
+          "pozycja": 1,
+          "nazwa": "UKS Feniks Pyskowice",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "9:1"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "UKS Huragan Sosnowiec",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "9:1"
+        },
+        {
+          "pozycja": 3,
+          "nazwa": "LKS Stra?ak Miko?ów",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "8:2"
+        },
+        {
+          "pozycja": 4,
+          "nazwa": "KS Mys?aw II Mys?owice",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "8:2"
+        },
+        {
+          "pozycja": 5,
+          "nazwa": "TTS Polonia II Bytom",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "7:3"
+        },
+        {
+          "pozycja": 6,
+          "nazwa": "AKS Miko?ów",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "7:3"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "KU AZS UJD Cz?stochowa",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "6:4"
+        },
+        {
+          "pozycja": 8,
+          "nazwa": "UKS Wolej Solver Ruda ?l?ska",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "6:4"
+        },
+        {
+          "pozycja": 9,
+          "nazwa": "MKS Skarbek III Tarnowskie Góry",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "4:6"
+        },
+        {
+          "pozycja": 10,
+          "nazwa": "MUKSTS Czerwionka Leszczyny",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "4:6"
+        },
+        {
+          "pozycja": 11,
+          "nazwa": "LKS Ci??kowianka Jaworzno",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "3:7"
+        },
+        {
+          "pozycja": 12,
+          "nazwa": "GLKS Lot Konopiska",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "3:7"
+        },
+        {
+          "pozycja": 13,
+          "nazwa": "UKS D?browiak D?browa Górnicza",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "2:8"
+        },
+        {
+          "pozycja": 14,
+          "nazwa": "MKS Siemianowiczanka Siemianowice ?l.",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "2:8"
+        },
+        {
+          "pozycja": 15,
+          "nazwa": "KS Unia Kalety",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "1:9"
+        },
+        {
+          "pozycja": 16,
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "1:9"
+        }
+      ],
+      "zaktualizowano": "2026-09-27T20:20:19.699Z"
+    },
+    {
+      "klucz": "18/142",
+      "nazwa": "4. Liga Mężczyzn · gr. IV",
+      "wiersze": [
+        {
+          "pozycja": 1,
+          "nazwa": "ATS Ligota ?ab?dzka",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "ULKS Ruch Pniów",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 3,
+          "nazwa": "KTS V Gliwice",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 4,
+          "nazwa": "KTS KA Krokus VII Gliwice",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 5,
+          "nazwa": "ULKS P?awniowice",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 6,
+          "nazwa": "LKS Naprzód ?wibie",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "LKS Stra?ak III Miko?ów",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 8,
+          "nazwa": "LKS Stra?ak II Miko?ów",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 9,
+          "nazwa": "LKS M?odo?? Rudno",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 10,
+          "nazwa": "KTS VI Gliwice",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 11,
+          "nazwa": "UKS Feniks II Pyskowice",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 12,
+          "nazwa": "ULKS Tajfun Ligota ?ab?dzka",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 13,
+          "nazwa": "STS II ?ernica",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        },
+        {
+          "pozycja": 14,
+          "nazwa": "STS I ?ernica",
+          "mecze": 0,
+          "punkty": 0,
+          "stosunek": "0:0"
+        }
+      ],
+      "zaktualizowano": "2026-09-27T20:20:19.699Z"
+    },
+    {
+      "klucz": "18/144",
+      "nazwa": "2. Śląska Liga Amatorów",
+      "wiersze": [
+        {
+          "pozycja": 1,
+          "nazwa": "LKS Stra?ak II Miko?ów",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "7:3"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "TKKF Aut ?agisza B?dzin",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "6:4"
+        },
+        {
+          "pozycja": 3,
+          "nazwa": "KTS Gliwice",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "6:4"
+        },
+        {
+          "pozycja": 4,
+          "nazwa": "Speed Team 43 Stolarzowice",
+          "mecze": 1,
+          "punkty": 1,
+          "stosunek": "5:5"
+        },
+        {
+          "pozycja": 5,
+          "nazwa": "AKS Miko?ów",
+          "mecze": 1,
+          "punkty": 1,
+          "stosunek": "5:5"
+        },
+        {
+          "pozycja": 6,
+          "nazwa": "UKS Wolej Solver III Ruda ?l?ska",
+          "mecze": 1,
+          "punkty": 1,
+          "stosunek": "5:5"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "UKS Ikar Mierz?cice",
+          "mecze": 1,
+          "punkty": 1,
+          "stosunek": "5:5"
+        },
+        {
+          "pozycja": 8,
+          "nazwa": "UKS Wolej Solver II Ruda ?l?ska",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "4:6"
+        },
+        {
+          "pozycja": 9,
+          "nazwa": "Bartek II Siemianowice",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "4:6"
+        },
+        {
+          "pozycja": 10,
+          "nazwa": "UKS Huragan I Sosnowiec",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "3:7"
+        }
+      ],
+      "zaktualizowano": "2026-09-27T20:20:19.699Z"
+    }
+  ],
+  "meczeSzts": [
+    {
+      "dataMeczu": "2026-09-21",
+      "godzina": "17:15",
+      "kolejka": 1,
+      "gospodarz": "KTS II Gliwice",
+      "gosc": "KTS III Gliwice",
+      "wynik": "10:0",
+      "rozegrany": true,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II",
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-09-24",
+      "godzina": "19:15",
+      "kolejka": 2,
+      "gospodarz": "KTS II Gliwice",
+      "gosc": "MKS Skarbek Tarnowskie Góry",
+      "wynik": "4:6",
+      "rozegrany": true,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-02",
+      "godzina": "18:30",
+      "kolejka": 3,
+      "gospodarz": "MKS Czechowice Dziedzice",
+      "gosc": "KTS II Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-09",
+      "godzina": "18:00",
+      "kolejka": 4,
+      "gospodarz": "LUKS GK Logistics Bodzanów",
+      "gosc": "KTS II Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-16",
+      "godzina": "18:00",
+      "kolejka": 5,
+      "gospodarz": "LUKS W?gierska Górka",
+      "gosc": "KTS II Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-22",
+      "godzina": "19:15",
+      "kolejka": 6,
+      "gospodarz": "KTS II Gliwice",
+      "gosc": "GUKS Byczyna",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-28",
+      "godzina": "18:00",
+      "kolejka": 7,
+      "gospodarz": "KS Mys?aw Mys?owice",
+      "gosc": "KTS II Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-05",
+      "godzina": "19:15",
+      "kolejka": 8,
+      "gospodarz": "KTS II Gliwice",
+      "gosc": "KTS Olimpijczyk Zawiercie",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-20",
+      "godzina": "18:00",
+      "kolejka": 9,
+      "gospodarz": "MKS Tajfun Ku?nia Raciborska",
+      "gosc": "KTS II Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-27",
+      "godzina": "18:30",
+      "kolejka": 10,
+      "gospodarz": "MKS II Czechowice Dziedzice",
+      "gosc": "KTS II Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-03",
+      "godzina": "19:15",
+      "kolejka": 11,
+      "gospodarz": "KTS II Gliwice",
+      "gosc": "MKS Skarbek II Tarnowskie Góry",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-11",
+      "godzina": "19:00",
+      "kolejka": 12,
+      "gospodarz": "LZS Chespa ?ywocice",
+      "gosc": "KTS II Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2027-01-14",
+      "godzina": "19:15",
+      "kolejka": 13,
+      "gospodarz": "KTS II Gliwice",
+      "gosc": "KS Naprzód II Borucin",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-05",
+      "godzina": "18:30",
+      "kolejka": 14,
+      "gospodarz": "LITS Meble Anders ?ywiec",
+      "gosc": "KTS II Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-11",
+      "godzina": "19:15",
+      "kolejka": 15,
+      "gospodarz": "KTS II Gliwice",
+      "gosc": "MUKS Jedynka Pszów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS II"
+      ]
+    },
+    {
+      "dataMeczu": "2026-09-25",
+      "godzina": "19:00",
+      "kolejka": 2,
+      "gospodarz": "KTS III Gliwice",
+      "gosc": "MKS II Czechowice Dziedzice",
+      "wynik": "1:9",
+      "rozegrany": true,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-02",
+      "godzina": "18:45",
+      "kolejka": 3,
+      "gospodarz": "MKS Skarbek II Tarnowskie Góry",
+      "gosc": "KTS III Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-09",
+      "godzina": "19:00",
+      "kolejka": 4,
+      "gospodarz": "LZS Chespa ?ywocice",
+      "gosc": "KTS III Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-16",
+      "godzina": "19:00",
+      "kolejka": 5,
+      "gospodarz": "KTS III Gliwice",
+      "gosc": "KS Naprzód II Borucin",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-23",
+      "godzina": "18:30",
+      "kolejka": 6,
+      "gospodarz": "LITS Meble Anders ?ywiec",
+      "gosc": "KTS III Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-30",
+      "godzina": "19:00",
+      "kolejka": 7,
+      "gospodarz": "KTS III Gliwice",
+      "gosc": "MUKS Jedynka Pszów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-06",
+      "godzina": "18:45",
+      "kolejka": 8,
+      "gospodarz": "MKS Skarbek Tarnowskie Góry",
+      "gosc": "KTS III Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-20",
+      "godzina": "19:00",
+      "kolejka": 9,
+      "gospodarz": "KTS III Gliwice",
+      "gosc": "MKS Czechowice Dziedzice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-27",
+      "godzina": "19:00",
+      "kolejka": 10,
+      "gospodarz": "KTS III Gliwice",
+      "gosc": "LUKS W?gierska Górka",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-04",
+      "godzina": "18:00",
+      "kolejka": 11,
+      "gospodarz": "GUKS Byczyna",
+      "gosc": "KTS III Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-11",
+      "godzina": "19:00",
+      "kolejka": 12,
+      "gospodarz": "KTS III Gliwice",
+      "gosc": "KS Mys?aw Mys?owice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2027-01-15",
+      "godzina": "18:00",
+      "kolejka": 13,
+      "gospodarz": "KTS Olimpijczyk Zawiercie",
+      "gosc": "KTS III Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-05",
+      "godzina": "18:00",
+      "kolejka": 14,
+      "gospodarz": "KTS III Gliwice",
+      "gosc": "MKS Tajfun Ku?nia Raciborska",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-12",
+      "godzina": "18:00",
+      "kolejka": 15,
+      "gospodarz": "LUKS GK Logistics Bodzanów",
+      "gosc": "KTS III Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Liga Mężczyzn",
+      "zespoly": [
+        "KTS III"
+      ]
+    },
+    {
+      "dataMeczu": "2026-09-21",
+      "godzina": "18:00",
+      "kolejka": 1,
+      "gospodarz": "UKS Huragan Sosnowiec",
+      "gosc": "KTS IV Gliwice",
+      "wynik": "9:1",
+      "rozegrany": true,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-01",
+      "godzina": "19:15",
+      "kolejka": 2,
+      "gospodarz": "KTS IV Gliwice",
+      "gosc": "MKS Siemianowiczanka Siemianowice ?l.",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-07",
+      "godzina": "18:30",
+      "kolejka": 3,
+      "gospodarz": "AKS Miko?ów",
+      "gosc": "KTS IV Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-15",
+      "godzina": "19:15",
+      "kolejka": 4,
+      "gospodarz": "KTS IV Gliwice",
+      "gosc": "UKS Feniks Pyskowice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-19",
+      "godzina": "18:15",
+      "kolejka": 5,
+      "gospodarz": "LKS Stra?ak Miko?ów",
+      "gosc": "KTS IV Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-29",
+      "godzina": "19:15",
+      "kolejka": 6,
+      "gospodarz": "KTS IV Gliwice",
+      "gosc": "UKS Wolej Solver Ruda ?l?ska",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-06",
+      "godzina": "18:00",
+      "kolejka": 7,
+      "gospodarz": "KU AZS UJD Cz?stochowa",
+      "gosc": "KTS IV Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-19",
+      "godzina": "19:15",
+      "kolejka": 8,
+      "gospodarz": "KTS IV Gliwice",
+      "gosc": "TTS Polonia II Bytom",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-25",
+      "godzina": "18:30",
+      "kolejka": 9,
+      "gospodarz": "MKS Skarbek III Tarnowskie Góry",
+      "gosc": "KTS IV Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-03",
+      "godzina": "19:15",
+      "kolejka": 10,
+      "gospodarz": "KTS IV Gliwice",
+      "gosc": "MUKSTS Czerwionka Leszczyny",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-11",
+      "godzina": "18:00",
+      "kolejka": 11,
+      "gospodarz": "UKS D?browiak D?browa Górnicza",
+      "gosc": "KTS IV Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-17",
+      "godzina": "19:15",
+      "kolejka": 12,
+      "gospodarz": "KTS IV Gliwice",
+      "gosc": "KS Unia Kalety",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2027-01-11",
+      "godzina": "18:00",
+      "kolejka": 13,
+      "gospodarz": "GLKS Lot Konopiska",
+      "gosc": "KTS IV Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-04",
+      "godzina": "19:15",
+      "kolejka": 14,
+      "gospodarz": "KTS IV Gliwice",
+      "gosc": "KS Mys?aw II Mys?owice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-12",
+      "godzina": "17:30",
+      "kolejka": 15,
+      "gospodarz": "LKS Ci??kowianka Jaworzno",
+      "gosc": "KTS IV Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "3. Liga Mężczyzn · gr. II",
+      "zespoly": [
+        "KTS IV"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-02",
+      "godzina": "19:00",
+      "kolejka": 1,
+      "gospodarz": "KTS V Gliwice",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V",
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-09",
+      "godzina": "19:00",
+      "kolejka": 2,
+      "gospodarz": "KTS V Gliwice",
+      "gosc": "ULKS P?awniowice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-14",
+      "godzina": "17:30",
+      "kolejka": 3,
+      "gospodarz": "STS II ?ernica",
+      "gosc": "KTS V Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-23",
+      "godzina": "19:00",
+      "kolejka": 4,
+      "gospodarz": "ATS Ligota ?ab?dzka",
+      "gosc": "KTS V Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-23",
+      "godzina": "19:00",
+      "kolejka": 5,
+      "gospodarz": "KTS V Gliwice",
+      "gosc": "STS I ?ernica",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-05",
+      "godzina": "19:00",
+      "kolejka": 6,
+      "gospodarz": "ULKS Ruch Pniów",
+      "gosc": "KTS V Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-19",
+      "godzina": "18:00",
+      "kolejka": 7,
+      "gospodarz": "LKS Naprzód ?wibie",
+      "gosc": "KTS V Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-27",
+      "godzina": "19:00",
+      "kolejka": 8,
+      "gospodarz": "KTS V Gliwice",
+      "gosc": "LKS Stra?ak II Miko?ów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-04",
+      "godzina": "19:00",
+      "kolejka": 9,
+      "gospodarz": "KTS VI Gliwice",
+      "gosc": "KTS V Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V",
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-11",
+      "godzina": "19:00",
+      "kolejka": 10,
+      "gospodarz": "KTS V Gliwice",
+      "gosc": "ULKS Tajfun Ligota ?ab?dzka",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2027-01-13",
+      "godzina": "18:00",
+      "kolejka": 11,
+      "gospodarz": "UKS Feniks II Pyskowice",
+      "gosc": "KTS V Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-05",
+      "godzina": "19:00",
+      "kolejka": 12,
+      "gospodarz": "KTS V Gliwice",
+      "gosc": "LKS M?odo?? Rudno",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-10",
+      "godzina": "18:15",
+      "kolejka": 13,
+      "gospodarz": "LKS Stra?ak III Miko?ów",
+      "gosc": "KTS V Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
+      "dataMeczu": "2026-09-30",
+      "godzina": "19:00",
+      "kolejka": 1,
+      "gospodarz": "LKS M?odo?? Rudno",
+      "gosc": "KTS VI Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-08",
+      "godzina": "18:00",
+      "kolejka": 2,
+      "gospodarz": "LKS Naprzód ?wibie",
+      "gosc": "KTS VI Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-16",
+      "godzina": "19:00",
+      "kolejka": 3,
+      "gospodarz": "KTS VI Gliwice",
+      "gosc": "LKS Stra?ak II Miko?ów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-23",
+      "godzina": "19:00",
+      "kolejka": 4,
+      "gospodarz": "KTS VI Gliwice",
+      "gosc": "STS II ?ernica",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-28",
+      "godzina": "18:00",
+      "kolejka": 5,
+      "gospodarz": "ULKS Tajfun Ligota ?ab?dzka",
+      "gosc": "KTS VI Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-06",
+      "godzina": "19:00",
+      "kolejka": 6,
+      "gospodarz": "KTS VI Gliwice",
+      "gosc": "UKS Feniks II Pyskowice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-18",
+      "godzina": "18:15",
+      "kolejka": 7,
+      "gospodarz": "LKS Stra?ak III Miko?ów",
+      "gosc": "KTS VI Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-27",
+      "godzina": "18:00",
+      "kolejka": 8,
+      "gospodarz": "ULKS P?awniowice",
+      "gosc": "KTS VI Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-11",
+      "godzina": "19:00",
+      "kolejka": 10,
+      "gospodarz": "ATS Ligota ?ab?dzka",
+      "gosc": "KTS VI Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2027-01-15",
+      "godzina": "19:00",
+      "kolejka": 11,
+      "gospodarz": "KTS VI Gliwice",
+      "gosc": "STS I ?ernica",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-04",
+      "godzina": "19:00",
+      "kolejka": 12,
+      "gospodarz": "ULKS Ruch Pniów",
+      "gosc": "KTS VI Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-12",
+      "godzina": "19:00",
+      "kolejka": 13,
+      "gospodarz": "KTS VI Gliwice",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS VI",
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-09",
+      "godzina": "19:00",
+      "kolejka": 2,
+      "gospodarz": "KTS KA Krokus VII Gliwice",
+      "gosc": "ULKS Tajfun Ligota ?ab?dzka",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-14",
+      "godzina": "18:00",
+      "kolejka": 3,
+      "gospodarz": "UKS Feniks II Pyskowice",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-23",
+      "godzina": "19:00",
+      "kolejka": 4,
+      "gospodarz": "KTS KA Krokus VII Gliwice",
+      "gosc": "LKS M?odo?? Rudno",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-28",
+      "godzina": "18:15",
+      "kolejka": 5,
+      "gospodarz": "LKS Stra?ak III Miko?ów",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-06",
+      "godzina": "19:00",
+      "kolejka": 6,
+      "gospodarz": "KTS KA Krokus VII Gliwice",
+      "gosc": "ULKS P?awniowice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-20",
+      "godzina": "19:00",
+      "kolejka": 7,
+      "gospodarz": "KTS KA Krokus VII Gliwice",
+      "gosc": "ATS Ligota ?ab?dzka",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-25",
+      "godzina": "17:30",
+      "kolejka": 8,
+      "gospodarz": "STS I ?ernica",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-04",
+      "godzina": "19:00",
+      "kolejka": 9,
+      "gospodarz": "KTS KA Krokus VII Gliwice",
+      "gosc": "ULKS Ruch Pniów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-09",
+      "godzina": "17:30",
+      "kolejka": 10,
+      "gospodarz": "STS II ?ernica",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2027-01-14",
+      "godzina": "18:00",
+      "kolejka": 11,
+      "gospodarz": "LKS Naprzód ?wibie",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2027-02-05",
+      "godzina": "19:00",
+      "kolejka": 12,
+      "gospodarz": "KTS KA Krokus VII Gliwice",
+      "gosc": "LKS Stra?ak II Miko?ów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-09-23",
+      "godzina": "17:00",
+      "kolejka": null,
+      "gospodarz": "Bartek II Siemianowice",
+      "gosc": "KTS Gliwice",
+      "wynik": "4:6",
+      "rozegrany": true,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-06",
+      "godzina": "19:00",
+      "kolejka": null,
+      "gospodarz": "UKS Wolej Solver II Ruda ?l?ska",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-22",
+      "godzina": "19:30",
+      "kolejka": null,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "LKS Stra?ak II Miko?ów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-05",
+      "godzina": "19:30",
+      "kolejka": null,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "UKS Ikar Mierz?cice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-12",
+      "godzina": "19:30",
+      "kolejka": null,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "Speed Team 43 Stolarzowice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-20",
+      "godzina": "18:30",
+      "kolejka": null,
+      "gospodarz": "UKS Huragan I Sosnowiec",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-11-25",
+      "godzina": "18:30",
+      "kolejka": null,
+      "gospodarz": "AKS Miko?ów",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-10",
+      "godzina": "19:30",
+      "kolejka": null,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "UKS Wolej Solver III Ruda ?l?ska",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-17",
+      "godzina": "19:30",
+      "kolejka": null,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "TKKF Aut ?agisza B?dzin",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "2. Śląska Liga Amatorów",
+      "zespoly": [
+        "KTS Gliwice · amatorzy"
+      ]
+    }
+  ],
+  "meczePzts": [
+    {
+      "dataMeczu": "2026-12-12",
+      "godzina": "16:00",
+      "kolejka": 10,
+      "gospodarz": "UKS Piast Poprawa Ostrzeszów",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-11-29",
+      "godzina": "16:00",
+      "kolejka": 8,
+      "gospodarz": "BKS Stal Bielsko-Biała",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-11-28",
+      "godzina": "16:00",
+      "kolejka": 7,
+      "gospodarz": "KS Naprzód Borucin",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-10-18",
+      "godzina": "16:00",
+      "kolejka": 6,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "MATS UR Rzeszów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-10-17",
+      "godzina": "16:00",
+      "kolejka": 5,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "PGE Fibrain AZS Politechnika Rzeszów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-10-04",
+      "godzina": "16:00",
+      "kolejka": 4,
+      "gospodarz": "Jom-Elektro Orzeł Lizawice",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-10-03",
+      "godzina": "16:00",
+      "kolejka": 3,
+      "gospodarz": "Advatech ZKS Zielona Góra",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-09-20",
+      "godzina": "16:00",
+      "kolejka": 2,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "GMKS Strzelec Frysztak",
+      "wynik": "7:3",
+      "rozegrany": true,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-09-19",
+      "godzina": "16:00",
+      "kolejka": 1,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "J. Sz. AZS Politechnika KATS Kraków",
+      "wynik": "5:5",
+      "rozegrany": true,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    }
+  ],
+  "ostatniSync": {
+    "szts": "2026-09-27T20:20:19.699Z",
+    "pzts": "2026-09-25T23:14:56.878Z"
+  }
+}
