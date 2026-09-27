@@ -1,0 +1,266 @@
+/* ============================================================
+   KTS Gliwice — strona statyczna (wdrożenie testowe)
+   Design 60-30-10: 60% neutralne, 30% błękit klubowy, 10% pomarańcz (tylko CTA)
+   Fonty: Barlow Condensed (display) + Inter (body)
+   Wiernie wg warsztatu (site-skeleton + globals.css)
+   ============================================================ */
+
+:root {
+  --kts-primary: #0057b8;        /* 30% — niebieski klubowy (WCAG AA) */
+  --kts-primary-light: #e8f1fb;
+  --kts-accent: #ff6b35;         /* 10% — pomarańczowa piłeczka, tylko CTA */
+  --kts-accent-dark: #c2410c;
+  --kts-ink: #0f1b2d;            /* grafit/granat — nagłówki, hero, stopka */
+  --kts-ink-soft: #1a2433;
+  --kts-text: #2a3646;
+  --kts-text-muted: #5a6a7e;
+  --kts-neutral: #f5f7fa;        /* 60% — neutralne tła */
+  --kts-line: #dbe3ec;
+  --kts-white: #ffffff;
+  --kts-win: #16a34a;
+  --kts-loss: #dc2626;
+  --kts-draw: #64748b;
+
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--kts-text);
+  background: var(--kts-white);
+  line-height: 1.55;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+main { flex: 1 0 auto; }
+
+.container { max-width: 72rem; margin-inline: auto; padding-inline: 1rem; }
+.center { text-align: center; }
+.gap-lg { gap: 1.5rem; }
+
+/* ===== typografia ===== */
+.t-hero {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+}
+.t-h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.875rem; line-height: 1.15; color: var(--kts-ink); }
+.t-h4 { font-family: var(--font-display); font-weight: 600; font-size: 1.125rem; line-height: 1.25; color: var(--kts-ink); }
+.t-small { font-size: 0.875rem; }
+.t-nums { font-variant-numeric: tabular-nums; }
+.muted { color: var(--kts-text-muted); }
+.text-primary { color: var(--kts-primary); }
+code { background: var(--kts-primary-light); color: var(--kts-primary); padding: 0.1em 0.35em; border-radius: 0.25rem; font-size: 0.85em; }
+
+/* ===== przyciski ===== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 0.5rem; font-weight: 600; text-decoration: none;
+  border: 1px solid transparent; cursor: pointer; transition: all 0.15s ease;
+  min-height: 44px; padding: 0 1.25rem; font-size: 0.95rem;
+}
+.btn-sm { min-height: 38px; padding: 0 0.9rem; font-size: 0.875rem; }
+.btn-lg { min-height: 48px; padding: 0 1.75rem; font-size: 1rem; }
+.btn-accent { background: var(--kts-accent); color: #fff; }
+.btn-accent:hover { background: var(--kts-accent-dark); }
+.btn-outline-light { background: transparent; color: #fff; border-color: rgba(255,255,255,0.4); }
+.btn-outline-light:hover { background: rgba(255,255,255,0.1); }
+
+/* ===== badge ===== */
+.badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  border-radius: 999px; padding: 0.3rem 0.85rem;
+  font-size: 0.78rem; font-weight: 600; border: 1px solid transparent; line-height: 1.2;
+}
+.badge-outline-light { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: #fff; }
+.badge-outline-primary { border-color: rgba(0,87,184,0.4); background: #fff; color: var(--kts-primary); }
+.badge-live { border-color: rgba(22,163,74,0.4); background: rgba(22,163,74,0.1); color: var(--kts-win); }
+.badge-live--warn { border-color: var(--kts-line); background: #fff; color: var(--kts-text-muted); }
+.badge--team { border-color: var(--kts-line); background: #fff; color: var(--kts-text-muted); align-self: flex-start; }
+.badge--team-pzts { border-color: rgba(0,87,184,0.4); background: var(--kts-primary-light); color: var(--kts-primary); }
+.badge--match { border-color: rgba(0,87,184,0.3); color: var(--kts-primary); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
+.badge--derby { border-color: rgba(0,87,184,0.4); color: var(--kts-primary); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
+.badge--W { border-color: rgba(22,163,74,0.4); color: var(--kts-win); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
+.badge--P { border-color: #fecaca; color: var(--kts-loss); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
+.badge--R { border-color: var(--kts-line); color: var(--kts-text-muted); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
+
+/* ===== header ===== */
+.header {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--kts-line);
+}
+.header-inner { display: flex; align-items: center; gap: 0.75rem; padding-block: 0.75rem; }
+.brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+.brand-mark {
+  display: flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem; border-radius: 0.5rem;
+  background: var(--kts-primary); color: #fff;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
+}
+.brand-mark-sm { width: 2rem; height: 2rem; font-size: 0.85rem; border-radius: 0.375rem; }
+.brand-name { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; letter-spacing: 0.02em; color: var(--kts-ink); }
+.brand-sub { color: var(--kts-text-muted); }
+.nav { margin-left: auto; display: flex; gap: 0.25rem; }
+.nav a {
+  padding: 0.5rem 0.75rem; border-radius: 0.375rem; text-decoration: none;
+  font-size: 0.875rem; font-weight: 500; color: var(--kts-text); transition: all 0.15s;
+}
+.nav a:hover { background: var(--kts-primary-light); color: var(--kts-primary); }
+.header-cta { margin-left: 0.5rem; }
+.hamburger {
+  display: none; margin-left: auto; background: none; border: 1px solid var(--kts-line);
+  border-radius: 0.375rem; padding: 0.5rem; cursor: pointer; flex-direction: column; gap: 4px;
+}
+.hamburger span { display: block; width: 1.25rem; height: 2px; background: var(--kts-ink); }
+
+@media (max-width: 48rem) {
+  .brand-name { display: none; }
+  .header-cta { display: none; }
+  .hamburger { display: flex; }
+  .nav {
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; background: #fff; border-bottom: 1px solid var(--kts-line);
+    padding: 0.5rem 1rem 1rem; box-shadow: 0 0.5rem 1rem rgba(15,27,45,0.08);
+  }
+  .nav.open { display: flex; }
+}
+
+/* ===== hero ===== */
+.hero {
+  background: var(--kts-ink); color: #fff; text-align: center;
+  padding: 5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+@media (min-width: 40rem) { .hero { padding: 7rem 1rem; } }
+.hero-lead { max-width: 36rem; color: rgba(255,255,255,0.7); margin-top: 0.5rem; }
+.hero-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; }
+
+/* ===== pasek meczu ===== */
+.matchbar { background: var(--kts-primary); color: #fff; border-bottom: 1px solid var(--kts-line); }
+.matchbar-inner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 0.5rem 1.5rem; padding-block: 0.75rem; text-align: center; font-size: 0.875rem;
+}
+.matchbar-label { font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.8rem; }
+.matchbar-result { font-weight: 500; }
+.matchbar-next { color: rgba(255,255,255,0.85); }
+
+/* ===== sekcje ===== */
+.section { padding: 3.5rem 1rem; }
+.section-neutral { background: var(--kts-neutral); border-block: 1px solid var(--kts-line); }
+.section-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.5rem; }
+.section-head-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.section-desc { max-width: 42rem; }
+
+/* ===== karty ===== */
+.grid { display: grid; gap: 1rem; }
+.grid-2 { grid-template-columns: 1fr; }
+.grid-3 { grid-template-columns: 1fr; }
+.grid-4 { grid-template-columns: 1fr; margin-top: 1.5rem; }
+@media (min-width: 40rem) {
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 64rem) {
+  .grid-2.results-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+.card {
+  background: #fff; border: 1px solid var(--kts-line); border-radius: 0.75rem;
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.card-pad { padding: 1rem; }
+.card-body { padding: 1rem; }
+
+.news-media {
+  height: 10rem; display: flex; align-items: center; justify-content: center;
+  background: var(--kts-neutral); font-size: 2rem; opacity: 0.55;
+}
+
+/* ===== karty drużyn ===== */
+.team-card { padding: 1rem; gap: 0.25rem; }
+.team-card dl { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.team-card .row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.team-card dt { color: var(--kts-text-muted); font-size: 0.875rem; }
+.team-card dd { font-size: 0.875rem; font-weight: 500; text-align: right; }
+.team-card .source-link {
+  margin-top: auto; padding-top: 0.75rem; font-size: 0.85rem; font-weight: 600;
+  color: var(--kts-primary); text-decoration: none;
+}
+.team-card .source-link:hover { opacity: 0.8; }
+
+/* ===== tabela ligowa ===== */
+.table-caption { font-size: 0.875rem; font-weight: 600; color: var(--kts-ink); margin-bottom: 0.5rem; }
+.table-scroll { max-height: 30rem; overflow-y: auto; }
+.league-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+.league-table th {
+  position: sticky; top: 0; background: #fff; font-size: 0.8rem; color: var(--kts-text-muted);
+  font-weight: 600; padding-block: 0.5rem; border-bottom: 1px solid var(--kts-line);
+}
+.league-table td { padding-block: 0.5rem; border-bottom: 1px solid var(--kts-line); }
+.league-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.league-table tr.is-ours td { background: var(--kts-primary-light); color: var(--kts-primary); font-weight: 600; }
+.source-note { border-top: 1px solid var(--kts-line); margin-top: 0.75rem; padding-top: 0.75rem; }
+.source-note a { color: var(--kts-primary); font-weight: 600; }
+
+/* ===== listy meczów ===== */
+.list-title { font-size: 0.875rem; font-weight: 600; color: var(--kts-ink); margin-bottom: 0.25rem; }
+.list-title-gap { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--kts-line); }
+.divide-list { list-style: none; }
+.divide-list li { padding-block: 0.6rem; border-bottom: 1px solid var(--kts-line); }
+.divide-list li:last-child { border-bottom: none; }
+.match-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
+.match-date { font-size: 0.8rem; color: var(--kts-text-muted); font-variant-numeric: tabular-nums; }
+.match-teams { font-size: 0.9rem; font-weight: 600; color: var(--kts-text); }
+.match-score { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--kts-ink); }
+.match-score--W { color: var(--kts-win); }
+.match-score--P { color: var(--kts-loss); }
+.match-score--derby { color: var(--kts-primary); }
+.match-meta { font-size: 0.78rem; color: var(--kts-text-muted); margin-top: 0.15rem; }
+
+/* ===== mechanizm ===== */
+.mechanism {
+  margin-top: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+  border: 1px dashed rgba(0,87,184,0.3); border-radius: 0.75rem; background: rgba(255,255,255,0.7); padding: 1rem;
+}
+.mechanism-side { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+
+/* ===== trenerzy ===== */
+.coach-card { flex-direction: row; align-items: center; gap: 1rem; }
+.coach-avatar {
+  width: 4rem; height: 4rem; border-radius: 999px; flex-shrink: 0;
+  background: var(--kts-neutral); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; opacity: 0.75;
+}
+.coach-name { font-weight: 600; color: var(--kts-ink); }
+
+/* ===== sponsorzy ===== */
+.sponsors { background: var(--kts-neutral); border-top: 1px solid var(--kts-line); padding-block: 3rem; }
+.sponsors-title { text-transform: uppercase; letter-spacing: 0.08em; color: var(--kts-text-muted); }
+.sponsors-row {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 2.5rem 1rem; margin-top: 1.5rem; opacity: 0.6;
+  font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; color: var(--kts-ink); letter-spacing: 0.03em;
+}
+
+/* ===== footer ===== */
+.footer { background: var(--kts-ink); color: rgba(255,255,255,0.8); padding: 2.5rem 0 2rem; margin-top: auto; }
+.footer-grid { display: grid; gap: 2rem; }
+@media (min-width: 40rem) { .footer-grid { grid-template-columns: repeat(3, 1fr); } }
+.footer-brand { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.footer-brand-name { font-family: var(--font-display); font-weight: 600; color: #fff; }
+.footer-col-title { font-weight: 600; color: #fff; margin-bottom: 0.5rem; font-size: 0.875rem; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.footer-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.875rem; }
+.footer-links a:hover { color: #fff; }
+.footer-fade { color: rgba(255,255,255,0.5); margin-top: 0.75rem; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem; padding-top: 1rem; color: rgba(255,255,255,0.4); }
