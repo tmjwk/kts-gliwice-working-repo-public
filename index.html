@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KTS Gliwice — Klub Tenisa Stołowego</title>
+  <meta name="description" content="KTS Gliwice — klub tenisa stołowego. Drużyny, wyniki ligowe na żywo, treningi dla dzieci i dorosłych. Gliwice, Śląsk.">
+  <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="#start" aria-label="KTS Gliwice — strona główna">
+        <span class="brand-mark">KTS</span>
+        <span class="brand-name">KTS GLIWICE <span class="brand-sub">/ SZKIELET</span></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Główna nawigacja">
+        <a href="#aktualnosci">Aktualności</a>
+        <a href="#oklubie">O klubie</a>
+        <a href="#druzyny-wyniki">Drużyny i wyniki</a>
+        <a href="#trenerzy">Trenerzy</a>
+        <a href="#galeria">Galeria</a>
+      </nav>
+      <a class="btn btn-accent btn-sm header-cta" href="#kontakt">Zapisz dziecko</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="start">
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <span class="badge badge-outline-light">SZKIELET — podział sekcji</span>
+      <h1 class="t-hero">Tenis stołowy w sercu Gliwic</h1>
+      <p class="hero-lead">
+        [Hero: mocne zdjęcie + jedno zdanie kim jesteśmy + 2 CTA — układ
+        „jeden przekaz”, bez slidera (patrz Q8)]
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-accent btn-lg" href="#kontakt">Zapisz dziecko na trening</a>
+        <a class="btn btn-outline-light btn-lg" href="#oklubie">Poznaj klub</a>
+      </div>
+    </section>
+
+    <!-- ===== PASEK NAJBLIŻSZEGO MECZU (dane live) ===== -->
+    <section class="matchbar" aria-label="Ostatni wynik i najbliższy mecz">
+      <div class="container matchbar-inner">
+        <span class="matchbar-label">Ostatni wynik</span>
+        <span class="t-nums matchbar-result" id="ostatni-wynik">…</span>
+        <span class="matchbar-next" id="najblizszy-mecz">…</span>
+      </div>
+    </section>
+
+    <!-- ===== AKTUALNOŚCI ===== -->
+    <section class="section" id="aktualnosci">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2 class="t-h2">Aktualności</h2>
+            <p class="t-small muted">Źródło: mirror fanpage’a FB (wariant B) / panel (wariant C) — patrz dziennik ustaleń</p>
+          </div>
+        </div>
+        <div class="grid grid-3">
+          <article class="card news-card">
+            <div class="news-media">🏆</div>
+            <div class="card-body">
+              <span class="t-small t-nums text-primary">[data]</span>
+              <h3 class="t-h4">Tytuł aktualności — mecz 1. ligi</h3>
+              <p class="t-small muted">[2–3 zdania zajawki — długość sprawdzona pod mobile]</p>
+            </div>
+          </article>
+          <article class="card news-card">
+            <div class="news-media">🏆</div>
+            <div class="card-body">
+              <span class="t-small t-nums text-primary">[data]</span>
+              <h3 class="t-h4">Tytuł aktualności — turniej juniorski</h3>
+              <p class="t-small muted">[2–3 zdania zajawki — długość sprawdzona pod mobile]</p>
+            </div>
+          </article>
+          <article class="card news-card">
+            <div class="news-media">🏆</div>
+            <div class="card-body">
+              <span class="t-small t-nums text-primary">[data]</span>
+              <h3 class="t-h4">Tytuł aktualności — nabór do akademii</h3>
+              <p class="t-small muted">[2–3 zdania zajawki — długość sprawdzona pod mobile]</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DRUŻYNY I WYNIKI (dane live z dane.json) ===== -->
+    <section class="section section-neutral" id="druzyny-wyniki">
+      <div class="container">
+        <div class="section-head-row">
+          <h2 class="t-h2">Drużyny i wyniki</h2>
+          <span class="badge badge-outline-primary" id="badge-sezon">Sezon —</span>
+          <span class="badge badge-live" id="badge-live">łączę z danymi…</span>
+        </div>
+        <p class="t-small muted section-desc">
+          Widok zbliżony do docelowego. Skład drużyn, ligi i źródła to dane
+          konfigurowalne — nowy sezon, awanse czy nowe drużyny (np. kobiece)
+          obsługiwane są edycją danych, bez zmian w kodzie strony.
+        </p>
+
+        <!-- Karty drużyn -->
+        <div class="grid grid-4" id="karty-druzyn"></div>
+
+        <!-- Tabela 2. LM + mecze -->
+        <div class="grid grid-2 gap-lg results-grid">
+          <div class="card card-pad">
+            <p class="table-caption">2. Liga Mężczyzn (ŚZTS) — pełna tabela, sync na żywo</p>
+            <div class="table-scroll">
+              <table class="league-table">
+                <thead>
+                  <tr>
+                    <th>Drużyna</th>
+                    <th class="num">M</th>
+                    <th class="num">Pkt</th>
+                    <th class="num">Sety</th>
+                  </tr>
+                </thead>
+                <tbody id="tabela-liga"></tbody>
+              </table>
+            </div>
+            <p class="t-small muted source-note">
+              Źródło: <a href="https://ligi.slzts.pl/liga/18/136/" target="_blank" rel="noreferrer">ligi.slzts.pl</a>
+              · automatyczny sync (razem z meczami) · stan: <span class="t-nums" id="tabela-stan">—</span>
+            </p>
+          </div>
+
+          <div class="card card-pad">
+            <p class="list-title">📅 Najbliższe mecze — wszystkie drużyny</p>
+            <ul class="divide-list" id="najblizsze-mecze"></ul>
+            <p class="list-title list-title-gap">🏆 Ostatnie mecze — wszystkie drużyny</p>
+            <ul class="divide-list" id="ostatnie-mecze"></ul>
+            <p class="t-small muted source-note">
+              Źródła: pzts.pl (1. liga) + ligi.slzts.pl (ligi 2–4 i amatorzy) ·
+              automatyczny sync
+            </p>
+          </div>
+        </div>
+
+        <!-- Mechanizm -->
+        <div class="mechanism">
+          <div>
+            <p class="t-small muted">
+              <strong class="text-primary">Jak to działa:</strong>
+              strona statyczna czyta <code>dane.json</code> (ładowanie z CDN —
+              natychmiast, bez serwera). Odświeżanie: GitHub Actions wg
+              harmonogramu (co 2 h) — ŚZTS: pełny automat (ligi 2–4 + amatorzy,
+              tabele + terminarze + stany).
+            </p>
+            <p class="t-small muted">
+              <strong class="text-primary">PZTS (1. liga):</strong>
+              pzts.pl za Cloudflare — mecze KTS I aktualizowane ręcznym
+              uruchomieniem workflow (wklej JSON raz na kolejkę), docelowo po
+              zgodzie PZTS.
+            </p>
+          </div>
+          <div class="mechanism-side">
+            <span class="t-small t-nums muted" id="ostatni-sync">Ostatni sync: —</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== O KLUBIE (placeholder) ===== -->
+    <section class="section" id="oklubie">
+      <div class="container">
+        <h2 class="t-h2">O klubie</h2>
+        <p class="t-small muted">[Sekcja historii i osiągnięć klubu — treści po decyzji redakcyjnej]</p>
+      </div>
+    </section>
+
+    <!-- ===== TRENERZY ===== -->
+    <section class="section" id="trenerzy">
+      <div class="container">
+        <h2 class="t-h2">Trenerzy</h2>
+        <div class="grid grid-3">
+          <div class="card card-pad coach-card">
+            <div class="coach-avatar">🎓</div>
+            <div>
+              <p class="coach-name">[Imię i nazwisko trenera 1]</p>
+              <p class="t-small muted">[grupa prowadzona / osiągnięcia]</p>
+            </div>
+          </div>
+          <div class="card card-pad coach-card">
+            <div class="coach-avatar">🎓</div>
+            <div>
+              <p class="coach-name">[Imię i nazwisko trenera 2]</p>
+              <p class="t-small muted">[grupa prowadzona / osiągnięcia]</p>
+            </div>
+          </div>
+          <div class="card card-pad coach-card">
+            <div class="coach-avatar">🎓</div>
+            <div>
+              <p class="coach-name">[Imię i nazwisko trenera 3]</p>
+              <p class="t-small muted">[grupa prowadzona / osiągnięcia]</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== GALERIA (placeholder) ===== -->
+    <section class="section section-neutral" id="galeria">
+      <div class="container">
+        <h2 class="t-h2">Galeria</h2>
+        <p class="t-small muted">[Galeria zdjęć — źródło: archiwum klubu / Facebook]</p>
+      </div>
+    </section>
+
+    <!-- ===== SPONSORZY ===== -->
+    <section class="section sponsors">
+      <div class="container center">
+        <h2 class="t-h4 sponsors-title">Sponsorzy i partnerzy</h2>
+        <div class="sponsors-row">
+          <span>[LOGO 1]</span><span>[LOGO 2]</span><span>[LOGO 3]</span><span>[LOGO 4]</span><span>[LOGO 5]</span>
+        </div>
+        <p class="t-small muted">[Układ zależny od wymogów umownych sponsorów — Q11]</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="kontakt">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">
+          <span class="brand-mark brand-mark-sm">KTS</span>
+          <span class="footer-brand-name">KTS Gliwice</span>
+        </div>
+        <p class="t-small">[adres hali] · Gliwice</p>
+        <p class="t-small">[telefon] · [e-mail]</p>
+      </div>
+      <nav aria-label="Stopka">
+        <p class="footer-col-title">Sekcje</p>
+        <ul class="footer-links">
+          <li><a href="#aktualnosci">Aktualności</a></li>
+          <li><a href="#oklubie">O klubie</a></li>
+          <li><a href="#druzyny-wyniki">Drużyny i wyniki</a></li>
+          <li><a href="#trenerzy">Trenerzy</a></li>
+          <li><a href="#galeria">Galeria</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="footer-col-title">Znajdź nas</p>
+        <p class="t-small">🤝 Facebook — AkademiaTenisaStolowego</p>
+        <p class="t-small footer-fade">[RODO · polityka cookies — do wdrożenia]</p>
+      </div>
+    </div>
+    <div class="container">
+      <p class="footer-bottom t-small">
+        SZKIELET projektowy · wdrożenie testowe (hosting statyczny, auto-sync wyników) · KTS Gliwice 2026
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
