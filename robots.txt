@@ -1,0 +1,4 @@
+# WERSJA TESTOWA — strona nie jest jeszcze oficjalna (ocena dla zarządu).
+# Przy premierze: usunąć ten plik ORAZ meta noindex w index.html.
+User-agent: *
+Disallow: /
