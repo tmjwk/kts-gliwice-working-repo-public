@@ -1,3 +1,12 @@
+# ⚠ REPO ROBOCZE — nie jest to finalna wersja witryny
+
+To repozytorium służy **wspólnej pracy** (właściciel + asystent AI)
+oraz **prezentacji kierunku dla zarządu klubu**. Ostateczna, publiczna
+wersja strony KTS Gliwice zostanie wdrożona do **osobnego
+repozytorium**. Poniższa treść opisuje bieżącą wersję testową.
+
+---
+
 # KTS Gliwice — strona testowa (wdrożenie statyczne)
 
 Testowa, publiczna wersja robocza strony klubu **KTS Gliwice** na GitHub
