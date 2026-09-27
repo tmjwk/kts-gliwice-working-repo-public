@@ -1,0 +1,51 @@
+name: Sync danych ligowych (KTS Gliwice)
+
+# Pełna automatyzacja dla hostingu statycznego (GitHub Pages):
+#   ŚZTS (ligi 2–4 + amatorzy) — Actions sam pobiera ligi.slzts.pl
+#   PZTS (1. liga) — pzts.pl za Cloudflare; wyniki dociągane opcjonalnie
+#   zmienną PZTS_MECZE przy uruchomieniu ręcznym (wklej JSON z warsztatu),
+#   w przeciwnym razie zachowywany jest ostatni znany stan.
+
+on:
+  schedule:
+    # co 2 godziny = 12 uruchomień/dobę × 4 strony ligowe = 48 zapytań
+    # dziennie (≈ 2/godz. — spokojne dla ligi.slzts.pl). Częstotliwość
+    # zmienia się JEDNĄ cyfrą: */1 = co godzinę, */4 = co 4 h.
+    # Puste przebiegi (brak zmian w źródłach) nie tworzą commitów
+    # ani przebudów strony. Wieczory meczowe można dogrzać drugim
+    # harmonogramem, np. "41 18-22 * * 0-4" (niedz–czw, 18–22).
+    - cron: "23 */2 * * *"
+  workflow_dispatch:
+    inputs:
+      pzts_mecze:
+        description: "Opcjonalnie: JSON z meczami PZTS 1. ligi (wklej z warsztatu)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Pobierz dane ligowe
+        run: bun scripts/sync_statyczny.ts
+        env:
+          PZTS_MECZE: ${{ inputs.pzts_mecze }}
+
+      - name: Commit (tylko gdy dane się zmieniły)
+        run: |
+          git config user.name "kts-sync-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add dane.json
+          if git diff --cached --quiet; then
+            echo "Brak zmian — dane aktualne."
+          else
+            git commit -m "sync: dane ligowe $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
