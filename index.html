@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
   <title>KTS Gliwice — Klub Tenisa Stołowego</title>
   <meta name="description" content="KTS Gliwice — klub tenisa stołowego. Drużyny, wyniki ligowe na żywo, treningi dla dzieci i dorosłych. Gliwice, Śląsk.">
   <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
@@ -12,6 +13,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Tryb dzień/noc — PRZED renderowaniem (bez mignięcia jasnym tłem):
+    // wybór z localStorage, domyślnie preferencja systemu.
+    (function () {
+      try {
+        var z = localStorage.getItem("kts-theme");
+        if (!z) z = window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "day";
+        document.documentElement.setAttribute("data-theme", z);
+      } catch (e) { /* prywatny tryb przeglądarki — zostaje dzienny */ }
+    })();
+  </script>
 </head>
 <body>
 
@@ -30,6 +42,7 @@
         <a href="#galeria">Galeria</a>
       </nav>
       <a class="btn btn-accent btn-sm header-cta" href="#kontakt">Zapisz dziecko</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Przełącz tryb nocny" title="Przełącz tryb dzień/noc">🌙</button>
       <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav">
         <span></span><span></span><span></span>
       </button>
@@ -157,14 +170,14 @@
               <strong class="text-primary">Jak to działa:</strong>
               strona statyczna czyta <code>dane.json</code> (ładowanie z CDN —
               natychmiast, bez serwera). Odświeżanie: GitHub Actions wg
-              harmonogramu (co 2 h) — ŚZTS: pełny automat (ligi 2–4 + amatorzy,
-              tabele + terminarze + stany).
+              harmonogramu (co 2 h) — pełny automat dla WSZYSTKICH źródeł:
+              ŚZTS bezpośrednio (ligi 2–4 + amatorzy), PZTS przez czytnik
+              r.jina.ai omijający Cloudflare (tabele + terminarz 1. ligi).
             </p>
             <p class="t-small muted">
               <strong class="text-primary">PZTS (1. liga):</strong>
-              pzts.pl za Cloudflare — mecze KTS I aktualizowane ręcznym
-              uruchomieniem workflow (wklej JSON raz na kolejkę), docelowo po
-              zgodzie PZTS.
+              automat przez czytnik; ręczna wklejka (Actions → „Sync danych
+              ligowych” → pole pzts_mecze) pozostaje jako ścieżka awaryjna.
             </p>
           </div>
           <div class="mechanism-side">
@@ -263,6 +276,7 @@
     <div class="container">
       <p class="footer-bottom t-small">
         SZKIELET projektowy · wdrożenie testowe (hosting statyczny, auto-sync wyników) · KTS Gliwice 2026
+        · <span class="t-nums" id="wersja-strony">wersja —</span>
       </p>
     </div>
   </footer>
