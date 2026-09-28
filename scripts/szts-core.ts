@@ -12,10 +12,13 @@
  *    nr meczu + liga + kolejka, gospodarz, gość, wynik, „Szczegóły"],
  *    poniżej każdego meczu wiersz sędziego („SG:") — pomijany (brak daty).
  *
- * Znana wada serwisu ŚZTS: dane drużyn gubią polskie znaki ł/ż/ź/ę (filtr
- * latin1 po stronie serwera — potwierdzone testem z dwoma różnymi UA).
- * Nazwy drużyn KTS Gliwice są czyste; problem jest kosmetyczny (niektórzy
- * przeciwnicy mają „?" w nazwie) i dotyczy wyłącznie wyświetlania.
+ * Znana wada serwisu ŚZTS: dane drużyn gubią polskie znaki ł/ą/ś/ż/ę/ź
+ * (filtr latin1 po stronie SERWERA — „?” leży już w ich bajtach, potwierdzone
+ * testem z dwoma UA i na sezonie 17; ó przetrwało, bo jest w latin-1).
+ * Naprawiamy po naszej stronie mapą NAPRAWA_NAZW (28.09.2026): nazwy
+ * zweryfikowane w sieci (slzts.pl/pzts.pl · Łabędzka, olza.pl · Dąbrowiak,
+ * skarbek.tarnogorski.pl · Mysław; pozostałe — geografia Śląska).
+ * Nieznane uszkodzenia zostają jawne („?” widoczne = sygnał do mapy).
  */
 
 export interface WierszTabeli {
@@ -67,6 +70,46 @@ function czystaKomorka(html: string): string {
     .trim();
 }
 
+/**
+ * Mapa naprawcza nazw drużyn z uszkodzonej bazy ŚZTS (serwer zamienia litery
+ * spoza latin-1 na „?”). Klucz = nazwa dokładnie taka, jak ją widzi parser.
+ * Utrzymywać ALFABETYCZNIE; po nowej uszkodzonej nazwie w danych → dopisać
+ * wiersz (i odświeżyć kopie: paczka statyczna + working repo).
+ */
+const NAPRAWA_NAZW: Readonly<Record<string, string>> = {
+  "AKS Miko?ów": "AKS Mikołów",
+  "ATS Ligota ?ab?dzka": "ATS Ligota Łabędzka",
+  "KS Mys?aw II Mys?owice": "KS Mysław II Mysłowice",
+  "KS Mys?aw Mys?owice": "KS Mysław Mysłowice",
+  "KU AZS UJD Cz?stochowa": "KU AZS UJD Częstochowa",
+  "LITS Meble Anders ?ywiec": "LITS Meble Anders Żywiec",
+  "LKS Ci??kowianka Jaworzno": "LKS Ciężkowianka Jaworzno",
+  "LKS M?odo?? Rudno": "LKS Młodość Rudno",
+  "LKS Naprzód ?wibie": "LKS Naprzód Świbie",
+  "LKS Stra?ak II Miko?ów": "LKS Strażak II Mikołów",
+  "LKS Stra?ak III Miko?ów": "LKS Strażak III Mikołów",
+  "LKS Stra?ak Miko?ów": "LKS Strażak Mikołów",
+  "LUKS W?gierska Górka": "LUKS Węgierska Górka",
+  "LZS Chespa ?ywocice": "LZS Chespa Żywocice",
+  "MKS Siemianowiczanka Siemianowice ?l.": "MKS Siemianowiczanka Siemianowice Śl.",
+  "MKS Tajfun Ku?nia Raciborska": "MKS Tajfun Kuźnia Raciborska",
+  "STS I ?ernica": "STS I Żernica",
+  "STS II ?ernica": "STS II Żernica",
+  "TKKF Aut ?agisza B?dzin": "TKKF Aut Łagisza Będzin",
+  "UKS D?browiak D?browa Górnicza": "UKS Dąbrowiak Dąbrowa Górnicza",
+  "UKS Ikar Mierz?cice": "UKS Ikar Mierzęcice",
+  "UKS Wolej Solver II Ruda ?l?ska": "UKS Wolej Solver II Ruda Śląska",
+  "UKS Wolej Solver III Ruda ?l?ska": "UKS Wolej Solver III Ruda Śląska",
+  "UKS Wolej Solver Ruda ?l?ska": "UKS Wolej Solver Ruda Śląska",
+  "ULKS P?awniowice": "ULKS Pławniowice",
+  "ULKS Tajfun Ligota ?ab?dzka": "ULKS Tajfun Ligota Łabędzka",
+};
+
+/** Nazwa z ŚZTS → nazwa właściwa (mapa) albo bez zmian. */
+export function naprawNazwe(nazwa: string): string {
+  return NAPRAWA_NAZW[nazwa] ?? nazwa;
+}
+
 /** Parsuje sekcję „Tabela ligowa" na listę wierszy. */
 export function parsujTabele(html: string): WierszTabeli[] {
   const start = html.indexOf("Tabela ligowa");
@@ -82,7 +125,7 @@ export function parsujTabele(html: string): WierszTabeli[] {
     // oczekiwany układ: ["8.", "KTS II Gliwice", "2", "2", "14:6"]
     if (komorki.length >= 5 && /^\d+\.$/.test(komorki[0])) {
       const pozycja = parseInt(komorki[0], 10);
-      const nazwa = komorki[1];
+      const nazwa = naprawNazwe(komorki[1]);
       const mecze = parseInt(komorki[komorki.length - 3], 10);
       const punkty = parseInt(komorki[komorki.length - 2], 10);
       const stosunek = komorki[komorki.length - 1];
@@ -123,8 +166,8 @@ export function parsujTerminarz(html: string): MeczLigi[] {
     if (idxWynik < 2) continue;
 
     const wynik = komorki[idxWynik].replace(/\s+/g, "");
-    const gospodarz = komorki[idxWynik - 2];
-    const gosc = komorki[idxWynik - 1];
+    const gospodarz = naprawNazwe(komorki[idxWynik - 2]);
+    const gosc = naprawNazwe(komorki[idxWynik - 1]);
     if (!gospodarz || !gosc) continue;
 
     mecze.push({
