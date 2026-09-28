@@ -187,9 +187,44 @@ function renderBadges(dane, ok) {
     `Ostatni sync: PZTS ${sPzts ?? "—"} · ŚZTS ${sSzts ?? "—"}`;
 }
 
+/* ===== tryb dzień/noc ===== */
+function ustawIkoneTrybu() {
+  const btn = $("#theme-toggle");
+  if (!btn) return;
+  const noc = document.documentElement.getAttribute("data-theme") === "night";
+  btn.textContent = noc ? "☀️" : "🌙";
+  btn.setAttribute("aria-label", noc ? "Włącz tryb dzienny" : "Włącz tryb nocny");
+  btn.setAttribute("aria-pressed", String(noc));
+}
+
+function obsluzPrzelacznikTrybu() {
+  const btn = $("#theme-toggle");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    const terazNoc = document.documentElement.getAttribute("data-theme") === "night";
+    const nowy = terazNoc ? "day" : "night";
+    document.documentElement.setAttribute("data-theme", nowy);
+    try { localStorage.setItem("kts-theme", nowy); } catch (e) { /* tryb prywatny */ }
+    ustawIkoneTrybu();
+  });
+  ustawIkoneTrybu();
+}
+
+/* ===== wersja strony (wersja.json przy deployu) ===== */
+async function pokazWersje() {
+  try {
+    const res = await fetch("wersja.json", { cache: "no-cache" });
+    if (!res.ok) return;
+    const w = await res.json();
+    if (w?.wersja) $("#wersja-strony").textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
+  } catch (e) { /* brak pliku — zostaje „wersja —” */ }
+}
+
 /* ===== start ===== */
 async function start() {
-  // hamburger (mobile)
+  // tryb dzień/noc (ikona + klik) i menu mobilne
+  obsluzPrzelacznikTrybu();
+  pokazWersje();
   const hamburger = $("#hamburger");
   const nav = $("#nav");
   hamburger.addEventListener("click", () => {
