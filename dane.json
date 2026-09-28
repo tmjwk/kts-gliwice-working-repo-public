@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-09-28T08:46:24.883Z",
+  "wygenerowano": "2026-09-28T18:11:35.853Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -27,7 +27,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "16. miejsce · 0 pkt",
+      "stan": "15. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "1:19"
         }
       ],
-      "zaktualizowano": "2026-09-28T08:46:24.883Z"
+      "zaktualizowano": "2026-09-28T18:11:35.853Z"
     },
     {
       "klucz": "18/138",
@@ -186,9 +186,9 @@
         {
           "pozycja": 1,
           "nazwa": "UKS Feniks Pyskowice",
-          "mecze": 1,
-          "punkty": 2,
-          "stosunek": "9:1"
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "19:1"
         },
         {
           "pozycja": 2,
@@ -262,41 +262,41 @@
         },
         {
           "pozycja": 12,
-          "nazwa": "GLKS Lot Konopiska",
-          "mecze": 1,
-          "punkty": 0,
-          "stosunek": "3:7"
-        },
-        {
-          "pozycja": 13,
           "nazwa": "UKS D?browiak D?browa Górnicza",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "2:8"
         },
         {
-          "pozycja": 14,
+          "pozycja": 13,
           "nazwa": "MKS Siemianowiczanka Siemianowice ?l.",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "2:8"
         },
         {
-          "pozycja": 15,
+          "pozycja": 14,
           "nazwa": "KS Unia Kalety",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "1:9"
         },
         {
-          "pozycja": 16,
+          "pozycja": 15,
           "nazwa": "KTS IV Gliwice",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "1:9"
+        },
+        {
+          "pozycja": 16,
+          "nazwa": "GLKS Lot Konopiska",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-09-28T08:46:24.883Z"
+      "zaktualizowano": "2026-09-28T18:11:35.853Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "0:0"
         }
       ],
-      "zaktualizowano": "2026-09-28T08:46:24.883Z"
+      "zaktualizowano": "2026-09-28T18:11:35.853Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-09-28T08:46:24.883Z"
+      "zaktualizowano": "2026-09-28T18:11:35.853Z"
     }
   ],
   "meczeSzts": [
@@ -783,7 +783,7 @@
       ]
     },
     {
-      "dataMeczu": "2026-11-27",
+      "dataMeczu": "2026-11-13",
       "godzina": "19:00",
       "kolejka": 10,
       "gospodarz": "KTS III Gliwice",
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-09-28T08:46:24.883Z",
+    "szts": "2026-09-28T18:11:35.853Z",
     "pzts": "2026-09-25T23:14:56.878Z"
   }
 }
