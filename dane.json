@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-09-28T18:11:35.853Z",
+  "wygenerowano": "2026-09-28T20:35:32.734Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -80,21 +80,21 @@
         },
         {
           "pozycja": 3,
-          "nazwa": "MKS Tajfun Ku?nia Raciborska",
+          "nazwa": "MKS Tajfun Kuźnia Raciborska",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "16:4"
         },
         {
           "pozycja": 4,
-          "nazwa": "KS Mys?aw Mys?owice",
+          "nazwa": "KS Mysław Mysłowice",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "15:5"
         },
         {
           "pozycja": 5,
-          "nazwa": "LITS Meble Anders ?ywiec",
+          "nazwa": "LITS Meble Anders Żywiec",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "15:5"
@@ -143,7 +143,7 @@
         },
         {
           "pozycja": 12,
-          "nazwa": "LZS Chespa ?ywocice",
+          "nazwa": "LZS Chespa Żywocice",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "0:10"
@@ -157,7 +157,7 @@
         },
         {
           "pozycja": 14,
-          "nazwa": "LUKS W?gierska Górka",
+          "nazwa": "LUKS Węgierska Górka",
           "mecze": 2,
           "punkty": 0,
           "stosunek": "2:18"
@@ -177,7 +177,7 @@
           "stosunek": "1:19"
         }
       ],
-      "zaktualizowano": "2026-09-28T18:11:35.853Z"
+      "zaktualizowano": "2026-09-28T20:35:32.734Z"
     },
     {
       "klucz": "18/138",
@@ -199,14 +199,14 @@
         },
         {
           "pozycja": 3,
-          "nazwa": "LKS Stra?ak Miko?ów",
+          "nazwa": "LKS Strażak Mikołów",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "8:2"
         },
         {
           "pozycja": 4,
-          "nazwa": "KS Mys?aw II Mys?owice",
+          "nazwa": "KS Mysław II Mysłowice",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "8:2"
@@ -220,21 +220,21 @@
         },
         {
           "pozycja": 6,
-          "nazwa": "AKS Miko?ów",
+          "nazwa": "AKS Mikołów",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "7:3"
         },
         {
           "pozycja": 7,
-          "nazwa": "KU AZS UJD Cz?stochowa",
+          "nazwa": "KU AZS UJD Częstochowa",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
         },
         {
           "pozycja": 8,
-          "nazwa": "UKS Wolej Solver Ruda ?l?ska",
+          "nazwa": "UKS Wolej Solver Ruda Śląska",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
@@ -255,21 +255,21 @@
         },
         {
           "pozycja": 11,
-          "nazwa": "LKS Ci??kowianka Jaworzno",
+          "nazwa": "LKS Ciężkowianka Jaworzno",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "3:7"
         },
         {
           "pozycja": 12,
-          "nazwa": "UKS D?browiak D?browa Górnicza",
+          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "2:8"
         },
         {
           "pozycja": 13,
-          "nazwa": "MKS Siemianowiczanka Siemianowice ?l.",
+          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "2:8"
@@ -296,7 +296,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-09-28T18:11:35.853Z"
+      "zaktualizowano": "2026-09-28T20:35:32.734Z"
     },
     {
       "klucz": "18/142",
@@ -304,7 +304,7 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "ATS Ligota ?ab?dzka",
+          "nazwa": "ATS Ligota Łabędzka",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
@@ -332,35 +332,35 @@
         },
         {
           "pozycja": 5,
-          "nazwa": "ULKS P?awniowice",
+          "nazwa": "ULKS Pławniowice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
           "pozycja": 6,
-          "nazwa": "LKS Naprzód ?wibie",
+          "nazwa": "LKS Naprzód Świbie",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
           "pozycja": 7,
-          "nazwa": "LKS Stra?ak III Miko?ów",
+          "nazwa": "LKS Strażak III Mikołów",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
           "pozycja": 8,
-          "nazwa": "LKS Stra?ak II Miko?ów",
+          "nazwa": "LKS Strażak II Mikołów",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
           "pozycja": 9,
-          "nazwa": "LKS M?odo?? Rudno",
+          "nazwa": "LKS Młodość Rudno",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
@@ -381,27 +381,27 @@
         },
         {
           "pozycja": 12,
-          "nazwa": "ULKS Tajfun Ligota ?ab?dzka",
+          "nazwa": "ULKS Tajfun Ligota Łabędzka",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
           "pozycja": 13,
-          "nazwa": "STS II ?ernica",
+          "nazwa": "STS II Żernica",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
           "pozycja": 14,
-          "nazwa": "STS I ?ernica",
+          "nazwa": "STS I Żernica",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         }
       ],
-      "zaktualizowano": "2026-09-28T18:11:35.853Z"
+      "zaktualizowano": "2026-09-28T20:35:32.734Z"
     },
     {
       "klucz": "18/144",
@@ -409,14 +409,14 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "LKS Stra?ak II Miko?ów",
+          "nazwa": "LKS Strażak II Mikołów",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "7:3"
         },
         {
           "pozycja": 2,
-          "nazwa": "TKKF Aut ?agisza B?dzin",
+          "nazwa": "TKKF Aut Łagisza Będzin",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
@@ -437,28 +437,28 @@
         },
         {
           "pozycja": 5,
-          "nazwa": "AKS Miko?ów",
+          "nazwa": "AKS Mikołów",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
           "pozycja": 6,
-          "nazwa": "UKS Wolej Solver III Ruda ?l?ska",
+          "nazwa": "UKS Wolej Solver III Ruda Śląska",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
           "pozycja": 7,
-          "nazwa": "UKS Ikar Mierz?cice",
+          "nazwa": "UKS Ikar Mierzęcice",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
           "pozycja": 8,
-          "nazwa": "UKS Wolej Solver II Ruda ?l?ska",
+          "nazwa": "UKS Wolej Solver II Ruda Śląska",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "4:6"
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-09-28T18:11:35.853Z"
+      "zaktualizowano": "2026-09-28T20:35:32.734Z"
     }
   ],
   "meczeSzts": [
@@ -539,7 +539,7 @@
       "dataMeczu": "2026-10-16",
       "godzina": "18:00",
       "kolejka": 5,
-      "gospodarz": "LUKS W?gierska Górka",
+      "gospodarz": "LUKS Węgierska Górka",
       "gosc": "KTS II Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -565,7 +565,7 @@
       "dataMeczu": "2026-10-28",
       "godzina": "18:00",
       "kolejka": 7,
-      "gospodarz": "KS Mys?aw Mys?owice",
+      "gospodarz": "KS Mysław Mysłowice",
       "gosc": "KTS II Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -591,7 +591,7 @@
       "dataMeczu": "2026-11-20",
       "godzina": "18:00",
       "kolejka": 9,
-      "gospodarz": "MKS Tajfun Ku?nia Raciborska",
+      "gospodarz": "MKS Tajfun Kuźnia Raciborska",
       "gosc": "KTS II Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -630,7 +630,7 @@
       "dataMeczu": "2026-12-11",
       "godzina": "19:00",
       "kolejka": 12,
-      "gospodarz": "LZS Chespa ?ywocice",
+      "gospodarz": "LZS Chespa Żywocice",
       "gosc": "KTS II Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -656,7 +656,7 @@
       "dataMeczu": "2027-02-05",
       "godzina": "18:30",
       "kolejka": 14,
-      "gospodarz": "LITS Meble Anders ?ywiec",
+      "gospodarz": "LITS Meble Anders Żywiec",
       "gosc": "KTS II Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -708,7 +708,7 @@
       "dataMeczu": "2026-10-09",
       "godzina": "19:00",
       "kolejka": 4,
-      "gospodarz": "LZS Chespa ?ywocice",
+      "gospodarz": "LZS Chespa Żywocice",
       "gosc": "KTS III Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -734,7 +734,7 @@
       "dataMeczu": "2026-10-23",
       "godzina": "18:30",
       "kolejka": 6,
-      "gospodarz": "LITS Meble Anders ?ywiec",
+      "gospodarz": "LITS Meble Anders Żywiec",
       "gosc": "KTS III Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -787,7 +787,7 @@
       "godzina": "19:00",
       "kolejka": 10,
       "gospodarz": "KTS III Gliwice",
-      "gosc": "LUKS W?gierska Górka",
+      "gosc": "LUKS Węgierska Górka",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "2. Liga Mężczyzn",
@@ -813,7 +813,7 @@
       "godzina": "19:00",
       "kolejka": 12,
       "gospodarz": "KTS III Gliwice",
-      "gosc": "KS Mys?aw Mys?owice",
+      "gosc": "KS Mysław Mysłowice",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "2. Liga Mężczyzn",
@@ -839,7 +839,7 @@
       "godzina": "18:00",
       "kolejka": 14,
       "gospodarz": "KTS III Gliwice",
-      "gosc": "MKS Tajfun Ku?nia Raciborska",
+      "gosc": "MKS Tajfun Kuźnia Raciborska",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "2. Liga Mężczyzn",
@@ -878,7 +878,7 @@
       "godzina": "19:15",
       "kolejka": 2,
       "gospodarz": "KTS IV Gliwice",
-      "gosc": "MKS Siemianowiczanka Siemianowice ?l.",
+      "gosc": "MKS Siemianowiczanka Siemianowice Śl.",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "3. Liga Mężczyzn · gr. II",
@@ -890,7 +890,7 @@
       "dataMeczu": "2026-10-07",
       "godzina": "18:30",
       "kolejka": 3,
-      "gospodarz": "AKS Miko?ów",
+      "gospodarz": "AKS Mikołów",
       "gosc": "KTS IV Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -916,7 +916,7 @@
       "dataMeczu": "2026-10-19",
       "godzina": "18:15",
       "kolejka": 5,
-      "gospodarz": "LKS Stra?ak Miko?ów",
+      "gospodarz": "LKS Strażak Mikołów",
       "gosc": "KTS IV Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -930,7 +930,7 @@
       "godzina": "19:15",
       "kolejka": 6,
       "gospodarz": "KTS IV Gliwice",
-      "gosc": "UKS Wolej Solver Ruda ?l?ska",
+      "gosc": "UKS Wolej Solver Ruda Śląska",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "3. Liga Mężczyzn · gr. II",
@@ -942,7 +942,7 @@
       "dataMeczu": "2026-11-06",
       "godzina": "18:00",
       "kolejka": 7,
-      "gospodarz": "KU AZS UJD Cz?stochowa",
+      "gospodarz": "KU AZS UJD Częstochowa",
       "gosc": "KTS IV Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -994,7 +994,7 @@
       "dataMeczu": "2026-12-11",
       "godzina": "18:00",
       "kolejka": 11,
-      "gospodarz": "UKS D?browiak D?browa Górnicza",
+      "gospodarz": "UKS Dąbrowiak Dąbrowa Górnicza",
       "gosc": "KTS IV Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1034,7 +1034,7 @@
       "godzina": "19:15",
       "kolejka": 14,
       "gospodarz": "KTS IV Gliwice",
-      "gosc": "KS Mys?aw II Mys?owice",
+      "gosc": "KS Mysław II Mysłowice",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "3. Liga Mężczyzn · gr. II",
@@ -1046,7 +1046,7 @@
       "dataMeczu": "2027-02-12",
       "godzina": "17:30",
       "kolejka": 15,
-      "gospodarz": "LKS Ci??kowianka Jaworzno",
+      "gospodarz": "LKS Ciężkowianka Jaworzno",
       "gosc": "KTS IV Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1074,7 +1074,7 @@
       "godzina": "19:00",
       "kolejka": 2,
       "gospodarz": "KTS V Gliwice",
-      "gosc": "ULKS P?awniowice",
+      "gosc": "ULKS Pławniowice",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1086,7 +1086,7 @@
       "dataMeczu": "2026-10-14",
       "godzina": "17:30",
       "kolejka": 3,
-      "gospodarz": "STS II ?ernica",
+      "gospodarz": "STS II Żernica",
       "gosc": "KTS V Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1099,7 +1099,7 @@
       "dataMeczu": "2026-10-23",
       "godzina": "19:00",
       "kolejka": 4,
-      "gospodarz": "ATS Ligota ?ab?dzka",
+      "gospodarz": "ATS Ligota Łabędzka",
       "gosc": "KTS V Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1113,7 +1113,7 @@
       "godzina": "19:00",
       "kolejka": 5,
       "gospodarz": "KTS V Gliwice",
-      "gosc": "STS I ?ernica",
+      "gosc": "STS I Żernica",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1138,7 +1138,7 @@
       "dataMeczu": "2026-11-19",
       "godzina": "18:00",
       "kolejka": 7,
-      "gospodarz": "LKS Naprzód ?wibie",
+      "gospodarz": "LKS Naprzód Świbie",
       "gosc": "KTS V Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1152,7 +1152,7 @@
       "godzina": "19:00",
       "kolejka": 8,
       "gospodarz": "KTS V Gliwice",
-      "gosc": "LKS Stra?ak II Miko?ów",
+      "gosc": "LKS Strażak II Mikołów",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1179,7 +1179,7 @@
       "godzina": "19:00",
       "kolejka": 10,
       "gospodarz": "KTS V Gliwice",
-      "gosc": "ULKS Tajfun Ligota ?ab?dzka",
+      "gosc": "ULKS Tajfun Ligota Łabędzka",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1205,7 +1205,7 @@
       "godzina": "19:00",
       "kolejka": 12,
       "gospodarz": "KTS V Gliwice",
-      "gosc": "LKS M?odo?? Rudno",
+      "gosc": "LKS Młodość Rudno",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1217,7 +1217,7 @@
       "dataMeczu": "2027-02-10",
       "godzina": "18:15",
       "kolejka": 13,
-      "gospodarz": "LKS Stra?ak III Miko?ów",
+      "gospodarz": "LKS Strażak III Mikołów",
       "gosc": "KTS V Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1230,7 +1230,7 @@
       "dataMeczu": "2026-09-30",
       "godzina": "19:00",
       "kolejka": 1,
-      "gospodarz": "LKS M?odo?? Rudno",
+      "gospodarz": "LKS Młodość Rudno",
       "gosc": "KTS VI Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1243,7 +1243,7 @@
       "dataMeczu": "2026-10-08",
       "godzina": "18:00",
       "kolejka": 2,
-      "gospodarz": "LKS Naprzód ?wibie",
+      "gospodarz": "LKS Naprzód Świbie",
       "gosc": "KTS VI Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1257,7 +1257,7 @@
       "godzina": "19:00",
       "kolejka": 3,
       "gospodarz": "KTS VI Gliwice",
-      "gosc": "LKS Stra?ak II Miko?ów",
+      "gosc": "LKS Strażak II Mikołów",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1270,7 +1270,7 @@
       "godzina": "19:00",
       "kolejka": 4,
       "gospodarz": "KTS VI Gliwice",
-      "gosc": "STS II ?ernica",
+      "gosc": "STS II Żernica",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1282,7 +1282,7 @@
       "dataMeczu": "2026-10-28",
       "godzina": "18:00",
       "kolejka": 5,
-      "gospodarz": "ULKS Tajfun Ligota ?ab?dzka",
+      "gospodarz": "ULKS Tajfun Ligota Łabędzka",
       "gosc": "KTS VI Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1308,7 +1308,7 @@
       "dataMeczu": "2026-11-18",
       "godzina": "18:15",
       "kolejka": 7,
-      "gospodarz": "LKS Stra?ak III Miko?ów",
+      "gospodarz": "LKS Strażak III Mikołów",
       "gosc": "KTS VI Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1321,7 +1321,7 @@
       "dataMeczu": "2026-11-27",
       "godzina": "18:00",
       "kolejka": 8,
-      "gospodarz": "ULKS P?awniowice",
+      "gospodarz": "ULKS Pławniowice",
       "gosc": "KTS VI Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1334,7 +1334,7 @@
       "dataMeczu": "2026-12-11",
       "godzina": "19:00",
       "kolejka": 10,
-      "gospodarz": "ATS Ligota ?ab?dzka",
+      "gospodarz": "ATS Ligota Łabędzka",
       "gosc": "KTS VI Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1348,7 +1348,7 @@
       "godzina": "19:00",
       "kolejka": 11,
       "gospodarz": "KTS VI Gliwice",
-      "gosc": "STS I ?ernica",
+      "gosc": "STS I Żernica",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1388,7 +1388,7 @@
       "godzina": "19:00",
       "kolejka": 2,
       "gospodarz": "KTS KA Krokus VII Gliwice",
-      "gosc": "ULKS Tajfun Ligota ?ab?dzka",
+      "gosc": "ULKS Tajfun Ligota Łabędzka",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1414,7 +1414,7 @@
       "godzina": "19:00",
       "kolejka": 4,
       "gospodarz": "KTS KA Krokus VII Gliwice",
-      "gosc": "LKS M?odo?? Rudno",
+      "gosc": "LKS Młodość Rudno",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1426,7 +1426,7 @@
       "dataMeczu": "2026-10-28",
       "godzina": "18:15",
       "kolejka": 5,
-      "gospodarz": "LKS Stra?ak III Miko?ów",
+      "gospodarz": "LKS Strażak III Mikołów",
       "gosc": "KTS KA Krokus VII Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1440,7 +1440,7 @@
       "godzina": "19:00",
       "kolejka": 6,
       "gospodarz": "KTS KA Krokus VII Gliwice",
-      "gosc": "ULKS P?awniowice",
+      "gosc": "ULKS Pławniowice",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1453,7 +1453,7 @@
       "godzina": "19:00",
       "kolejka": 7,
       "gospodarz": "KTS KA Krokus VII Gliwice",
-      "gosc": "ATS Ligota ?ab?dzka",
+      "gosc": "ATS Ligota Łabędzka",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1465,7 +1465,7 @@
       "dataMeczu": "2026-11-25",
       "godzina": "17:30",
       "kolejka": 8,
-      "gospodarz": "STS I ?ernica",
+      "gospodarz": "STS I Żernica",
       "gosc": "KTS KA Krokus VII Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1491,7 +1491,7 @@
       "dataMeczu": "2026-12-09",
       "godzina": "17:30",
       "kolejka": 10,
-      "gospodarz": "STS II ?ernica",
+      "gospodarz": "STS II Żernica",
       "gosc": "KTS KA Krokus VII Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1504,7 +1504,7 @@
       "dataMeczu": "2027-01-14",
       "godzina": "18:00",
       "kolejka": 11,
-      "gospodarz": "LKS Naprzód ?wibie",
+      "gospodarz": "LKS Naprzód Świbie",
       "gosc": "KTS KA Krokus VII Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1518,7 +1518,7 @@
       "godzina": "19:00",
       "kolejka": 12,
       "gospodarz": "KTS KA Krokus VII Gliwice",
-      "gosc": "LKS Stra?ak II Miko?ów",
+      "gosc": "LKS Strażak II Mikołów",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
@@ -1543,7 +1543,7 @@
       "dataMeczu": "2026-10-06",
       "godzina": "19:00",
       "kolejka": null,
-      "gospodarz": "UKS Wolej Solver II Ruda ?l?ska",
+      "gospodarz": "UKS Wolej Solver II Ruda Śląska",
       "gosc": "KTS Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1557,7 +1557,7 @@
       "godzina": "19:30",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
-      "gosc": "LKS Stra?ak II Miko?ów",
+      "gosc": "LKS Strażak II Mikołów",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "2. Śląska Liga Amatorów",
@@ -1570,7 +1570,7 @@
       "godzina": "19:30",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
-      "gosc": "UKS Ikar Mierz?cice",
+      "gosc": "UKS Ikar Mierzęcice",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "2. Śląska Liga Amatorów",
@@ -1608,7 +1608,7 @@
       "dataMeczu": "2026-11-25",
       "godzina": "18:30",
       "kolejka": null,
-      "gospodarz": "AKS Miko?ów",
+      "gospodarz": "AKS Mikołów",
       "gosc": "KTS Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1622,7 +1622,7 @@
       "godzina": "19:30",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
-      "gosc": "UKS Wolej Solver III Ruda ?l?ska",
+      "gosc": "UKS Wolej Solver III Ruda Śląska",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "2. Śląska Liga Amatorów",
@@ -1635,7 +1635,7 @@
       "godzina": "19:30",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
-      "gosc": "TKKF Aut ?agisza B?dzin",
+      "gosc": "TKKF Aut Łagisza Będzin",
       "wynik": "-:-",
       "rozegrany": false,
       "liga": "2. Śląska Liga Amatorów",
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-09-28T18:11:35.853Z",
+    "szts": "2026-09-28T20:35:32.734Z",
     "pzts": "2026-09-25T23:14:56.878Z"
   }
 }
