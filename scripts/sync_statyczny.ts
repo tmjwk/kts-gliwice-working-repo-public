@@ -9,10 +9,13 @@
  *  - ŚZTS (ligi 2–4 + amatorzy): pełny automat — ten skrypt pobiera
  *    tabele i terminarze przy każdym uruchomieniu (cron Actions).
  *  - PZTS (1. liga, KTS Gliwice I): pzts.pl jest za Cloudflare — runner
- *    Actions nie odczyta strony. Mecze 1. ligi przychodzą z zewnątrz:
- *    a) zmienna środowiskowa PZTS_MECZE (JSON — wklejany przy uruchomieniu
- *       ręcznym workflow_dispatch, np. wyeksportowany z warsztatu na z.ai),
- *    b) albo zostają zachowane z poprzedniego stanu dane.json.
+ *    Actions nie odczyta go bezpośrednio. Kolejność prób (29.09.2026):
+ *    a) zmienna PZTS_MECZE (JSON z wklejki ręcznej — najwyższy priorytet,
+ *       backup gdyby czytnik zawiódł),
+ *    b) czytnik r.jina.ai — publiczna usługa renderująca strony
+ *       (headless browser) omijająca Cloudflare; parsujemy Markdown:
+ *       terminarz + tabela 1. ligi gr. południowej (id=82),
+ *    c) zachowanie ostatniego znanego stanu z poprzedniego dane.json.
  *
  * Uruchomienie:  bun scripts/sync_statyczny.ts
  *   (z katalogu głównego repo; wymaga bun albo: npx tsx scripts/sync_statyczny.ts)
@@ -34,8 +37,13 @@ import {
 // ====== KONFIGURACJA SEZONU 2026/27 (edytuj przy nowym sezonie) ======
 const SEZON = "2026/27";
 
+// 1. Liga Mężczyzn gr. południowa — strona tabeli i terminarza na pzts.pl
+const PZTS_LIGA_URL = "https://www.pzts.pl/rozgrywki-ligowe/liga/?id=82";
+// Czytnik omijający Cloudflare (bez klucza API, format: Markdown)
+const JINA_URL = `https://r.jina.ai/${PZTS_LIGA_URL}`;
+
 const ZESPOLY = [
-  { nazwa: "KTS Gliwice I", liga: "1. Liga Mężczyzn · gr. południowa", tryb: "PZTS · czytnik", url: "https://pzts.pl/rozgrywki-ligowe/druzyna/960/", ligaKlucz: null as string | null },
+  { nazwa: "KTS Gliwice I", liga: "1. Liga Mężczyzn · gr. południowa", tryb: "PZTS · automat", url: "https://pzts.pl/rozgrywki-ligowe/druzyna/960/", ligaKlucz: null as string | null },
   { nazwa: "KTS II", liga: "2. Liga Mężczyzn", tryb: "ŚZTS · automat", url: "https://ligi.slzts.pl/liga/18/136/", ligaKlucz: "18/136" },
   { nazwa: "KTS III", liga: "2. Liga Mężczyzn", tryb: "ŚZTS · automat", url: "https://ligi.slzts.pl/liga/18/136/", ligaKlucz: "18/136" },
   { nazwa: "KTS IV", liga: "3. Liga Mężczyzn · gr. II", tryb: "ŚZTS · automat", url: "https://ligi.slzts.pl/liga/18/138/", ligaKlucz: "18/138" },
@@ -98,6 +106,120 @@ function bilansPzts(mecze: MeczPzts[]): string {
   return czesci.join(" · ") || "—";
 }
 
+/* ============================================================
+ * PZTS przez czytnik r.jina.ai (Markdown) — czysty parser,
+ * testowalny na zapisanym pliku (jesteśmy offline-friendly).
+ * Format potwierdzony inspekcją 29.09.2026 (liga id=82):
+ *  - terminarz: | 2026-09-19 g. 16:00 | 503 1 | …[**GOSPODARZ**](url) | …[**GOŚĆ**](url) | **5:5** / -:- | [Szczegóły](…) |
+ *  - tabela:    | 4. | …[**KTS Gliwice**](url) | 2 | 1 | 1 | 0 | 12:8 | **3** |
+ * ============================================================ */
+
+interface WierszTabeliPzts {
+  pozycja: number;
+  nazwa: string;
+  mecze: number;
+  zwyciestwa: number;
+  remisy: number;
+  porazki: number;
+  pojedynki: string;
+  punkty: number;
+}
+
+/** Ostatnia nazwa w **pogrubieniu** z komórki Markdown (np. „…[**KTS Gliwice**](url)”). */
+function ostatniaPogrubiona(komorka: string): string | null {
+  const trafienia = [...komorka.matchAll(/\*\*([^*]+)\*\*/g)];
+  return trafienia.length > 0 ? trafienia[trafienia.length - 1][1].trim() : null;
+}
+
+/** Parser terminarza 1. ligi z Markdownu czytnika. */
+export function parsujTerminarzPzts(md: string): Array<MeczLigi> {
+  const mecze: Array<MeczLigi> = [];
+  for (const linia of md.split("\n")) {
+    if (!/^\| \d{4}-\d{2}-\d{2} g\. \d{2}:\d{2}/.test(linia.trim())) continue;
+    const c = linia.split("|").map((x) => x.trim());
+    // c: [", data, numer+kolejka, gospodarz, gość, wynik, szczegóły, ']
+    if (c.length < 7) continue;
+    const dm = c[1].match(/^(\d{4}-\d{2}-\d{2}) g\. (\d{2}:\d{2})/);
+    if (!dm) continue;
+    const gospodarz = ostatniaPogrubiona(c[3]);
+    const gosc = ostatniaPogrubiona(c[4]);
+    if (!gospodarz || !gosc) continue; // wiersz uszkodzony — pomijamy jawnie
+    const wynikRaw = c[5].replace(/\*\*/g, "").trim();
+    const rozegrany = /^\d+\s*:\s*\d+$/.test(wynikRaw);
+    const kolejka = c[2].match(/(\d+)\s*$/);
+    mecze.push({
+      dataMeczu: dm[1],
+      godzina: dm[2],
+      kolejka: kolejka ? parseInt(kolejka[1], 10) : null,
+      gospodarz,
+      gosc,
+      wynik: rozegrany ? wynikRaw.replace(/\s/g, "") : "-:-",
+      rozegrany,
+    });
+  }
+  return mecze;
+}
+
+/** Parser tabeli ligowej (stan: pozycja + punkty) z Markdownu czytnika. */
+export function parsujTabelePzts(md: string): WierszTabeliPzts[] {
+  const wiersze: WierszTabeliPzts[] = [];
+  for (const linia of md.split("\n")) {
+    if (!/^\| \d+\. /.test(linia.trim())) continue;
+    const c = linia.split("|").map((x) => x.trim());
+    if (c.length < 9) continue;
+    const nazwa = ostatniaPogrubiona(c[2]);
+    const pozycja = parseInt(c[1], 10);
+    if (!nazwa || !Number.isFinite(pozycja)) continue;
+    const liczba = (x: string): number => parseInt(x.replace(/\*/g, ""), 10);
+    wiersze.push({
+      pozycja,
+      nazwa,
+      mecze: liczba(c[3]),
+      zwyciestwa: liczba(c[4]),
+      remisy: liczba(c[5]),
+      porazki: liczba(c[6]),
+      pojedynki: c[7],
+      punkty: liczba(c[8]),
+    });
+  }
+  return wiersze;
+}
+
+/** Pobiera Markdown ligi przez czytnik (ponawia — darmowy limit bywa wąski).
+ *  Opcjonalny klucz: sekret JINA_API_KEY w repo (Authorization: Bearer …)
+ *  — zabezpieczenie na wypadek blokad anonimowego ruchu z IP runnera. */
+async function pobierzPztsPrzezJine(proby = 3): Promise<string> {
+  let ostatniBlad: unknown = null;
+  const klucz = process.env.JINA_API_KEY?.trim();
+  for (let i = 1; i <= proby; i++) {
+    try {
+      const res = await fetch(JINA_URL, {
+        headers: {
+          // KLUCZOWE (29.09.2026, testy A/B): bez „Accept: text/plain"
+          // czytnik odrzuca zapytania anonimowe 401 „bad IP reputation";
+          // z nim — 200 nawet z niestandardowym User-Agent.
+          "Accept": "text/plain",
+          "User-Agent": "KTS-Gliwice-Sync/1.0 (strona klubowa; tabela 1. ligi)",
+          ...(klucz ? { Authorization: `Bearer ${klucz}` } : {}),
+        },
+        signal: AbortSignal.timeout(90_000),
+      });
+      // 429 = limit zapytań; 401 bywa nietrwałym odrzuceniem darmowego ruchu
+      if (res.status === 429 || res.status === 401) {
+        throw new Error(`czytnik odrzucił zapytanie (HTTP ${res.status}) — próba ${i}/${proby}`);
+      }
+      if (!res.ok) throw new Error(`czytnik HTTP ${res.status}`);
+      const tekst = await res.text();
+      if (tekst.length < 5000 || !tekst.includes("Liga")) throw new Error("czytnik zwrócił podejrzanie krótką odpowiedź");
+      return tekst;
+    } catch (err) {
+      ostatniBlad = err;
+      if (i < proby) await new Promise((r) => setTimeout(r, 10_000 * i)); // 10 s, 20 s
+    }
+  }
+  throw ostatniBlad ?? new Error("czytnik: nieznany błąd");
+}
+
 async function main() {
   const teraz = new Date().toISOString();
   const staryPlik = existsSync(WYJSCIE) ? (JSON.parse(readFileSync(WYJSCIE, "utf-8")) as Dane) : null;
@@ -138,23 +260,50 @@ async function main() {
     console.log(`${liga.klucz}: tabela ${tabela.length} drużyn, terminarz ${terminarz.length} meczów, dopasowano ${pary.length}/${nasi.length}`);
   }
 
-  // ===== 2. PZTS — z env (wklej) albo zachowaj ostatni znany stan =====
+  // ===== 2. PZTS — kolejność: wklej (env) → czytnik (jina) → stary stan =====
   let meczePzts: MeczPzts[] = [];
   let pztsSync: string | null = staryPlik?.ostatniSync?.pzts ?? null;
-  if (process.env.PZTS_MECZE) {
-    const zEnv = JSON.parse(process.env.PZTS_MECZE) as MeczLigi[];
-    meczePzts = zEnv.map((m) => ({
+  let stanPztsTabela: string | null = null; // „4. miejsce · 3 pkt” z tabeli ligi
+
+  const przyjmijMecze = (lista: MeczLigi[], zrodlo: string): void => {
+    meczePzts = lista.map((m) => ({
       ...m,
       liga: "1. Liga Mężczyzn · gr. południowa",
       zespol: "KTS Gliwice I",
     }));
     pztsSync = teraz;
-    console.log(`PZTS: przyjęto ${meczePzts.length} meczów ze zmiennej PZTS_MECZE`);
-  } else if (staryPlik?.meczePzts) {
-    meczePzts = staryPlik.meczePzts;
-    console.log(`PZTS: zachowano ${meczePzts.length} meczów z poprzedniego pliku`);
+    console.log(`PZTS: przyjęto ${meczePzts.length} meczów (${zrodlo})`);
+  };
+
+  if (process.env.PZTS_MECZE) {
+    // (a) ręczna wklejka — najwyższy priorytet (backup)
+    const zEnv = JSON.parse(process.env.PZTS_MECZE) as MeczLigi[];
+    przyjmijMecze(zEnv, "zmienna PZTS_MECZE — wklejka ręczna");
   } else {
-    console.log("PZTS: brak danych (przekaż PZTS_MECZE przy uruchomieniu ręcznym)");
+    // (b) czytnik r.jina.ai — pełny automat
+    try {
+      const md = await pobierzPztsPrzezJine();
+      const terminarz = parsujTerminarzPzts(md);
+      const nasi = terminarz.filter(
+        (m) => m.gospodarz.includes("KTS Gliwice") || m.gosc.includes("KTS Gliwice"),
+      );
+      if (nasi.length === 0) throw new Error("parser nie znalazł meczów KTS Gliwice — zmiana strony pzts.pl?");
+      przyjmijMecze(nasi, `czytnik r.jina.ai: ${terminarz.length} meczów ligi, ${nasi.length} naszych`);
+      const tabela = parsujTabelePzts(md);
+      const my = tabela.find((w) => w.nazwa.includes("KTS Gliwice"));
+      if (my && Number.isFinite(my.pozycja) && Number.isFinite(my.punkty)) {
+        stanPztsTabela = `${my.pozycja}. miejsce · ${my.punkty} pkt`;
+        console.log(`PZTS: tabela ligowa OK (${tabela.length} drużyn) — KTS: ${stanPztsTabela}`);
+      }
+    } catch (err) {
+      console.warn(`PZTS: czytnik zawiódł (${(err as Error).message}) —${staryPlik?.meczePzts?.length ? " zachowuję ostatni znany stan" : " brak danych"}`);
+      if (staryPlik?.meczePzts) {
+        meczePzts = staryPlik.meczePzts;
+        console.log(`PZTS: zachowano ${meczePzts.length} meczów z poprzedniego pliku`);
+      } else {
+        console.log("PZTS: brak danych (przekaż PZTS_MECZE przy uruchomieniu ręcznym)");
+      }
+    }
   }
 
   // ===== 3. Skład danych + zapis =====
@@ -165,7 +314,7 @@ async function main() {
       nazwa: z.nazwa,
       liga: z.liga,
       tryb: z.tryb,
-      stan: z.nazwa === "KTS Gliwice I" ? bilansPzts(meczePzts) : stany.get(z.nazwa) ?? "—",
+      stan: z.nazwa === "KTS Gliwice I" ? (stanPztsTabela ?? bilansPzts(meczePzts)) : stany.get(z.nazwa) ?? "—",
       url: z.url,
     })),
     tabele,
@@ -199,7 +348,11 @@ async function main() {
   );
 }
 
-main().catch((err) => {
-  console.error("BŁĄD synchronizacji:", err);
-  process.exit(1);
-});
+// Osłona: main() TYLKO przy bezpośrednim uruchomieniu (bun scripts/sync_statyczny.ts),
+// nie przy imporcie do testów (import.meta.main — konwencja buna/deno).
+if (import.meta.main) {
+  main().catch((err) => {
+    console.error("BŁĄD synchronizacji:", err);
+    process.exit(1);
+  });
+}
