@@ -1,0 +1,72 @@
+name: Rollback strony (cofnij wersję)
+
+# WERSJONOWANIE (29.09.2026): każdy deploy strony dostaje tag vX.Y.Z
+# (patrz scripts/deploy w warsztacie). Ten workflow cofa STRONĘ (kod:
+# index.html, css/, js/, wersja.json) — dane ligowe (dane.json) zostają
+# aktualne, bo kolejny cron sync i tak je odświeży.
+#
+# Użycie (GitHub UI): Actions → „Rollback strony” → Run workflow:
+#   • pole „wersja” PUSTE → cofa OSTATNIĄ zmianę kodu strony
+#     (git revert najnowszego commita dotykającego plików strony),
+#   • pole „wersja” = np. 1.0.0 → przywraca pliki strony z taga v1.0.0.
+#
+# Weryfikacja po rollbacku: stopka strony pokazuje „wersja vX.Y.Z”
+# (plik wersja.json jest częścią przywracanych plików).
+
+on:
+  workflow_dispatch:
+    inputs:
+      wersja:
+        description: "Numer wersji do przywrócenia (np. 1.0.0). PUSTE = cofnij ostatnią zmianę kodu strony."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # pełna historia — revert/przywracanie z tagów
+
+      - name: Przywróć wersję lub cofnij ostatnią zmianę
+        run: |
+          git config user.name "kts-sync-bot"
+          git config user.email "actions@users.noreply.github.com"
+          PLIKI="index.html css/ js/ wersja.json favicon.svg robots.txt"
+
+          if [ -n "${{ inputs.wersja }}" ]; then
+            TAG="v${{ inputs.wersja }}"
+            if ! git rev-parse --verify "$TAG" >/dev/null 2>&1; then
+              echo "::error::Nie znaleziono taga $TAG — dostępne: $(git tag | tr '\n' ' ')"
+              exit 1
+            fi
+            echo "Przywracam pliki strony z $TAG (dane.json zostają aktualne)…"
+            git checkout "$TAG" -- $PLIKI
+            git add $PLIKI
+            if git diff --cached --quiet; then
+              echo "Brak różnic względem $TAG — nic do robienia."
+            else
+              git commit -m "rollback: przywrócono pliki strony z $TAG"
+              git push
+              echo "✔ Strona przywrócona do $TAG — Pages przebuduje się automatycznie."
+            fi
+          else
+            echo "Szukam ostatniego commita zmieniającego kod strony…"
+            SHA=$(git log -n 50 --format=%H -- index.html css/ js/ wersja.json | sed -n 1p)
+            if [ -z "$SHA" ]; then
+              echo "Brak commitów dotykających kodu strony — nie ma czego cofać."
+              exit 0
+            fi
+            echo "Cofam commit $(git log -1 --format='%h %s' $SHA)…"
+            if git revert --no-edit "$SHA"; then
+              git push
+              echo "✔ Ostatnia zmiana kodu strony cofnięta (dane ligowe nietknięte)."
+            else
+              echo "::error::Revert nie wyszedł (konflikt?) — zobacz log powyżej."
+              exit 1
+            fi
+          fi
