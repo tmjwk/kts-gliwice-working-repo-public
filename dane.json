@@ -1,12 +1,12 @@
 {
-  "wygenerowano": "2026-09-28T20:43:00.214Z",
+  "wygenerowano": "2026-09-28T21:36:01.855Z",
   "sezon": "2026/27",
   "zespoly": [
     {
       "nazwa": "KTS Gliwice I",
       "liga": "1. Liga Mężczyzn · gr. południowa",
-      "tryb": "PZTS · czytnik",
-      "stan": "1 zwycięstwo · 1 remis",
+      "tryb": "PZTS · automat",
+      "stan": "4. miejsce · 3 pkt",
       "url": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "1:19"
         }
       ],
-      "zaktualizowano": "2026-09-28T20:43:00.214Z"
+      "zaktualizowano": "2026-09-28T21:36:01.855Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-09-28T20:43:00.214Z"
+      "zaktualizowano": "2026-09-28T21:36:01.855Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "0:0"
         }
       ],
-      "zaktualizowano": "2026-09-28T20:43:00.214Z"
+      "zaktualizowano": "2026-09-28T21:36:01.855Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-09-28T20:43:00.214Z"
+      "zaktualizowano": "2026-09-28T21:36:01.855Z"
     }
   ],
   "meczeSzts": [
@@ -1646,10 +1646,76 @@
   ],
   "meczePzts": [
     {
-      "dataMeczu": "2026-12-12",
+      "dataMeczu": "2026-09-19",
       "godzina": "16:00",
-      "kolejka": 10,
-      "gospodarz": "UKS Piast Poprawa Ostrzeszów",
+      "kolejka": 1,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "J. Sz. AZS Politechnika KATS Kraków",
+      "wynik": "5:5",
+      "rozegrany": true,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-09-20",
+      "godzina": "16:00",
+      "kolejka": 2,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "GMKS Strzelec Frysztak",
+      "wynik": "7:3",
+      "rozegrany": true,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-10-03",
+      "godzina": "16:00",
+      "kolejka": 3,
+      "gospodarz": "Advatech ZKS Zielona Góra",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-10-04",
+      "godzina": "16:00",
+      "kolejka": 4,
+      "gospodarz": "Jom-Elektro Orzeł Lizawice",
+      "gosc": "KTS Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-10-17",
+      "godzina": "16:00",
+      "kolejka": 5,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "PGE Fibrain AZS Politechnika Rzeszów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-10-18",
+      "godzina": "16:00",
+      "kolejka": 6,
+      "gospodarz": "KTS Gliwice",
+      "gosc": "MATS UR Rzeszów",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "1. Liga Mężczyzn · gr. południowa",
+      "zespol": "KTS Gliwice I"
+    },
+    {
+      "dataMeczu": "2026-11-28",
+      "godzina": "16:00",
+      "kolejka": 7,
+      "gospodarz": "KS Naprzód Borucin",
       "gosc": "KTS Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1668,85 +1734,19 @@
       "zespol": "KTS Gliwice I"
     },
     {
-      "dataMeczu": "2026-11-28",
+      "dataMeczu": "2026-12-12",
       "godzina": "16:00",
-      "kolejka": 7,
-      "gospodarz": "KS Naprzód Borucin",
+      "kolejka": 10,
+      "gospodarz": "UKS Piast Poprawa Ostrzeszów",
       "gosc": "KTS Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
-      "liga": "1. Liga Mężczyzn · gr. południowa",
-      "zespol": "KTS Gliwice I"
-    },
-    {
-      "dataMeczu": "2026-10-18",
-      "godzina": "16:00",
-      "kolejka": 6,
-      "gospodarz": "KTS Gliwice",
-      "gosc": "MATS UR Rzeszów",
-      "wynik": "-:-",
-      "rozegrany": false,
-      "liga": "1. Liga Mężczyzn · gr. południowa",
-      "zespol": "KTS Gliwice I"
-    },
-    {
-      "dataMeczu": "2026-10-17",
-      "godzina": "16:00",
-      "kolejka": 5,
-      "gospodarz": "KTS Gliwice",
-      "gosc": "PGE Fibrain AZS Politechnika Rzeszów",
-      "wynik": "-:-",
-      "rozegrany": false,
-      "liga": "1. Liga Mężczyzn · gr. południowa",
-      "zespol": "KTS Gliwice I"
-    },
-    {
-      "dataMeczu": "2026-10-04",
-      "godzina": "16:00",
-      "kolejka": 4,
-      "gospodarz": "Jom-Elektro Orzeł Lizawice",
-      "gosc": "KTS Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
-      "liga": "1. Liga Mężczyzn · gr. południowa",
-      "zespol": "KTS Gliwice I"
-    },
-    {
-      "dataMeczu": "2026-10-03",
-      "godzina": "16:00",
-      "kolejka": 3,
-      "gospodarz": "Advatech ZKS Zielona Góra",
-      "gosc": "KTS Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
-      "liga": "1. Liga Mężczyzn · gr. południowa",
-      "zespol": "KTS Gliwice I"
-    },
-    {
-      "dataMeczu": "2026-09-20",
-      "godzina": "16:00",
-      "kolejka": 2,
-      "gospodarz": "KTS Gliwice",
-      "gosc": "GMKS Strzelec Frysztak",
-      "wynik": "7:3",
-      "rozegrany": true,
-      "liga": "1. Liga Mężczyzn · gr. południowa",
-      "zespol": "KTS Gliwice I"
-    },
-    {
-      "dataMeczu": "2026-09-19",
-      "godzina": "16:00",
-      "kolejka": 1,
-      "gospodarz": "KTS Gliwice",
-      "gosc": "J. Sz. AZS Politechnika KATS Kraków",
-      "wynik": "5:5",
-      "rozegrany": true,
       "liga": "1. Liga Mężczyzn · gr. południowa",
       "zespol": "KTS Gliwice I"
     }
   ],
   "ostatniSync": {
-    "szts": "2026-09-28T20:43:00.214Z",
-    "pzts": "2026-09-28T20:43:00.214Z"
+    "szts": "2026-09-28T21:36:01.855Z",
+    "pzts": "2026-09-28T21:36:01.855Z"
   }
 }
