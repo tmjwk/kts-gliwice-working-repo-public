@@ -42,11 +42,15 @@ przeglądarce, domyślnie wg ustawień systemu.
 ## Struktura repo
 
     index.html                      ← strona (szkielet projektowy + dane live)
+    galeria.html                    ← GALERIA (podstrona; zdjęcia ładują się tylko tu)
+    galeria.json                    ← indeks albumów (tytuły, daty, listy zdjęć)
+    galeria/                        ← zdjęcia albumów (prototyp: bez optymalizacji)
     css/style.css · js/app.js       ← design 60-30-10 (błękit #0057B8, pomarańcz tylko CTA) + tryb nocny
+    js/galeria.js                   ← logika galerii (filtry roku, lightbox, swipe)
     wersja.json                     ← numer wersji strony (widoczny w stopce)
     dane.json                       ← dane ligowe (generowane automatycznie — NIE edytować ręcznie)
     scripts/sync_statyczny.ts       ← synchronizacja (ŚZTS + PZTS-przez-czytnik)
-    scripts/szts-core.ts            ← rdzeń: fetch + parser ŚZTS
+    scripts/szts-core.ts             ← rdzeń: fetch + parser ŚZTS
     .github/workflows/sync-dane.yml ← harmonogram (co 2 h) + uruchomienie ręczne
     .github/workflows/rollback.yml  ← COFANIE wersji strony (patrz niżej)
 

@@ -220,11 +220,37 @@ async function pokazWersje() {
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
 }
 
+/* ===== galeria: teaser okładek (pełna galeria na podstronie) ===== */
+async function renderTeaserGalerii() {
+  const wrap = $("#gal-teaser");
+  const badge = $("#gal-count");
+  if (!wrap) return;
+  try {
+    const res = await fetch("galeria.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const albumy = await res.json();
+    albumy.sort((a, b) => (a.data ?? "") < (b.data ?? "") ? 1 : -1);
+    if (badge) {
+      const n = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
+      badge.textContent = `${albumy.length} albumów · ${n} zdjęć`;
+    }
+    wrap.innerHTML = albumy.slice(0, 6).map((a) => `
+      <a href="galeria.html#album-${esc(a.slug)}" aria-label="${esc(a.tytul)}">
+        <img src="${esc(a.zdjecia[0])}" alt="${esc(a.tytul)}" loading="lazy">
+        <span class="gal-teaser-label">${a.data ? esc(formatujDate(a.data)) : ""} · ${esc(a.tytul)}</span>
+      </a>`).join("");
+  } catch (err) {
+    console.error("Błąd ładowania galeria.json:", err);
+    if (badge) badge.textContent = "galeria niedostępna";
+  }
+}
+
 /* ===== start ===== */
 async function start() {
   // tryb dzień/noc (ikona + klik) i menu mobilne
   obsluzPrzelacznikTrybu();
   pokazWersje();
+  renderTeaserGalerii();
   const hamburger = $("#hamburger");
   const nav = $("#nav");
   hamburger.addEventListener("click", () => {

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Galeria zdjęć — KTS Gliwice</title>
+  <meta name="description" content="Galeria KTS Gliwice — turnieje, obozy, mecze i życie klubu. Zdjęcia z archiwum klubowego.">
+  <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Tryb dzień/noc — PRZED renderowaniem (bez mignięcia jasnym tłem):
+    // wybór z localStorage, domyślnie preferencja systemu.
+    (function () {
+      try {
+        var z = localStorage.getItem("kts-theme");
+        if (!z) z = window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "day";
+        document.documentElement.setAttribute("data-theme", z);
+      } catch (e) { /* prywatny tryb przeglądarki — zostaje dzienny */ }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="KTS Gliwice — strona główna">
+        <span class="brand-mark">KTS</span>
+        <span class="brand-name">KTS GLIWICE <span class="brand-sub">/ GALERIA</span></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Główna nawigacja">
+        <a href="index.html#aktualnosci">Aktualności</a>
+        <a href="index.html#oklubie">O klubie</a>
+        <a href="index.html#druzyny-wyniki">Drużyny i wyniki</a>
+        <a href="index.html#trenerzy">Trenerzy</a>
+        <a href="galeria.html" aria-current="page">Galeria</a>
+      </nav>
+      <a class="btn btn-accent btn-sm header-cta" href="index.html#kontakt">Zapisz dziecko</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Przełącz tryb nocny" title="Przełącz tryb dzień/noc">🌙</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== GALERIA ===== -->
+    <section class="section" id="galeria-strona">
+      <div class="container">
+        <a class="gal-powrot" href="index.html">← Wróć na stronę główną</a>
+
+        <div class="section-head-row">
+          <h1 class="t-h2" style="font-size: 2.25rem;">Galeria klubu</h1>
+          <span class="badge badge-outline-primary t-nums" id="gal-statystyki">—</span>
+        </div>
+        <p class="t-small muted section-desc">
+          Turnieje, obozy, mecze i codzienne życie klubu. Prototyp galleryjny —
+          materiały z archiwum starej strony klubowej; docelowo nowe albumy
+          będą doładowywane z klubowego folderu (Google Drive).
+          Kliknij zdjęcie, aby otworzyć podgląd.
+        </p>
+
+        <!-- Filtry roku (renderuje js/galeria.js) -->
+        <div class="gal-filtry" id="gal-filtry" role="group" aria-label="Filtruj albumy po roku"></div>
+
+        <!-- Albumy (renderuje js/galeria.js) -->
+        <div id="gal-albumy"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER (jak na stronie głównej) ===== -->
+  <footer class="footer" id="kontakt">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">
+          <span class="brand-mark brand-mark-sm">KTS</span>
+          <span class="footer-brand-name">KTS Gliwice</span>
+        </div>
+        <p class="t-small">[adres hali] · Gliwice</p>
+        <p class="t-small">[telefon] · [e-mail]</p>
+      </div>
+      <nav aria-label="Stopka">
+        <p class="footer-col-title">Sekcje</p>
+        <ul class="footer-links">
+          <li><a href="index.html#aktualnosci">Aktualności</a></li>
+          <li><a href="index.html#oklubie">O klubie</a></li>
+          <li><a href="index.html#druzyny-wyniki">Drużyny i wyniki</a></li>
+          <li><a href="index.html#trenerzy">Trenerzy</a></li>
+          <li><a href="galeria.html">Galeria</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="footer-col-title">Znajdź nas</p>
+        <p class="t-small">🤝 Facebook — AkademiaTenisaStolowego</p>
+        <p class="t-small footer-fade">[RODO · polityka cookies — do wdrożenia]</p>
+      </div>
+    </div>
+    <div class="container">
+      <p class="footer-bottom t-small">
+        SZKIELET projektowy · wdrożenie testowe (hosting statyczny, auto-sync wyników) · KTS Gliwice 2026
+        · <span class="t-nums" id="wersja-strony">wersja —</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ===== LIGHTBOX (podgląd zdjęcia) ===== -->
+  <div class="gal-lightbox" id="gal-lightbox" role="dialog" aria-modal="true" aria-label="Podgląd zdjęcia" hidden>
+    <button class="gal-lb-btn gal-lb-zamknij" id="gal-lb-zamknij" type="button" aria-label="Zamknij podgląd">✕</button>
+    <button class="gal-lb-btn gal-lb-poprz" id="gal-lb-poprz" type="button" aria-label="Poprzednie zdjęcie">‹</button>
+    <img id="gal-lb-img" src="" alt="">
+    <button class="gal-lb-btn gal-lb-nast" id="gal-lb-nast" type="button" aria-label="Następne zdjęcie">›</button>
+    <p class="gal-lb-info">
+      <span id="gal-lb-tytul"></span> <span class="gal-lb-licznik" id="gal-lb-licznik"></span>
+    </p>
+  </div>
+
+  <script src="js/galeria.js"></script>
+</body>
+</html>
