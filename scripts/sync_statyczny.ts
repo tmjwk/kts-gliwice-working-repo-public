@@ -174,7 +174,25 @@ async function main() {
     ostatniSync: { szts: teraz, pzts: pztsSync },
   };
 
-  writeFileSync(WYJSCIE, JSON.stringify(dane, null, 2) + "\n", "utf-8");
+  // ===== 3. Ochrona przed szumem: zapis TYLKO przy realnej zmianie danych =====
+  // Znaczniki czasu (wygenerowano / zaktualizowano / ostatniSync) zmieniają
+  // się przy KAŻDYM przebiegu — porównujemy treść bez nich. Bez różnicy
+  // = bez zapisu = bez commita i przebudowy Pages (cron może chodzić dalej,
+  // historia repo pokazuje wyłącznie ISTOTNE zmiany).
+  const doZapisu = JSON.stringify(dane, null, 2) + "\n";
+  if (staryPlik) {
+    const bezZnacznikow = (tekst: string): string => tekst
+      .replace(/"wygenerowano": "[^"]*"/, '"wygenerowano": "X"')
+      .replace(/"zaktualizowano": "[^"]*"/g, '"zaktualizowano": "X"')
+      .replace(/"szts": "[^"]*"/, '"szts": "X"')
+      .replace(/"pzts": "[^"]*"/, '"pzts": "X"');
+    const stary = JSON.stringify(staryPlik, null, 2) + "\n";
+    if (bezZnacznikow(doZapisu) === bezZnacznikow(stary)) {
+      console.log("Dane bez zmian — pomijam zapis (brak commita/przebudowy).");
+      return;
+    }
+  }
+  writeFileSync(WYJSCIE, doZapisu, "utf-8");
   console.log(
     `Zapisano ${WYJSCIE}: ${dane.zespoly.length} zespołów, ${dane.tabele.length} tabel, ` +
       `${dane.meczeSzts.length} meczów ŚZTS, ${dane.meczePzts.length} meczów PZTS`,
