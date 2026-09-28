@@ -23,23 +23,46 @@ placeholderowe są celowe. Na czas testów strona jest nieindeksowalna
 2. Skrypt `scripts/sync_statyczny.ts` (bun, bez bazy danych) pobiera
    4 strony ligowe z ligi.slzts.pl, parsuje **tabele + terminarze + stany
    drużyn** i zapisuje `dane.json`.
-3. Jeśli dane się zmieniły — automatyczny commit; GitHub Pages przebudowuje
+3. **PZTS (1. liga) — też automat:** ten sam skrypt pobiera tabelę i
+   terminarz 1. ligi z pzts.pl **przez czytnik r.jina.ai** (usługa
+   headless-browser, która omija Cloudflare). Przy okazji liczy stan KTS I
+   z tabeli ligowej (miejsce + punkty).
+4. Jeśli dane się zmieniły — automatyczny commit; GitHub Pages przebudowuje
    stronę. Puste przebiegi nie tworzą commitów.
-4. Odwiedzający wczytuje `dane.json` z CDN — natychmiast, bez serwera.
+5. Odwiedzający wczytuje `dane.json` z CDN — natychmiast, bez serwera.
 
-**PZTS (1. liga, KTS Gliwice I):** pzts.pl jest za Cloudflare — runner
-Actions nie odczyta tej strony. Mecze 1. ligi aktualizuje się **raz na
-kolejkę**: *Run workflow* → wklej JSON w pole `pzts_mecze` (wyeksportowany
-z warsztatu projektowego). Bez wklejki zachowywany jest ostatni znany stan.
+**Awaryjnie (PZTS):** gdyby czytnik nie odpowiedział, automat zachowuje
+ostatni znany stan, a wyniki można wgrać ręcznie: *Run workflow* → wklej
+JSON w pole `pzts_mecze`. Opcjonalny sekret `JINA_API_KEY` (darmowy klucz
+z jina.ai) zabezpiecza na wypadek blokady anonimowego ruchu z IP runnera.
+
+**Tryb nocny:** przełącznik 🌙/☀️ w nagłówku; wybór zapamiętywany w
+przeglądarce, domyślnie wg ustawień systemu.
 
 ## Struktura repo
 
     index.html                      ← strona (szkielet projektowy + dane live)
-    css/style.css · js/app.js       ← design 60-30-10 (błękit #0057B8, pomarańcz tylko CTA)
+    css/style.css · js/app.js       ← design 60-30-10 (błękit #0057B8, pomarańcz tylko CTA) + tryb nocny
+    wersja.json                     ← numer wersji strony (widoczny w stopce)
     dane.json                       ← dane ligowe (generowane automatycznie — NIE edytować ręcznie)
-    scripts/sync_statyczny.ts       ← synchronizacja (ŚZTS: pełny automat)
+    scripts/sync_statyczny.ts       ← synchronizacja (ŚZTS + PZTS-przez-czytnik)
     scripts/szts-core.ts            ← rdzeń: fetch + parser ŚZTS
     .github/workflows/sync-dane.yml ← harmonogram (co 2 h) + uruchomienie ręczne
+    .github/workflows/rollback.yml  ← COFANIE wersji strony (patrz niżej)
+
+## Wersjonowanie i cofanie zmian (rollback)
+
+Każde wdrożenie kodu strony dostaje **tag `vX.Y.Z`** (lista: *Code* →
+*Tags*). Bieżąca wersja widnieje w stopce strony i w `wersja.json`.
+
+**Cofnięcie strony o wersję wstecz** (jeśli coś pójdzie nie tak):
+
+1. Zakładka *Actions* → **„Rollback strony (cofnij wersję)”** → *Run workflow*.
+2. Uruchom z PUSTYM polem „wersja” → cofa ostatnią zmianę kodu strony
+   (dane ligowe `dane.json` zostają nietknięte — cron i tak je odświeża).
+3. Albo: wpisz konkretną wersję (np. `1.0.0`) → przywraca pliki strony
+   z taga `v1.0.0`.
+4. Pages przebuduje się automatycznie — w stopce sprawdź numer wersji.
 
 ## Nowy sezon (odporność sezonowa)
 
