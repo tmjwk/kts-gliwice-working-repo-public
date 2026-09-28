@@ -1,10 +1,15 @@
 name: Sync danych ligowych (KTS Gliwice)
 
 # Pełna automatyzacja dla hostingu statycznego (GitHub Pages):
-#   ŚZTS (ligi 2–4 + amatorzy) — Actions sam pobiera ligi.slzts.pl
-#   PZTS (1. liga) — pzts.pl za Cloudflare; wyniki dociągane opcjonalnie
-#   zmienną PZTS_MECZE przy uruchomieniu ręcznym (wklej JSON z warsztatu),
-#   w przeciwnym razie zachowywany jest ostatni znany stan.
+#   ŚZTS (ligi 2–4 + amatorzy) — Actions sam pobiera ligi.slzts.pl,
+#   PZTS (1. liga) — Actions pobiera pzts.pl PRZEZ CZYTNIK r.jina.ai
+#   (usługa headless-browser omijająca Cloudflare; parsuje Markdown:
+#   terminarz + tabela 1. ligi gr. południowej).
+#   Zmienna PZTS_MECZE (wklejka ręczna) pozostaje jako BACKUP —
+#   ma priorytet nad czytnikiem, gdy jest podana.
+#   Opcjonalny sekret JINA_API_KEY (Authorization: Bearer) zabezpiecza
+#   na wypadek blokady anonimowego ruchu z IP runnera.
+#   Rollback strony: osobny workflow „Rollback strony” (rollback.yml).
 
 on:
   schedule:
@@ -37,6 +42,7 @@ jobs:
         run: bun scripts/sync_statyczny.ts
         env:
           PZTS_MECZE: ${{ inputs.pzts_mecze }}
+          JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
 
       - name: Commit (tylko gdy dane się zmieniły)
         run: |
