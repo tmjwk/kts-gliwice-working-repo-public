@@ -53,6 +53,7 @@ przeglądarce, domyślnie wg ustawień systemu.
     scripts/szts-core.ts             ← rdzeń: fetch + parser ŚZTS
     .github/workflows/sync-dane.yml ← harmonogram (co 2 h) + uruchomienie ręczne
     .github/workflows/rollback.yml  ← COFANIE wersji strony (patrz niżej)
+    .github/workflows/keepalive.yml ← ochrona przed wygasnięciem cronów (patrz niżej)
 
 ## Wersjonowanie i cofanie zmian (rollback)
 
@@ -74,6 +75,29 @@ Każde wdrożenie kodu strony dostaje **tag `vX.Y.Z`** (lista: *Code* →
   ligi, adresy (nowa drużyna = nowy wpis; rozwiązanie drużyny = usunięcie).
 - Kod drużyny PZTS (dziś 960) zmienia się przy awansie — odkrywanie jest
   zautomatyzowane w warsztacie projektowym (mapa herb-ID).
+
+## Dlaczego crony nie umrą w wakacje (keepalive)
+
+**Zasada GitHuba:** w repo publicznym zaplanowane workflowy (`schedule`)
+są automatycznie wyłączane, gdy przez **60 dni nie ma żadnego commita**
+w repo. Przebiegi cronów NIE liczą się jako aktywność — tylko commity.
+
+Przez sezon nie ma problemu: sync commituje `dane.json` przy każdej
+zmianie wyników (własne commity bota z `GITHUB_TOKEN` liczą się jako
+aktywność). Dziura zaczyna się w wakacje: liga nie gra → brak zmian →
+brak commitów → licznik tyka.
+
+**Rozwiązanie:** `.github/workflows/keepalive.yml` — raz w tygodniu
+sprawdza wiek ostatniego commita i po **40 dniach** bezczynności wypycha
+**pusty commit** (nie dotyka plików). Licznik wraca do zera; w praktyce
+workflow wykona się 1–2 razy w roku (lato). Zero sekretów, zero kont
+zewnętrznych — wbudowany `GITHUB_TOKEN`. To standard rynkowy
+(akcja `gautamkrishnar/keepalive-workflow` robi dokładnie to samo).
+
+**Gdyby cron mimo wszystko wygasł** (np. ktoś usunął keepalive):
+GitHub wysyła maila z linkiem „Enable workflow”, albo włącz ręcznie:
+zakładka *Actions* → dany workflow → przycisk **Enable workflow**.
+Podbicie czegokolwiek do repo (np. tego pliku) nie włączy go samo.
 
 ## Znane ograniczenia (uczciwie)
 
