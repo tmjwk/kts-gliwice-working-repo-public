@@ -1,0 +1,56 @@
+name: Keepalive (anty-idle)
+
+# DLACZEGO TO ISTNIEJE — zasada 60 dni GitHuba:
+# GitHub wyłącza zaplanowane crony (trigger `schedule`) w repo publicznym,
+# gdy przez 60 dni nie ma ŻADNEGO commita w repo („repository activity”).
+# Przebiegi workflowów NIE liczą się jako aktywność — liczą się commity.
+#
+# Przez cały sezon problemu nie ma: sync-dane.yml commituje dane.json przy
+# każdej zmianie wyników, więc licznik resetuje się sam. Dziura zaczyna się
+# w przerwach (wakacje, przerwa między sezonami): liga nie gra → dane się
+# nie zmieniają → sync niczego nie commituje → licznik 60 dni tyka →
+# crony zamierają, a pierwsza osoba, która się o tym dowie, to użytkownik
+# strony we wrześniu.
+#
+# ROZWIĄZANIE (fire and forget):
+# Raz w tygodniu sprawdzamy wiek ostatniego commita w repo. Gdy przekroczy
+# 40 dni (limit GitHuba 60, zostaje 20 dni zapasu na opóźnienia crona),
+# wypychamy PUSTY commit — nie dotyka żadnych plików, a licznik aktywności
+# wraca do zera. Działa na wbudowanym GITHUB_TOKEN: zero sekretów, zero
+# kont zewnętrznych, nic nie wygasa. Pusty commit z GITHUB_TOKEN nie
+# odpala innych workflowów (brak pętli rekurencyjnej). W praktyce wykona
+# się 1–2 razy w roku — latem. Standard rynkowy (akcja
+# gautamkrishnar/keepalive-workflow) robi dokładnie to samo, tylko w
+# external action; tu wprost w bashu, żeby niczego nie zaciągać.
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"   # poniedziałki 06:17 UTC — poza pełnymi godziniami (krótsza kolejka)
+  workflow_dispatch:        # + przycisk „Run workflow” (do testu / awaryjnie)
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Jeśli repo „stygnie” (>40 dni bez commitów) — wypchnij pusty commit
+        run: |
+          ostatni=$(git log -1 --format=%ct)
+          teraz=$(date +%s)
+          wiek=$(( (teraz - ostatni) / 86400 ))
+          echo "Ostatni commit w repo: $wiek dni temu (próg: 40, limit GitHuba: 60)."
+
+          if [ "$wiek" -lt 40 ]; then
+            echo "Repo aktywne — nic do robienia."
+            exit 0
+          fi
+
+          echo "::notice::Repo bez commitów od $wiek dni — wypycham pusty commit (reset licznika aktywności)."
+          git config user.name "kts-keepalive-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git commit --allow-empty -m "chore(keepalive): podtrzymanie cronów — ostatni commit $wiek dni temu [automat]"
+          git push
