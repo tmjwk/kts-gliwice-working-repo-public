@@ -388,3 +388,51 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .gal-lb-nast { right: 0.5rem; }
   .gal-lb-info { padding: 0.75rem 3.5rem 0; }
 }
+
+/* ============================================================
+   ANKIETA DLA ZARZĄDU (etap projektowy, v1.3.0)
+   Sekcja #opinia (index.html) + pasek przyklejony (.pasek-ankiety,
+   index.html i galeria.html). Całość do USUNIĘCIA przy wersji
+   finalnej: 2 bloki HTML + ten fragment CSS + padding-bottom body.
+   ============================================================ */
+
+/* --- sekcja „Podziel się opinią" --- */
+.opinia-desc {
+  max-width: 46rem; margin: 0.75rem auto 1.5rem; color: var(--kts-text-muted);
+}
+.opinia-cta { margin-bottom: 0.75rem; }
+.opinia-nota { letter-spacing: 0.01em; }
+
+/* --- pasek przyklejony do dołu ekranu --- */
+.pasek-ankiety {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+  gap: 1rem; flex-wrap: wrap;
+  padding: 0.65rem 1rem;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid var(--kts-line);
+  box-shadow: 0 -6px 18px rgba(15, 27, 45, 0.10);
+}
+.pasek-ankiety-info {
+  display: flex; align-items: center; gap: 0.6rem; margin: 0;
+  font-size: 0.875rem; color: var(--kts-text);
+}
+.pasek-ankiety-badge {
+  font-weight: 600; font-size: 0.6875rem; line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--kts-text-muted);
+  border: 1px solid currentColor; border-radius: 999px;
+  padding: 0.28rem 0.55rem; white-space: nowrap;
+}
+
+/* miejsce na pasek — stopka nie może być zasłonięta */
+body { padding-bottom: 3.9rem; }
+
+@media (max-width: 40rem) {
+  .pasek-ankiety { flex-direction: column; gap: 0.5rem; padding: 0.6rem 0.75rem; }
+  .pasek-ankiety-info { text-align: center; }
+  .pasek-ankiety .btn { min-height: 44px; }   /* cel dotykowy >= 44 px */
+  body { padding-bottom: 6.9rem; }
+}
