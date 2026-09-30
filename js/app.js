@@ -275,7 +275,10 @@ async function renderTeaserGalerii() {
     const res = await fetch("galeria.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const albumy = await res.json();
-    albumy.sort((a, b) => (a.data ?? "") < (b.data ?? "") ? 1 : -1);
+    albumy.sort((a, b) => {
+      const da = a.data ?? "", db = b.data ?? "";
+      return da > db ? -1 : da < db ? 1 : 0;
+    });
     if (badge) {
       const n = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
       badge.textContent = `${albumy.length} albumów · ${n} zdjęć`;

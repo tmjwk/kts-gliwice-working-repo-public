@@ -235,8 +235,11 @@ async function start() {
     return;
   }
 
-  // sortowanie: najnowsze albumy na górze
-  GALERIA.sort((a, b) => (a.data ?? "") < (b.data ?? "") ? 1 : -1);
+  // sortowanie: najnowsze albumy na górze; bez daty (serwisowe) — na końcu
+  GALERIA.sort((a, b) => {
+    const da = a.data ?? "", db = b.data ?? "";
+    return da > db ? -1 : da < db ? 1 : 0;
+  });
   renderStatystyki();
   renderFiltry();
   renderAlbumy();

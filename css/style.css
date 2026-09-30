@@ -316,9 +316,18 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .footer-fade { color: rgba(255,255,255,0.5); margin-top: 0.75rem; }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem; padding-top: 1rem; color: rgba(255,255,255,0.4); }
 
-/* ===== galeria (v1.2.0 — prototyp) ===== */
+/* ===== galeria (pełna — od v1.4.0) ===== */
 .gal-powrot { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--kts-link); text-decoration: none; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; }
 .gal-powrot:hover { text-decoration: underline; }
+
+/* nota zakresu archiwum / statusu importu (pełna galeria) */
+.gal-notatka {
+  margin: 0 0 1.5rem; padding: 0.85rem 1rem;
+  border: 1px solid var(--kts-line); border-left: 3px solid rgba(90,149,255,0.55);
+  border-radius: 0.5rem; background: var(--bg-card);
+  font-size: 0.85rem; line-height: 1.55; color: var(--kts-text-muted);
+}
+.gal-notatka strong { color: var(--kts-ink); font-weight: 600; }
 
 .gal-filtry { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0 2rem; }
 .gal-chip {
