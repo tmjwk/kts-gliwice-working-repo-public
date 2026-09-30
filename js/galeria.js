@@ -5,6 +5,42 @@
    ============================================================ */
 "use strict";
 
+/* ===== zawsze startuj od nagłówka strony — jak w app.js (v1.3.2) =====
+   Patrz komentarz w js/app.js: skok natychmiastowy (bez animacji),
+   obsługa przywrócenia karty z pamięci (pageshow persisted),
+   kotwica uszanowana tylko przy wejściu z naszej domeny. */
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+const _naszReferrer = (() => {
+  try { return !!document.referrer && new URL(document.referrer).origin === location.origin; }
+  catch { return false; }
+})();
+
+const _naGoreNatychmiast = () => {
+  if (location.hash && _naszReferrer) return;
+  try {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  } catch {
+    const html = document.documentElement, org = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    html.style.scrollBehavior = org;
+  }
+};
+
+// kotwica zdejmowana natychmiast (przed przewinięciem Chrome do fragmentu)
+// — tylko dla wejść spoza naszej domeny:
+if (location.hash && !_naszReferrer) {
+  history.replaceState(null, "", location.pathname + location.search);
+}
+_naGoreNatychmiast();
+window.addEventListener("load", () => {
+  _naGoreNatychmiast();
+  setTimeout(_naGoreNatychmiast, 200);
+  setTimeout(_naGoreNatychmiast, 600);
+});
+window.addEventListener("pageshow", (e) => { if (e.persisted) _naGoreNatychmiast(); });
+
 const $ = (sel) => document.querySelector(sel);
 
 function esc(s) {
