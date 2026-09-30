@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-09-30T12:45:02.596Z",
+  "wygenerowano": "2026-09-30T19:27:47.608Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -34,21 +34,21 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "3. miejsce · 0 pkt",
+      "stan": "6. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
       "nazwa": "KTS VI",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "10. miejsce · 0 pkt",
+      "stan": "11. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "4. miejsce · 0 pkt",
+      "stan": "7. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -66,38 +66,38 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "LITS Meble Anders Żywiec",
+          "mecze": 3,
+          "punkty": 6,
+          "stosunek": "23:7"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "KTS Olimpijczyk Zawiercie",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "18:2"
         },
         {
-          "pozycja": 2,
+          "pozycja": 3,
+          "nazwa": "MUKS Jedynka Pszów",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "17:3"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "MKS Czechowice Dziedzice",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "16:4"
         },
         {
-          "pozycja": 3,
+          "pozycja": 5,
           "nazwa": "MKS Tajfun Kuźnia Raciborska",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "16:4"
-        },
-        {
-          "pozycja": 4,
-          "nazwa": "KS Mysław Mysłowice",
-          "mecze": 2,
-          "punkty": 4,
-          "stosunek": "15:5"
-        },
-        {
-          "pozycja": 5,
-          "nazwa": "LITS Meble Anders Żywiec",
-          "mecze": 2,
-          "punkty": 4,
-          "stosunek": "15:5"
         },
         {
           "pozycja": 6,
@@ -108,10 +108,10 @@
         },
         {
           "pozycja": 7,
-          "nazwa": "MUKS Jedynka Pszów",
-          "mecze": 1,
-          "punkty": 2,
-          "stosunek": "10:0"
+          "nazwa": "KS Mysław Mysłowice",
+          "mecze": 3,
+          "punkty": 4,
+          "stosunek": "17:13"
         },
         {
           "pozycja": 8,
@@ -144,9 +144,9 @@
         {
           "pozycja": 12,
           "nazwa": "LZS Chespa Żywocice",
-          "mecze": 1,
+          "mecze": 2,
           "punkty": 0,
-          "stosunek": "0:10"
+          "stosunek": "3:17"
         },
         {
           "pozycja": 13,
@@ -177,7 +177,7 @@
           "stosunek": "1:19"
         }
       ],
-      "zaktualizowano": "2026-09-30T12:45:02.596Z"
+      "zaktualizowano": "2026-09-30T19:27:47.608Z"
     },
     {
       "klucz": "18/138",
@@ -213,24 +213,24 @@
         },
         {
           "pozycja": 5,
-          "nazwa": "TTS Polonia II Bytom",
-          "mecze": 1,
-          "punkty": 2,
-          "stosunek": "7:3"
-        },
-        {
-          "pozycja": 6,
           "nazwa": "AKS Mikołów",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "7:3"
         },
         {
-          "pozycja": 7,
+          "pozycja": 6,
           "nazwa": "KU AZS UJD Częstochowa",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "MKS Skarbek III Tarnowskie Góry",
+          "mecze": 2,
+          "punkty": 2,
+          "stosunek": "11:9"
         },
         {
           "pozycja": 8,
@@ -241,10 +241,10 @@
         },
         {
           "pozycja": 9,
-          "nazwa": "MKS Skarbek III Tarnowskie Góry",
-          "mecze": 1,
-          "punkty": 0,
-          "stosunek": "4:6"
+          "nazwa": "TTS Polonia II Bytom",
+          "mecze": 2,
+          "punkty": 2,
+          "stosunek": "10:10"
         },
         {
           "pozycja": 10,
@@ -296,7 +296,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-09-30T12:45:02.596Z"
+      "zaktualizowano": "2026-09-30T19:27:47.608Z"
     },
     {
       "klucz": "18/142",
@@ -304,104 +304,104 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "6:4"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "UKS Feniks II Pyskowice",
+          "mecze": 1,
+          "punkty": 1,
+          "stosunek": "5:5"
+        },
+        {
+          "pozycja": 3,
+          "nazwa": "ULKS Tajfun Ligota Łabędzka",
+          "mecze": 1,
+          "punkty": 1,
+          "stosunek": "5:5"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "ATS Ligota Łabędzka",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 2,
+          "pozycja": 5,
           "nazwa": "ULKS Ruch Pniów",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 3,
+          "pozycja": 6,
           "nazwa": "KTS V Gliwice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 4,
+          "pozycja": 7,
           "nazwa": "KTS KA Krokus VII Gliwice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 5,
+          "pozycja": 8,
           "nazwa": "ULKS Pławniowice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 6,
+          "pozycja": 9,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 7,
-          "nazwa": "LKS Strażak III Mikołów",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
-          "pozycja": 8,
-          "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
-          "pozycja": 9,
+          "pozycja": 10,
           "nazwa": "LKS Młodość Rudno",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 10,
+          "pozycja": 11,
           "nazwa": "KTS VI Gliwice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 11,
-          "nazwa": "UKS Feniks II Pyskowice",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
           "pozycja": 12,
-          "nazwa": "ULKS Tajfun Ligota Łabędzka",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
-          "pozycja": 13,
           "nazwa": "STS II Żernica",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 14,
+          "pozycja": 13,
           "nazwa": "STS I Żernica",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
+        },
+        {
+          "pozycja": 14,
+          "nazwa": "LKS Strażak III Mikołów",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "4:6"
         }
       ],
-      "zaktualizowano": "2026-09-30T12:45:02.596Z"
+      "zaktualizowano": "2026-09-30T19:27:47.608Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-09-30T12:45:02.596Z"
+      "zaktualizowano": "2026-09-30T19:27:47.608Z"
     }
   ],
   "meczeSzts": [
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-09-30T12:45:02.596Z",
-    "pzts": "2026-09-30T12:45:02.596Z"
+    "szts": "2026-09-30T19:27:47.608Z",
+    "pzts": "2026-09-30T19:27:47.608Z"
   }
 }
