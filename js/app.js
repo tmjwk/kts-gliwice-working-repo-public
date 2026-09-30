@@ -266,6 +266,40 @@ async function pokazWersje() {
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
 }
 
+/* ===== aktywność automatu: ostatnie 3 uruchomienia workflow =====
+   Publiczne API GitHuba (repo jest publiczne — pobierane z przeglądarki
+   gościa, limit 60 zapytań/h na IP — dla strony klubowej zapas ogromny).
+   Pokazuje KAŻDY run, także pusty („bez zmian w danych”): ✓ = sukces,
+   ✗ = błąd, … = w trakcie. „Ostatni sync” obok pokazuje ostatnią REALNĄ
+   zmianę danych (commity powstają tylko przy realnej zmianie). */
+async function pokazAktywnoscCrona() {
+  const el = $("#cron-aktywnosc");
+  if (!el) return;
+  try {
+    const res = await fetch(
+      "https://api.github.com/repos/tmjwk/kts-gliwice-working-repo-public" +
+        "/actions/workflows/sync-dane.yml/runs?per_page=3",
+      { headers: { Accept: "application/vnd.github+json" } },
+    );
+    if (!res.ok) return; // np. chwilowy limit zapytań — po prostu nie pokazujemy
+    const dane = await res.json();
+    const runy = (dane.workflow_runs ?? []).slice(0, 3);
+    if (!runy.length) return;
+    const znak = (r) => (r.status !== "completed" ? "…" : r.conclusion === "success" ? "✓" : "✗");
+    const czas = (iso) => {
+      const d = new Date(iso);
+      const dzien = d.toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", timeZone: "Europe/Warsaw" });
+      const godz = d.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
+      return `${dzien} ${godz}`;
+    };
+    el.textContent = "Cron: " + runy.map((r) => `${czas(r.created_at)} ${znak(r)}`).join(" · ");
+    el.title =
+      "Ostatnie 3 uruchomienia automatu synchronizacji. ✓ = zakończony sukcesem, " +
+      "✗ = błąd, … = w trakcie. Pusty przebieg (bez zmian danych) jest normalny — " +
+      "„Ostatni sync” pokazuje moment ostatniej realnej zmiany danych.";
+  } catch (e) { /* sieć — sekcja milczy */ }
+}
+
 /* ===== galeria: teaser okładek (pełna galeria na podstronie) ===== */
 async function renderTeaserGalerii() {
   const wrap = $("#gal-teaser");
@@ -307,6 +341,7 @@ async function start() {
   // tryb dzień/noc (ikona + klik) i menu mobilne
   obsluzPrzelacznikTrybu();
   pokazWersje();
+  pokazAktywnoscCrona();
   renderTeaserGalerii();
   const hamburger = $("#hamburger");
   const nav = $("#nav");
