@@ -4,20 +4,51 @@
    ============================================================ */
 "use strict";
 
-/* ===== zawsze startuj od baneru (hero) =====
-   Przeglądarki domyślnie przywracają pozycję scrolla z ostatniej wizyty
-   (history.scrollRestoration = "auto") — po powrocie na stronę wylądowaliśmy
-   na "Aktualnościach" zamiast na hero. Dla strony klubowej pierwsze wrażenie
-   jest banerem, więc każemy zaczynać od góry. Nie dotyka linków #kotwica
-   (menu nadal przewija do sekcji) — wpływa tylko na świeże wejścia/reload. */
+/* ===== zawsze startuj od baneru (hero) — v1.3.2 =====
+   Trzy scenariusze, w których v1.3.1 przegrywało z przeglądarką:
+   (a) scrollTo(0,0) przy html{scroll-behavior:smooth} jedzie ANIMACJĄ —
+       późne przywrócenie pozycji (po doładowaniu obrazków) wygrywało
+       ze skokiem → teraz behavior:"instant" (bez animacji),
+   (b) przywrócenie karty z pamięci (bfcache: „wstecz", ponowne otwarcie
+       karty, przywrócenie sesji) NIE odpala skryptu od nowa → pageshow
+       z persisted=true,
+   (c) klik w menu zostawiał w adresie #sekcja — przywrócenie sesji
+       z kotwicą lądowało na sekcji → kotwica uszanowana TYLKO gdy
+       wejście przyszło z naszej domeny (linki z galeria.html). */
 if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-if (!location.hash) {
-  // bez kotwicy w URL — start od baneru (także po reloadzie)
-  window.scrollTo(0, 0);
-  window.addEventListener("load", () => window.scrollTo(0, 0)); // ponownie po obrazkach — iOS lubi przywracać późno
+
+const _naszReferrer = (() => {
+  try { return !!document.referrer && new URL(document.referrer).origin === location.origin; }
+  catch { return false; }
+})();
+
+const _naGoreNatychmiast = () => {
+  if (location.hash && _naszReferrer) return;   // galeria → sekcja: uszanuj kotwicę
+  try {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" }); // skok, nie animacja
+  } catch {
+    const html = document.documentElement, org = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";         // starsze przeglądarki bez "instant"
+    window.scrollTo(0, 0);
+    html.style.scrollBehavior = org;
+  }
+};
+
+// kotwicę z adresu zdejmujemy NATYCHMIAST (jeszcze w trakcie parsowania,
+// zanim Chrome zaplanuje asynchroniczne przewinięcie do fragmentu) —
+// dotyczy tylko wejść spoza naszej domeny (z galerii kotwica zostaje):
+if (location.hash && !_naszReferrer) {
+  history.replaceState(null, "", location.pathname + location.search);
 }
-// z kotwicą (np. udostępniony link .../index.html#trenerzy) — nie ruszamy
-// scrolla: przeglądarka sama przewinie do sekcji.
+_naGoreNatychmiast();
+window.addEventListener("load", () => {
+  _naGoreNatychmiast();
+  // siatka bezpieczeństwa: Chrome potrafi przewinąć do kotwicy późno
+  // i to ANIMOWANIE (płynnie) — dostrzelamy dwoma skokami:
+  setTimeout(_naGoreNatychmiast, 200);
+  setTimeout(_naGoreNatychmiast, 600);
+});
+window.addEventListener("pageshow", (e) => { if (e.persisted) _naGoreNatychmiast(); });
 
 /* ===== pomocnicze ===== */
 const $ = (sel) => document.querySelector(sel);
