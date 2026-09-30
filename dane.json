@@ -1,12 +1,12 @@
 {
-  "wygenerowano": "2026-09-29T13:02:57.977Z",
+  "wygenerowano": "2026-09-30T05:41:05.871Z",
   "sezon": "2026/27",
   "zespoly": [
     {
       "nazwa": "KTS Gliwice I",
       "liga": "1. Liga Mężczyzn · gr. południowa",
       "tryb": "PZTS · automat",
-      "stan": "4. miejsce · 3 pkt",
+      "stan": "1 zwycięstwo · 1 remis",
       "url": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "1:19"
         }
       ],
-      "zaktualizowano": "2026-09-29T13:02:57.977Z"
+      "zaktualizowano": "2026-09-30T05:41:05.871Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-09-29T13:02:57.977Z"
+      "zaktualizowano": "2026-09-30T05:41:05.871Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "0:0"
         }
       ],
-      "zaktualizowano": "2026-09-29T13:02:57.977Z"
+      "zaktualizowano": "2026-09-30T05:41:05.871Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-09-29T13:02:57.977Z"
+      "zaktualizowano": "2026-09-30T05:41:05.871Z"
     }
   ],
   "meczeSzts": [
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-09-29T13:02:57.977Z",
+    "szts": "2026-09-30T05:41:05.871Z",
     "pzts": "2026-09-29T13:02:57.977Z"
   }
 }
