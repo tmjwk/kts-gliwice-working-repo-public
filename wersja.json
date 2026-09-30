@@ -1,5 +1,5 @@
 {
-  "wersja": "1.4.1",
+  "wersja": "1.5.0",
   "data": "2026-10-01T00:00:00Z",
-  "opis": "poprawka: cudzysłowy w tytułach albumów (encje HTML)"
+  "opis": "miniatury WebP + blur-up w galerii (siatka 8× lżejsza)"
 }

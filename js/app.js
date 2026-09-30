@@ -283,11 +283,19 @@ async function renderTeaserGalerii() {
       const n = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
       badge.textContent = `${albumy.length} albumów · ${n} zdjęć`;
     }
-    wrap.innerHTML = albumy.slice(0, 6).map((a) => `
+    wrap.innerHTML = albumy.slice(0, 6).map((a) => {
+      const mini = (a.miniatury && a.miniatury[0]) || a.zdjecia[0];   // v1.5.0: miniatura WebP
+      const lqip = a.lqip && a.lqip[0];                              // v1.5.0: placeholder blur-up
+      return `
       <a href="galeria.html#album-${esc(a.slug)}" aria-label="${esc(a.tytul)}">
-        <img src="${esc(a.zdjecia[0])}" alt="${esc(a.tytul)}" loading="lazy">
+        ${lqip ? `<span class="lqip" style="background-image:url('${lqip}')" aria-hidden="true"></span>` : ""}
+        <img onload="this.classList.add('zalane')"
+             onerror="if(this.dataset.org && this.src !== this.dataset.org){this.src=this.dataset.org}else{this.classList.add('zalane')}"
+             src="${esc(mini)}" data-org="${esc(a.zdjecia[0])}"
+             alt="${esc(a.tytul)}" loading="lazy" decoding="async">
         <span class="gal-teaser-label">${a.data ? esc(formatujDate(a.data)) : ""} · ${esc(a.tytul)}</span>
-      </a>`).join("");
+      </a>`;
+    }).join("");
   } catch (err) {
     console.error("Błąd ładowania galeria.json:", err);
     if (badge) badge.textContent = "galeria niedostępna";

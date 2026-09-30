@@ -102,11 +102,19 @@ function renderAlbumy() {
   }
   kontener.innerHTML = widoczne.map((a) => {
     const idx = GALERIA.indexOf(a);
-    const fotosy = a.zdjecia.map((src, i) => `
+    const fotosy = a.zdjecia.map((src, i) => {
+      const mini = (a.miniatury && a.miniatury[i]) || src;   // v1.5.0: miniatura WebP
+      const lqip = a.lqip && a.lqip[i];                       // v1.5.0: placeholder blur-up
+      return `
       <button class="gal-foto" type="button" data-album="${idx}" data-foto="${i}"
               aria-label="Powiększ zdjęcie ${i + 1} z albumu ${esc(a.tytul)}">
-        <img src="${esc(src)}" alt="${esc(a.tytul)} — zdjęcie ${i + 1}" loading="lazy">
-      </button>`).join("");
+        ${lqip ? `<span class="lqip" style="background-image:url('${lqip}')" aria-hidden="true"></span>` : ""}
+        <img onload="this.classList.add('zalane')"
+             onerror="if(this.dataset.org && this.src !== this.dataset.org){this.src=this.dataset.org}else{this.classList.add('zalane')}"
+             src="${esc(mini)}" data-org="${esc(src)}"
+             alt="${esc(a.tytul)} — zdjęcie ${i + 1}" loading="lazy" decoding="async">
+      </button>`;
+    }).join("");
     return `
       <article class="gal-album" id="album-${esc(a.slug)}">
         <div class="gal-album-head">
@@ -133,8 +141,16 @@ function lbPokaz() {
   const a = GALERIA[LB.album];
   if (!a) return;
   LB.foto = Math.max(0, Math.min(LB.foto, a.zdjecia.length - 1));
-  $("#gal-lb-img").src = a.zdjecia[LB.foto];
-  $("#gal-lb-img").alt = `${a.tytul} — zdjęcie ${LB.foto + 1}`;
+  const img = $("#gal-lb-img");
+  const tlo = $("#gal-lb-tlo");
+  // v1.5.0: LQIP jako rozmyte tło — natychmiastowa reakcja, oryginał wjeżdża na wierzchu
+  if (tlo) {
+    const lqip = a.lqip && a.lqip[LB.foto];
+    tlo.style.backgroundImage = lqip ? `url('${lqip}')` : "none";
+  }
+  img.classList.remove("zalane");
+  img.src = a.zdjecia[LB.foto];
+  img.alt = `${a.tytul} — zdjęcie ${LB.foto + 1}`;
   $("#gal-lb-tytul").textContent = a.tytul;
   $("#gal-lb-licznik").textContent = `· ${LB.foto + 1} / ${a.zdjecia.length}`;
 }
