@@ -4,6 +4,21 @@
    ============================================================ */
 "use strict";
 
+/* ===== zawsze startuj od baneru (hero) =====
+   Przeglądarki domyślnie przywracają pozycję scrolla z ostatniej wizyty
+   (history.scrollRestoration = "auto") — po powrocie na stronę wylądowaliśmy
+   na "Aktualnościach" zamiast na hero. Dla strony klubowej pierwsze wrażenie
+   jest banerem, więc każemy zaczynać od góry. Nie dotyka linków #kotwica
+   (menu nadal przewija do sekcji) — wpływa tylko na świeże wejścia/reload. */
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+if (!location.hash) {
+  // bez kotwicy w URL — start od baneru (także po reloadzie)
+  window.scrollTo(0, 0);
+  window.addEventListener("load", () => window.scrollTo(0, 0)); // ponownie po obrazkach — iOS lubi przywracać późno
+}
+// z kotwicą (np. udostępniony link .../index.html#trenerzy) — nie ruszamy
+// scrolla: przeglądarka sama przewinie do sekcji.
+
 /* ===== pomocnicze ===== */
 const $ = (sel) => document.querySelector(sel);
 
