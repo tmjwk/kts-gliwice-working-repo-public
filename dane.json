@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-09-30T19:27:47.608Z",
+  "wygenerowano": "2026-09-30T23:56:25.015Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -34,21 +34,21 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "6. miejsce · 0 pkt",
+      "stan": "9. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
       "nazwa": "KTS VI",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "11. miejsce · 0 pkt",
+      "stan": "14. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "7. miejsce · 0 pkt",
+      "stan": "10. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "1:19"
         }
       ],
-      "zaktualizowano": "2026-09-30T19:27:47.608Z"
+      "zaktualizowano": "2026-09-30T23:56:25.015Z"
     },
     {
       "klucz": "18/138",
@@ -192,38 +192,38 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "KU AZS UJD Częstochowa",
+          "mecze": 2,
+          "punkty": 3,
+          "stosunek": "11:9"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "UKS Huragan Sosnowiec",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "9:1"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "LKS Strażak Mikołów",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "8:2"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "KS Mysław II Mysłowice",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "8:2"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "AKS Mikołów",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "7:3"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "KU AZS UJD Częstochowa",
-          "mecze": 1,
-          "punkty": 2,
-          "stosunek": "6:4"
         },
         {
           "pozycja": 7,
@@ -249,9 +249,9 @@
         {
           "pozycja": 10,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
-          "mecze": 1,
-          "punkty": 0,
-          "stosunek": "4:6"
+          "mecze": 2,
+          "punkty": 1,
+          "stosunek": "9:11"
         },
         {
           "pozycja": 11,
@@ -296,7 +296,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-09-30T19:27:47.608Z"
+      "zaktualizowano": "2026-09-30T23:56:25.015Z"
     },
     {
       "klucz": "18/142",
@@ -311,97 +311,97 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "LKS Młodość Rudno",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "6:4"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "UKS Feniks II Pyskowice",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "ULKS Tajfun Ligota Łabędzka",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
+          "nazwa": "STS II Żernica",
+          "mecze": 1,
+          "punkty": 1,
+          "stosunek": "5:5"
+        },
+        {
+          "pozycja": 6,
+          "nazwa": "STS I Żernica",
+          "mecze": 1,
+          "punkty": 1,
+          "stosunek": "5:5"
+        },
+        {
+          "pozycja": 7,
           "nazwa": "ATS Ligota Łabędzka",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 5,
+          "pozycja": 8,
           "nazwa": "ULKS Ruch Pniów",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 6,
+          "pozycja": 9,
           "nazwa": "KTS V Gliwice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 7,
+          "pozycja": 10,
           "nazwa": "KTS KA Krokus VII Gliwice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 8,
+          "pozycja": 11,
           "nazwa": "ULKS Pławniowice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 9,
+          "pozycja": 12,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 10,
-          "nazwa": "LKS Młodość Rudno",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
-          "pozycja": 11,
-          "nazwa": "KTS VI Gliwice",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
-          "pozycja": 12,
-          "nazwa": "STS II Żernica",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
           "pozycja": 13,
-          "nazwa": "STS I Żernica",
-          "mecze": 0,
+          "nazwa": "LKS Strażak III Mikołów",
+          "mecze": 1,
           "punkty": 0,
-          "stosunek": "0:0"
+          "stosunek": "4:6"
         },
         {
           "pozycja": 14,
-          "nazwa": "LKS Strażak III Mikołów",
+          "nazwa": "KTS VI Gliwice",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "4:6"
         }
       ],
-      "zaktualizowano": "2026-09-30T19:27:47.608Z"
+      "zaktualizowano": "2026-09-30T23:56:25.015Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-09-30T19:27:47.608Z"
+      "zaktualizowano": "2026-09-30T23:56:25.015Z"
     }
   ],
   "meczeSzts": [
@@ -1232,8 +1232,8 @@
       "kolejka": 1,
       "gospodarz": "LKS Młodość Rudno",
       "gosc": "KTS VI Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "6:4",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS VI"
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-09-30T19:27:47.608Z",
-    "pzts": "2026-09-30T19:27:47.608Z"
+    "szts": "2026-09-30T23:56:25.015Z",
+    "pzts": "2026-09-30T23:56:25.015Z"
   }
 }
