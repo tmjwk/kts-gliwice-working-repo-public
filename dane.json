@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-01T13:29:16.247Z",
+  "wygenerowano": "2026-10-01T19:37:00.454Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -27,7 +27,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "15. miejsce · 0 pkt",
+      "stan": "14. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "1:19"
         }
       ],
-      "zaktualizowano": "2026-10-01T13:29:16.247Z"
+      "zaktualizowano": "2026-10-01T19:37:00.454Z"
     },
     {
       "klucz": "18/138",
@@ -192,38 +192,38 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "LKS Strażak Mikołów",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "16:4"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "KS Mysław II Mysłowice",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "13:7"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "AKS Mikołów",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "12:8"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "KU AZS UJD Częstochowa",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "11:9"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "UKS Huragan Sosnowiec",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "9:1"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "LKS Strażak Mikołów",
-          "mecze": 1,
-          "punkty": 2,
-          "stosunek": "8:2"
         },
         {
           "pozycja": 7,
@@ -276,17 +276,17 @@
         },
         {
           "pozycja": 14,
-          "nazwa": "KS Unia Kalety",
+          "nazwa": "KTS IV Gliwice",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "1:9"
         },
         {
           "pozycja": 15,
-          "nazwa": "KTS IV Gliwice",
-          "mecze": 1,
+          "nazwa": "KS Unia Kalety",
+          "mecze": 2,
           "punkty": 0,
-          "stosunek": "1:9"
+          "stosunek": "3:17"
         },
         {
           "pozycja": 16,
@@ -296,7 +296,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-10-01T13:29:16.247Z"
+      "zaktualizowano": "2026-10-01T19:37:00.454Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:6"
         }
       ],
-      "zaktualizowano": "2026-10-01T13:29:16.247Z"
+      "zaktualizowano": "2026-10-01T19:37:00.454Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-10-01T13:29:16.247Z"
+      "zaktualizowano": "2026-10-01T19:37:00.454Z"
     }
   ],
   "meczeSzts": [
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-01T13:29:16.247Z",
-    "pzts": "2026-10-01T13:29:16.247Z"
+    "szts": "2026-10-01T19:37:00.454Z",
+    "pzts": "2026-10-01T19:37:00.454Z"
   }
 }
