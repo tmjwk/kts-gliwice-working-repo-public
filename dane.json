@@ -1,12 +1,12 @@
 {
-  "wygenerowano": "2026-10-01T19:37:00.454Z",
+  "wygenerowano": "2026-10-01T23:56:51.113Z",
   "sezon": "2026/27",
   "zespoly": [
     {
       "nazwa": "KTS Gliwice I",
       "liga": "1. Liga Mężczyzn · gr. południowa",
       "tryb": "PZTS · automat",
-      "stan": "4. miejsce · 3 pkt",
+      "stan": "1 zwycięstwo · 1 remis",
       "url": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/"
     },
     {
@@ -27,14 +27,14 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "14. miejsce · 0 pkt",
+      "stan": "10. miejsce · 2 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "9. miejsce · 0 pkt",
+      "stan": "1. miejsce · 2 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -48,7 +48,7 @@
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "10. miejsce · 0 pkt",
+      "stan": "12. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "1:19"
         }
       ],
-      "zaktualizowano": "2026-10-01T19:37:00.454Z"
+      "zaktualizowano": "2026-10-01T23:56:51.113Z"
     },
     {
       "klucz": "18/138",
@@ -248,55 +248,55 @@
         },
         {
           "pozycja": 10,
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 2,
+          "punkty": 2,
+          "stosunek": "10:10"
+        },
+        {
+          "pozycja": 11,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
           "mecze": 2,
           "punkty": 1,
           "stosunek": "9:11"
         },
         {
-          "pozycja": 11,
+          "pozycja": 12,
           "nazwa": "LKS Ciężkowianka Jaworzno",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "3:7"
         },
         {
-          "pozycja": 12,
+          "pozycja": 13,
           "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "2:8"
         },
         {
-          "pozycja": 13,
-          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
-          "mecze": 1,
-          "punkty": 0,
-          "stosunek": "2:8"
-        },
-        {
           "pozycja": 14,
-          "nazwa": "KTS IV Gliwice",
-          "mecze": 1,
-          "punkty": 0,
-          "stosunek": "1:9"
-        },
-        {
-          "pozycja": 15,
           "nazwa": "KS Unia Kalety",
           "mecze": 2,
           "punkty": 0,
           "stosunek": "3:17"
         },
         {
-          "pozycja": 16,
+          "pozycja": 15,
           "nazwa": "GLKS Lot Konopiska",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "3:17"
+        },
+        {
+          "pozycja": 16,
+          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
           "mecze": 2,
           "punkty": 0,
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-10-01T19:37:00.454Z"
+      "zaktualizowano": "2026-10-01T23:56:51.113Z"
     },
     {
       "klucz": "18/142",
@@ -304,87 +304,87 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "LKS Strażak II Mikołów",
+          "nazwa": "KTS V Gliwice",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
         },
         {
           "pozycja": 2,
-          "nazwa": "LKS Młodość Rudno",
+          "nazwa": "LKS Strażak II Mikołów",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
         },
         {
           "pozycja": 3,
+          "nazwa": "LKS Młodość Rudno",
+          "mecze": 1,
+          "punkty": 2,
+          "stosunek": "6:4"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "UKS Feniks II Pyskowice",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "ULKS Tajfun Ligota Łabędzka",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "STS II Żernica",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 6,
+          "pozycja": 7,
           "nazwa": "STS I Żernica",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 7,
+          "pozycja": 8,
           "nazwa": "ATS Ligota Łabędzka",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 8,
+          "pozycja": 9,
           "nazwa": "ULKS Ruch Pniów",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 9,
-          "nazwa": "KTS V Gliwice",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
           "pozycja": 10,
-          "nazwa": "KTS KA Krokus VII Gliwice",
-          "mecze": 0,
-          "punkty": 0,
-          "stosunek": "0:0"
-        },
-        {
-          "pozycja": 11,
           "nazwa": "ULKS Pławniowice",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
         },
         {
-          "pozycja": 12,
+          "pozycja": 11,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 0,
           "punkty": 0,
           "stosunek": "0:0"
+        },
+        {
+          "pozycja": 12,
+          "nazwa": "KTS KA Krokus VII Gliwice",
+          "mecze": 1,
+          "punkty": 0,
+          "stosunek": "4:6"
         },
         {
           "pozycja": 13,
@@ -401,7 +401,7 @@
           "stosunek": "4:6"
         }
       ],
-      "zaktualizowano": "2026-10-01T19:37:00.454Z"
+      "zaktualizowano": "2026-10-01T23:56:51.113Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-10-01T19:37:00.454Z"
+      "zaktualizowano": "2026-10-01T23:56:51.113Z"
     }
   ],
   "meczeSzts": [
@@ -879,8 +879,8 @@
       "kolejka": 2,
       "gospodarz": "KTS IV Gliwice",
       "gosc": "MKS Siemianowiczanka Siemianowice Śl.",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "9:1",
+      "rozegrany": true,
       "liga": "3. Liga Mężczyzn · gr. II",
       "zespoly": [
         "KTS IV"
@@ -1061,8 +1061,8 @@
       "kolejka": 1,
       "gospodarz": "KTS V Gliwice",
       "gosc": "KTS KA Krokus VII Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "6:4",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS V",
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-01T19:37:00.454Z",
+    "szts": "2026-10-01T23:56:51.113Z",
     "pzts": "2026-10-01T19:37:00.454Z"
   }
 }
