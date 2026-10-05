@@ -1,0 +1,15 @@
+{
+  "wygenerowano": "2026-10-05T14:54:16.583Z",
+  "przechowuje": 50,
+  "runs": [
+    {
+      "start": "2026-10-05T14:54:01.054Z",
+      "czasS": 16,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "stan drużyn",
+      "blad": null
+    }
+  ]
+}
