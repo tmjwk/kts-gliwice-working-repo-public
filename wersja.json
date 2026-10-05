@@ -1,5 +1,5 @@
 {
-  "wersja": "1.5.1",
-  "data": "2026-10-01T00:00:00Z",
-  "opis": "aktywność crona na stronie (ostatnie 3 uruchomienia automatu)"
+  "wersja": "1.6.0",
+  "data": "2026-10-05T05:00:00Z",
+  "opis": "pasek meczowy całymi dniami (kilka meczów + wyniki w drodze), każdy mecz w osobnym wierszu ze strefami i pillkami wyników + przebiegi automatu z runs.json"
 }
