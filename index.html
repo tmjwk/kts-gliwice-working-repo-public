@@ -64,12 +64,22 @@
       </div>
     </section>
 
-    <!-- ===== PASEK NAJBLIŻSZEGO MECZU (dane live) ===== -->
-    <section class="matchbar" aria-label="Ostatni wynik i najbliższy mecz">
+    <!-- ===== PASEK MECZOWY (dane live; dzień meczowy może mieć kilka meczów;
+         każdy mecz w OSOBNYM wierszu — czytelność na telefonie) ===== -->
+    <section class="matchbar" aria-label="Ostatnie wyniki i najbliższe mecze">
       <div class="container matchbar-inner">
-        <span class="matchbar-label">Ostatni wynik</span>
-        <span class="t-nums matchbar-result" id="ostatni-wynik">…</span>
-        <span class="matchbar-next" id="najblizszy-mecz">…</span>
+        <div class="matchbar-zone">
+          <span class="matchbar-label" id="etykieta-ostatni">Ostatni wynik</span>
+          <div class="matchbar-matches t-nums" id="ostatni-wynik">…</div>
+        </div>
+        <div class="matchbar-zone" id="strefa-droga" hidden>
+          <span class="matchbar-label matchbar-label--pending">Wynik w drodze</span>
+          <div class="matchbar-matches" id="wyniki-w-drodze"></div>
+        </div>
+        <div class="matchbar-zone">
+          <span class="matchbar-label" id="etykieta-najblizszy">Najbliższy mecz</span>
+          <div class="matchbar-matches" id="najblizszy-mecz">…</div>
+        </div>
       </div>
     </section>
 
@@ -181,8 +191,9 @@
             </p>
           </div>
           <div class="mechanism-side">
-            <span class="t-small t-nums muted" id="ostatni-sync">Ostatni sync: —</span>
+            <span class="t-small t-nums muted" id="ostatni-sync">Ostatnia zmiana danych: —</span>
             <span class="t-small t-nums muted" id="cron-aktywnosc"></span>
+            <span class="t-small t-nums muted" id="cron-ostatni-odczyt"></span>
           </div>
         </div>
       </div>
