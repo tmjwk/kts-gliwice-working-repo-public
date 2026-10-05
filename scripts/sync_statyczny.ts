@@ -20,6 +20,15 @@
  * Uruchomienie:  bun scripts/sync_statyczny.ts
  *   (z katalogu głównego repo; wymaga bun albo: npx tsx scripts/sync_statyczny.ts)
  *
+ * Od v1.5.2: KAŻDE uruchomienie (także puste, bez zmian danych) dopisuje
+ * wpis do runs.json — dziennik przebiegów dla panelu na stronie:
+ *   szts:"ok"    = dane odczytane (sukces, również „bez zmian"),
+ *   szts:"blad"  = źródło nie odpowiedziało (szczegół w polu blad),
+ *   brak wpisu  = slot crona nie wystartował (GitHub pominął termin).
+ * runs.json trzyma ostatnie 50 przebiegów; workflow commituje go ZAWSZE
+ * (świadoma zmiana zasady „pusty przebieg = brak commita" — historia
+ * dane.json pozostaje czysta, commity runs.json to nowy, osobny szum).
+ *
  * Nowy sezon: zaktualizuj ZESPOLY (i ewentualnie LIGI_SZTS w szts-core.ts).
  */
 
@@ -54,6 +63,22 @@ const ZESPOLY = [
 ];
 
 const WYJSCIE = process.env.DANE_WYJSCIE ?? "dane.json";
+
+// ====== Dziennik przebiegów (runs.json) — panel „Automat: ✓/✗" na stronie ======
+const RUNY_WYJSCIE = process.env.RUNY_WYJSCIE ?? "runs.json";
+const RUNY_LIMIT = 50;
+
+type StanSzts = "ok" | "blad";
+type StanPzts = "ok" | "recznie" | "blad-czytnika" | "pominieto";
+interface WpisRunu {
+  start: string; // ISO rozpoczęcia skryptu
+  czasS: number; // czas trwania (sekundy) — miara „zamulania" źródeł
+  szts: StanSzts;
+  pzts: StanPzts;
+  zmieniono: boolean; // czy dane.json został zapisany (realna zmiana danych)
+  zmiany: string; // „bez zmian" / „+2 wyniki (ŚZTS)" / „—"
+  blad: string | null; // treść błędu, gdy szts === "blad"
+}
 
 // ====== Typy danych wyjściowych (kontrakt dla strony statycznej) ======
 interface MeczSzts extends MeczLigi {
@@ -220,7 +245,69 @@ async function pobierzPztsPrzezJine(proby = 3): Promise<string> {
   throw ostatniBlad ?? new Error("czytnik: nieznany błąd");
 }
 
-async function main() {
+/** Krótki, ludzki opis różnicy między dwoma stanami danych (do runs.json). */
+function opiszZmiany(stary: Dane | null, nowy: Dane): string {
+  if (!stary) return "pierwszy zapis";
+  const klucz = (m: MeczLigi) => `${m.dataMeczu}|${m.gospodarz}|${m.gosc}`;
+  const czesci: string[] = [];
+  const raportMeczy = (nazwa: string, stare: MeczLigi[], nowe: MeczLigi[]) => {
+    const stareMapa = new Map(stare.map((m) => [klucz(m), m]));
+    let noweWyniki = 0;
+    let poprawione = 0;
+    let noweTerminy = 0;
+    for (const m of nowe) {
+      const st = stareMapa.get(klucz(m));
+      if (!st) {
+        noweTerminy++;
+      } else if (m.rozegrany && !st.rozegrany) {
+        noweWyniki++;
+      } else if (m.rozegrany && st.rozegrany && m.wynik !== st.wynik) {
+        poprawione++; // korekta błędnie wpisanego wyniku
+      }
+    }
+    if (noweWyniki > 0) czesci.push(`+${noweWyniki} ${odmien(noweWyniki, ["wynik", "wyniki", "wyników"])} (${nazwa})`);
+    if (poprawione > 0) czesci.push(`poprawione: ${poprawione} (${nazwa})`);
+    if (noweTerminy > 0) czesci.push(`+${noweTerminy} w terminarzu (${nazwa})`);
+  };
+  raportMeczy("ŚZTS", stary.meczeSzts ?? [], nowy.meczeSzts);
+  raportMeczy("PZTS", stary.meczePzts ?? [], nowy.meczePzts);
+  const wierszeTabel = (t: Dane["tabele"]) => JSON.stringify(t.map((x) => [x.klucz, x.wiersze]));
+  if (wierszeTabel(stary.tabele ?? []) !== wierszeTabel(nowy.tabele)) {
+    const klucze = nowy.tabele
+      .filter((nt) => {
+        const st = (stary.tabele ?? []).find((x) => x.klucz === nt.klucz);
+        return !st || JSON.stringify(st.wiersze) !== JSON.stringify(nt.wiersze);
+      })
+      .map((t) => t.klucz);
+    if (klucze.length > 0) czesci.push(`tabele: ${klucze.join(", ")}`);
+  }
+  const stanyDruzyn = (d: Dane) => JSON.stringify(d.zespoly.map((z) => [z.nazwa, z.stan]));
+  if (stanyDruzyn(stary) !== stanyDruzyn(nowy)) czesci.push("stan drużyn");
+  return czesci.length > 0 ? czesci.join(" · ") : "bez zmian";
+}
+
+/** Dopisuje przebieg do runs.json (ostatnie RUNY_LIMIT wpisów) — każda ścieżka wyjścia. */
+function zapiszRun(wpis: WpisRunu): void {
+  let runs: WpisRunu[] = [];
+  try {
+    const plik = JSON.parse(readFileSync(RUNY_WYJSCIE, "utf-8")) as { runs?: WpisRunu[] };
+    if (Array.isArray(plik.runs)) runs = plik.runs;
+  } catch {
+    // brak pliku lub uszkodzony — zaczynamy świeżo (utrata historii ≠ utrata danych)
+  }
+  runs.push(wpis);
+  if (runs.length > RUNY_LIMIT) runs = runs.slice(-RUNY_LIMIT);
+  writeFileSync(
+    RUNY_WYJSCIE,
+    JSON.stringify({ wygenerowano: new Date().toISOString(), przechowuje: RUNY_LIMIT, runs }, null, 2) + "\n",
+    "utf-8",
+  );
+}
+
+/** Faza runu dla etykiety błędu w runs.json (awaria ŚZTS vs PZTS). */
+let FAZA_RUNU: "szts" | "pzts" = "szts";
+
+async function main(): Promise<{ szts: StanSzts; pzts: StanPzts; zmieniono: boolean; zmiany: string }> {
   const teraz = new Date().toISOString();
   const staryPlik = existsSync(WYJSCIE) ? (JSON.parse(readFileSync(WYJSCIE, "utf-8")) as Dane) : null;
 
@@ -261,24 +348,27 @@ async function main() {
   }
 
   // ===== 2. PZTS — kolejność: wklej (env) → czytnik (jina) → stary stan =====
+  FAZA_RUNU = "pzts";
   let meczePzts: MeczPzts[] = [];
   let pztsSync: string | null = staryPlik?.ostatniSync?.pzts ?? null;
   let stanPztsTabela: string | null = null; // „4. miejsce · 3 pkt” z tabeli ligi
+  let pztsStan: StanPzts = "pominieto";
 
-  const przyjmijMecze = (lista: MeczLigi[], zrodlo: string): void => {
+  const przyjmijMecze = (lista: MeczLigi[], zrodlo: string, stan: StanPzts): void => {
     meczePzts = lista.map((m) => ({
       ...m,
       liga: "1. Liga Mężczyzn · gr. południowa",
       zespol: "KTS Gliwice I",
     }));
     pztsSync = teraz;
+    pztsStan = stan;
     console.log(`PZTS: przyjęto ${meczePzts.length} meczów (${zrodlo})`);
   };
 
   if (process.env.PZTS_MECZE) {
     // (a) ręczna wklejka — najwyższy priorytet (backup)
     const zEnv = JSON.parse(process.env.PZTS_MECZE) as MeczLigi[];
-    przyjmijMecze(zEnv, "zmienna PZTS_MECZE — wklejka ręczna");
+    przyjmijMecze(zEnv, "zmienna PZTS_MECZE — wklejka ręczna", "recznie");
   } else {
     // (b) czytnik r.jina.ai — pełny automat
     try {
@@ -288,7 +378,7 @@ async function main() {
         (m) => m.gospodarz.includes("KTS Gliwice") || m.gosc.includes("KTS Gliwice"),
       );
       if (nasi.length === 0) throw new Error("parser nie znalazł meczów KTS Gliwice — zmiana strony pzts.pl?");
-      przyjmijMecze(nasi, `czytnik r.jina.ai: ${terminarz.length} meczów ligi, ${nasi.length} naszych`);
+      przyjmijMecze(nasi, `czytnik r.jina.ai: ${terminarz.length} meczów ligi, ${nasi.length} naszych`, "ok");
       const tabela = parsujTabelePzts(md);
       const my = tabela.find((w) => w.nazwa.includes("KTS Gliwice"));
       if (my && Number.isFinite(my.pozycja) && Number.isFinite(my.punkty)) {
@@ -296,10 +386,16 @@ async function main() {
         console.log(`PZTS: tabela ligowa OK (${tabela.length} drużyn) — KTS: ${stanPztsTabela}`);
       }
     } catch (err) {
+      pztsStan = "blad-czytnika";
       console.warn(`PZTS: czytnik zawiódł (${(err as Error).message}) —${staryPlik?.meczePzts?.length ? " zachowuję ostatni znany stan" : " brak danych"}`);
       if (staryPlik?.meczePzts) {
         meczePzts = staryPlik.meczePzts;
         console.log(`PZTS: zachowano ${meczePzts.length} meczów z poprzedniego pliku`);
+        // Zachowujemy też ostatni DOBRY stan 1. drużyny („4. miejsce · 3 pkt")
+        // zamiast degradować go do bilansu z zachowanych meczów — awaria
+        // czytnika nie może tasować karty na stronie (zbędny zapis danych).
+        const staryStan = staryPlik.zespoly?.find((z) => z.nazwa === "KTS Gliwice I")?.stan;
+        if (staryStan) stanPztsTabela = staryStan;
       } else {
         console.log("PZTS: brak danych (przekaż PZTS_MECZE przy uruchomieniu ręcznym)");
       }
@@ -328,6 +424,7 @@ async function main() {
   // się przy KAŻDYM przebiegu — porównujemy treść bez nich. Bez różnicy
   // = bez zapisu = bez commita i przebudowy Pages (cron może chodzić dalej,
   // historia repo pokazuje wyłącznie ISTOTNE zmiany).
+  const zmiany = opiszZmiany(staryPlik, dane);
   const doZapisu = JSON.stringify(dane, null, 2) + "\n";
   if (staryPlik) {
     const bezZnacznikow = (tekst: string): string => tekst
@@ -338,7 +435,7 @@ async function main() {
     const stary = JSON.stringify(staryPlik, null, 2) + "\n";
     if (bezZnacznikow(doZapisu) === bezZnacznikow(stary)) {
       console.log("Dane bez zmian — pomijam zapis (brak commita/przebudowy).");
-      return;
+      return { szts: "ok", pzts: pztsStan, zmieniono: false, zmiany: "bez zmian" };
     }
   }
   writeFileSync(WYJSCIE, doZapisu, "utf-8");
@@ -346,13 +443,33 @@ async function main() {
     `Zapisano ${WYJSCIE}: ${dane.zespoly.length} zespołów, ${dane.tabele.length} tabel, ` +
       `${dane.meczeSzts.length} meczów ŚZTS, ${dane.meczePzts.length} meczów PZTS`,
   );
+  return { szts: "ok", pzts: pztsStan, zmieniono: true, zmiany };
 }
 
 // Osłona: main() TYLKO przy bezpośrednim uruchomieniu (bun scripts/sync_statyczny.ts),
 // nie przy imporcie do testów (import.meta.main — konwencja buna/deno).
+// Od v1.5.2 KAŻDA ścieżka wyjścia (sukces / bez zmian / awaria) zapisuje
+// wpis do runs.json — panel na stronie odczytuje go zamiast API GitHuba.
 if (import.meta.main) {
-  main().catch((err) => {
-    console.error("BŁĄD synchronizacji:", err);
-    process.exit(1);
-  });
+  const startMs = Date.now();
+  const startIso = () => new Date(startMs).toISOString();
+  const czasTrwania = () => Math.round((Date.now() - startMs) / 1000);
+  main()
+    .then((w) => {
+      zapiszRun({
+        start: startIso(), czasS: czasTrwania(),
+        szts: w.szts, pzts: w.pzts, zmieniono: w.zmieniono, zmiany: w.zmiany, blad: null,
+      });
+    })
+    .catch((err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("BŁĄD synchronizacji:", err);
+      zapiszRun({
+        start: startIso(), czasS: czasTrwania(),
+        szts: FAZA_RUNU === "szts" ? "blad" : "ok",
+        pzts: FAZA_RUNU === "pzts" ? "blad-czytnika" : "pominieto",
+        zmieniono: false, zmiany: "—", blad: msg.slice(0, 300),
+      });
+      process.exit(1);
+    });
 }
