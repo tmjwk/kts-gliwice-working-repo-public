@@ -60,18 +60,11 @@
           <span class="badge badge-outline-primary t-nums" id="gal-statystyki">—</span>
         </div>
         <p class="t-small muted section-desc">
-          Pełne archiwum klubowe ze starej strony: turnieje, obozy, mecze
-          i codzienne życie klubu. Nowe albumy będą doładowywane z klubowego
-          folderu (Google Drive). Kliknij zdjęcie, aby otworzyć podgląd.
+          Turnieje, obozy, mecze i codzienne życie klubu. Prototyp galleryjny —
+          materiały z archiwum starej strony klubowej; docelowo nowe albumy
+          będą doładowywane z klubowego folderu (Google Drive).
+          Kliknij zdjęcie, aby otworzyć podgląd.
         </p>
-
-        <!-- Zakres archiwum + status importu z FB (nota dla zarządu/odwiedzających) -->
-        <div class="gal-notatka" role="note">
-          <strong>Zakres archiwum: lata 2023–2024.</strong>
-          Zdjęcia z lat 2025–2026 są publikowane na Facebooku klubu —
-          ich zaimportowanie do galerii wymaga tokenu dostępowego
-          (prace przygotowawcze w toku).
-        </div>
 
         <!-- Filtry roku (renderuje js/galeria.js) -->
         <div class="gal-filtry" id="gal-filtry" role="group" aria-label="Filtruj albumy po roku"></div>
@@ -120,10 +113,9 @@
 
   <!-- ===== LIGHTBOX (podgląd zdjęcia) ===== -->
   <div class="gal-lightbox" id="gal-lightbox" role="dialog" aria-modal="true" aria-label="Podgląd zdjęcia" hidden>
-    <div class="gal-lb-tlo" id="gal-lb-tlo" aria-hidden="true"></div>
     <button class="gal-lb-btn gal-lb-zamknij" id="gal-lb-zamknij" type="button" aria-label="Zamknij podgląd">✕</button>
     <button class="gal-lb-btn gal-lb-poprz" id="gal-lb-poprz" type="button" aria-label="Poprzednie zdjęcie">‹</button>
-    <img id="gal-lb-img" src="" alt="" onload="this.classList.add('zalane')">
+    <img id="gal-lb-img" src="" alt="">
     <button class="gal-lb-btn gal-lb-nast" id="gal-lb-nast" type="button" aria-label="Następne zdjęcie">›</button>
     <p class="gal-lb-info">
       <span id="gal-lb-tytul"></span> <span class="gal-lb-licznik" id="gal-lb-licznik"></span>
@@ -131,15 +123,5 @@
   </div>
 
   <script src="js/galeria.js"></script>
-
-  <!-- ===== PASEK ANKIETY (etap projektowy — z wersją finalną usunąć; patrz index.html #opinia) ===== -->
-  <aside class="pasek-ankiety" aria-label="Ankieta dotycząca wersji testowej strony">
-    <p class="pasek-ankiety-info">
-      <span class="pasek-ankiety-badge">WERSJA TESTOWA</span>
-      <span>Twoja opinia buduje tę stronę.</span>
-    </p>
-    <a class="btn btn-accent btn-sm" href="https://forms.gle/aLCxD2VHf7XfN6W86"
-       target="_blank" rel="noopener">Wypełnij ankietę <span aria-hidden="true">→</span></a>
-  </aside>
 </body>
 </html>
