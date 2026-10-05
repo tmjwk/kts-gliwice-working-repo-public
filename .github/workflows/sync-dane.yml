@@ -33,25 +33,44 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    # ZAPAS NA „ZAMULANIE" ŚZTS: najdłuższy dotąd run ~33 min (30.09, wieczór
+    # meczowy). Domyślny limit Actions to 6 h — zawieszone połączenie trzymałoby
+    # runnera pół dnia. 50 min = górna granica zdrowego runu + margines.
+    timeout-minutes: 50
+    # Równoległe starty (schedule + ręczny dispatch) kolejkujemy — dwa runy
+    # naraz nadpisałyby sobie runs.json (ostatni wygrywa, wpis przepada).
+    concurrency:
+      group: sync-dane
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
 
       - uses: oven-sh/setup-bun@v2
 
       - name: Pobierz dane ligowe
+        id: sync
         run: bun scripts/sync_statyczny.ts
         env:
           PZTS_MECZE: ${{ inputs.pzts_mecze }}
           JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
 
-      - name: Commit (tylko gdy dane się zmieniły)
+      # Od v1.5.2: runs.json zapisywany PRZY KAŻDYM uruchomieniu (także pustym)
+      # → commit powstaje zawsze (panel „Automat: ✓/✗" na stronie). Historia
+      # dane.json pozostaje czysta (skrypt nadal nie zapisuje go bez zmian).
+      # if:always() — wpis o BŁĘDZIE odczytu (✗) też musi dotrzeć na stronę.
+      - name: Commit (dane + dziennik przebiegów; także przy błędzie)
+        if: always()
         run: |
           git config user.name "kts-sync-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add dane.json
+          if [ -f runs.json ]; then git add dane.json runs.json; else git add dane.json; fi
           if git diff --cached --quiet; then
             echo "Brak zmian — dane aktualne."
           else
-            git commit -m "sync: dane ligowe $(date -u '+%Y-%m-%d %H:%M UTC')"
+            if [ "${{ steps.sync.outcome }}" = "success" ]; then
+              git commit -m "sync: dane ligowe $(date -u '+%Y-%m-%d %H:%M UTC')"
+            else
+              git commit -m "sync: przebieg z błędem odczytu $(date -u '+%Y-%m-%d %H:%M UTC')"
+            fi
             git push
           fi
