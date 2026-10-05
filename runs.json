@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-05T14:54:16.583Z",
+  "wygenerowano": "2026-10-05T22:44:11.562Z",
   "przechowuje": 50,
   "runs": [
     {
@@ -9,6 +9,15 @@
       "pzts": "ok",
       "zmieniono": true,
       "zmiany": "stan drużyn",
+      "blad": null
+    },
+    {
+      "start": "2026-10-05T22:43:58.409Z",
+      "czasS": 13,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "+1 w terminarzu (ŚZTS) · tabele: 18/138, 18/142 · stan drużyn",
       "blad": null
     }
   ]

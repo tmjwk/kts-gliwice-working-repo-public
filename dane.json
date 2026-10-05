@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-05T14:54:01.055Z",
+  "wygenerowano": "2026-10-05T22:43:58.410Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -34,7 +34,7 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "3. miejsce · 2 pkt",
+      "stan": "4. miejsce · 2 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "2:28"
         }
       ],
-      "zaktualizowano": "2026-10-05T14:54:01.055Z"
+      "zaktualizowano": "2026-10-05T22:43:58.410Z"
     },
     {
       "klucz": "18/138",
@@ -185,49 +185,49 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "LKS Strażak Mikołów",
+          "mecze": 3,
+          "punkty": 6,
+          "stosunek": "26:4"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "UKS Wolej Solver Ruda Śląska",
+          "mecze": 3,
+          "punkty": 5,
+          "stosunek": "18:12"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "UKS Feniks Pyskowice",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "19:1"
         },
         {
-          "pozycja": 2,
+          "pozycja": 4,
           "nazwa": "UKS Huragan Sosnowiec",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "17:3"
         },
         {
-          "pozycja": 3,
-          "nazwa": "LKS Strażak Mikołów",
-          "mecze": 2,
-          "punkty": 4,
-          "stosunek": "16:4"
-        },
-        {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "KS Mysław II Mysłowice",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "13:7"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "AKS Mikołów",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "12:8"
         },
         {
-          "pozycja": 6,
-          "nazwa": "KU AZS UJD Częstochowa",
-          "mecze": 2,
-          "punkty": 3,
-          "stosunek": "11:9"
-        },
-        {
           "pozycja": 7,
-          "nazwa": "UKS Wolej Solver Ruda Śląska",
+          "nazwa": "KU AZS UJD Częstochowa",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "11:9"
@@ -276,27 +276,27 @@
         },
         {
           "pozycja": 14,
-          "nazwa": "KS Unia Kalety",
+          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
           "mecze": 2,
           "punkty": 0,
           "stosunek": "3:17"
         },
         {
           "pozycja": 15,
-          "nazwa": "GLKS Lot Konopiska",
-          "mecze": 2,
+          "nazwa": "KS Unia Kalety",
+          "mecze": 3,
           "punkty": 0,
-          "stosunek": "3:17"
+          "stosunek": "6:24"
         },
         {
           "pozycja": 16,
-          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
-          "mecze": 2,
+          "nazwa": "GLKS Lot Konopiska",
+          "mecze": 3,
           "punkty": 0,
-          "stosunek": "3:17"
+          "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-05T14:54:01.055Z"
+      "zaktualizowano": "2026-10-05T22:43:58.410Z"
     },
     {
       "klucz": "18/142",
@@ -304,28 +304,28 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "16:4"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "8:2"
         },
         {
-          "pozycja": 2,
+          "pozycja": 3,
           "nazwa": "ATS Ligota Łabędzka",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "7:3"
         },
         {
-          "pozycja": 3,
-          "nazwa": "KTS V Gliwice",
-          "mecze": 1,
-          "punkty": 2,
-          "stosunek": "6:4"
-        },
-        {
           "pozycja": 4,
-          "nazwa": "LKS Strażak II Mikołów",
+          "nazwa": "KTS V Gliwice",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
@@ -353,17 +353,17 @@
         },
         {
           "pozycja": 8,
-          "nazwa": "STS II Żernica",
+          "nazwa": "STS I Żernica",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
           "pozycja": 9,
-          "nazwa": "STS I Żernica",
-          "mecze": 1,
+          "nazwa": "STS II Żernica",
+          "mecze": 2,
           "punkty": 1,
-          "stosunek": "5:5"
+          "stosunek": "5:15"
         },
         {
           "pozycja": 10,
@@ -401,7 +401,7 @@
           "stosunek": "2:8"
         }
       ],
-      "zaktualizowano": "2026-10-05T14:54:01.055Z"
+      "zaktualizowano": "2026-10-05T22:43:58.410Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "3:7"
         }
       ],
-      "zaktualizowano": "2026-10-05T14:54:01.055Z"
+      "zaktualizowano": "2026-10-05T22:43:58.410Z"
     }
   ],
   "meczeSzts": [
@@ -1384,7 +1384,7 @@
       ]
     },
     {
-      "dataMeczu": "2026-10-09",
+      "dataMeczu": "2026-10-08",
       "godzina": "19:00",
       "kolejka": 2,
       "gospodarz": "KTS KA Krokus VII Gliwice",
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-05T14:54:01.055Z",
-    "pzts": "2026-10-05T14:54:01.055Z"
+    "szts": "2026-10-05T22:43:58.410Z",
+    "pzts": "2026-10-05T22:43:58.410Z"
   }
 }
