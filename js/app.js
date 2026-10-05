@@ -107,16 +107,57 @@ function statusMeczu(m) {
   return "R";
 }
 
-/** Następny mecz dla drużyny (tekst "30.09 · Górnik Bobowa"). */
+/** Dzisiejsza data ISO w czasie LOKALNYM gościa (toISOString dałoby UTC —
+ *  między 00:00 a 02:00 polskiego wieczora goniłoby datę o dobę wstecz). */
+function dzisISO() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
+}
+
+/** Etykieta dnia dla człowieka: „dziś" / „jutro" / „21.09.2026". */
+function etykietaDnia(iso) {
+  const dzis = dzisISO();
+  if (iso === dzis) return "dziś";
+  const j = new Date();
+  j.setDate(j.getDate() + 1);
+  const jutro = `${j.getFullYear()}-${String(j.getMonth() + 1).padStart(2, "0")}-${String(j.getDate()).padStart(2, "0")}`;
+  if (iso === jutro) return "jutro";
+  return formatujDate(iso);
+}
+
+/** Czy mecz już się zaczął, a wyniku wciąż brak w źródle?
+ *  Godziny ligowe są warszawskie; u gościa z innej strefy granica
+ *  przesunie się o kilka godzin — akceptowalne dla komunikatu na żywo. */
+function meczRozpoczety(m) {
+  if (m.rozegrany) return false;
+  const dzis = dzisISO();
+  if (m.dataMeczu < dzis) return true; // wczoraj lub dawniej — mecz na pewno się skończył
+  if (m.dataMeczu === dzis && m.godzina) {
+    const [g, mi] = m.godzina.split(":").map(Number);
+    const n = new Date();
+    return n.getHours() > g || (n.getHours() === g && n.getMinutes() >= mi);
+  }
+  return false;
+}
+
+/** Następny mecz dla drużyny (tekst „dziś · Górnik Bobowa"). */
 function nastepnyDla(mecze, nazwa) {
-  const dzis = new Date().toISOString().slice(0, 10);
+  const wToku = mecze
+    .filter((m) => meczRozpoczety(m) && druzynyMeczu(m).includes(nazwa))
+    .sort((x, y) => (x.dataMeczu < y.dataMeczu ? 1 : -1))[0];
+  if (wToku) return `${formatujDate(wToku.dataMeczu)} · wynik w drodze`;
   const przyszle = mecze
-    .filter((m) => !m.rozegrany && m.dataMeczu >= dzis && druzynyMeczu(m).includes(nazwa))
+    .filter((m) => !m.rozegrany && !meczRozpoczety(m) && druzynyMeczu(m).includes(nazwa))
     .sort((x, y) => (x.dataMeczu < y.dataMeczu ? -1 : 1));
   const m = przyszle[0];
   if (!m) return "—";
-  const rywal = stronaNasza(m.gospodarz, nazwa) ? m.gosc : m.gospodarz;
-  return `${formatujDate(m.dataMeczu)} · ${rywal}`;
+  // Rywal = strona meczu, która NIE jest nami; nazwa karty bywa fragmentem
+  // nazwy ligowej („KA Krokus VII" ⊂ „KTS KA Krokus VII Gliwice"), więc
+  // dopasowujemy po zawieraniu, a nie przedrostku.
+  const nasi = druzynyMeczu(m);
+  const myName = nasi.find((n) => n === nazwa) ?? nasi[0] ?? nazwa;
+  const rywal = [m.gospodarz, m.gosc].find((s) => !s.includes(myName)) ?? m.gosc;
+  return `${etykietaDnia(m.dataMeczu)} · ${rywal}`;
 }
 
 function esc(s) {
@@ -126,22 +167,81 @@ function esc(s) {
 }
 
 /* ===== render ===== */
+/** Pasek meczowy pokazuje CAŁE dni meczowe, nie pojedyncze mecze:
+ *  1) ostatnie wyniki — wszystkie z najświeższego dnia, w którym padł wynik,
+ *  2) wyniki w drodze — mecze już rozegrane, których źródło jeszcze nie wpisało,
+ *  3) najbliższe mecze — wszystkie z najbliższego dnia z terminarza.
+ *  Czytelność: KAŻDY mecz w osobnym wierszu (flex-wrap w ramach jednego meczu),
+ *  wynik w „pillce" — wizualna granica między meczami; nazwy escapowane. */
+function wierszMeczuPaska(html, klasy = "") {
+  return `<span class="matchbar-match${klasy ? ` ${klasy}` : ""}">${html}</span>`;
+}
+
 function renderPasekMeczu(mecze) {
-  const rozegrane = mecze.filter((m) => m.rozegrany).sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
-  const dzis = new Date().toISOString().slice(0, 10);
-  const przyszle = mecze.filter((m) => !m.rozegrany && m.dataMeczu >= dzis)
+  const rozegrane = mecze.filter((m) => m.rozegrany)
+    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
+  const wDrodze = mecze.filter(meczRozpoczety)
+    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
+  const przyszle = mecze.filter((m) => !m.rozegrany && !meczRozpoczety(m))
     .sort((a, b) => (a.dataMeczu < b.dataMeczu ? -1 : 1));
 
   const elO = $("#ostatni-wynik");
+  const elD = $("#wyniki-w-drodze");
   const elN = $("#najblizszy-mecz");
+  const strefaD = $("#strefa-droga");
+
   const o = rozegrane[0];
-  elO.textContent = o
-    ? `${formatujDate(o.dataMeczu)} · ${o.gospodarz} ${o.wynik} ${o.gosc}`
-    : "Wyniki pojawią się po pierwszej synchronizacji";
+  if (o) {
+    const zDnia = rozegrane.filter((m) => m.dataMeczu === o.dataMeczu)
+      .sort((a, b) => (a.godzina ?? "").localeCompare(b.godzina ?? ""));
+    const etykietaO = $("#etykieta-ostatni");
+    if (etykietaO) {
+      etykietaO.textContent = (zDnia.length > 1 ? "Ostatnie wyniki" : "Ostatni wynik")
+        + ` · ${formatujDate(o.dataMeczu)}`;
+    }
+    elO.innerHTML = zDnia.map((m) => wierszMeczuPaska(
+      `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
+      + `<span class="matchbar-score t-nums">${esc(m.wynik)}</span>`
+      + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
+    )).join("");
+  } else {
+    elO.textContent = "Wyniki pojawią się po pierwszej synchronizacji";
+  }
+
+  if (elD && strefaD) {
+    if (wDrodze.length > 0) {
+      const etykietaD = strefaD.querySelector(".matchbar-label");
+      if (etykietaD) etykietaD.textContent = `Wynik w drodze · ${etykietaDnia(wDrodze[0].dataMeczu)}`;
+      elD.innerHTML = wDrodze.map((m) => wierszMeczuPaska(
+        `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
+        + `<span class="matchbar-sep">—</span>`
+        + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
+        "matchbar-match--pending",
+      )).join("");
+      strefaD.hidden = false;
+    } else {
+      strefaD.hidden = true;
+    }
+  }
+
   const n = przyszle[0];
-  elN.textContent = n
-    ? `Najbliższy mecz: ${formatujDate(n.dataMeczu)}${n.godzina ? ` g. ${n.godzina}` : ""} · ${n.gospodarz} — ${n.gosc}`
-    : "Najbliższy mecz: wg terminarza";
+  if (n) {
+    const zDnia = przyszle.filter((m) => m.dataMeczu === n.dataMeczu)
+      .sort((a, b) => (a.godzina ?? "").localeCompare(b.godzina ?? ""));
+    const etykietaN = $("#etykieta-najblizszy");
+    if (etykietaN) {
+      etykietaN.textContent = (zDnia.length > 1 ? "Najbliższe mecze" : "Najbliższy mecz")
+        + ` · ${etykietaDnia(n.dataMeczu)}`;
+    }
+    elN.innerHTML = zDnia.map((m) => wierszMeczuPaska(
+      (m.godzina ? `<span class="matchbar-hour t-nums">g. ${esc(m.godzina)}</span>` : "")
+      + `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
+      + `<span class="matchbar-sep">—</span>`
+      + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
+    )).join("");
+  } else {
+    elN.textContent = "Najbliższy mecz: wg terminarza";
+  }
 }
 
 function renderKartyDruzyn(dane, mecze) {
@@ -176,14 +276,16 @@ function renderTabele(dane) {
   $("#tabela-stan").textContent = formatujZnacznik(tabela.zaktualizowano) ?? "—";
 }
 
-function wierszMeczu(m) {
+function wierszMeczu(m, oczekuje = false) {
   const nasze = druzynyMeczu(m);
   const derby = nasze.length > 1;
   const st = statusMeczu(m);
   const wynikKolor = derby ? "match-score--derby" : st === "W" ? "match-score--W" : st === "P" ? "match-score--P" : "";
-  const badge = derby
-    ? `<span class="badge badge--derby">derby</span>`
-    : st ? `<span class="badge badge--${st}">${st}</span>` : "";
+  const badge = oczekuje
+    ? `<span class="badge badge--pending">wynik w drodze</span>`
+    : derby
+      ? `<span class="badge badge--derby">derby</span>`
+      : st ? `<span class="badge badge--${st}">${st}</span>` : "";
   const etykieta = nasze.length > 0 && !derby ? ` · ${nasze[0]}` : "";
   const zrodlo = m.liga.startsWith("1. Liga") ? "pzts.pl" : "ligi.slzts.pl";
   return `
@@ -200,9 +302,11 @@ function wierszMeczu(m) {
 }
 
 function renderMecze(mecze) {
-  const dzis = new Date().toISOString().slice(0, 10);
+  const dzis = dzisISO();
+  // „Najbliższe": przyszłe + te już rozpoczęte, lecz bez wyniku w źródle
+  // (kiedyś padnie — plakietka „wynik w drodze" tłumaczy, dlaczego tu wisi).
   const najblizsze = mecze
-    .filter((m) => !m.rozegrany && m.dataMeczu >= dzis)
+    .filter((m) => !m.rozegrany && (m.dataMeczu >= dzis || meczRozpoczety(m)))
     .sort((a, b) => (a.dataMeczu < b.dataMeczu ? -1 : 1))
     .slice(0, 6);
   const ostatnie = mecze
@@ -210,7 +314,7 @@ function renderMecze(mecze) {
     .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
 
   $("#najblizsze-mecze").innerHTML = najblizsze.length
-    ? najblizsze.map(wierszMeczu).join("")
+    ? najblizsze.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")
     : `<li class="t-small muted">Terminarz pojawi się po pierwszej synchronizacji.</li>`;
   $("#ostatnie-mecze").innerHTML = ostatnie.length
     ? ostatnie.map(wierszMeczu).join("")
@@ -229,8 +333,12 @@ function renderBadges(dane, ok) {
   }
   const sSzts = formatujZnacznik(dane.ostatniSync?.szts);
   const sPzts = formatujZnacznik(dane.ostatniSync?.pzts);
-  $("#ostatni-sync").textContent =
-    `Ostatni sync: PZTS ${sPzts ?? "—"} · ŚZTS ${sSzts ?? "—"}`;
+  const elSync = $("#ostatni-sync");
+  elSync.textContent =
+    `Ostatnia zmiana danych: PZTS ${sPzts ?? "—"} · ŚZTS ${sSzts ?? "—"}`;
+  elSync.title =
+    "Moment ostatniej REALNEJ zmiany danych (commit w repo) — nie każde " +
+    "uruchomienie automatu coś zmienia; puste przebiegi są normalne.";
 }
 
 /* ===== tryb dzień/noc ===== */
@@ -266,38 +374,68 @@ async function pokazWersje() {
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
 }
 
-/* ===== aktywność automatu: ostatnie 3 uruchomienia workflow =====
-   Publiczne API GitHuba (repo jest publiczne — pobierane z przeglądarki
-   gościa, limit 60 zapytań/h na IP — dla strony klubowej zapas ogromny).
-   Pokazuje KAŻDY run, także pusty („bez zmian w danych”): ✓ = sukces,
-   ✗ = błąd, … = w trakcie. „Ostatni sync” obok pokazuje ostatnią REALNĄ
-   zmianę danych (commity powstają tylko przy realnej zmianie). */
-async function pokazAktywnoscCrona() {
+/* ===== przebiegi automatu: runs.json (zapisywany przy KAŻDYM uruchomieniu) =====
+   Konwencja uzgodniona z właścicielem (01.10.2026):
+     ✓ = automat wystartował i ODCZYTAŁ dane ze źródeł — sukces, TAKŻE gdy
+         danych nie zmienił („bez zmian" to również sukces, nie błąd),
+     ✗ = automat wystartował, ale źródło nie odpowiedziało (timeout / 0 B),
+     BRAK WPISU między godzinami = slot co 2 h pominięty przez GitHub
+         (normalne na darmowym planie — przerwy 4-8 h).
+   Źródło: runs.json (same-origin, bez limitów API); ostatnie 50 przebiegów.
+   „Ostatnia zmiana danych" obok = moment ostatniej REALNEJ zmiany (commit). */
+async function pokazPrzebiegiSyncu() {
   const el = $("#cron-aktywnosc");
+  const elO = $("#cron-ostatni-odczyt");
   if (!el) return;
+  let runs = null;
   try {
-    const res = await fetch(
-      "https://api.github.com/repos/tmjwk/kts-gliwice-working-repo-public" +
-        "/actions/workflows/sync-dane.yml/runs?per_page=3",
-      { headers: { Accept: "application/vnd.github+json" } },
-    );
-    if (!res.ok) return; // np. chwilowy limit zapytań — po prostu nie pokazujemy
-    const dane = await res.json();
-    const runy = (dane.workflow_runs ?? []).slice(0, 3);
-    if (!runy.length) return;
-    const znak = (r) => (r.status !== "completed" ? "…" : r.conclusion === "success" ? "✓" : "✗");
-    const czas = (iso) => {
-      const d = new Date(iso);
-      const dzien = d.toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", timeZone: "Europe/Warsaw" });
-      const godz = d.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
-      return `${dzien} ${godz}`;
-    };
-    el.textContent = "Cron: " + runy.map((r) => `${czas(r.created_at)} ${znak(r)}`).join(" · ");
-    el.title =
-      "Ostatnie 3 uruchomienia automatu synchronizacji. ✓ = zakończony sukcesem, " +
-      "✗ = błąd, … = w trakcie. Pusty przebieg (bez zmian danych) jest normalny — " +
-      "„Ostatni sync” pokazuje moment ostatniej realnej zmiany danych.";
+    const res = await fetch("runs.json", { cache: "no-cache" });
+    if (res.ok) runs = (await res.json())?.runs ?? null;
   } catch (e) { /* sieć — sekcja milczy */ }
+  if (!runs || !runs.length) {
+    el.textContent = "Automat: czekam na pierwszy zapis przebiegu…";
+    el.title =
+      "Od wersji 1.5.2 automat zapisuje każdy przebieg (także pusty) do runs.json. " +
+      "Pierwszy wpis pojawi się po najbliższym uruchomieniu crona.";
+    return;
+  }
+  const etykietaCzasu = (iso) => {
+    const d = new Date(iso);
+    const teraz = new Date();
+    const fmt = (x) =>
+      x.toLocaleDateString("pl-PL", { day: "2-digit", month: "2-digit", timeZone: "Europe/Warsaw" });
+    const godz = d.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
+    if (fmt(d) === fmt(teraz)) return `dziś ${godz}`;
+    const wczoraj = new Date(teraz.getTime() - 86_400_000);
+    if (fmt(d) === fmt(wczoraj)) return `wczoraj ${godz}`;
+    return `${fmt(d)} ${godz}`;
+  };
+  const opisRunu = (r) => {
+    if (r.szts !== "ok") return "✗ źródło bez odpowiedzi";
+    let txt = r.zmieniono ? (r.zmiany && r.zmiany !== "—" ? r.zmiany : "zmiana danych") : "bez zmian";
+    if (r.pzts === "blad-czytnika") txt += " · PZTS czytnik ✗";
+    if (r.pzts === "recznie") txt += " · PZTS wklejka";
+    return `✓ ${txt}`;
+  };
+  const ostatnie3 = runs.slice(-3).reverse(); // najnowszy pierwszy
+  el.textContent = "Automat: " + ostatnie3.map((r) => `${etykietaCzasu(r.start)} ${opisRunu(r)}`).join(" · ");
+  el.title =
+    "Ostatnie uruchomienia automatu (cron co 2 h). ✓ = dane odczytane — także bez zmian; " +
+    "✗ = źródło nie odpowiedziało; brak wpisu między godzinami = slot pominięty przez " +
+    "GitHub (przerwy 4-8 h są normalne). Szczegóły techniczne: runs.json w repo.";
+  if (elO) {
+    const ostatniOk = [...runs].reverse().find((r) => r.szts === "ok");
+    if (ostatniOk) {
+      const min = Math.round((Date.now() - new Date(ostatniOk.start).getTime()) / 60_000);
+      const temu =
+        min < 1 ? "właśnie teraz" :
+        min < 60 ? `${min} min temu` :
+        min < 2_880 ? `${Math.round(min / 60)} godz. temu` :
+        `${Math.round(min / 1_440)} dni temu`;
+      elO.textContent = `Ostatni udany odczyt: ${etykietaCzasu(ostatniOk.start)} (${temu})`;
+      elO.title = "Moment ostatniego przebiegu, w którym dane ze źródeł zostały odczytane pomyślnie.";
+    }
+  }
 }
 
 /* ===== galeria: teaser okładek (pełna galeria na podstronie) ===== */
@@ -341,7 +479,7 @@ async function start() {
   // tryb dzień/noc (ikona + klik) i menu mobilne
   obsluzPrzelacznikTrybu();
   pokazWersje();
-  pokazAktywnoscCrona();
+  pokazPrzebiegiSyncu();
   renderTeaserGalerii();
   const hamburger = $("#hamburger");
   const nav = $("#nav");
@@ -361,6 +499,8 @@ async function start() {
     console.error("Błąd ładowania dane.json:", err);
     $("#ostatni-wynik").textContent = "Błąd ładowania danych — odśwież stronę";
     $("#najblizszy-mecz").textContent = "";
+    const elD = $("#wyniki-w-drodze");
+    if (elD) elD.hidden = true;
     $("#karty-druzyn").innerHTML =
       `<p class="t-small muted">Dane chwilowo niedostępne — odśwież stronę.</p>`;
     $("#badge-sezon").textContent = "Sezon —";
