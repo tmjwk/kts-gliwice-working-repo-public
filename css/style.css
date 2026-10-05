@@ -197,12 +197,44 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 /* ===== pasek meczu ===== */
 .matchbar { background: var(--kts-primary); color: #fff; border-bottom: 1px solid var(--kts-line); }
 .matchbar-inner {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-  gap: 0.5rem 1.5rem; padding-block: 0.75rem; text-align: center; font-size: 0.875rem;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-block: 0.5rem; text-align: center; font-size: 0.875rem;
 }
-.matchbar-label { font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.8rem; }
-.matchbar-result { font-weight: 500; }
-.matchbar-next { color: rgba(255,255,255,0.85); }
+.matchbar-zone {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  padding: 0.5rem 0.75rem;
+}
+.matchbar-zone + .matchbar-zone { border-top: 1px solid rgba(255,255,255,0.16); }
+@media (min-width: 64rem) {
+  .matchbar-inner { flex-direction: row; align-items: stretch; }
+  .matchbar-zone { flex: 1 1 0; max-width: 34rem; }
+  .matchbar-zone + .matchbar-zone { border-top: 0; border-left: 1px solid rgba(255,255,255,0.16); }
+}
+.matchbar-label {
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  font-size: 0.72rem; color: rgba(255,255,255,0.72);
+}
+.matchbar-matches { display: flex; flex-direction: column; gap: 0.25rem; }
+.matchbar-match {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center;
+  column-gap: 0.45rem; row-gap: 0.1rem; line-height: 1.45;
+}
+.matchbar-team { font-weight: 500; }
+.matchbar-score {
+  font-weight: 700; border-radius: 0.35rem; padding: 0 0.5rem;
+  background: rgba(255,255,255,0.16);
+}
+.matchbar-sep { color: rgba(255,255,255,0.55); }
+.matchbar-hour { font-weight: 700; }
+.matchbar-match--pending { position: relative; padding-left: 0.9rem; }
+.matchbar-match--pending::before {
+  content: ""; position: absolute; left: 0.1rem; top: 50%;
+  width: 0.45rem; height: 0.45rem; border-radius: 50%;
+  background: var(--kts-accent); transform: translateY(-50%);
+  animation: matchbar-pulse 1.6s ease-in-out infinite;
+}
+@keyframes matchbar-pulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+.badge--pending { border-color: var(--kts-line); color: var(--kts-text-muted); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
 
 /* ===== sekcje ===== */
 .section { padding: 3.5rem 1rem; }
@@ -316,18 +348,9 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .footer-fade { color: rgba(255,255,255,0.5); margin-top: 0.75rem; }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem; padding-top: 1rem; color: rgba(255,255,255,0.4); }
 
-/* ===== galeria (pełna — od v1.4.0) ===== */
+/* ===== galeria (v1.2.0 — prototyp) ===== */
 .gal-powrot { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--kts-link); text-decoration: none; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; }
 .gal-powrot:hover { text-decoration: underline; }
-
-/* nota zakresu archiwum / statusu importu (pełna galeria) */
-.gal-notatka {
-  margin: 0 0 1.5rem; padding: 0.85rem 1rem;
-  border: 1px solid var(--kts-line); border-left: 3px solid rgba(90,149,255,0.55);
-  border-radius: 0.5rem; background: var(--bg-card);
-  font-size: 0.85rem; line-height: 1.55; color: var(--kts-text-muted);
-}
-.gal-notatka strong { color: var(--kts-ink); font-weight: 600; }
 
 .gal-filtry { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0 2rem; }
 .gal-chip {
@@ -353,23 +376,9 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   background: var(--kts-neutral); border-radius: 0.5rem; overflow: hidden;
   aspect-ratio: 4 / 3;
 }
-.gal-foto img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; opacity: 0; transition: transform 0.25s ease, opacity 0.25s ease-out; }
-.gal-foto img.zalane { opacity: 1; }
+.gal-foto img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s ease; }
 .gal-foto:hover img, .gal-foto:focus-visible img { transform: scale(1.04); }
 .gal-foto:focus-visible { outline: 2px solid var(--kts-link); outline-offset: 2px; }
-
-/* LQIP blur-up (v1.5.0): rozmyty placeholder pod ładującą się miniaturą */
-.lqip {
-  position: absolute; inset: 0; background-size: cover; background-position: center;
-  filter: blur(16px) saturate(1.15); transform: scale(1.12);
-}
-/* lightbox: miniaturka jako rozmyte tło pod ładującym się oryginałem */
-.gal-lb-tlo {
-  position: absolute; inset: 0; background-position: center; background-repeat: no-repeat;
-  background-size: contain; filter: blur(32px) saturate(1.1); transform: scale(1.06);
-}
-#gal-lb-img { position: relative; z-index: 1; opacity: 0; transition: opacity 0.3s ease-out; }
-#gal-lb-img.zalane { opacity: 1; }
 
 /* teaser na stronie głównej */
 .gal-teaser { display: grid; gap: 0.5rem; grid-template-columns: repeat(2, 1fr); margin-top: 1.5rem; }
@@ -377,8 +386,7 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 @media (min-width: 64rem) { .gal-teaser { grid-template-columns: repeat(6, 1fr); } }
 .gal-teaser a { position: relative; border-radius: 0.5rem; overflow: hidden; aspect-ratio: 1; text-decoration: none; display: block; }
 .gal-teaser a:focus-visible { outline: 2px solid var(--kts-link); outline-offset: 2px; }
-.gal-teaser img { width: 100%; height: 100%; object-fit: cover; display: block; position: relative; opacity: 0; transition: opacity 0.25s ease-out; }
-.gal-teaser img.zalane { opacity: 1; }
+.gal-teaser img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .gal-teaser-label {
   position: absolute; inset: auto 0 0 0; padding: 1.6rem 0.5rem 0.4rem;
   background: linear-gradient(transparent, rgba(9,16,29,0.88)); color: #fff;
@@ -411,52 +419,4 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .gal-lb-poprz { left: 0.5rem; }
   .gal-lb-nast { right: 0.5rem; }
   .gal-lb-info { padding: 0.75rem 3.5rem 0; }
-}
-
-/* ============================================================
-   ANKIETA DLA ZARZĄDU (etap projektowy, v1.3.0)
-   Sekcja #opinia (index.html) + pasek przyklejony (.pasek-ankiety,
-   index.html i galeria.html). Całość do USUNIĘCIA przy wersji
-   finalnej: 2 bloki HTML + ten fragment CSS + padding-bottom body.
-   ============================================================ */
-
-/* --- sekcja „Podziel się opinią" --- */
-.opinia-desc {
-  max-width: 46rem; margin: 0.75rem auto 1.5rem; color: var(--kts-text-muted);
-}
-.opinia-cta { margin-bottom: 0.75rem; }
-.opinia-nota { letter-spacing: 0.01em; }
-
-/* --- pasek przyklejony do dołu ekranu --- */
-.pasek-ankiety {
-  position: fixed; inset-inline: 0; bottom: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: center;
-  gap: 1rem; flex-wrap: wrap;
-  padding: 0.65rem 1rem;
-  background: var(--bg-glass);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid var(--kts-line);
-  box-shadow: 0 -6px 18px rgba(15, 27, 45, 0.10);
-}
-.pasek-ankiety-info {
-  display: flex; align-items: center; gap: 0.6rem; margin: 0;
-  font-size: 0.875rem; color: var(--kts-text);
-}
-.pasek-ankiety-badge {
-  font-weight: 600; font-size: 0.6875rem; line-height: 1;
-  letter-spacing: 0.08em;
-  color: var(--kts-text-muted);
-  border: 1px solid currentColor; border-radius: 999px;
-  padding: 0.28rem 0.55rem; white-space: nowrap;
-}
-
-/* miejsce na pasek — stopka nie może być zasłonięta */
-body { padding-bottom: 3.9rem; }
-
-@media (max-width: 40rem) {
-  .pasek-ankiety { flex-direction: column; gap: 0.5rem; padding: 0.6rem 0.75rem; }
-  .pasek-ankiety-info { text-align: center; }
-  .pasek-ankiety .btn { min-height: 44px; }   /* cel dotykowy >= 44 px */
-  body { padding-bottom: 6.9rem; }
 }
