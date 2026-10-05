@@ -5,42 +5,6 @@
    ============================================================ */
 "use strict";
 
-/* ===== zawsze startuj od nagłówka strony — jak w app.js (v1.3.2) =====
-   Patrz komentarz w js/app.js: skok natychmiastowy (bez animacji),
-   obsługa przywrócenia karty z pamięci (pageshow persisted),
-   kotwica uszanowana tylko przy wejściu z naszej domeny. */
-if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-
-const _naszReferrer = (() => {
-  try { return !!document.referrer && new URL(document.referrer).origin === location.origin; }
-  catch { return false; }
-})();
-
-const _naGoreNatychmiast = () => {
-  if (location.hash && _naszReferrer) return;
-  try {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-  } catch {
-    const html = document.documentElement, org = html.style.scrollBehavior;
-    html.style.scrollBehavior = "auto";
-    window.scrollTo(0, 0);
-    html.style.scrollBehavior = org;
-  }
-};
-
-// kotwica zdejmowana natychmiast (przed przewinięciem Chrome do fragmentu)
-// — tylko dla wejść spoza naszej domeny:
-if (location.hash && !_naszReferrer) {
-  history.replaceState(null, "", location.pathname + location.search);
-}
-_naGoreNatychmiast();
-window.addEventListener("load", () => {
-  _naGoreNatychmiast();
-  setTimeout(_naGoreNatychmiast, 200);
-  setTimeout(_naGoreNatychmiast, 600);
-});
-window.addEventListener("pageshow", (e) => { if (e.persisted) _naGoreNatychmiast(); });
-
 const $ = (sel) => document.querySelector(sel);
 
 function esc(s) {
@@ -102,19 +66,11 @@ function renderAlbumy() {
   }
   kontener.innerHTML = widoczne.map((a) => {
     const idx = GALERIA.indexOf(a);
-    const fotosy = a.zdjecia.map((src, i) => {
-      const mini = (a.miniatury && a.miniatury[i]) || src;   // v1.5.0: miniatura WebP
-      const lqip = a.lqip && a.lqip[i];                       // v1.5.0: placeholder blur-up
-      return `
+    const fotosy = a.zdjecia.map((src, i) => `
       <button class="gal-foto" type="button" data-album="${idx}" data-foto="${i}"
               aria-label="Powiększ zdjęcie ${i + 1} z albumu ${esc(a.tytul)}">
-        ${lqip ? `<span class="lqip" style="background-image:url('${lqip}')" aria-hidden="true"></span>` : ""}
-        <img onload="this.classList.add('zalane')"
-             onerror="if(this.dataset.org && this.src !== this.dataset.org){this.src=this.dataset.org}else{this.classList.add('zalane')}"
-             src="${esc(mini)}" data-org="${esc(src)}"
-             alt="${esc(a.tytul)} — zdjęcie ${i + 1}" loading="lazy" decoding="async">
-      </button>`;
-    }).join("");
+        <img src="${esc(src)}" alt="${esc(a.tytul)} — zdjęcie ${i + 1}" loading="lazy">
+      </button>`).join("");
     return `
       <article class="gal-album" id="album-${esc(a.slug)}">
         <div class="gal-album-head">
@@ -141,16 +97,8 @@ function lbPokaz() {
   const a = GALERIA[LB.album];
   if (!a) return;
   LB.foto = Math.max(0, Math.min(LB.foto, a.zdjecia.length - 1));
-  const img = $("#gal-lb-img");
-  const tlo = $("#gal-lb-tlo");
-  // v1.5.0: LQIP jako rozmyte tło — natychmiastowa reakcja, oryginał wjeżdża na wierzchu
-  if (tlo) {
-    const lqip = a.lqip && a.lqip[LB.foto];
-    tlo.style.backgroundImage = lqip ? `url('${lqip}')` : "none";
-  }
-  img.classList.remove("zalane");
-  img.src = a.zdjecia[LB.foto];
-  img.alt = `${a.tytul} — zdjęcie ${LB.foto + 1}`;
+  $("#gal-lb-img").src = a.zdjecia[LB.foto];
+  $("#gal-lb-img").alt = `${a.tytul} — zdjęcie ${LB.foto + 1}`;
   $("#gal-lb-tytul").textContent = a.tytul;
   $("#gal-lb-licznik").textContent = `· ${LB.foto + 1} / ${a.zdjecia.length}`;
 }
@@ -251,11 +199,8 @@ async function start() {
     return;
   }
 
-  // sortowanie: najnowsze albumy na górze; bez daty (serwisowe) — na końcu
-  GALERIA.sort((a, b) => {
-    const da = a.data ?? "", db = b.data ?? "";
-    return da > db ? -1 : da < db ? 1 : 0;
-  });
+  // sortowanie: najnowsze albumy na górze
+  GALERIA.sort((a, b) => (a.data ?? "") < (b.data ?? "") ? 1 : -1);
   renderStatystyki();
   renderFiltry();
   renderAlbumy();
