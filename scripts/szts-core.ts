@@ -51,14 +51,49 @@ export const LIGI_SZTS: ReadonlyArray<{
   { klucz: "18/144", nazwa: "2. Śląska Liga Amatorów", url: "https://ligi.slzts.pl/liga/18/144/" },
 ];
 
-/** Pobiera stronę ligową (serwer deklaruje UTF-8; zdejmujemy BOM). */
-export async function pobierzHtml(url: string): Promise<string> {
-  const res = await fetch(url, {
-    headers: { "User-Agent": "KTS-Gliwice-Sync/1.0 (strona klubowa; tabele ligowe)" },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status} dla ${url}`);
-  const tekst = await res.text();
-  return tekst.replace(/^\uFEFF/, "");
+/**
+ * Statystyki prób pobierania (v1.6.1 — poziom 1: retry+timeout w pobierzHtml).
+ * Każde udane pobranie PO PONOWIE zapisuje się tutaj; sync_statyczny.ts
+ * odczytuje tę listę przy budowie wpisu runs.json („sukces po 2. próbie"),
+ * żeby pomiar „jak często błędy przejściowe" nie umarł razem z retry.
+ */
+export const STATYSTYKI_POBIERANIA: Array<{ url: string; proby: number }> = [];
+
+/**
+ * Pobiera stronę ligową (serwer deklaruje UTF-8; zdejmujemy BOM).
+ *
+ * v1.6.1 — wzór lustrzany z pobierzPztsPrzezJine (ścieżka PZTS, sprawdzona
+ * produkcyjnie od 29.09): 3 próby, timeout 90 s, backoff 10 s / 20 s.
+ * PONAWIAMY także przy podejrzanej treści: strona ligowa MUSI mieć sekcje
+ * „Tabela ligowa" i „Terminarz" — 03.10 13:47 ŚZTS wydał stronę 3LM bez
+ * tabeli (parsujTabele → 0 wierszy → run czerwony); dziś taki odczyt
+ * NIE jest sukcesem, tylko błędem przejściowym wartym ponowienie.
+ * Pełna awaria po 3 próbach = fail-loud jak dotychczas.
+ */
+export async function pobierzHtml(url: string, probyMax = 3): Promise<string> {
+  let ostatniBlad: unknown = null;
+  for (let i = 1; i <= probyMax; i++) {
+    try {
+      const res = await fetch(url, {
+        headers: { "User-Agent": "KTS-Gliwice-Sync/1.0 (strona klubowa; tabele ligowe)" },
+        signal: AbortSignal.timeout(90_000),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status} dla ${url}`);
+      const tekst = (await res.text()).replace(/^\uFEFF/, "");
+      if (!tekst.includes("Tabela ligowa") || !tekst.includes("Terminarz")) {
+        throw new Error(`strona bez sekcji ligowych (${tekst.length} B) — przejściowa awaria ŚZTS?`);
+      }
+      if (i > 1) STATYSTYKI_POBIERANIA.push({ url, proby: i });
+      return tekst;
+    } catch (err) {
+      ostatniBlad = err;
+      if (i < probyMax) {
+        console.warn(`pobierzHtml: próba ${i}/${probyMax} nieudana (${(err as Error).message}) — czekam ${10 * i} s`);
+        await new Promise((r) => setTimeout(r, 10_000 * i)); // 10 s, 20 s
+      }
+    }
+  }
+  throw ostatniBlad ?? new Error(`nieznany błąd pobierania: ${url}`);
 }
 
 /** Czyni komórkę HTML znośnym tekstem (usuwa tagi, &nbsp;, białe znaki). */
