@@ -1,5 +1,5 @@
 {
-  "wersja": "1.6.0",
-  "data": "2026-10-05T05:00:00Z",
-  "opis": "pasek meczowy całymi dniami (kilka meczów + wyniki w drodze), każdy mecz w osobnym wierszu ze strefami i pillkami wyników + przebiegi automatu z runs.json"
+  "wersja": "1.6.1",
+  "data": "2026-10-06T08:00:00Z",
+  "opis": "wzmocnienie syncu: ponawianie pobierania ŚZTS (3 próby, timeout 90 s) + izolacja źródeł — awaria jednego nie blokuje drugiego, status per źródło w danych"
 }
