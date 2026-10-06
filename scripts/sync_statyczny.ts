@@ -29,6 +29,17 @@
  * (świadoma zmiana zasady „pusty przebieg = brak commita" — historia
  * dane.json pozostaje czysta, commity runs.json to nowy, osobny szum).
  *
+ * Od v1.6.1 (poziom 1): pobierzHtml (szts-core.ts) ponawia pobieranie
+ * (3 próby / timeout 90 s / 10 s + 20 s) — użycie retry trafia do runs.json
+ * (pole „retry"), żeby pomiar błędów przejściowych nie umarł z retry.
+ *
+ * Od v1.6.1 (poziom 2): IZOLACJA ŹRÓDEŁ — błąd ŚZTS nie blokuje PZTS
+ * (i odwrotnie). Awaria jednego źródła = przytrzymanie jego danych
+ * z poprzedniego dane.json + status w polu „zrodla" + run czerwony
+ * (exit 1 PO zapisie), ale część udana ląduje w repo (commit if:always
+ * w workflow). Świadoma zgoda właściciela na częściowo świeże dane
+ * zamiast all-or-nothing (decyzja 03.10: „wykonaj 1+2").
+ *
  * Nowy sezon: zaktualizuj ZESPOLY (i ewentualnie LIGI_SZTS w szts-core.ts).
  */
 
@@ -40,6 +51,7 @@ import {
   parsujTabele,
   parsujTerminarz,
   pobierzHtml,
+  STATYSTYKI_POBIERANIA,
   type MeczLigi,
 } from "./szts-core";
 
@@ -78,6 +90,7 @@ interface WpisRunu {
   zmieniono: boolean; // czy dane.json został zapisany (realna zmiana danych)
   zmiany: string; // „bez zmian" / „+2 wyniki (ŚZTS)" / „—"
   blad: string | null; // treść błędu, gdy szts === "blad"
+  retry?: string | null; // v1.6.1: użycie ponowień, np. „ŚZTS: sukces po 2. próbie (18/138)"
 }
 
 // ====== Typy danych wyjściowych (kontrakt dla strony statycznej) ======
@@ -97,6 +110,10 @@ interface Dane {
   meczeSzts: MeczSzts[];
   meczePzts: MeczPzts[];
   ostatniSync: { szts: string | null; pzts: string | null };
+  /** v1.6.1 (poziom 2): status per źródło. "ok" jest stabilne (nie szumi
+   *  w ochronie przed zapisem bez zmian); awaria i wyzdrowienie zmieniają
+   *  treść → realny commit — dokładnie wtedy, gdy warto to pokazać. */
+  zrodla: { szts: string; pzts: string };
 }
 
 /** Polska odmiana liczebników (1 zwycięstwo, 2 zwycięstwa, 5 zwycięstw). */
@@ -212,7 +229,10 @@ export function parsujTabelePzts(md: string): WierszTabeliPzts[] {
 
 /** Pobiera Markdown ligi przez czytnik (ponawia — darmowy limit bywa wąski).
  *  Opcjonalny klucz: sekret JINA_API_KEY w repo (Authorization: Bearer …)
- *  — zabezpieczenie na wypadek blokad anonimowego ruchu z IP runnera. */
+ *  — zabezpieczenie na wypadek blokad anonimowego ruchu z IP runnera.
+ *  v1.6.1: liczba prób sukcesu exposed przez JINA_PROBY (do runs.json). */
+let JINA_PROBY = 0; // 1 = sukces za pierwszym razem; 2+ = po ponowieniu
+
 async function pobierzPztsPrzezJine(proby = 3): Promise<string> {
   let ostatniBlad: unknown = null;
   const klucz = process.env.JINA_API_KEY?.trim();
@@ -236,6 +256,7 @@ async function pobierzPztsPrzezJine(proby = 3): Promise<string> {
       if (!res.ok) throw new Error(`czytnik HTTP ${res.status}`);
       const tekst = await res.text();
       if (tekst.length < 5000 || !tekst.includes("Liga")) throw new Error("czytnik zwrócił podejrzanie krótką odpowiedź");
+      JINA_PROBY = i;
       return tekst;
     } catch (err) {
       ostatniBlad = err;
@@ -307,44 +328,89 @@ function zapiszRun(wpis: WpisRunu): void {
 /** Faza runu dla etykiety błędu w runs.json (awaria ŚZTS vs PZTS). */
 let FAZA_RUNU: "szts" | "pzts" = "szts";
 
-async function main(): Promise<{ szts: StanSzts; pzts: StanPzts; zmieniono: boolean; zmiany: string }> {
+type WynikRunu = {
+  szts: StanSzts;
+  pzts: StanPzts;
+  zmieniono: boolean;
+  zmiany: string;
+  blad: string | null; // treść błędu źródła (izolacja: błąd NIE ubija runu)
+  retry: string | null; // opis użycia ponowień („ŚZTS: sukces po 2. próbie…”)
+};
+
+/** Opis użycia ponowień dla runs.json — pomiar błędów przejściowych w locie. */
+function opiszRetry(): string | null {
+  const czesci: string[] = [];
+  if (STATYSTYKI_POBIERANIA.length > 0) {
+    const klucze = STATYSTYKI_POBIERANIA.map((s) => s.url.match(/\d+\/\d+/)?.[0] ?? s.url);
+    czesci.push(`ŚZTS: sukces po ${STATYSTYKI_POBIERANIA[0].proby}. próbie (${klucze.join(", ")})`);
+  }
+  if (JINA_PROBY > 1) czesci.push(`PZTS: czytnik sukces po ${JINA_PROBY}. próbie`);
+  return czesci.length > 0 ? czesci.join(" · ") : null;
+}
+
+async function main(): Promise<WynikRunu> {
   const teraz = new Date().toISOString();
   const staryPlik = existsSync(WYJSCIE) ? (JSON.parse(readFileSync(WYJSCIE, "utf-8")) as Dane) : null;
 
   // ===== 1. ŚZTS — żywy odczyt (tabele + terminarze + stany) =====
-  const tabele: Dane["tabele"] = [];
-  const meczeMap = new Map<string, MeczSzts>();
+  // v1.6.1 (poziom 2): IZOLACJA — awaria ŚZTS przytrzymuje poprzednie dane
+  // tego źródła i NIE blokuje odczytu PZTS; run kończy się czerwono
+  // (exit 1 w wrapperze PO zapisie), ale część udana ląduje w repo.
+  let tabele: Dane["tabele"] = staryPlik?.tabele ?? [];
+  let meczeSzts: MeczSzts[] = staryPlik?.meczeSzts ?? [];
+  let sztsSync: string | null = staryPlik?.ostatniSync?.szts ?? null;
+  // stany ŚZTS przytrzymane z poprzedniego pliku (awaria nie kasuje kart)
   const stany = new Map<string, string>();
+  for (const z of staryPlik?.zespoly ?? []) {
+    if (z.tryb.startsWith("ŚZTS")) stany.set(z.nazwa, z.stan);
+  }
+  let sztsBlad: string | null = null;
 
-  for (const liga of LIGI_SZTS) {
-    const html = await pobierzHtml(liga.url);
-    const tabela = parsujTabele(html);
-    if (tabela.length === 0) throw new Error(`pusta tabela ${liga.klucz} — zmiana struktury ligi.slzts.pl?`);
-    tabele.push({ klucz: liga.klucz, nazwa: liga.nazwa, wiersze: tabela, zaktualizowano: teraz });
+  try {
+    const tabeleNowe: Dane["tabele"] = [];
+    const meczeMap = new Map<string, MeczSzts>();
+    const stanyNowe = new Map<string, string>();
 
-    const nasi = ZESPOLY.filter((z) => z.ligaKlucz === liga.klucz);
-    if (nasi.length === 0) continue;
-    const pary = dopasujZespoly(
-      nasi.map((z) => z.nazwa),
-      tabela,
-    );
-    const terminarz = parsujTerminarz(html);
+    for (const liga of LIGI_SZTS) {
+      const html = await pobierzHtml(liga.url);
+      const tabela = parsujTabele(html);
+      if (tabela.length === 0) throw new Error(`pusta tabela ${liga.klucz} — zmiana struktury ligi.slzts.pl?`);
+      tabeleNowe.push({ klucz: liga.klucz, nazwa: liga.nazwa, wiersze: tabela, zaktualizowano: teraz });
 
-    for (const { nasza, szts } of pary) {
-      const z = nasi.find((x) => x.nazwa === nasza);
-      const wiersz = tabela.find((t) => t.nazwa === szts);
-      if (z && wiersz) stany.set(nasza, `${wiersz.pozycja}. miejsce · ${wiersz.punkty} pkt`);
-      for (const m of meczeZespolu(terminarz, szts)) {
-        const klucz = `${m.dataMeczu}|${m.gospodarz}|${m.gosc}`;
-        const istniejacy = meczeMap.get(klucz);
-        if (istniejacy) {
-          if (!istniejacy.zespoly.includes(nasza)) istniejacy.zespoly.push(nasza); // derby
-        } else {
-          meczeMap.set(klucz, { ...m, liga: z?.liga ?? liga.nazwa, zespoly: [nasza] });
+      const nasi = ZESPOLY.filter((z) => z.ligaKlucz === liga.klucz);
+      if (nasi.length === 0) continue;
+      const pary = dopasujZespoly(
+        nasi.map((z) => z.nazwa),
+        tabela,
+      );
+      const terminarz = parsujTerminarz(html);
+
+      for (const { nasza, szts } of pary) {
+        const z = nasi.find((x) => x.nazwa === nasza);
+        const wiersz = tabela.find((t) => t.nazwa === szts);
+        if (z && wiersz) stanyNowe.set(nasza, `${wiersz.pozycja}. miejsce · ${wiersz.punkty} pkt`);
+        for (const m of meczeZespolu(terminarz, szts)) {
+          const klucz = `${m.dataMeczu}|${m.gospodarz}|${m.gosc}`;
+          const istniejacy = meczeMap.get(klucz);
+          if (istniejacy) {
+            if (!istniejacy.zespoly.includes(nasza)) istniejacy.zespoly.push(nasza); // derby
+          } else {
+            meczeMap.set(klucz, { ...m, liga: z?.liga ?? liga.nazwa, zespoly: [nasza] });
+          }
         }
       }
+      console.log(`${liga.klucz}: tabela ${tabela.length} drużyn, terminarz ${terminarz.length} meczów, dopasowano ${pary.length}/${nasi.length}`);
     }
-    console.log(`${liga.klucz}: tabela ${tabela.length} drużyn, terminarz ${terminarz.length} meczów, dopasowano ${pary.length}/${nasi.length}`);
+
+    tabele = tabeleNowe;
+    meczeSzts = [...meczeMap.values()];
+    stany.clear();
+    for (const [k, v] of stanyNowe) stany.set(k, v);
+    sztsSync = teraz;
+  } catch (err) {
+    sztsBlad = err instanceof Error ? err.message : String(err);
+    if (!staryPlik) throw err; // brak danych do przytrzymania — totalna awaria = fail loud
+    console.warn(`ŚZTS: awaria odczytu (${sztsBlad}) — przytrzymuję dane z poprzedniego pliku`);
   }
 
   // ===== 2. PZTS — kolejność: wklej (env) → czytnik (jina) → stary stan =====
@@ -414,9 +480,15 @@ async function main(): Promise<{ szts: StanSzts; pzts: StanPzts; zmieniono: bool
       url: z.url,
     })),
     tabele,
-    meczeSzts: [...meczeMap.values()],
+    meczeSzts,
     meczePzts,
-    ostatniSync: { szts: teraz, pzts: pztsSync },
+    ostatniSync: { szts: sztsSync, pzts: pztsSync },
+    // v1.6.1 (poziom 2): status per źródło — „ok” stabilne, awaria/wyzdrowienie
+    // zmienia treść → realny commit dokładnie wtedy, gdy warto to pokazać.
+    zrodla: {
+      szts: sztsBlad ? `blad: ${sztsBlad.slice(0, 120)}` : "ok",
+      pzts: pztsStan === "blad-czytnika" ? "blad: czytnik PZTS — dane przytrzymane" : (pztsStan === "pominieto" ? "pominieto" : "ok"),
+    },
   };
 
   // ===== 3. Ochrona przed szumem: zapis TYLKO przy realnej zmianie danych =====
@@ -425,6 +497,9 @@ async function main(): Promise<{ szts: StanSzts; pzts: StanPzts; zmieniono: bool
   // = bez zapisu = bez commita i przebudowy Pages (cron może chodzić dalej,
   // historia repo pokazuje wyłącznie ISTOTNE zmiany).
   const zmiany = opiszZmiany(staryPlik, dane);
+  const zmianyPelne = sztsBlad
+    ? `AWARIA ŚZTS — dane przytrzymane (${sztsBlad.slice(0, 80)})${zmiany !== "bez zmian" ? ` · ${zmiany}` : ""}`
+    : (pztsStan === "blad-czytnika" ? `AWARIA PZTS — dane przytrzymane${zmiany !== "bez zmian" ? ` · ${zmiany}` : ""}` : zmiany);
   const doZapisu = JSON.stringify(dane, null, 2) + "\n";
   if (staryPlik) {
     const bezZnacznikow = (tekst: string): string => tekst
@@ -435,7 +510,10 @@ async function main(): Promise<{ szts: StanSzts; pzts: StanPzts; zmieniono: bool
     const stary = JSON.stringify(staryPlik, null, 2) + "\n";
     if (bezZnacznikow(doZapisu) === bezZnacznikow(stary)) {
       console.log("Dane bez zmian — pomijam zapis (brak commita/przebudowy).");
-      return { szts: "ok", pzts: pztsStan, zmieniono: false, zmiany: "bez zmian" };
+      return {
+        szts: sztsBlad ? "blad" : "ok", pzts: pztsStan, zmieniono: false,
+        zmiany: zmianyPelne, blad: sztsBlad, retry: opiszRetry(),
+      };
     }
   }
   writeFileSync(WYJSCIE, doZapisu, "utf-8");
@@ -443,13 +521,19 @@ async function main(): Promise<{ szts: StanSzts; pzts: StanPzts; zmieniono: bool
     `Zapisano ${WYJSCIE}: ${dane.zespoly.length} zespołów, ${dane.tabele.length} tabel, ` +
       `${dane.meczeSzts.length} meczów ŚZTS, ${dane.meczePzts.length} meczów PZTS`,
   );
-  return { szts: "ok", pzts: pztsStan, zmieniono: true, zmiany };
+  return {
+    szts: sztsBlad ? "blad" : "ok", pzts: pztsStan, zmieniono: true,
+    zmiany: zmianyPelne, blad: sztsBlad, retry: opiszRetry(),
+  };
 }
 
 // Osłona: main() TYLKO przy bezpośrednim uruchomieniu (bun scripts/sync_statyczny.ts),
 // nie przy imporcie do testów (import.meta.main — konwencja buna/deno).
 // Od v1.5.2 KAŻDA ścieżka wyjścia (sukces / bez zmian / awaria) zapisuje
 // wpis do runs.json — panel na stronie odczytuje go zamiast API GitHuba.
+// Od v1.6.1 (poziom 2): błąd jednego źródła = run CZERWONY (exit 1 PO zapisie
+// runs.json i dane.json), żeby awaria była widoczna w historii Actions;
+// workflow i tak commituje (krok Commit ma if:always()).
 if (import.meta.main) {
   const startMs = Date.now();
   const startIso = () => new Date(startMs).toISOString();
@@ -458,8 +542,12 @@ if (import.meta.main) {
     .then((w) => {
       zapiszRun({
         start: startIso(), czasS: czasTrwania(),
-        szts: w.szts, pzts: w.pzts, zmieniono: w.zmieniono, zmiany: w.zmiany, blad: null,
+        szts: w.szts, pzts: w.pzts, zmieniono: w.zmieniono, zmiany: w.zmiany,
+        blad: w.blad, retry: w.retry,
       });
+      // v1.6.1: awaria któregokolwiek źródła = świadomie czerwony run
+      // (widoczny w Actions), ale dane i dziennik już zapisane.
+      if (w.szts === "blad" || w.pzts === "blad-czytnika") process.exit(1);
     })
     .catch((err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);
@@ -468,7 +556,7 @@ if (import.meta.main) {
         start: startIso(), czasS: czasTrwania(),
         szts: FAZA_RUNU === "szts" ? "blad" : "ok",
         pzts: FAZA_RUNU === "pzts" ? "blad-czytnika" : "pominieto",
-        zmieniono: false, zmiany: "—", blad: msg.slice(0, 300),
+        zmieniono: false, zmiany: "—", blad: msg.slice(0, 300), retry: opiszRetry(),
       });
       process.exit(1);
     });
