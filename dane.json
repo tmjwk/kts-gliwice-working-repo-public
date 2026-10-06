@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-06T15:16:48.717Z",
+  "wygenerowano": "2026-10-06T21:05:13.060Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -55,7 +55,7 @@
       "nazwa": "KTS Gliwice · amatorzy",
       "liga": "2. Śląska Liga Amatorów",
       "tryb": "ŚZTS · automat",
-      "stan": "3. miejsce · 2 pkt",
+      "stan": "1. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/144/"
     }
   ],
@@ -177,7 +177,7 @@
           "stosunek": "2:28"
         }
       ],
-      "zaktualizowano": "2026-10-06T15:16:48.717Z"
+      "zaktualizowano": "2026-10-06T21:05:13.060Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-06T15:16:48.717Z"
+      "zaktualizowano": "2026-10-06T21:05:13.060Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "2:8"
         }
       ],
-      "zaktualizowano": "2026-10-06T15:16:48.717Z"
+      "zaktualizowano": "2026-10-06T21:05:13.060Z"
     },
     {
       "klucz": "18/144",
@@ -409,76 +409,76 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "KTS Gliwice",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "12:8"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "UKS Ikar Mierzęcice",
+          "mecze": 2,
+          "punkty": 3,
+          "stosunek": "12:8"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "LKS Strażak II Mikołów",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "7:3"
         },
         {
-          "pozycja": 2,
+          "pozycja": 4,
           "nazwa": "TKKF Aut Łagisza Będzin",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
         },
         {
-          "pozycja": 3,
-          "nazwa": "KTS Gliwice",
-          "mecze": 1,
-          "punkty": 2,
-          "stosunek": "6:4"
-        },
-        {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "Speed Team 43 Stolarzowice",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "AKS Mikołów",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 6,
+          "pozycja": 7,
           "nazwa": "UKS Wolej Solver III Ruda Śląska",
           "mecze": 1,
           "punkty": 1,
           "stosunek": "5:5"
         },
         {
-          "pozycja": 7,
-          "nazwa": "UKS Ikar Mierzęcice",
-          "mecze": 1,
-          "punkty": 1,
-          "stosunek": "5:5"
-        },
-        {
           "pozycja": 8,
-          "nazwa": "UKS Wolej Solver II Ruda Śląska",
-          "mecze": 1,
-          "punkty": 0,
-          "stosunek": "4:6"
-        },
-        {
-          "pozycja": 9,
           "nazwa": "Bartek II Siemianowice",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "4:6"
         },
         {
+          "pozycja": 9,
+          "nazwa": "UKS Wolej Solver II Ruda Śląska",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "8:12"
+        },
+        {
           "pozycja": 10,
           "nazwa": "UKS Huragan I Sosnowiec",
-          "mecze": 1,
+          "mecze": 2,
           "punkty": 0,
-          "stosunek": "3:7"
+          "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-06T15:16:48.717Z"
+      "zaktualizowano": "2026-10-06T21:05:13.060Z"
     }
   ],
   "meczeSzts": [
@@ -1545,8 +1545,8 @@
       "kolejka": null,
       "gospodarz": "UKS Wolej Solver II Ruda Śląska",
       "gosc": "KTS Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "4:6",
+      "rozegrany": true,
       "liga": "2. Śląska Liga Amatorów",
       "zespoly": [
         "KTS Gliwice · amatorzy"
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-06T15:16:48.717Z",
-    "pzts": "2026-10-06T15:16:48.717Z"
+    "szts": "2026-10-06T21:05:13.060Z",
+    "pzts": "2026-10-06T21:05:13.060Z"
   },
   "zrodla": {
     "szts": "ok",
