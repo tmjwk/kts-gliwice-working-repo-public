@@ -79,6 +79,13 @@ body {
 }
 main { flex: 1 0 auto; }
 
+/* Atrybut hidden MUSI wygrywać z display z klas — inaczej ukrywane
+   strefy (np. „Wynik w drodze" na pasku, gdy brak meczów w toku)
+   zostają widoczne jako puste etykiety. Styl autora bije styl
+   przeglądarki, dlatego obrona z !important (wykryte w audycie
+   06.10 wieczorem — pusta strefa wisi na żywej stronie od v1.6.0). */
+[hidden] { display: none !important; }
+
 .container { max-width: 72rem; margin-inline: auto; padding-inline: 1rem; }
 .center { text-align: center; }
 .gap-lg { gap: 1.5rem; }
