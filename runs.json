@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-07T17:27:40.025Z",
+  "wygenerowano": "2026-10-07T23:10:53.821Z",
   "przechowuje": 50,
   "runs": [
     {
@@ -86,6 +86,16 @@
       "pzts": "ok",
       "zmieniono": false,
       "zmiany": "bez zmian",
+      "blad": null,
+      "retry": null
+    },
+    {
+      "start": "2026-10-07T23:10:41.960Z",
+      "czasS": 12,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "tabele: 18/136, 18/138, 18/142, 18/144 · stan drużyn",
       "blad": null,
       "retry": null
     }
