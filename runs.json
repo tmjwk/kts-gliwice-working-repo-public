@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-07T08:48:35.375Z",
+  "wygenerowano": "2026-10-07T17:27:40.025Z",
   "przechowuje": 50,
   "runs": [
     {
@@ -76,6 +76,16 @@
       "pzts": "ok",
       "zmieniono": true,
       "zmiany": "+1 w terminarzu (ŚZTS)",
+      "blad": null,
+      "retry": null
+    },
+    {
+      "start": "2026-10-07T17:27:28.280Z",
+      "czasS": 12,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": false,
+      "zmiany": "bez zmian",
       "blad": null,
       "retry": null
     }
