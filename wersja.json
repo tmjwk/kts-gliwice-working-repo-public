@@ -1,5 +1,5 @@
 {
-  "wersja": "1.6.1",
-  "data": "2026-10-06T08:00:00Z",
-  "opis": "wzmocnienie syncu: ponawianie pobierania ŚZTS (3 próby, timeout 90 s) + izolacja źródeł — awaria jednego nie blokuje drugiego, status per źródło w danych"
+  "wersja": "1.6.4",
+  "data": "2026-10-07T01:10:00Z",
+  "opis": "poprawka kosmetyczna: atrybut hidden wygrywa z regułami CSS (reguła obronna [hidden] w arkuszu) — pusta strefa „Wynik w drodze” znika z paska meczowego, gdy nie ma meczów w toku"
 }
