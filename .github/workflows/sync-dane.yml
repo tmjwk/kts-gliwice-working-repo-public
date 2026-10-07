@@ -13,13 +13,24 @@ name: Sync danych ligowych (KTS Gliwice)
 
 on:
   schedule:
-    # co 2 godziny = 12 uruchomień/dobę × 4 strony ligowe = 48 zapytań
-    # dziennie (≈ 2/godz. — spokojne dla ligi.slzts.pl). Częstotliwość
-    # zmienia się JEDNĄ cyfrą: */1 = co godzinę, */4 = co 4 h.
+    # BAZOWY (od 28.09): co 2 godziny = 12 uruchomień/dobę × 4 strony
+    # ligowe = 48 zapytań dziennie (≈ 2/godz. — spokojne dla ligi.slzts.pl).
+    # Częstotliwość zmienia się JEDNĄ cyfrą: */1 = co godzinę, */4 = co 4 h.
     # Puste przebiegi (brak zmian w źródłach) nie tworzą commitów
-    # ani przebudów strony. Wieczory meczowe można dogrzać drugim
-    # harmonogramem, np. "41 18-22 * * 0-4" (niedz–czw, 18–22).
+    # ani przebudów strony.
     - cron: "23 */2 * * *"
+    # DOGRZANIE WIECZORÓW MECZOWYCH (od 07.10.2026): co godzinę, 16–22 UTC.
+    # ⚠ Harmonogramy GitHuba liczą czas w UTC, nie w polskim! 16–22 UTC
+    # = 18:41–00:41 czasu letniego (CEST) i 17:41–23:41 zimowego (CET)
+    # po zmianie czasu 25.10 — okno celowo szerokie na ±1 h, BEZ edycji.
+    # Codziennie i bez filtra dni, bo mecze KTS wypadają we wszystkie
+    # dni tygodnia (pt 39 · czw 30 · śr 16 · sob 5 · pon 4 · ndz 3 ·
+    # wt 1 — dane z 07.10), starty niemal zawsze 18:00–19:00, wyniki
+    # lądują 20:00–24:00 → najdalej ~40 min po publikacji w źródle.
+    # Minuta :41 — rozsunięcie od bazy (:23) i od pełnych godzin
+    # (kongestja crona GitHuba na :00). Plan B, gdyby nie starczyło:
+    # Google Sheets + Apps Script (§4.31/§5.21 zapisu rozmowy — odłożone).
+    - cron: "41 16-22 * * *"
   workflow_dispatch:
     inputs:
       pzts_mecze:
