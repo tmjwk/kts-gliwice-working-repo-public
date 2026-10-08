@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-08T06:15:55.792Z",
+  "wygenerowano": "2026-10-08T13:40:16.139Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "5:35"
         }
       ],
-      "zaktualizowano": "2026-10-08T06:15:55.792Z"
+      "zaktualizowano": "2026-10-08T13:40:16.139Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-08T06:15:55.792Z"
+      "zaktualizowano": "2026-10-08T13:40:16.139Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "2:8"
         }
       ],
-      "zaktualizowano": "2026-10-08T06:15:55.792Z"
+      "zaktualizowano": "2026-10-08T13:40:16.139Z"
     },
     {
       "klucz": "18/144",
@@ -423,38 +423,38 @@
         },
         {
           "pozycja": 3,
-          "nazwa": "UKS Ikar Mierzęcice",
+          "nazwa": "AKS Mikołów",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "12:8"
         },
         {
           "pozycja": 4,
+          "nazwa": "UKS Ikar Mierzęcice",
+          "mecze": 2,
+          "punkty": 3,
+          "stosunek": "12:8"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "TKKF Aut Łagisza Będzin",
           "mecze": 1,
           "punkty": 2,
           "stosunek": "6:4"
         },
         {
-          "pozycja": 5,
-          "nazwa": "AKS Mikołów",
-          "mecze": 1,
-          "punkty": 1,
-          "stosunek": "5:5"
-        },
-        {
           "pozycja": 6,
-          "nazwa": "UKS Wolej Solver III Ruda Śląska",
-          "mecze": 1,
-          "punkty": 1,
-          "stosunek": "5:5"
-        },
-        {
-          "pozycja": 7,
           "nazwa": "Speed Team 43 Stolarzowice",
           "mecze": 2,
           "punkty": 1,
           "stosunek": "9:11"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "UKS Wolej Solver III Ruda Śląska",
+          "mecze": 2,
+          "punkty": 1,
+          "stosunek": "8:12"
         },
         {
           "pozycja": 8,
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-08T06:15:55.792Z"
+      "zaktualizowano": "2026-10-08T13:40:16.139Z"
     }
   ],
   "meczeSzts": [
@@ -1083,7 +1083,7 @@
       ]
     },
     {
-      "dataMeczu": "2026-10-14",
+      "dataMeczu": "2026-10-15",
       "godzina": "17:30",
       "kolejka": 3,
       "gospodarz": "STS II Żernica",
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-08T06:15:55.792Z",
-    "pzts": "2026-10-08T06:15:55.792Z"
+    "szts": "2026-10-08T13:40:16.139Z",
+    "pzts": "2026-10-08T13:40:16.139Z"
   },
   "zrodla": {
     "szts": "ok",
