@@ -1,5 +1,5 @@
 {
-  "wersja": "1.6.4",
-  "data": "2026-10-07T01:10:00Z",
-  "opis": "poprawka kosmetyczna: atrybut hidden wygrywa z regułami CSS (reguła obronna [hidden] w arkuszu) — pusta strefa „Wynik w drodze” znika z paska meczowego, gdy nie ma meczów w toku"
+ "wersja": "1.6.5",
+ "data": "2026-10-08T22:35:25Z",
+ "opis": "sekcja Aktualności zasilona migracją WordPress (81 wpisów 2024–2026, 78 okładek, dialog pełnego wpisu, „pokaż więcej”); decyzje z checklisty 09.10: + Felkel (reprezentacja), + MAMY TO (Puchar Europy 14.12.2024), −5 krótkich zapowiedzi"
 }
