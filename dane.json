@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-08T13:40:16.139Z",
+  "wygenerowano": "2026-10-08T19:59:31.427Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -41,7 +41,7 @@
       "nazwa": "KTS VI",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "12. miejsce · 0 pkt",
+      "stan": "14. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "5:35"
         }
       ],
-      "zaktualizowano": "2026-10-08T13:40:16.139Z"
+      "zaktualizowano": "2026-10-08T19:59:31.427Z"
     },
     {
       "klucz": "18/138",
@@ -207,9 +207,9 @@
         {
           "pozycja": 4,
           "nazwa": "UKS Huragan Sosnowiec",
-          "mecze": 2,
+          "mecze": 3,
           "punkty": 4,
-          "stosunek": "17:3"
+          "stosunek": "21:9"
         },
         {
           "pozycja": 5,
@@ -255,31 +255,31 @@
         },
         {
           "pozycja": 11,
+          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
+          "mecze": 3,
+          "punkty": 2,
+          "stosunek": "9:21"
+        },
+        {
+          "pozycja": 12,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
           "mecze": 3,
           "punkty": 1,
           "stosunek": "13:17"
         },
         {
-          "pozycja": 12,
+          "pozycja": 13,
           "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
           "mecze": 2,
           "punkty": 1,
           "stosunek": "7:13"
         },
         {
-          "pozycja": 13,
+          "pozycja": 14,
           "nazwa": "LKS Ciężkowianka Jaworzno",
           "mecze": 2,
           "punkty": 0,
           "stosunek": "5:15"
-        },
-        {
-          "pozycja": 14,
-          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
-          "mecze": 2,
-          "punkty": 0,
-          "stosunek": "3:17"
         },
         {
           "pozycja": 15,
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-08T13:40:16.139Z"
+      "zaktualizowano": "2026-10-08T19:59:31.427Z"
     },
     {
       "klucz": "18/142",
@@ -304,24 +304,24 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "LKS Naprzód Świbie",
+          "mecze": 2,
+          "punkty": 4,
+          "stosunek": "18:2"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "LKS Strażak II Mikołów",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "16:4"
         },
         {
-          "pozycja": 2,
+          "pozycja": 3,
           "nazwa": "STS I Żernica",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "12:8"
-        },
-        {
-          "pozycja": 3,
-          "nazwa": "LKS Naprzód Świbie",
-          "mecze": 1,
-          "punkty": 2,
-          "stosunek": "8:2"
         },
         {
           "pozycja": 4,
@@ -381,27 +381,27 @@
         },
         {
           "pozycja": 12,
-          "nazwa": "KTS VI Gliwice",
-          "mecze": 1,
-          "punkty": 0,
-          "stosunek": "4:6"
-        },
-        {
-          "pozycja": 13,
           "nazwa": "ULKS Ruch Pniów",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "3:7"
         },
         {
-          "pozycja": 14,
+          "pozycja": 13,
           "nazwa": "ULKS Pławniowice",
           "mecze": 1,
           "punkty": 0,
           "stosunek": "2:8"
+        },
+        {
+          "pozycja": 14,
+          "nazwa": "KTS VI Gliwice",
+          "mecze": 2,
+          "punkty": 0,
+          "stosunek": "4:16"
         }
       ],
-      "zaktualizowano": "2026-10-08T13:40:16.139Z"
+      "zaktualizowano": "2026-10-08T19:59:31.427Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-08T13:40:16.139Z"
+      "zaktualizowano": "2026-10-08T19:59:31.427Z"
     }
   ],
   "meczeSzts": [
@@ -1245,8 +1245,8 @@
       "kolejka": 2,
       "gospodarz": "LKS Naprzód Świbie",
       "gosc": "KTS VI Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "10:0",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS VI"
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-08T13:40:16.139Z",
-    "pzts": "2026-10-08T13:40:16.139Z"
+    "szts": "2026-10-08T19:59:31.427Z",
+    "pzts": "2026-10-08T19:59:31.427Z"
   },
   "zrodla": {
     "szts": "ok",
