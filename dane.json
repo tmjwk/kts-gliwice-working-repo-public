@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-07T23:10:41.962Z",
+  "wygenerowano": "2026-10-08T06:15:55.792Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -27,7 +27,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "10. miejsce · 2 pkt",
+      "stan": "5. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "5:35"
         }
       ],
-      "zaktualizowano": "2026-10-07T23:10:41.962Z"
+      "zaktualizowano": "2026-10-08T06:15:55.792Z"
     },
     {
       "klucz": "18/138",
@@ -213,17 +213,17 @@
         },
         {
           "pozycja": 5,
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 3,
+          "punkty": 4,
+          "stosunek": "19:11"
+        },
+        {
+          "pozycja": 6,
           "nazwa": "TTS Polonia II Bytom",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "16:14"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "AKS Mikołów",
-          "mecze": 2,
-          "punkty": 3,
-          "stosunek": "12:8"
         },
         {
           "pozycja": 7,
@@ -241,17 +241,17 @@
         },
         {
           "pozycja": 9,
+          "nazwa": "AKS Mikołów",
+          "mecze": 3,
+          "punkty": 3,
+          "stosunek": "13:17"
+        },
+        {
+          "pozycja": 10,
           "nazwa": "MKS Skarbek III Tarnowskie Góry",
           "mecze": 2,
           "punkty": 2,
           "stosunek": "11:9"
-        },
-        {
-          "pozycja": 10,
-          "nazwa": "KTS IV Gliwice",
-          "mecze": 2,
-          "punkty": 2,
-          "stosunek": "10:10"
         },
         {
           "pozycja": 11,
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-07T23:10:41.962Z"
+      "zaktualizowano": "2026-10-08T06:15:55.792Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "2:8"
         }
       ],
-      "zaktualizowano": "2026-10-07T23:10:41.962Z"
+      "zaktualizowano": "2026-10-08T06:15:55.792Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-07T23:10:41.962Z"
+      "zaktualizowano": "2026-10-08T06:15:55.792Z"
     }
   ],
   "meczeSzts": [
@@ -892,8 +892,8 @@
       "kolejka": 3,
       "gospodarz": "AKS Mikołów",
       "gosc": "KTS IV Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "1:9",
+      "rozegrany": true,
       "liga": "3. Liga Mężczyzn · gr. II",
       "zespoly": [
         "KTS IV"
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-07T23:10:41.962Z",
-    "pzts": "2026-10-07T23:10:41.962Z"
+    "szts": "2026-10-08T06:15:55.792Z",
+    "pzts": "2026-10-08T06:15:55.792Z"
   },
   "zrodla": {
     "szts": "ok",
