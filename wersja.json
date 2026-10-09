@@ -1,5 +1,5 @@
 {
- "wersja": "1.6.6",
- "data": "2026-10-08T23:20:02Z",
- "opis": "Aktualności: 93 wpisy (81 z 1.6.5 + 12 perełek 2023–24 — mistrzostwa klubu: Mistrzostwo I Ligi, Drużynowy Puchar Polski, powrót do Superligi po 20 latach, pierwsze zwycięstwa w Superlidze, TOP 8 Europy; decyzja właściciela 09.10), 90 okładek webp, dialog pełnego wpisu, „pokaż więcej\""
+ "wersja": "1.6.7",
+ "data": "2026-10-09T20:55:00Z",
+ "opis": "Poprawka kontrastu miniaturek aktualności — zdjęcia były wyświetlane w 55% krycia (wyblakłe w trybie jasnym), teraz pełne; tryb jasny/ciemny podąża na żywo za ustawieniem systemu, gdy nie wybrano ręcznie"
 }
