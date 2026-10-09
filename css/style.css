@@ -461,3 +461,46 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .news-dialog-stopka a { color: var(--kts-link); font-weight: 600; text-decoration: none; }
 .news-dialog-stopka a:hover { text-decoration: underline; }
 .news-dialog-zamknij { align-self: center; margin-top: 0.35rem; }
+
+/* ===== PIŁKA-BOHATER KTS (1.7.0) ===== */
+/* Jeden wzór piłki (sprite #pilka-kts w index.html, wierny demo „piłeczka
+   en face” z 07.10) — spójny z favicon.svg (ta sama piłka na kaflu klubowym).
+   64 px to najmniejsza skala, w której nadruk „KTS GLIWICE ★★★ 40+” jest
+   czytelny (badanie rozmiarów z demo); w pasku meczowym pozostaje stara
+   piłeczka CSS 0,9 em — rozstrzygnięcie z eksperymentu v1.6.3. */
+.pilka-bohater {
+  width: 64px; height: 64px; flex: none;
+  filter: drop-shadow(0 3px 6px rgba(9, 16, 29, 0.28));
+}
+@media (max-width: 48rem) {
+  .pilka-bohater { width: 48px; height: 48px; }
+}
+
+/* „Podanie” — sygnał świeżości: strona odświeżyła wyniki w tle (poll
+   dane.json co 10 min, patrz app.js) i piłka robi jeden ruch. Reguła
+   celowo żyje TYLKO w @media no-preference — przy prefers-reduced-motion
+   piłka stoi, dane i tak się odświeżają. */
+@media (prefers-reduced-motion: no-preference) {
+  .pilka-bohater.podanie {
+    animation: pilka-podanie 1.15s cubic-bezier(0.3, 0.7, 0.4, 1) 1 both;
+  }
+  @keyframes pilka-podanie {
+    0%   { transform: translateY(0) rotate(0deg); }
+    28%  { transform: translateY(-16px) rotate(16deg); }
+    50%  { transform: translateY(0) scale(1.05, 0.9); }
+    72%  { transform: translateY(-7px) rotate(-7deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+}
+
+/* Pusty stan „Najbliższych meczów” — przerwa w rozgrywkach: piłka
+   spoczywa lekko obrócona, bez animacji (cisza, nie zabawa). */
+.pusty-stan {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.35rem 0;
+}
+.pusty-stan .pilka-odpoczyna {
+  width: 44px; height: 44px; flex: none;
+  transform: rotate(-16deg);
+  filter: drop-shadow(0 2px 3px rgba(9, 16, 29, 0.2));
+}
