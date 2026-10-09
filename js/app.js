@@ -317,7 +317,7 @@ function renderMecze(mecze) {
     ? najblizsze.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")
     : `<li class="t-small muted">Terminarz pojawi się po pierwszej synchronizacji.</li>`;
   $("#ostatnie-mecze").innerHTML = ostatnie.length
-    ? ostatnie.map(wierszMeczu).join("")
+    ? ostatnie.map((m) => wierszMeczu(m)).join("")
     : `<li class="t-small muted">Brak rozegranych meczów w bazie.</li>`;
 }
 
