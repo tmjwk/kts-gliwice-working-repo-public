@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-09T00:27:13.559Z",
+  "wygenerowano": "2026-10-09T19:45:21.529Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -13,7 +13,7 @@
       "nazwa": "KTS II",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "10. miejsce · 2 pkt",
+      "stan": "9. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/"
     },
     {
@@ -27,7 +27,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "5. miejsce · 4 pkt",
+      "stan": "6. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
@@ -108,38 +108,38 @@
         },
         {
           "pozycja": 7,
-          "nazwa": "MKS II Czechowice Dziedzice",
-          "mecze": 3,
-          "punkty": 4,
-          "stosunek": "22:8"
-        },
-        {
-          "pozycja": 8,
           "nazwa": "KTS Olimpijczyk Zawiercie",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "22:8"
         },
         {
+          "pozycja": 8,
+          "nazwa": "MKS II Czechowice Dziedzice",
+          "mecze": 4,
+          "punkty": 4,
+          "stosunek": "25:15"
+        },
+        {
           "pozycja": 9,
-          "nazwa": "KS Naprzód II Borucin",
+          "nazwa": "KTS II Gliwice",
+          "mecze": 4,
+          "punkty": 4,
+          "stosunek": "25:15"
+        },
+        {
+          "pozycja": 10,
+          "nazwa": "MKS Skarbek II Tarnowskie Góry",
           "mecze": 4,
           "punkty": 4,
           "stosunek": "20:20"
         },
         {
-          "pozycja": 10,
-          "nazwa": "KTS II Gliwice",
-          "mecze": 3,
-          "punkty": 2,
-          "stosunek": "16:14"
-        },
-        {
           "pozycja": 11,
-          "nazwa": "MKS Skarbek II Tarnowskie Góry",
-          "mecze": 3,
-          "punkty": 2,
-          "stosunek": "13:17"
+          "nazwa": "KS Naprzód II Borucin",
+          "mecze": 4,
+          "punkty": 4,
+          "stosunek": "20:20"
         },
         {
           "pozycja": 12,
@@ -164,20 +164,20 @@
         },
         {
           "pozycja": 15,
-          "nazwa": "LUKS GK Logistics Bodzanów",
-          "mecze": 3,
-          "punkty": 0,
-          "stosunek": "2:28"
-        },
-        {
-          "pozycja": 16,
           "nazwa": "LUKS Węgierska Górka",
           "mecze": 4,
           "punkty": 0,
           "stosunek": "5:35"
+        },
+        {
+          "pozycja": 16,
+          "nazwa": "LUKS GK Logistics Bodzanów",
+          "mecze": 4,
+          "punkty": 0,
+          "stosunek": "3:37"
         }
       ],
-      "zaktualizowano": "2026-10-09T00:27:13.559Z"
+      "zaktualizowano": "2026-10-09T19:45:21.529Z"
     },
     {
       "klucz": "18/138",
@@ -206,31 +206,31 @@
         },
         {
           "pozycja": 4,
+          "nazwa": "KU AZS UJD Częstochowa",
+          "mecze": 3,
+          "punkty": 5,
+          "stosunek": "19:11"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "UKS Wolej Solver Ruda Śląska",
           "mecze": 3,
           "punkty": 5,
           "stosunek": "18:12"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "KTS IV Gliwice",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "19:11"
         },
         {
-          "pozycja": 6,
+          "pozycja": 7,
           "nazwa": "TTS Polonia II Bytom",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "16:14"
-        },
-        {
-          "pozycja": 7,
-          "nazwa": "KU AZS UJD Częstochowa",
-          "mecze": 2,
-          "punkty": 3,
-          "stosunek": "11:9"
         },
         {
           "pozycja": 8,
@@ -263,9 +263,9 @@
         {
           "pozycja": 12,
           "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
-          "mecze": 2,
+          "mecze": 3,
           "punkty": 1,
-          "stosunek": "7:13"
+          "stosunek": "9:21"
         },
         {
           "pozycja": 13,
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-09T00:27:13.559Z"
+      "zaktualizowano": "2026-10-09T19:45:21.529Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-10-09T00:27:13.559Z"
+      "zaktualizowano": "2026-10-09T19:45:21.529Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-09T00:27:13.559Z"
+      "zaktualizowano": "2026-10-09T19:45:21.529Z"
     }
   ],
   "meczeSzts": [
@@ -528,8 +528,8 @@
       "kolejka": 4,
       "gospodarz": "LUKS GK Logistics Bodzanów",
       "gosc": "KTS II Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "1:9",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS II"
@@ -1397,7 +1397,7 @@
       ]
     },
     {
-      "dataMeczu": "2026-10-14",
+      "dataMeczu": "2026-00-00",
       "godzina": "18:00",
       "kolejka": 3,
       "gospodarz": "UKS Feniks II Pyskowice",
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-09T00:27:13.559Z",
-    "pzts": "2026-10-09T00:27:13.559Z"
+    "szts": "2026-10-09T19:45:21.529Z",
+    "pzts": "2026-10-09T19:45:21.529Z"
   },
   "zrodla": {
     "szts": "ok",
