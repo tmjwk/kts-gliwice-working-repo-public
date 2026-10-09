@@ -275,7 +275,12 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 
 .news-media {
   height: 10rem; display: flex; align-items: center; justify-content: center;
-  background: var(--kts-neutral); font-size: 2rem; opacity: 0.55;
+  background: var(--kts-neutral);
+  /* UWAGA (1.6.7): bez opacity! Krycie 0.55 było stylizacją placeholdera 🏓
+     (news-media-brak), ale dziedziczyły je też prawdziwe okładki zdjęciowe
+     (news-media-img) — zdjęcia renderowały się na 55% krycia i w trybie
+     jasnym wyglądały na wyblakłe (zgłoszenie Tomka 09.10 wieczór).
+     Placeholder ma własne 0.55 w .news-media-brak poniżej. */
 }
 
 /* ===== karty drużyn ===== */
