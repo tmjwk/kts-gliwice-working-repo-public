@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-08T21:30:29.845Z",
+  "wygenerowano": "2026-10-09T00:27:13.559Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -13,7 +13,7 @@
       "nazwa": "KTS II",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "9. miejsce · 2 pkt",
+      "stan": "10. miejsce · 2 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/"
     },
     {
@@ -95,9 +95,9 @@
         {
           "pozycja": 5,
           "nazwa": "MKS Tajfun Kuźnia Raciborska",
-          "mecze": 3,
+          "mecze": 4,
           "punkty": 6,
-          "stosunek": "22:8"
+          "stosunek": "26:14"
         },
         {
           "pozycja": 6,
@@ -122,17 +122,17 @@
         },
         {
           "pozycja": 9,
+          "nazwa": "KS Naprzód II Borucin",
+          "mecze": 4,
+          "punkty": 4,
+          "stosunek": "20:20"
+        },
+        {
+          "pozycja": 10,
           "nazwa": "KTS II Gliwice",
           "mecze": 3,
           "punkty": 2,
           "stosunek": "16:14"
-        },
-        {
-          "pozycja": 10,
-          "nazwa": "KS Naprzód II Borucin",
-          "mecze": 3,
-          "punkty": 2,
-          "stosunek": "14:16"
         },
         {
           "pozycja": 11,
@@ -177,7 +177,7 @@
           "stosunek": "5:35"
         }
       ],
-      "zaktualizowano": "2026-10-08T21:30:29.845Z"
+      "zaktualizowano": "2026-10-09T00:27:13.559Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-08T21:30:29.845Z"
+      "zaktualizowano": "2026-10-09T00:27:13.559Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-10-08T21:30:29.845Z"
+      "zaktualizowano": "2026-10-09T00:27:13.559Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-08T21:30:29.845Z"
+      "zaktualizowano": "2026-10-09T00:27:13.559Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-08T21:30:29.845Z",
-    "pzts": "2026-10-08T21:30:29.845Z"
+    "szts": "2026-10-09T00:27:13.559Z",
+    "pzts": "2026-10-09T00:27:13.559Z"
   },
   "zrodla": {
     "szts": "ok",
