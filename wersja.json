@@ -1,5 +1,5 @@
 {
- "wersja": "1.6.9",
- "data": "2026-10-10T21:35:00Z",
- "opis": "Naprawa plakietek w tabeli „Ostatnie mecze”: wszystkie wiersze poza pierwszym miały „wynik w drodze” mimo wpisanego wyniku (np. KTS V — Pławniowice 9:1). Przyczyna: ostatnie.map(wierszMeczu) przekazywało indeks wiersza jako argument „oczekuje” (drugi parametr funkcji) — od indeksu 1 w górę plakietka zawsze prawdziwa. Poprawka: ostatnie.map((m) => wierszMeczu(m)) — zgłoszenie Tomka 10.10"
+ "wersja": "1.7.0",
+ "data": "2026-10-10T22:20:00Z",
+ "opis": "Piłka-bohater KTS ★★★ 40+ (64 px) przy nagłówku „Drużyny i wyniki”, nowy favicon z tą samą piłką, pusty stan „Najbliższych meczów” (przerwa w rozgrywkach) i sygnał świeżości: odświeżanie danych w tle co 10 min + jedno „podanie” piłki przy nowym wyniku, z poszanowaniem reduced-motion; karta podglądu do udostępnień (og:image) — pomysły z 1.6.9, zielone światło Tomka z turnieju"
 }
