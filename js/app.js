@@ -362,6 +362,24 @@ function obsluzPrzelacznikTrybu() {
     ustawIkoneTrybu();
   });
   ustawIkoneTrybu();
+  sledzSystemowyTryb();
+}
+
+/* 1.6.7 — system przełącza dzień/noc (np. Windows o zachodzie słońca):
+   strona podąża NA ŻYWO, bez odświeżania — ale tylko dopóki użytkownik
+   nie kliknął własnego przełącznika (ręczny wybór w localStorage jest
+   ważniejszy niż system; świeża wizyta = zawsze tryb systemu). */
+function sledzSystemowyTryb() {
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  const reakcja = (e) => {
+    let zapisany = null;
+    try { zapisany = localStorage.getItem("kts-theme"); } catch (err) { /* prywatny */ }
+    if (zapisany) return; // własny wybór wygrywa — nie ruszamy
+    document.documentElement.setAttribute("data-theme", e.matches ? "night" : "day");
+    ustawIkoneTrybu();
+  };
+  if (typeof mq.addEventListener === "function") mq.addEventListener("change", reakcja);
+  else if (typeof mq.addListener === "function") mq.addListener(reakcja); // starsze Safari
 }
 
 /* ===== wersja strony (wersja.json przy deployu) ===== */
