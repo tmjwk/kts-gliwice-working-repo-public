@@ -525,7 +525,13 @@ async function start() {
   }
 
   if (ok) {
-    const mecze = [...(dane.meczeSzts ?? []), ...(dane.meczePzts ?? [])];
+    // Ochrona przed datami zastępczymi źródeł (ŚZTS wstawia „2026-00-00"
+    // dla meczów bez terminu): wiersz z niepoprawną datą nie może trafić
+    // na pasek meczowy (wisi tam jako „Wynik w drodze · 00.00.2026"),
+    // do kart drużyn ani list wyników. Parser też je odsiewa — to
+    // podwójne zabezpieczenie (bug z 10.10, zgłoszenie Tomka).
+    const mecze = [...(dane.meczeSzts ?? []), ...(dane.meczePzts ?? [])]
+      .filter((m) => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(m.dataMeczu ?? ""));
     renderPasekMeczu(mecze);
     renderKartyDruzyn(dane, mecze);
     renderTabele(dane);
