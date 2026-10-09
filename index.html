@@ -8,6 +8,13 @@
   <meta name="description" content="KTS Gliwice — klub tenisa stołowego. Drużyny, wyniki ligowe na żywo, treningi dla dzieci i dorosłych. Gliwice, Śląsk.">
   <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
   <meta name="robots" content="noindex, nofollow">
+  <!-- 1.7.0: karta podglądu do udostępnień (FB wróci z lustrem — obraz gotowy już teraz) -->
+  <meta property="og:title" content="KTS Gliwice — Klub Tenisa Stołowego">
+  <meta property="og:description" content="Klub tenisa stołowego w Gliwicach. Drużyny, wyniki ligowe na żywo, treningi dla dzieci i dorosłych.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tmjwk.github.io/kts-gliwice-working-repo-public/">
+  <meta property="og:image" content="https://tmjwk.github.io/kts-gliwice-working-repo-public/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,6 +137,7 @@
     <section class="section section-neutral" id="druzyny-wyniki">
       <div class="container">
         <div class="section-head-row">
+          <svg class="pilka-bohater" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
           <h2 class="t-h2">Drużyny i wyniki</h2>
           <span class="badge badge-outline-primary" id="badge-sezon">Sezon —</span>
           <span class="badge badge-live" id="badge-live">łączę z danymi…</span>
@@ -329,6 +337,32 @@
       </p>
     </div>
   </footer>
+
+  <!-- ===== SPRITE PIŁKI KTS (1.7.0) — jeden wzór: piłka-bohater przy nagłówku,
+       pusty stan „Najbliższych meczów” i favicon (favicon.svg to ta sama piłka na kaflu).
+       Definicje wiernie z demo „piłeczka en face” (07.10, plan B bez cudzego znaku towarowego). ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="kula-gradient" cx="32%" cy="28%" r="75%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="45%" stop-color="#fdfcf8"/>
+        <stop offset="75%" stop-color="#ece8dd"/>
+        <stop offset="100%" stop-color="#d9d4c5"/>
+      </radialGradient>
+      <path id="gwiazdka" d="M0,-6.5 L1.46,-2.01 L6.18,-2.01 L2.36,0.77 L3.82,5.26 L0,2.48 L-3.82,5.26 L-2.36,0.77 L-6.18,-2.01 L-1.46,-2.01 Z"/>
+      <path id="luk-nadruku" d="M 28 62 A 42 42 0 0 1 92 62" fill="none"/>
+      <symbol id="pilka-kts" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="57" fill="url(#kula-gradient)"/>
+        <text font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="11" font-weight="700" fill="#0057b8" letter-spacing="1">
+          <textPath href="#luk-nadruku" startOffset="50%" text-anchor="middle">KTS GLIWICE</textPath>
+        </text>
+        <use href="#gwiazdka" transform="translate(43 75)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(60 75)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(77 75)" fill="#0057b8"/>
+        <text x="60" y="92" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="10" font-weight="700" fill="#0057b8" text-anchor="middle" letter-spacing="1">40+</text>
+      </symbol>
+    </defs>
+  </svg>
 
   <script src="js/app.js"></script>
   <script src="js/aktualnosci.js" defer></script>
