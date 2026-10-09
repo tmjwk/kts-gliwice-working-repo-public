@@ -1,5 +1,5 @@
 {
  "wersja": "1.6.9",
- "data": "2026-10-10T20:30:00Z",
- "opis": "Naprawa plakietek w tabeli „Ostatnie mecze": wszystkie wiersze poza pierwszym miały „wynik w drodze" mimo wpisanego wyniku (np. KTS V — Pławniowice 9:1). Przyczyna: ostatnie.map(wierszMeczu) przekazywało indeks wiersza jako argument „oczekuje" (drugi parametr funkcji) — od indeksu 1 w górę plakietka zawsze prawdziwa. Poprawka: ostatnie.map((m) => wierszMeczu(m)) — zgłoszenie Tomka 10.10"
+ "data": "2026-10-10T21:35:00Z",
+ "opis": "Naprawa plakietek w tabeli „Ostatnie mecze”: wszystkie wiersze poza pierwszym miały „wynik w drodze” mimo wpisanego wyniku (np. KTS V — Pławniowice 9:1). Przyczyna: ostatnie.map(wierszMeczu) przekazywało indeks wiersza jako argument „oczekuje” (drugi parametr funkcji) — od indeksu 1 w górę plakietka zawsze prawdziwa. Poprawka: ostatnie.map((m) => wierszMeczu(m)) — zgłoszenie Tomka 10.10"
 }
