@@ -1,5 +1,5 @@
 {
- "wersja": "1.6.8",
- "data": "2026-10-09T20:15:00Z",
- "opis": "Naprawa paska meczowego: mecze bez terminu (ŚZTS wstawia datę zastępczą 2026-00-00) wisiły na żywej jako „Wynik w drodze · 00.00.2026\" — parser pomija je do czasu wpisania prawdziwej daty przez źródło, a strona filtruje wiersze z niepoprawną datą"
+ "wersja": "1.6.9",
+ "data": "2026-10-10T20:30:00Z",
+ "opis": "Naprawa plakietek w tabeli „Ostatnie mecze": wszystkie wiersze poza pierwszym miały „wynik w drodze" mimo wpisanego wyniku (np. KTS V — Pławniowice 9:1). Przyczyna: ostatnie.map(wierszMeczu) przekazywało indeks wiersza jako argument „oczekuje" (drugi parametr funkcji) — od indeksu 1 w górę plakietka zawsze prawdziwa. Płatka: ostatnie.map((m) => wierszMeczu(m)) — zgłoszenie Tomka 10.10"
 }
