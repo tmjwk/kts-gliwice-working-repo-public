@@ -1,5 +1,5 @@
 {
- "wersja": "1.6.7",
- "data": "2026-10-09T20:55:00Z",
- "opis": "Poprawka kontrastu miniaturek aktualności — zdjęcia były wyświetlane w 55% krycia (wyblakłe w trybie jasnym), teraz pełne; tryb jasny/ciemny podąża na żywo za ustawieniem systemu, gdy nie wybrano ręcznie"
+ "wersja": "1.6.8",
+ "data": "2026-10-09T20:15:00Z",
+ "opis": "Naprawa paska meczowego: mecze bez terminu (ŚZTS wstawia datę zastępczą 2026-00-00) wisiły na żywej jako „Wynik w drodze · 00.00.2026\" — parser pomija je do czasu wpisania prawdziwej daty przez źródło, a strona filtruje wiersze z niepoprawną datą"
 }
