@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-09T19:58:48.059Z",
+  "wygenerowano": "2026-10-09T21:17:43.046Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -13,7 +13,7 @@
       "nazwa": "KTS II",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "9. miejsce · 4 pkt",
+      "stan": "8. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/"
     },
     {
@@ -66,31 +66,31 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "LITS Meble Anders Żywiec",
+          "mecze": 4,
+          "punkty": 8,
+          "stosunek": "32:8"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "MKS Czechowice Dziedzice",
           "mecze": 4,
           "punkty": 8,
           "stosunek": "31:9"
         },
         {
-          "pozycja": 2,
+          "pozycja": 3,
           "nazwa": "MKS Skarbek Tarnowskie Góry",
           "mecze": 4,
           "punkty": 8,
           "stosunek": "31:9"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "MUKS Jedynka Pszów",
           "mecze": 4,
           "punkty": 6,
           "stosunek": "31:9"
-        },
-        {
-          "pozycja": 4,
-          "nazwa": "LITS Meble Anders Żywiec",
-          "mecze": 3,
-          "punkty": 6,
-          "stosunek": "23:7"
         },
         {
           "pozycja": 5,
@@ -108,24 +108,24 @@
         },
         {
           "pozycja": 7,
-          "nazwa": "KTS Olimpijczyk Zawiercie",
-          "mecze": 3,
-          "punkty": 4,
-          "stosunek": "22:8"
-        },
-        {
-          "pozycja": 8,
           "nazwa": "MKS II Czechowice Dziedzice",
           "mecze": 4,
           "punkty": 4,
           "stosunek": "25:15"
         },
         {
-          "pozycja": 9,
+          "pozycja": 8,
           "nazwa": "KTS II Gliwice",
           "mecze": 4,
           "punkty": 4,
           "stosunek": "25:15"
+        },
+        {
+          "pozycja": 9,
+          "nazwa": "KTS Olimpijczyk Zawiercie",
+          "mecze": 4,
+          "punkty": 4,
+          "stosunek": "23:17"
         },
         {
           "pozycja": 10,
@@ -177,7 +177,7 @@
           "stosunek": "3:37"
         }
       ],
-      "zaktualizowano": "2026-10-09T19:58:48.059Z"
+      "zaktualizowano": "2026-10-09T21:17:43.046Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-09T19:58:48.059Z"
+      "zaktualizowano": "2026-10-09T21:17:43.046Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-10-09T19:58:48.059Z"
+      "zaktualizowano": "2026-10-09T21:17:43.046Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-09T19:58:48.059Z"
+      "zaktualizowano": "2026-10-09T21:17:43.046Z"
     }
   ],
   "meczeSzts": [
@@ -1733,8 +1733,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-09T19:58:48.059Z",
-    "pzts": "2026-10-09T19:58:48.059Z"
+    "szts": "2026-10-09T21:17:43.046Z",
+    "pzts": "2026-10-09T21:17:43.046Z"
   },
   "zrodla": {
     "szts": "ok",

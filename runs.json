@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-09T19:58:51.693Z",
+  "wygenerowano": "2026-10-09T21:17:54.508Z",
   "przechowuje": 50,
   "runs": [
     {
@@ -206,6 +206,16 @@
       "pzts": "ok",
       "zmieniono": true,
       "zmiany": "tabele: 18/136, 18/138 · stan drużyn",
+      "blad": null,
+      "retry": null
+    },
+    {
+      "start": "2026-10-09T21:17:43.044Z",
+      "czasS": 11,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "tabele: 18/136 · stan drużyn",
       "blad": null,
       "retry": null
     }
