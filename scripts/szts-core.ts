@@ -183,6 +183,13 @@ export function parsujTerminarz(html: string): MeczLigi[] {
   for (const w of wiersze) {
     const data = w.match(/(\d{4}-\d{2}-\d{2})/)?.[1];
     if (!data) continue; // nagłówek lub wiersz sędziego („SG: …")
+    // ŚZTS oznacza mecze bez terminu datą zastępczą „2026-00-00"
+    // (kolejki, których terminarz nie jest jeszcze ustalony). Takiego
+    // meczu nie da się posortować ani wyświetlić — pomijamy; wróci
+    // automatycznie, gdy źródło wpisze prawdziwą datę (a sync co 2 h
+    // ją podchwyci). Bez tego wisi na pasku jako „Wynik w drodze ·
+    // 00.00.2026" w nieskończoność (bug zgłoszony 10.10).
+    if (/-00-00$/.test(data)) continue;
 
     const godzina = w.match(/g\.\s*(\d{1,2}:\d{2})/)?.[1] ?? null;
     // kolejka: liczba tuż przed <br /> w kolumnie „nr | liga | kolejka"
