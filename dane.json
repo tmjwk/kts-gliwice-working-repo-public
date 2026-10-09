@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-09T19:45:21.529Z",
+  "wygenerowano": "2026-10-09T19:58:48.059Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -27,7 +27,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "6. miejsce · 4 pkt",
+      "stan": "7. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
@@ -73,17 +73,17 @@
         },
         {
           "pozycja": 2,
-          "nazwa": "MUKS Jedynka Pszów",
+          "nazwa": "MKS Skarbek Tarnowskie Góry",
           "mecze": 4,
-          "punkty": 6,
+          "punkty": 8,
           "stosunek": "31:9"
         },
         {
           "pozycja": 3,
-          "nazwa": "MKS Skarbek Tarnowskie Góry",
-          "mecze": 3,
+          "nazwa": "MUKS Jedynka Pszów",
+          "mecze": 4,
           "punkty": 6,
-          "stosunek": "23:7"
+          "stosunek": "31:9"
         },
         {
           "pozycja": 4,
@@ -157,14 +157,14 @@
         },
         {
           "pozycja": 14,
-          "nazwa": "GUKS Byczyna",
-          "mecze": 3,
+          "nazwa": "LUKS Węgierska Górka",
+          "mecze": 4,
           "punkty": 0,
-          "stosunek": "3:27"
+          "stosunek": "5:35"
         },
         {
           "pozycja": 15,
-          "nazwa": "LUKS Węgierska Górka",
+          "nazwa": "GUKS Byczyna",
           "mecze": 4,
           "punkty": 0,
           "stosunek": "5:35"
@@ -177,7 +177,7 @@
           "stosunek": "3:37"
         }
       ],
-      "zaktualizowano": "2026-10-09T19:45:21.529Z"
+      "zaktualizowano": "2026-10-09T19:58:48.059Z"
     },
     {
       "klucz": "18/138",
@@ -220,38 +220,38 @@
         },
         {
           "pozycja": 6,
-          "nazwa": "KTS IV Gliwice",
+          "nazwa": "MKS Skarbek III Tarnowskie Góry",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "19:11"
         },
         {
           "pozycja": 7,
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 3,
+          "punkty": 4,
+          "stosunek": "19:11"
+        },
+        {
+          "pozycja": 8,
           "nazwa": "TTS Polonia II Bytom",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "16:14"
         },
         {
-          "pozycja": 8,
+          "pozycja": 9,
           "nazwa": "KS Mysław II Mysłowice",
           "mecze": 3,
           "punkty": 3,
           "stosunek": "16:14"
         },
         {
-          "pozycja": 9,
+          "pozycja": 10,
           "nazwa": "AKS Mikołów",
           "mecze": 3,
           "punkty": 3,
           "stosunek": "13:17"
-        },
-        {
-          "pozycja": 10,
-          "nazwa": "MKS Skarbek III Tarnowskie Góry",
-          "mecze": 2,
-          "punkty": 2,
-          "stosunek": "11:9"
         },
         {
           "pozycja": 11,
@@ -270,9 +270,9 @@
         {
           "pozycja": 13,
           "nazwa": "LKS Ciężkowianka Jaworzno",
-          "mecze": 2,
+          "mecze": 3,
           "punkty": 0,
-          "stosunek": "5:15"
+          "stosunek": "7:23"
         },
         {
           "pozycja": 14,
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-09T19:45:21.529Z"
+      "zaktualizowano": "2026-10-09T19:58:48.059Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-10-09T19:45:21.529Z"
+      "zaktualizowano": "2026-10-09T19:58:48.059Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-09T19:45:21.529Z"
+      "zaktualizowano": "2026-10-09T19:58:48.059Z"
     }
   ],
   "meczeSzts": [
@@ -1397,19 +1397,6 @@
       ]
     },
     {
-      "dataMeczu": "2026-00-00",
-      "godzina": "18:00",
-      "kolejka": 3,
-      "gospodarz": "UKS Feniks II Pyskowice",
-      "gosc": "KTS KA Krokus VII Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
-      "liga": "4. Liga Mężczyzn · gr. IV",
-      "zespoly": [
-        "KA Krokus VII"
-      ]
-    },
-    {
       "dataMeczu": "2026-10-23",
       "godzina": "19:00",
       "kolejka": 4,
@@ -1746,8 +1733,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-09T19:45:21.529Z",
-    "pzts": "2026-10-09T19:45:21.529Z"
+    "szts": "2026-10-09T19:58:48.059Z",
+    "pzts": "2026-10-09T19:58:48.059Z"
   },
   "zrodla": {
     "szts": "ok",
