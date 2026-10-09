@@ -166,6 +166,14 @@ function esc(s) {
   }[c]));
 }
 
+/** Mecze ze wszystkich źródeł (ŚZTS + PZTS) z odsianiem dat zastępczych
+ *  (ŚZTS wstawia „2026-00-00” dla meczów bez terminu). Używana przy
+ *  starcie i przy odświeżaniu w tle (1.7.0) — jedno miejsce prawdy. */
+function meczeZDanych(dane) {
+  return [...(dane.meczeSzts ?? []), ...(dane.meczePzts ?? [])]
+    .filter((m) => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(m.dataMeczu ?? ""));
+}
+
 /* ===== render ===== */
 /** Pasek meczowy pokazuje CAŁE dni meczowe, nie pojedyncze mecze:
  *  1) ostatnie wyniki — wszystkie z najświeższego dnia, w którym padł wynik,
@@ -313,9 +321,14 @@ function renderMecze(mecze) {
     .filter((m) => m.rozegrany)
     .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
 
+  // 1.7.0: pusty terminarz nie jest błędem — to przerwa w rozgrywkach;
+  // piłka (#pilka-kts) spoczywa, komunikat tłumaczy, skąd wezmą się dane.
   $("#najblizsze-mecze").innerHTML = najblizsze.length
     ? najblizsze.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")
-    : `<li class="t-small muted">Terminarz pojawi się po pierwszej synchronizacji.</li>`;
+    : `<li class="pusty-stan">
+         <svg class="pilka-odpoczyna" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
+         <span class="t-small muted">Brak zaplanowanych meczów — przerwa w rozgrywkach. Nowy terminarz wpadnie automatycznie (sync co 2&nbsp;h).</span>
+       </li>`;
   $("#ostatnie-mecze").innerHTML = ostatnie.length
     ? ostatnie.map((m) => wierszMeczu(m)).join("")
     : `<li class="t-small muted">Brak rozegranych meczów w bazie.</li>`;
@@ -390,6 +403,44 @@ async function pokazWersje() {
     const w = await res.json();
     if (w?.wersja) $("#wersja-strony").textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
+}
+
+/* ===== 1.7.0: sygnał świeżości =====
+   Karta z wynikami często wisi otwarta godzinami. Co 10 min (tyle żyje
+   cache CDN dla dane.json) strona cicho sprawdza, czy wyniki się zmieniły;
+   jeśli tak — przerysowuje sekcje danymi (te same funkcje co przy starcie)
+   i piłka-bohater przy nagłówku robi jedno „podanie”.
+   prefers-reduced-motion: dane odświeżają się tak samo, animacji nie ma
+   (reguła CSS żyje tylko w @media no-preference — patrz style.css). */
+function sygnaturaWynikow(dane) {
+  return meczeZDanych(dane).filter((m) => m.rozegrany)
+    .map((m) => `${m.dataMeczu}:${m.gospodarz}:${m.wynik}`)
+    .join("|");
+}
+
+function pilnujSwiezosci(poczatkowaSygnatura) {
+  let poprzednia = poczatkowaSygnatura;
+  setInterval(async () => {
+    try {
+      const res = await fetch("dane.json", { cache: "no-cache" });
+      if (!res.ok) return;
+      const dane = await res.json();
+      const sygnatura = sygnaturaWynikow(dane);
+      if (sygnatura === poprzednia) return; // bez zmian — cicho
+      poprzednia = sygnatura;
+      const mecze = meczeZDanych(dane);
+      renderPasekMeczu(mecze);
+      renderKartyDruzyn(dane, mecze);
+      renderTabele(dane);
+      renderMecze(mecze);
+      const pilka = document.querySelector(".pilka-bohater");
+      if (pilka) {
+        pilka.classList.remove("podanie");
+        void pilka.getBoundingClientRect(); // restart animacji (reflow)
+        pilka.classList.add("podanie");
+      }
+    } catch (e) { /* sieć — kolejna próba za 10 min */ }
+  }, 600_000);
 }
 
 /* ===== przebiegi automatu: runs.json (zapisywany przy KAŻDYM uruchomieniu) =====
@@ -525,17 +576,17 @@ async function start() {
   }
 
   if (ok) {
-    // Ochrona przed datami zastępczymi źródeł (ŚZTS wstawia „2026-00-00"
-    // dla meczów bez terminu): wiersz z niepoprawną datą nie może trafić
+    // Mecze z odsianiem dat zastępczych źródeł (ŚZTS wstawia „2026-00-00"
+    // dla meczów bez terminu) — wiersz z niepoprawną datą nie może trafić
     // na pasek meczowy (wisi tam jako „Wynik w drodze · 00.00.2026"),
     // do kart drużyn ani list wyników. Parser też je odsiewa — to
     // podwójne zabezpieczenie (bug z 10.10, zgłoszenie Tomka).
-    const mecze = [...(dane.meczeSzts ?? []), ...(dane.meczePzts ?? [])]
-      .filter((m) => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(m.dataMeczu ?? ""));
+    const mecze = meczeZDanych(dane);
     renderPasekMeczu(mecze);
     renderKartyDruzyn(dane, mecze);
     renderTabele(dane);
     renderMecze(mecze);
+    pilnujSwiezosci(sygnaturaWynikow(dane)); // 1.7.0: odświeżanie w tle
   }
   renderBadges(dane ?? {}, ok);
 }
