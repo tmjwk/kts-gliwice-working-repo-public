@@ -17,6 +17,11 @@ placeholderowe są celowe. Na czas testów strona jest nieindeksowalna
 
 ## Jak to działa (automatyzacja)
 
+> **Uwaga (v1.7.1 / Task 84):** ten plik jest kanonicznym domem opisu
+> mechanizmu. Wykład „Jak to działa” zniknął z WIDOKU strony (zwiedzający
+> go nie potrzebuje) — w `index.html` siedzi w komentarzu HTML oznaczonym
+> `DO USUNIĘCIA W PRZYSZŁOŚCI`; skasować przy wielkim sprzątaniu kodu.
+
 1. **GitHub Actions** (`.github/workflows/sync-dane.yml`) uruchamia się wg
    harmonogramu (**co 2 h**) lub ręcznie: zakładka *Actions* →
    „Sync danych ligowych” → *Run workflow*.
