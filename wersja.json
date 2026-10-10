@@ -1,5 +1,5 @@
 {
- "wersja": "1.7.2",
- "data": "2026-10-10T21:32:00Z",
- "opis": "Czytelny sygnał świeżości w sekcji wyników: „Ostatnia zmiana danych” staje się „Ostatni odczyt” (uczciwie — znacznik to moment poprawnego odczytu źródła, nie zmiany), a linia Automat pokazuje jeden ostatni przebieg ze statusem per źródło — „ŚZTS ✓ · PZTS chwilowo nieodczytany (pokazuję ostatnie znane dane)” zamiast zupki „✓ AWARIA… · czytnik ✗ · źródło bez odpowiedzi”; trzecia linia („Ostatni udany odczyt”) znika, bo po poprawkach dublowała pierwszą; słowo AWARIA zostaje w runs.json — dla nas, nie dla zwiedzających"
+ "wersja": "1.7.3",
+ "data": "2026-10-11T06:40:00Z",
+ "opis": "Nadruk na piłce-bohaterze widać na pierwszy rzut oka (zgłoszenie Tomka: napis ma być dobrze widoczny): KTS GLIWICE rośnie z 11 do 17 jednostek, a łuk napisu staje się płytszy (R=70 zamiast R=42) — jak rzut nadruku na prawdziwej piłce, gdzie okrąg sfery widać jako elipsę; gwiazdki i 40+ rosną razem z napisem, litery dostają delikatne pogrubienie; favicon dostaje ten sam większy wzór w rozmiarze bezpiecznym dla fontów systemowych — koniec ucinania skrajnych liter, gdy zamiast Arial Narrow renderuje się szeroki Arial"
 }
