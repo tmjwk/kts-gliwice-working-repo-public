@@ -347,13 +347,15 @@
     </div>
   </footer>
 
-  <!-- ===== SPRITE PIŁKI KTS (1.7.0; 1.7.3: nadruk powiększony) — jeden wzór:
+  <!-- ===== SPRITE PIŁKI KTS (1.7.0; 1.7.4: kompozycja KTS + 5★ + 40+) — jeden wzór:
        piłka-bohater przy nagłówku, pusty stan „Najbliższych meczów” i favicon
-       (favicon.svg to ta sama piłka na kaflu). Definicje wiernie z demo
-       „piłeczka en face” (07.10, plan B bez cudzego znaku towarowego);
-       1.7.3 (zgłoszenie Tomka: napis ma być DOBRZE widoczny): napis 17/120,
-       łuk płytszy (R=70 — jak rzut okręgu sfery, czyli elipsa), gwiazdki R=9,
-       „40+” 17/120, litery pogrubione strokiem pod fill. ===== -->
+       (favicon.svg to ta sama piłka na kaflu). Plan B bez cudzego znaku
+       towarowego. 1.7.4 (decyzja Tomka: bez „GLIWICE”, gwiazdek 5, dbać
+       o symetrię): KTS duże POZIOMO na środku (30/120), 5 gwiazdek w koronie
+       na okręgu koncentrycznym r=30 (kąty -90°, ±54°, ±18° — idealna
+       symetria), „40+” 21/120 na dole; krótki napis = duży font = czytelność
+       już od 44 px. Historia: 1.7.3 powiększył „KTS GLIWICE” na łuku;
+       1.7.0–1.7.2 miał napis 11/120. ===== -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <defs>
       <radialGradient id="kula-gradient" cx="32%" cy="28%" r="75%">
@@ -363,16 +365,16 @@
         <stop offset="100%" stop-color="#d9d4c5"/>
       </radialGradient>
       <path id="gwiazdka" d="M0,-9 L2.02,-2.78 L8.56,-2.78 L3.27,1.07 L5.29,7.29 L0,3.44 L-5.29,7.29 L-3.27,1.07 L-8.56,-2.78 L-2.02,-2.78 Z"/>
-      <path id="luk-nadruku" d="M 16 46 A 70 70 0 0 1 104 46" fill="none"/>
       <symbol id="pilka-kts" viewBox="0 0 120 120">
         <circle cx="60" cy="60" r="57" fill="url(#kula-gradient)"/>
-        <text font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="17" font-weight="700" fill="#0057b8" letter-spacing="0.5" stroke="#0057b8" stroke-width="0.5" paint-order="stroke fill">
-          <textPath href="#luk-nadruku" startOffset="50%" text-anchor="middle">KTS GLIWICE</textPath>
-        </text>
-        <use href="#gwiazdka" transform="translate(40 68)" fill="#0057b8"/>
-        <use href="#gwiazdka" transform="translate(60 68)" fill="#0057b8"/>
-        <use href="#gwiazdka" transform="translate(80 68)" fill="#0057b8"/>
-        <text x="60" y="93" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="17" font-weight="700" fill="#0057b8" text-anchor="middle" letter-spacing="0.5" stroke="#0057b8" stroke-width="0.5" paint-order="stroke fill">40+</text>
+        <!-- korona: 5 gwiazdek na okręgu koncentrycznym r=30 wokół środka -->
+        <use href="#gwiazdka" transform="translate(60 30)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(77.6 35.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(42.4 35.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(88.6 50.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(31.4 50.7)" fill="#0057b8"/>
+        <text x="60" y="84" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="30" font-weight="700" fill="#0057b8" text-anchor="middle" letter-spacing="1.5" stroke="#0057b8" stroke-width="0.7" paint-order="stroke fill">KTS</text>
+        <text x="60" y="106" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="21" font-weight="700" fill="#0057b8" text-anchor="middle" letter-spacing="0.5" stroke="#0057b8" stroke-width="0.5" paint-order="stroke fill">40+</text>
       </symbol>
     </defs>
   </svg>
