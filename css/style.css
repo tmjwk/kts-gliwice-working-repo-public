@@ -462,13 +462,12 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .news-dialog-stopka a:hover { text-decoration: underline; }
 .news-dialog-zamknij { align-self: center; margin-top: 0.35rem; }
 
-/* ===== PIŁKA-BOHATER KTS (1.7.0; 1.7.3: nadruk powiększony) ===== */
-/* Jeden wzór piłki (sprite #pilka-kts w index.html, wierny demo „piłeczka
-   en face” z 07.10) — spójny z favicon.svg (ta sama piłka na kaflu klubowym).
-   Od 1.7.3 (zgłoszenie Tomka: napis ma być DOBRZE widoczny) nadruk jest
-   duży jak na prawdziwej piłce meczowej: napis 17/120 na płytkim łuku R=70
-   (rzut okręgu sfery to elipsa), gwiazdki R=9 — litery ~8 px wysokości
-   przy 64 px; w pasku meczowym pozostaje stara piłeczka CSS 0,9 em —
+/* ===== PIŁKA-BOHATER KTS (1.7.0; 1.7.4: kompozycja KTS + 5★ + 40+) ===== */
+/* Jeden wzór piłki (sprite #pilka-kts w index.html) — spójny z favicon.svg
+   (ta sama piłka na kaflu klubowym). Od 1.7.4 (decyzja Tomka: bez „GLIWICE”,
+   5 gwiazdek, symetria): KTS duże poziome na środku piłki (30/120 — czytelne
+   już od 44 px), korona 5 gwiazdek na okręgu koncentrycznym r=30, „40+”
+   21/120 na dole. W pasku meczowym pozostaje stara piłeczka CSS 0,9 em —
    rozstrzygnięcie z eksperymentu v1.6.3. */
 .pilka-bohater {
   width: 64px; height: 64px; flex: none;
