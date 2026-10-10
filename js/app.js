@@ -348,10 +348,11 @@ function renderBadges(dane, ok) {
   const sPzts = formatujZnacznik(dane.ostatniSync?.pzts);
   const elSync = $("#ostatni-sync");
   elSync.textContent =
-    `Ostatnia zmiana danych: PZTS ${sPzts ?? "—"} · ŚZTS ${sSzts ?? "—"}`;
+    `Ostatni odczyt: PZTS ${sPzts ?? "—"} · ŚZTS ${sSzts ?? "—"}`;
   elSync.title =
-    "Moment ostatniej REALNEJ zmiany danych (commit w repo) — nie każde " +
-    "uruchomienie automatu coś zmienia; puste przebiegi są normalne.";
+    "Moment ostatniego poprawnego odczytu każdego źródła. Wyniki nie muszą " +
+    "się zmieniać między odczytami — strona zawsze pokazuje najświeższe " +
+    "odczytane dane.";
 }
 
 /* ===== tryb dzień/noc ===== */
@@ -444,17 +445,17 @@ function pilnujSwiezosci(poczatkowaSygnatura) {
 }
 
 /* ===== przebiegi automatu: runs.json (zapisywany przy KAŻDYM uruchomieniu) =====
-   Konwencja uzgodniona z właścicielem (01.10.2026):
-     ✓ = automat wystartował i ODCZYTAŁ dane ze źródeł — sukces, TAKŻE gdy
-         danych nie zmienił („bez zmian" to również sukces, nie błąd),
-     ✗ = automat wystartował, ale źródło nie odpowiedziało (timeout / 0 B),
-     BRAK WPISU między godzinami = slot co 2 h pominięty przez GitHub
-         (normalne na darmowym planie — przerwy 4-8 h).
-   Źródło: runs.json (same-origin, bez limitów API); ostatnie 50 przebiegów.
-   „Ostatnia zmiana danych" obok = moment ostatniej REALNEJ zmiany (commit). */
+   Konwencja uzgodniona z właścicielem (01.10.2026), doprecyzowana 10.10 (1.7.2):
+     ✓ = źródło odczytane poprawnie (także gdy danych nie zmieniło —
+         „bez zmian” to również sukces),
+     „chwilowo nieodczytany” = źródło nie odpowiedziało (timeout / 0 B) —
+         na stronie zostają ostatnie znane dane.
+   Od 1.7.2 linia pokazuje JEDEN ostatni przebieg ze statusem PER ŹRÓDŁO,
+   źródła po imieniu. Poprzedni format „✗ źródło bez odpowiedzi” nie nazywał
+   źródła (atrybucja kłamała przy awarii), a „✓ AWARIA…” kleił sukces ze
+   statusem awarii innego źródła. Szczegóły techniczne pozostają w runs.json. */
 async function pokazPrzebiegiSyncu() {
   const el = $("#cron-aktywnosc");
-  const elO = $("#cron-ostatni-odczyt");
   if (!el) return;
   let runs = null;
   try {
@@ -465,7 +466,7 @@ async function pokazPrzebiegiSyncu() {
     el.textContent = "Automat: czekam na pierwszy zapis przebiegu…";
     el.title =
       "Od wersji 1.5.2 automat zapisuje każdy przebieg (także pusty) do runs.json. " +
-      "Pierwszy wpis pojawi się po najbliższym uruchomieniu crona.";
+      "Pierwszy wpis pojawi się po najbliższym uruchomieniu crona (co 2 h).";
     return;
   }
   const etykietaCzasu = (iso) => {
@@ -479,32 +480,21 @@ async function pokazPrzebiegiSyncu() {
     if (fmt(d) === fmt(wczoraj)) return `wczoraj ${godz}`;
     return `${fmt(d)} ${godz}`;
   };
-  const opisRunu = (r) => {
-    if (r.szts !== "ok") return "✗ źródło bez odpowiedzi";
-    let txt = r.zmieniono ? (r.zmiany && r.zmiany !== "—" ? r.zmiany : "zmiana danych") : "bez zmian";
-    if (r.pzts === "blad-czytnika") txt += " · PZTS czytnik ✗";
-    if (r.pzts === "recznie") txt += " · PZTS wklejka";
-    return `✓ ${txt}`;
-  };
-  const ostatnie3 = runs.slice(-3).reverse(); // najnowszy pierwszy
-  el.textContent = "Automat: " + ostatnie3.map((r) => `${etykietaCzasu(r.start)} ${opisRunu(r)}`).join(" · ");
+  const run = runs[runs.length - 1];
+  const sztsStan = run.szts === "ok" ? "ŚZTS ✓" : "ŚZTS chwilowo nieodczytany";
+  const pztsStan =
+    run.pzts === "ok" ? "PZTS ✓" :
+    run.pzts === "recznie" ? "PZTS ✓ (wklejka)" :
+    run.pzts === "pominieto" ? "PZTS pominięty" :
+    "PZTS chwilowo nieodczytany";
+  const przytrzymane = run.szts !== "ok" || (run.pzts !== "ok" && run.pzts !== "recznie" && run.pzts !== "pominieto");
+  el.textContent =
+    `Automat: ostatni przebieg ${etykietaCzasu(run.start)} — ${sztsStan} · ${pztsStan}` +
+    (przytrzymane ? " (pokazuję ostatnie znane dane)" : "");
   el.title =
-    "Ostatnie uruchomienia automatu (cron co 2 h). ✓ = dane odczytane — także bez zmian; " +
-    "✗ = źródło nie odpowiedziało; brak wpisu między godzinami = slot pominięty przez " +
-    "GitHub (przerwy 4-8 h są normalne). Szczegóły techniczne: runs.json w repo.";
-  if (elO) {
-    const ostatniOk = [...runs].reverse().find((r) => r.szts === "ok");
-    if (ostatniOk) {
-      const min = Math.round((Date.now() - new Date(ostatniOk.start).getTime()) / 60_000);
-      const temu =
-        min < 1 ? "właśnie teraz" :
-        min < 60 ? `${min} min temu` :
-        min < 2_880 ? `${Math.round(min / 60)} godz. temu` :
-        `${Math.round(min / 1_440)} dni temu`;
-      elO.textContent = `Ostatni udany odczyt: ${etykietaCzasu(ostatniOk.start)} (${temu})`;
-      elO.title = "Moment ostatniego przebiegu, w którym dane ze źródeł zostały odczytane pomyślnie.";
-    }
-  }
+    "Automat czyta źródła co 2 h (cron GitHub Actions). ✓ = odczytane poprawnie — " +
+    "także bez zmian; „chwilowo nieodczytany” = źródło nie odpowiedziało, " +
+    "na stronie zostają ostatnie znane dane. Historia: runs.json w repo.";
 }
 
 /* ===== galeria: teaser okładek (pełna galeria na podstronie) ===== */
