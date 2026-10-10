@@ -1,5 +1,5 @@
 {
- "wersja": "1.7.0",
- "data": "2026-10-10T22:20:00Z",
- "opis": "Piłka-bohater KTS ★★★ 40+ (64 px) przy nagłówku „Drużyny i wyniki”, nowy favicon z tą samą piłką, pusty stan „Najbliższych meczów” (przerwa w rozgrywkach) i sygnał świeżości: odświeżanie danych w tle co 10 min + jedno „podanie” piłki przy nowym wyniku, z poszanowaniem reduced-motion; karta podglądu do udostępnień (og:image) — pomysły z 1.6.9, zielone światło Tomka z turnieju"
+ "wersja": "1.7.1",
+ "data": "2026-10-10T21:05:00Z",
+ "opis": "Wykład techniczny „Jak to działa” (CDN, Actions, czytniki) ukryty z widoku strony — w sekcji wyników zostaje sam sygnał świeżości „Ostatnia zmiana danych”; tekst oznaczony w kodzie jako „do usunięcia w przyszłości”, a pełny opis mechanizmu żyje w README — decyzja Tomka: ukryć teraz, skasować przy wielkim sprzątaniu kodu"
 }
