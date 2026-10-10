@@ -1,5 +1,5 @@
 {
- "wersja": "1.7.3",
- "data": "2026-10-11T06:40:00Z",
- "opis": "Nadruk na piłce-bohaterze widać na pierwszy rzut oka (zgłoszenie Tomka: napis ma być dobrze widoczny): KTS GLIWICE rośnie z 11 do 17 jednostek, a łuk napisu staje się płytszy (R=70 zamiast R=42) — jak rzut nadruku na prawdziwej piłce, gdzie okrąg sfery widać jako elipsę; gwiazdki i 40+ rosną razem z napisem, litery dostają delikatne pogrubienie; favicon dostaje ten sam większy wzór w rozmiarze bezpiecznym dla fontów systemowych — koniec ucinania skrajnych liter, gdy zamiast Arial Narrow renderuje się szeroki Arial"
+ "wersja": "1.7.4",
+ "data": "2026-10-11T06:55:00Z",
+ "opis": "Piłka mówi teraz KTS i pokazuje pięć gwiazdek (decyzja Tomka: bez słowa GLIWICE, gwiazdek 5, zadbać o symetrię): krótki napis schodzi z łuku na środek piłki i rośnie z 17 do 30 jednostek — czytelny już przy 44 pikselach, pięć gwiazdek układa się w koronę na okręgu koncentrycznym (idealna symetria względem osi piłki), a 40+ zyskuje odpowiedni dystans od środka i krawędzi; favicon z tym samym wzorem jest bezpieczny w każdym fontie systemowym, bo poziomy napis na środku nie ma czego uciąć"
 }
