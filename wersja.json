@@ -1,5 +1,5 @@
 {
- "wersja": "1.7.1",
- "data": "2026-10-10T21:05:00Z",
- "opis": "Wykład techniczny „Jak to działa” (CDN, Actions, czytniki) ukryty z widoku strony — w sekcji wyników zostaje sam sygnał świeżości „Ostatnia zmiana danych”; tekst oznaczony w kodzie jako „do usunięcia w przyszłości”, a pełny opis mechanizmu żyje w README — decyzja Tomka: ukryć teraz, skasować przy wielkim sprzątaniu kodu"
+ "wersja": "1.7.2",
+ "data": "2026-10-10T21:32:00Z",
+ "opis": "Czytelny sygnał świeżości w sekcji wyników: „Ostatnia zmiana danych” staje się „Ostatni odczyt” (uczciwie — znacznik to moment poprawnego odczytu źródła, nie zmiany), a linia Automat pokazuje jeden ostatni przebieg ze statusem per źródło — „ŚZTS ✓ · PZTS chwilowo nieodczytany (pokazuję ostatnie znane dane)” zamiast zupki „✓ AWARIA… · czytnik ✗ · źródło bez odpowiedzi”; trzecia linia („Ostatni udany odczyt”) znika, bo po poprawkach dublowała pierwszą; słowo AWARIA zostaje w runs.json — dla nas, nie dla zwiedzających"
 }
