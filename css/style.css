@@ -462,12 +462,14 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .news-dialog-stopka a:hover { text-decoration: underline; }
 .news-dialog-zamknij { align-self: center; margin-top: 0.35rem; }
 
-/* ===== PIŁKA-BOHATER KTS (1.7.0) ===== */
+/* ===== PIŁKA-BOHATER KTS (1.7.0; 1.7.3: nadruk powiększony) ===== */
 /* Jeden wzór piłki (sprite #pilka-kts w index.html, wierny demo „piłeczka
    en face” z 07.10) — spójny z favicon.svg (ta sama piłka na kaflu klubowym).
-   64 px to najmniejsza skala, w której nadruk „KTS GLIWICE ★★★ 40+” jest
-   czytelny (badanie rozmiarów z demo); w pasku meczowym pozostaje stara
-   piłeczka CSS 0,9 em — rozstrzygnięcie z eksperymentu v1.6.3. */
+   Od 1.7.3 (zgłoszenie Tomka: napis ma być DOBRZE widoczny) nadruk jest
+   duży jak na prawdziwej piłce meczowej: napis 17/120 na płytkim łuku R=70
+   (rzut okręgu sfery to elipsa), gwiazdki R=9 — litery ~8 px wysokości
+   przy 64 px; w pasku meczowym pozostaje stara piłeczka CSS 0,9 em —
+   rozstrzygnięcie z eksperymentu v1.6.3. */
 .pilka-bohater {
   width: 64px; height: 64px; flex: none;
   filter: drop-shadow(0 3px 6px rgba(9, 16, 29, 0.28));
