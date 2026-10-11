@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-11T20:39:58.832Z",
+  "wygenerowano": "2026-10-11T23:44:08.145Z",
   "przechowuje": 50,
   "runs": [
     {
@@ -337,6 +337,16 @@
       "zmieniono": true,
       "zmiany": "AWARIA ŚZTS — dane przytrzymane (The operation timed out.)",
       "blad": "The operation timed out.",
+      "retry": null
+    },
+    {
+      "start": "2026-10-11T23:43:56.300Z",
+      "czasS": 12,
+      "szts": "ok",
+      "pzts": "blad-czytnika",
+      "zmieniono": true,
+      "zmiany": "AWARIA PZTS — dane przytrzymane",
+      "blad": null,
       "retry": null
     }
   ]
