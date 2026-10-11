@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-11T05:58:06.230Z",
+  "wygenerowano": "2026-10-11T20:34:48.306Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -1734,10 +1734,10 @@
   ],
   "ostatniSync": {
     "szts": "2026-10-11T05:58:06.230Z",
-    "pzts": "2026-10-11T05:58:06.230Z"
+    "pzts": "2026-10-11T20:34:48.306Z"
   },
   "zrodla": {
-    "szts": "ok",
+    "szts": "blad: The operation timed out.",
     "pzts": "ok"
   }
 }
