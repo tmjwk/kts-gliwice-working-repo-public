@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-11T13:03:22.535Z",
+  "wygenerowano": "2026-10-11T18:59:26.013Z",
   "przechowuje": 50,
   "runs": [
     {
@@ -312,6 +312,16 @@
     {
       "start": "2026-10-11T13:03:10.978Z",
       "czasS": 12,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": false,
+      "zmiany": "bez zmian",
+      "blad": null,
+      "retry": null
+    },
+    {
+      "start": "2026-10-11T18:59:04.051Z",
+      "czasS": 22,
       "szts": "ok",
       "pzts": "ok",
       "zmieniono": false,
