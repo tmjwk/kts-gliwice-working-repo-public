@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-12T23:03:05.432Z",
+  "wygenerowano": "2026-10-14T13:49:20.645Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "3:37"
         }
       ],
-      "zaktualizowano": "2026-10-12T23:03:05.432Z"
+      "zaktualizowano": "2026-10-14T13:49:20.645Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-12T23:03:05.432Z"
+      "zaktualizowano": "2026-10-14T13:49:20.645Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "3:17"
         }
       ],
-      "zaktualizowano": "2026-10-12T23:03:05.432Z"
+      "zaktualizowano": "2026-10-14T13:49:20.645Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-12T23:03:05.432Z"
+      "zaktualizowano": "2026-10-14T13:49:20.645Z"
     }
   ],
   "meczeSzts": [
@@ -1084,7 +1084,7 @@
     },
     {
       "dataMeczu": "2026-10-15",
-      "godzina": "17:30",
+      "godzina": "19:00",
       "kolejka": 3,
       "gospodarz": "STS II Żernica",
       "gosc": "KTS V Gliwice",
@@ -1540,8 +1540,8 @@
       ]
     },
     {
-      "dataMeczu": "2026-10-22",
-      "godzina": "19:30",
+      "dataMeczu": "2026-10-19",
+      "godzina": "17:00",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
       "gosc": "LKS Strażak II Mikołów",
@@ -1553,8 +1553,8 @@
       ]
     },
     {
-      "dataMeczu": "2026-11-05",
-      "godzina": "19:30",
+      "dataMeczu": "2026-11-02",
+      "godzina": "17:00",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
       "gosc": "UKS Ikar Mierzęcice",
@@ -1566,8 +1566,8 @@
       ]
     },
     {
-      "dataMeczu": "2026-11-12",
-      "godzina": "19:30",
+      "dataMeczu": "2026-11-09",
+      "godzina": "17:00",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
       "gosc": "Speed Team 43 Stolarzowice",
@@ -1605,8 +1605,8 @@
       ]
     },
     {
-      "dataMeczu": "2026-12-10",
-      "godzina": "19:30",
+      "dataMeczu": "2026-12-07",
+      "godzina": "17:00",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
       "gosc": "UKS Wolej Solver III Ruda Śląska",
@@ -1618,8 +1618,8 @@
       ]
     },
     {
-      "dataMeczu": "2026-12-17",
-      "godzina": "19:30",
+      "dataMeczu": "2026-12-14",
+      "godzina": "17:00",
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
       "gosc": "TKKF Aut Łagisza Będzin",
@@ -1733,8 +1733,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-12T23:03:05.432Z",
-    "pzts": "2026-10-12T23:03:05.432Z"
+    "szts": "2026-10-14T13:49:20.645Z",
+    "pzts": "2026-10-14T13:49:20.645Z"
   },
   "zrodla": {
     "szts": "ok",
