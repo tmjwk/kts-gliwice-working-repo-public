@@ -550,7 +550,7 @@
     },
     {
       "dataMeczu": "2026-10-22",
-      "godzina": "19:15",
+      "godzina": "19:00",
       "kolejka": 6,
       "gospodarz": "KTS II Gliwice",
       "gosc": "GUKS Byczyna",
@@ -576,7 +576,7 @@
     },
     {
       "dataMeczu": "2026-11-05",
-      "godzina": "19:15",
+      "godzina": "19:00",
       "kolejka": 8,
       "gospodarz": "KTS II Gliwice",
       "gosc": "KTS Olimpijczyk Zawiercie",
@@ -615,7 +615,7 @@
     },
     {
       "dataMeczu": "2026-12-03",
-      "godzina": "19:15",
+      "godzina": "19:00",
       "kolejka": 11,
       "gospodarz": "KTS II Gliwice",
       "gosc": "MKS Skarbek II Tarnowskie Góry",
@@ -641,7 +641,7 @@
     },
     {
       "dataMeczu": "2027-01-14",
-      "godzina": "19:15",
+      "godzina": "19:00",
       "kolejka": 13,
       "gospodarz": "KTS II Gliwice",
       "gosc": "KS Naprzód II Borucin",
@@ -667,7 +667,7 @@
     },
     {
       "dataMeczu": "2027-02-11",
-      "godzina": "19:15",
+      "godzina": "19:00",
       "kolejka": 15,
       "gospodarz": "KTS II Gliwice",
       "gosc": "MUKS Jedynka Pszów",
