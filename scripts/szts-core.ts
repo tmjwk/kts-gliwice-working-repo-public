@@ -168,6 +168,23 @@ const KOREKTY_GODZIN: Readonly<Record<string, string>> = {
   "2027-02-11|KTS II Gliwice|MUKS Jedynka Pszów": "19:00",
 };
 
+/**
+ * Rejestr zastosowanych korekt (wypełnia parsujTerminarz przy każdym
+ * przebiegu). sync_statyczny.ts odczytuje go przy budowie wpisu runs.json —
+ * żeby stan „wiedza klubowa vs źródło" był JAWNY w dzienniku przebiegów:
+ *  - zeZrodla ≠ korekta → korekta pracuje (źródło nadal kłamie),
+ *  - zeZrodla = korekta → źródło przejęło prawdziwą godzinę — wpis można
+ *    zdjąć z KOREKTY_GODZIN (korekta stała się no-op).
+ * Konwencja lustrzana z STATYSTYKI_POBIERANIA (akumulacja w ramach procesu).
+ */
+export const KOREKTY_ZASTOSOWANE: Array<{
+  data: string;
+  gospodarz: string;
+  gosc: string;
+  zeZrodla: string | null;
+  korekta: string;
+}> = [];
+
 /** Parsuje sekcję „Tabela ligowa" na listę wierszy. */
 export function parsujTabele(html: string): WierszTabeli[] {
   const start = html.indexOf("Tabela ligowa");
@@ -237,8 +254,13 @@ export function parsujTerminarz(html: string): MeczLigi[] {
 
     // korekta godzin (wiedza klubowa vs błąd źródła — patrz KOREKTY_GODZIN)
     const korekta = KOREKTY_GODZIN[`${data}|${gospodarz}|${gosc}`];
-    if (korekta && korekta !== godzina) {
-      console.log(`korekta godziny: ${data} ${gospodarz} vs ${gosc}: źródło ${godzina} → ${korekta} (wiedza klubowa)`);
+    if (korekta !== undefined) {
+      KOREKTY_ZASTOSOWANE.push({ data, gospodarz, gosc, zeZrodla: godzina, korekta });
+      if (korekta !== godzina) {
+        console.log(`korekta godziny: ${data} ${gospodarz} vs ${gosc}: źródło ${godzina} → ${korekta} (wiedza klubowa)`);
+      } else {
+        console.log(`korekta zgodna ze źródłem: ${data} ${gospodarz} vs ${gosc}: ${korekta} — źródło przejęło wartość, wpis można zdjąć z KOREKTY_GODZIN`);
+      }
     }
 
     mecze.push({
