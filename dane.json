@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-14T22:39:17.232Z",
+  "wygenerowano": "2026-10-14T23:17:43.025Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -66,21 +66,21 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "MKS Skarbek Tarnowskie Góry",
+          "mecze": 5,
+          "punkty": 10,
+          "stosunek": "37:13"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "LITS Meble Anders Żywiec",
           "mecze": 4,
           "punkty": 8,
           "stosunek": "32:8"
         },
         {
-          "pozycja": 2,
-          "nazwa": "MKS Czechowice Dziedzice",
-          "mecze": 4,
-          "punkty": 8,
-          "stosunek": "31:9"
-        },
-        {
           "pozycja": 3,
-          "nazwa": "MKS Skarbek Tarnowskie Góry",
+          "nazwa": "MKS Czechowice Dziedzice",
           "mecze": 4,
           "punkty": 8,
           "stosunek": "31:9"
@@ -102,9 +102,9 @@
         {
           "pozycja": 6,
           "nazwa": "KS Mysław Mysłowice",
-          "mecze": 4,
+          "mecze": 5,
           "punkty": 6,
-          "stosunek": "23:17"
+          "stosunek": "27:23"
         },
         {
           "pozycja": 7,
@@ -177,7 +177,7 @@
           "stosunek": "3:37"
         }
       ],
-      "zaktualizowano": "2026-10-14T22:39:17.232Z"
+      "zaktualizowano": "2026-10-14T23:17:43.025Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "3:27"
         }
       ],
-      "zaktualizowano": "2026-10-14T22:39:17.232Z"
+      "zaktualizowano": "2026-10-14T23:17:43.025Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "6:24"
         }
       ],
-      "zaktualizowano": "2026-10-14T22:39:17.232Z"
+      "zaktualizowano": "2026-10-14T23:17:43.025Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-14T22:39:17.232Z"
+      "zaktualizowano": "2026-10-14T23:17:43.025Z"
     }
   ],
   "meczeSzts": [
@@ -1733,8 +1733,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-14T22:39:17.232Z",
-    "pzts": "2026-10-14T22:39:17.232Z"
+    "szts": "2026-10-14T23:17:43.025Z",
+    "pzts": "2026-10-14T23:17:43.025Z"
   },
   "zrodla": {
     "szts": "ok",
