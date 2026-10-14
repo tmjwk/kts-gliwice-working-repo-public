@@ -145,6 +145,29 @@ export function naprawNazwe(nazwa: string): string {
   return NAPRAWA_NAZW[nazwa] ?? nazwa;
 }
 
+/**
+ * Korekty godzin meczów — wiedza terenowa klubu vs błąd w źródle ŚZTS
+ * (15.10.2026, Task 93). Źródło ligi.slzts.pl wystawia „19:15” przy
+ * czwartkowych meczach DOMOWYCH KTS II Gliwice w 2LM (sezon 2026/27,
+ * jedyna runda do 12.02.2027), a klub gra o 19:00 — potwierdzone przez
+ * właściciela („do końca tej rundy grają o 19:00”; źródło ma niby
+ * poprawić, ale na 15.10 nadal kłamie — weryfikacja curl-em).
+ *
+ * Klucz = „data|gospodarz|gość” (pełny identyfikator meczu — konwencja
+ * klucza z sync_statyczny.ts), wartość = właściwa godzina.
+ * Mapa jest SAMOWYGAJĄCA: klucze trzymają pełne daty, więc po końcu
+ * sezonu (12.02.2027) i przy nowym sezonie nikt nie musi jej zdejmować.
+ * Gdy ŚZTS poprawi źródło na 19:00, wpisy stają się no-op — można je
+ * wtedy zdjąć przy okazji porządków.
+ */
+const KOREKTY_GODZIN: Readonly<Record<string, string>> = {
+  "2026-10-22|KTS II Gliwice|GUKS Byczyna": "19:00",
+  "2026-11-05|KTS II Gliwice|KTS Olimpijczyk Zawiercie": "19:00",
+  "2026-12-03|KTS II Gliwice|MKS Skarbek II Tarnowskie Góry": "19:00",
+  "2027-01-14|KTS II Gliwice|KS Naprzód II Borucin": "19:00",
+  "2027-02-11|KTS II Gliwice|MUKS Jedynka Pszów": "19:00",
+};
+
 /** Parsuje sekcję „Tabela ligowa" na listę wierszy. */
 export function parsujTabele(html: string): WierszTabeli[] {
   const start = html.indexOf("Tabela ligowa");
@@ -212,9 +235,15 @@ export function parsujTerminarz(html: string): MeczLigi[] {
     const gosc = naprawNazwe(komorki[idxWynik - 1]);
     if (!gospodarz || !gosc) continue;
 
+    // korekta godzin (wiedza klubowa vs błąd źródła — patrz KOREKTY_GODZIN)
+    const korekta = KOREKTY_GODZIN[`${data}|${gospodarz}|${gosc}`];
+    if (korekta && korekta !== godzina) {
+      console.log(`korekta godziny: ${data} ${gospodarz} vs ${gosc}: źródło ${godzina} → ${korekta} (wiedza klubowa)`);
+    }
+
     mecze.push({
       dataMeczu: data,
-      godzina,
+      godzina: korekta ?? godzina,
       kolejka,
       gospodarz,
       gosc,
