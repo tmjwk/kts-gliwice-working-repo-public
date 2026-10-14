@@ -1,16 +1,7 @@
 {
-  "wygenerowano": "2026-10-14T22:39:29.903Z",
+  "wygenerowano": "2026-10-14T22:54:39.287Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-10-05T22:43:58.409Z",
-      "czasS": 13,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": true,
-      "zmiany": "+1 w terminarzu (ŚZTS) · tabele: 18/138, 18/142 · stan drużyn",
-      "blad": null
-    },
     {
       "start": "2026-10-06T06:30:16.491Z",
       "czasS": 16,
@@ -499,6 +490,23 @@
       "zmiany": "tabele: 18/142 · stan drużyn",
       "blad": null,
       "retry": null
+    },
+    {
+      "start": "2026-10-14T22:54:35.112Z",
+      "czasS": 4,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": false,
+      "zmiany": "bez zmian",
+      "blad": null,
+      "retry": null,
+      "korekty": [
+        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
+        "2026-11-05 KTS II Gliwice–KTS Olimpijczyk Zawiercie: źródło 19:15 → korekta 19:00",
+        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
+        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
+        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
+      ]
     }
   ]
 }
