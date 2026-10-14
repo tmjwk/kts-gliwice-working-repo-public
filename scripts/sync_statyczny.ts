@@ -52,6 +52,7 @@ import {
   parsujTerminarz,
   pobierzHtml,
   STATYSTYKI_POBIERANIA,
+  KOREKTY_ZASTOSOWANE,
   type MeczLigi,
 } from "./szts-core";
 
@@ -91,6 +92,12 @@ interface WpisRunu {
   zmiany: string; // „bez zmian" / „+2 wyniki (ŚZTS)" / „—"
   blad: string | null; // treść błędu, gdy szts === "blad"
   retry?: string | null; // v1.6.1: użycie ponowień, np. „ŚZTS: sukces po 2. próbie (18/138)"
+  // v1.7.5 (Task 94, „sprytny kod”): jawny stan korekt godzin w ŻYWYM
+  // odczycie — "data gospodarz–gość: źródło X → korekta Y" albo
+  // "źródło przejęło Y — wpis można zdjąć". Pole opcjonalne: wpis
+  // bez korekt (mapa pusta / meczów brak) go pomija — runs.json
+  // pozostaje wstecznie zgodny z dotychczasowym frontem.
+  korekty?: string[];
 }
 
 // ====== Typy danych wyjściowych (kontrakt dla strony statycznej) ======
@@ -267,27 +274,58 @@ async function pobierzPztsPrzezJine(proby = 3): Promise<string> {
 }
 
 /** Krótki, ludzki opis różnicy między dwoma stanami danych (do runs.json). */
-function opiszZmiany(stary: Dane | null, nowy: Dane): string {
+export function opiszZmiany(stary: Dane | null, nowy: Dane): string {
   if (!stary) return "pierwszy zapis";
   const klucz = (m: MeczLigi) => `${m.dataMeczu}|${m.gospodarz}|${m.gosc}`;
+  const para = (m: MeczLigi) => `${m.gospodarz}|${m.gosc}`;
   const czesci: string[] = [];
+  // v1.7.5 (Task 94, „sprytny kod”): źródło bywa zawodne — zmiany TERMINÓW
+  // (godziny, przesunięcia dat, usunięcia) muszą być JAWNIE raportowane,
+  // nie przemykać cicho w commicie. Wcześniejsza luka: klucz meczu nie
+  // zawiera godziny → zmiana 19:15→19:00 była niewidoczna; przesunięcie
+  // daty wyglądało jak „+nowy termin” bez zniknięcia starego.
   const raportMeczy = (nazwa: string, stare: MeczLigi[], nowe: MeczLigi[]) => {
     const stareMapa = new Map(stare.map((m) => [klucz(m), m]));
+    const noweKlucze = new Set(nowe.map((m) => klucz(m)));
+    const nowePary = new Set(nowe.map((m) => para(m)));
     let noweWyniki = 0;
     let poprawione = 0;
     let noweTerminy = 0;
+    let usuniete = 0;
+    const zmianyGodzin: string[] = [];
+    const przesuniete: string[] = [];
     for (const m of nowe) {
       const st = stareMapa.get(klucz(m));
       if (!st) {
-        noweTerminy++;
+        // „nowy” klucz: przesunięcie (ta sama para pod inną datą, a stara
+        // data zniknęła z terminarza) czy naprawdę nowy mecz?
+        const zniknieta = stare.filter((s) => para(s) === para(m) && !noweKlucze.has(klucz(s)));
+        if (zniknieta.length > 0) {
+          przesuniete.push(`${zniknieta[0].dataMeczu}→${m.dataMeczu} ${m.gospodarz}–${m.gosc}`);
+        } else {
+          noweTerminy++;
+        }
       } else if (m.rozegrany && !st.rozegrany) {
         noweWyniki++;
       } else if (m.rozegrany && st.rozegrany && m.wynik !== st.wynik) {
         poprawione++; // korekta błędnie wpisanego wyniku
+      } else if (m.godzina !== st.godzina) {
+        zmianyGodzin.push(`${m.dataMeczu} ${m.gospodarz}–${m.gosc}: ${st.godzina ?? "?"}→${m.godzina ?? "?"}`);
       }
+    }
+    for (const s of stare) {
+      // para zniknęła CAŁKOWICIE (stare daty nie wróciły pod innym kluczem)
+      if (!noweKlucze.has(klucz(s)) && !nowePary.has(para(s))) usuniete++;
     }
     if (noweWyniki > 0) czesci.push(`+${noweWyniki} ${odmien(noweWyniki, ["wynik", "wyniki", "wyników"])} (${nazwa})`);
     if (poprawione > 0) czesci.push(`poprawione: ${poprawione} (${nazwa})`);
+    if (zmianyGodzin.length > 0) {
+      czesci.push(`godziny (${nazwa}): ${zmianyGodzin.slice(0, 3).join("; ")}${zmianyGodzin.length > 3 ? " …" : ""}`);
+    }
+    if (przesuniete.length > 0) {
+      czesci.push(`przesunięte terminy (${nazwa}): ${przesuniete.slice(0, 3).join("; ")}${przesuniete.length > 3 ? " …" : ""}`);
+    }
+    if (usuniete > 0) czesci.push(`usunięte z terminarza: ${usuniete} (${nazwa})`);
     if (noweTerminy > 0) czesci.push(`+${noweTerminy} w terminarzu (${nazwa})`);
   };
   raportMeczy("ŚZTS", stary.meczeSzts ?? [], nowy.meczeSzts);
@@ -335,6 +373,7 @@ type WynikRunu = {
   zmiany: string;
   blad: string | null; // treść błędu źródła (izolacja: błąd NIE ubija runu)
   retry: string | null; // opis użycia ponowień („ŚZTS: sukces po 2. próbie…”)
+  korekty: string[]; // v1.7.5: stan korekt godzin (opiszKorekty) — jawnie
 };
 
 /** Opis użycia ponowień dla runs.json — pomiar błędów przejściowych w locie. */
@@ -346,6 +385,30 @@ function opiszRetry(): string | null {
   }
   if (JINA_PROBY > 1) czesci.push(`PZTS: czytnik sukces po ${JINA_PROBY}. próbie`);
   return czesci.length > 0 ? czesci.join(" · ") : null;
+}
+
+/**
+ * Stan korekt godzin po ŻYWYM odczycie (v1.7.5, Task 94) — z rejestru
+ * wypełnianego przez parsujTerminarz. Cel: właściciel w dzienniku przebiegów
+ * (runs.json) widzi bez zaglądania w kod, czy korekta wiedzy klubowej:
+ *  - nadal pracuje („źródło 19:15 → korekta 19:00”) — źródło kłamie,
+ *  - stała się zbędna („źródło przejęło 19:00 — wpis można zdjąć”) —
+ *    ŚZTS poprawił dane i mapę można oczyścić przy najbliższych porządkach,
+ *  - źródło zgłosiło wartość trzecią (np. 19:30) — jawnie wprost, bo
+ *    korekta zamaskowałaby ją w danych; tu prawda pozostaje widoczna.
+ * Puste gdy mapa pusta lub mecze nieobjęte korektą (pole pomijane we wpisie).
+ */
+function opiszKorekty(): string[] {
+  return KOREKTY_ZASTOSOWANE.map((k) => {
+    const kto = `${k.data} ${k.gospodarz}–${k.gosc}`;
+    if (k.zeZrodla === k.korekta) {
+      return `${kto}: źródło przejęło ${k.korekta} — wpis można zdjąć z KOREKTY_GODZIN`;
+    }
+    if (k.zeZrodla === null) {
+      return `${kto}: źródło BEZ godziny — korekta ${k.korekta}`;
+    }
+    return `${kto}: źródło ${k.zeZrodla} → korekta ${k.korekta}`;
+  });
 }
 
 async function main(): Promise<WynikRunu> {
@@ -512,7 +575,7 @@ async function main(): Promise<WynikRunu> {
       console.log("Dane bez zmian — pomijam zapis (brak commita/przebudowy).");
       return {
         szts: sztsBlad ? "blad" : "ok", pzts: pztsStan, zmieniono: false,
-        zmiany: zmianyPelne, blad: sztsBlad, retry: opiszRetry(),
+        zmiany: zmianyPelne, blad: sztsBlad, retry: opiszRetry(), korekty: opiszKorekty(),
       };
     }
   }
@@ -523,7 +586,7 @@ async function main(): Promise<WynikRunu> {
   );
   return {
     szts: sztsBlad ? "blad" : "ok", pzts: pztsStan, zmieniono: true,
-    zmiany: zmianyPelne, blad: sztsBlad, retry: opiszRetry(),
+    zmiany: zmianyPelne, blad: sztsBlad, retry: opiszRetry(), korekty: opiszKorekty(),
   };
 }
 
@@ -540,11 +603,15 @@ if (import.meta.main) {
   const czasTrwania = () => Math.round((Date.now() - startMs) / 1000);
   main()
     .then((w) => {
-      zapiszRun({
+      const wpis: WpisRunu = {
         start: startIso(), czasS: czasTrwania(),
         szts: w.szts, pzts: w.pzts, zmieniono: w.zmieniono, zmiany: w.zmiany,
         blad: w.blad, retry: w.retry,
-      });
+      };
+      // pole jawne tylko gdy korekty wystąpiły (wsteczna zgodność runs.json)
+      const korekty = opiszKorekty();
+      if (korekty.length > 0) wpis.korekty = korekty;
+      zapiszRun(wpis);
       // v1.6.1: awaria któregokolwiek źródła = świadomie czerwony run
       // (widoczny w Actions), ale dane i dziennik już zapisane.
       if (w.szts === "blad" || w.pzts === "blad-czytnika") process.exit(1);
@@ -552,12 +619,15 @@ if (import.meta.main) {
     .catch((err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);
       console.error("BŁĄD synchronizacji:", err);
-      zapiszRun({
+      const wpis: WpisRunu = {
         start: startIso(), czasS: czasTrwania(),
         szts: FAZA_RUNU === "szts" ? "blad" : "ok",
         pzts: FAZA_RUNU === "pzts" ? "blad-czytnika" : "pominieto",
         zmieniono: false, zmiany: "—", blad: msg.slice(0, 300), retry: opiszRetry(),
-      });
+      };
+      const korekty = opiszKorekty();
+      if (korekty.length > 0) wpis.korekty = korekty;
+      zapiszRun(wpis);
       process.exit(1);
     });
 }
