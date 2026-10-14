@@ -1,16 +1,7 @@
 {
-  "wygenerowano": "2026-10-14T20:20:26.426Z",
+  "wygenerowano": "2026-10-14T22:39:29.903Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-10-05T14:54:01.054Z",
-      "czasS": 16,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": true,
-      "zmiany": "stan drużyn",
-      "blad": null
-    },
     {
       "start": "2026-10-05T22:43:58.409Z",
       "czasS": 13,
@@ -496,6 +487,16 @@
       "pzts": "ok",
       "zmieniono": true,
       "zmiany": "tabele: 18/138, 18/142 · stan drużyn",
+      "blad": null,
+      "retry": null
+    },
+    {
+      "start": "2026-10-14T22:39:17.231Z",
+      "czasS": 13,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "tabele: 18/142 · stan drużyn",
       "blad": null,
       "retry": null
     }
