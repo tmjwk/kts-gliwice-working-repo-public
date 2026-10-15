@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-15T20:02:41.076Z",
+  "wygenerowano": "2026-10-15T21:30:13.767Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -27,14 +27,14 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "7. miejsce · 4 pkt",
+      "stan": "6. miejsce · 5 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "5. miejsce · 4 pkt",
+      "stan": "1. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "3:37"
         }
       ],
-      "zaktualizowano": "2026-10-15T20:02:41.076Z"
+      "zaktualizowano": "2026-10-15T21:30:13.767Z"
     },
     {
       "klucz": "18/138",
@@ -200,9 +200,9 @@
         {
           "pozycja": 3,
           "nazwa": "UKS Feniks Pyskowice",
-          "mecze": 3,
-          "punkty": 6,
-          "stosunek": "26:4"
+          "mecze": 4,
+          "punkty": 7,
+          "stosunek": "31:9"
         },
         {
           "pozycja": 4,
@@ -220,17 +220,17 @@
         },
         {
           "pozycja": 6,
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 4,
+          "punkty": 5,
+          "stosunek": "24:16"
+        },
+        {
+          "pozycja": 7,
           "nazwa": "UKS Wolej Solver Ruda Śląska",
           "mecze": 4,
           "punkty": 5,
           "stosunek": "22:18"
-        },
-        {
-          "pozycja": 7,
-          "nazwa": "KTS IV Gliwice",
-          "mecze": 3,
-          "punkty": 4,
-          "stosunek": "19:11"
         },
         {
           "pozycja": 8,
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-15T20:02:41.076Z"
+      "zaktualizowano": "2026-10-15T21:30:13.767Z"
     },
     {
       "klucz": "18/142",
@@ -304,38 +304,38 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "KTS V Gliwice",
+          "mecze": 3,
+          "punkty": 6,
+          "stosunek": "25:5"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "STS I Żernica",
           "mecze": 3,
           "punkty": 5,
           "stosunek": "21:9"
         },
         {
-          "pozycja": 2,
+          "pozycja": 3,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "22:8"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "ATS Ligota Łabędzka",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "16:4"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "LKS Strażak II Mikołów",
           "mecze": 2,
           "punkty": 4,
           "stosunek": "16:4"
-        },
-        {
-          "pozycja": 5,
-          "nazwa": "KTS V Gliwice",
-          "mecze": 2,
-          "punkty": 4,
-          "stosunek": "15:5"
         },
         {
           "pozycja": 6,
@@ -375,9 +375,9 @@
         {
           "pozycja": 11,
           "nazwa": "STS II Żernica",
-          "mecze": 2,
+          "mecze": 3,
           "punkty": 1,
-          "stosunek": "5:15"
+          "stosunek": "5:25"
         },
         {
           "pozycja": 12,
@@ -401,7 +401,7 @@
           "stosunek": "6:24"
         }
       ],
-      "zaktualizowano": "2026-10-15T20:02:41.076Z"
+      "zaktualizowano": "2026-10-15T21:30:13.767Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-15T20:02:41.076Z"
+      "zaktualizowano": "2026-10-15T21:30:13.767Z"
     }
   ],
   "meczeSzts": [
@@ -905,8 +905,8 @@
       "kolejka": 4,
       "gospodarz": "KTS IV Gliwice",
       "gosc": "UKS Feniks Pyskowice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "5:5",
+      "rozegrany": true,
       "liga": "3. Liga Mężczyzn · gr. II",
       "zespoly": [
         "KTS IV"
@@ -1088,8 +1088,8 @@
       "kolejka": 3,
       "gospodarz": "STS II Żernica",
       "gosc": "KTS V Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "0:10",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS V"
@@ -1391,6 +1391,19 @@
       "gosc": "ULKS Tajfun Ligota Łabędzka",
       "wynik": "6:4",
       "rozegrany": true,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
+      ]
+    },
+    {
+      "dataMeczu": "2026-10-19",
+      "godzina": "19:00",
+      "kolejka": 3,
+      "gospodarz": "UKS Feniks II Pyskowice",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KA Krokus VII"
@@ -1733,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-15T20:02:41.076Z",
-    "pzts": "2026-10-15T20:02:41.076Z"
+    "szts": "2026-10-15T21:30:13.767Z",
+    "pzts": "2026-10-15T21:30:13.767Z"
   },
   "zrodla": {
     "szts": "ok",
