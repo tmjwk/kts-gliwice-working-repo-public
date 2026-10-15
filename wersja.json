@@ -1,5 +1,5 @@
 {
- "wersja": "1.7.4",
- "data": "2026-10-11T06:55:00Z",
- "opis": "Piłka mówi teraz KTS i pokazuje pięć gwiazdek (decyzja Tomka: bez słowa GLIWICE, gwiazdek 5, zadbać o symetrię): krótki napis schodzi z łuku na środek piłki i rośnie z 17 do 30 jednostek — czytelny już przy 44 pikselach, pięć gwiazdek układa się w koronę na okręgu koncentrycznym (idealna symetria względem osi piłki), a 40+ zyskuje odpowiedni dystans od środka i krawędzi; favicon z tym samym wzorem jest bezpieczny w każdym fontie systemowym, bo poziomy napis na środku nie ma czego uciąć"
+ "wersja": "1.7.5",
+ "data": "2026-10-15T23:05:00Z",
+ "opis": "Strona sama pilnuje świeżości wyników (przebudowa mechanizmu z 1.7.0): sprawdza dane adaptacyjnie — co 2 min gdy wynik w drodze, 5 min w dzień meczowy, 10 min zwykle, natychmiast po powrocie do karty; wykrywa wszystkie zmiany (wyniki, terminarz z godzinami, tabele, stan drużyn), przerysowuje sekcje bez przeładowywania strony i pokazuje krótki komunikat na dole ekranu; wykrywa też nową wersję strony (podpowiada odświeżenie) i odzyskuje dane po chwilowym błędzie sieci"
 }
