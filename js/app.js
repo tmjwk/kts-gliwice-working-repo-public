@@ -337,11 +337,15 @@ function renderMecze(mecze) {
 function renderBadges(dane, ok) {
   $("#badge-sezon").textContent = `Sezon ${dane.sezon}`;
   const live = $("#badge-live");
+  // klasy wymieniane SYMETRYCZNIE — od 1.7.5 renderBadges woła też tło
+  // (odzysk po błędzie ładowania), więc „warn" nie może zostać przyklejony
   if (ok) {
     live.textContent = "dane live · auto-sync";
+    live.classList.remove("badge-live--warn");
     live.classList.add("badge-live");
   } else {
     live.textContent = "błąd ładowania danych";
+    live.classList.remove("badge-live");
     live.classList.add("badge-live--warn");
   }
   const sSzts = formatujZnacznik(dane.ostatniSync?.szts);
@@ -400,48 +404,215 @@ function sledzSystemowyTryb() {
 async function pokazWersje() {
   try {
     const res = await fetch("wersja.json", { cache: "no-cache" });
-    if (!res.ok) return;
+    if (!res.ok) return null;
     const w = await res.json();
-    if (w?.wersja) $("#wersja-strony").textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
+    if (w?.wersja) {
+      $("#wersja-strony").textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
+      return w.wersja; // 1.7.5: punkt odniesienia dla „w międzyczasie wyszła nowa wersja"
+    }
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
+  return null;
 }
 
-/* ===== 1.7.0: sygnał świeżości =====
-   Karta z wynikami często wisi otwarta godzinami. Co 10 min (tyle żyje
-   cache CDN dla dane.json) strona cicho sprawdza, czy wyniki się zmieniły;
-   jeśli tak — przerysowuje sekcje danymi (te same funkcje co przy starcie)
-   i piłka-bohater przy nagłówku robi jedno „podanie”.
-   prefers-reduced-motion: dane odświeżają się tak samo, animacji nie ma
-   (reguła CSS żyje tylko w @media no-preference — patrz style.css). */
+/* ===== 1.7.5: odświeżanie danych w tle (przebudowa sygnału świeżości z 1.7.0) =====
+   Karta z wynikami wisi często otwarta godzinami — strona SAMA pilnuje,
+   czy nie wpadły nowe dane (pytanie Tomka 15.10; mechanizm z 1.7.0
+   rozbudowany, bo wykrywał tylko zmiany wyników rozegranych meczów —
+   zmiana terminarza/godziny czy tabeli wymykała mu się po cichu).
+
+   JAK DZIAŁA:
+   • Rytm ADAPTACYJNY (samoplanujący setTimeout, nie sztywny setInterval):
+       2 min  — gdy jakiś wynik jest „w drodze” (mecz się skończył, źródło
+                jeszcze nie wpisało) — łowimy jak najszybciej,
+       5 min  — w dzień meczowy (wyniki zaczną wpadać wieczorem),
+       10 min — zwykły spokojny rytm (tyle mniej więcej żyje cache CDN
+                dla dane.json, więc częściej nie ma sensu),
+       1 min  — gdy strona wciąż nie ma danych (błąd startu) — odzysk.
+   • Powrót do karty / odzysk sieci = sprawdzenie NATYCHMIAST (nie
+     częściej niż co 45 s) — ukryta karta dostaje od przeglądarki
+     zmulone timery, więc realny rytm pilnuje właśnie to zdarzenie.
+   • Co wykrywa: KAŻDĄ realną zmianę dane.json. Sync commituje plik tylko
+     przy zmianie treści (znaczniki czasu maskuje), więc zwykłe
+     porównanie tekstu wystarcza: wyniki, terminarz (daty/godziny!),
+     tabele, stan drużyn, odzysk/awaria źródła.
+   • Co robi po wykryciu: przerysowuje sekcje (te same funkcje co przy
+     starcie — podmieniają tylko wnętrza, scroll i menu zostają),
+     piłka-bohater robi jedno „podanie”, a na dole ekranu pojawia się
+     krótki komunikat (znika sam; prefers-reduced-motion: bez animacji,
+     dane i tak się odświeżają).
+   • Nowa wersja strony (deploy w międzyczasie) → komunikat z przyciskiem
+     „Odśwież stronę”. NIGDY nie przeładowujemy karty sami — czytanie
+     święte.
+   • Koszt: fetch z cache:"no-cache" to rewalidacja ETag (304 = kilkadziesiąt
+     bajtów); przy okazji odświeża się panel „Automat” (runs.json) i
+     znacznik „Ostatni odczyt”. Komunikat w ukrytej karcie czeka na
+     powrót gościa — żeby go nie ominął.
+
+   Uchwyt window._ktsSprawdzDane — wymuszone sprawdzenie z konsoli
+   (testy automatu, debugging). */
+
+const SWIEZOSC = {
+  tekst: null,            // ostatni surowy dane.json (identyczny tekst = cisza)
+  dane: null,             // ostatnie sparsowane dane
+  wersjaStartowa: null,    // wersja strony z chwili załadowania karty
+  wersjaZgloszona: false, // czy komunikat o nowej wersji już się pokazał
+  wToku: false,           // osłona przed równoległymi sprawdzeniami
+  ostatnio: 0,            // czas ostatniego wystartowania sprawdzenia (ms)
+  timer: null,
+};
+
+/** Sygnatura rozegranych meczów — rozróżnia „nowe wyniki!” od innych zmian. */
 function sygnaturaWynikow(dane) {
   return meczeZDanych(dane).filter((m) => m.rozegrany)
     .map((m) => `${m.dataMeczu}:${m.gospodarz}:${m.wynik}`)
     .join("|");
 }
 
-function pilnujSwiezosci(poczatkowaSygnatura) {
-  let poprzednia = poczatkowaSygnatura;
-  setInterval(async () => {
-    try {
-      const res = await fetch("dane.json", { cache: "no-cache" });
-      if (!res.ok) return;
-      const dane = await res.json();
-      const sygnatura = sygnaturaWynikow(dane);
-      if (sygnatura === poprzednia) return; // bez zmian — cicho
-      poprzednia = sygnatura;
-      const mecze = meczeZDanych(dane);
-      renderPasekMeczu(mecze);
-      renderKartyDruzyn(dane, mecze);
-      renderTabele(dane);
-      renderMecze(mecze);
-      const pilka = document.querySelector(".pilka-bohater");
-      if (pilka) {
-        pilka.classList.remove("podanie");
-        void pilka.getBoundingClientRect(); // restart animacji (reflow)
-        pilka.classList.add("podanie");
+/** Sygnatura całej widocznej treści (bez znaczników czasu i statusów źródeł). */
+function sygnaturaWidoczna(dane) {
+  return JSON.stringify([dane.sezon, dane.zespoly, dane.tabele, dane.meczeSzts, dane.meczePzts]);
+}
+
+/** Odstęp do następnego sprawdzenia — patrz komentarz bloku wyżej. */
+function nastepnyOdstep() {
+  if (!SWIEZOSC.dane) return 60_000;
+  const mecze = meczeZDanych(SWIEZOSC.dane);
+  if (mecze.some(meczRozpoczety)) return 2 * 60_000;
+  if (mecze.some((m) => m.dataMeczu === dzisISO() && !m.rozegrany)) return 5 * 60_000;
+  return 10 * 60_000;
+}
+
+function zaplanujSprawdzenie() {
+  clearTimeout(SWIEZOSC.timer);
+  SWIEZOSC.timer = setTimeout(sprawdzDane, nastepnyOdstep());
+}
+
+/* ===== toast: krótki komunikat na dole ekranu =====
+   Jeden element, budowany dopiero przy pierwszej potrzebie. role=status
+   (czytniki ekranu ogłaszają grzecznie, raz). Znika sam; klik = zamknij;
+   wariant --wersja dokłada przycisk „Odśwież stronę” (świadome
+   przeładowanie). Gdy karta jest ukryta, komunikat CZEKA na powrót. */
+const TOAST = { el: null, timer: null, oczekujacy: null };
+
+function pokazToast(tresc, { odswiez = false } = {}) {
+  TOAST.oczekujacy = { tresc, odswiez };
+  if (document.hidden) return; // pokaże się, gdy gość wróci do karty
+  pokazToastTeraz();
+}
+
+function pokazToastTeraz() {
+  const z = TOAST.oczekujacy;
+  if (!z) return;
+  TOAST.oczekujacy = null;
+  if (!TOAST.el) {
+    TOAST.el = document.createElement("div");
+    TOAST.el.id = "toast-danych";
+    TOAST.el.className = "toast-danych";
+    TOAST.el.setAttribute("role", "status");
+    TOAST.el.addEventListener("click", (e) => {
+      if (e.target.closest(".toast-btn")) return; // przycisk ma własną akcję
+      ukryjToast();
+    });
+    document.body.appendChild(TOAST.el);
+  }
+  TOAST.el.classList.toggle("toast-danych--wersja", z.odswiez);
+  TOAST.el.innerHTML =
+    `<span class="toast-tekst">${esc(z.tresc)}</span>` +
+    (z.odswiez ? `<button type="button" class="btn btn-accent btn-sm toast-btn">Odśwież stronę</button>` : "");
+  const btn = TOAST.el.querySelector(".toast-btn");
+  if (btn) btn.addEventListener("click", () => location.reload());
+  requestAnimationFrame(() => TOAST.el.classList.add("widoczny"));
+  clearTimeout(TOAST.timer);
+  TOAST.timer = setTimeout(ukryjToast, z.odswiez ? 20_000 : 8_000);
+}
+
+function ukryjToast() {
+  if (!TOAST.el) return;
+  TOAST.el.classList.remove("widoczny");
+  clearTimeout(TOAST.timer);
+}
+
+/** Przerysowanie wszystkich sekcji danymi — identyczne funkcje jak przy
+ *  starcie (podmieniają tylko wnętrza, scroll i menu zostają nietknięte). */
+function przerysujDane(dane, animujPilke) {
+  const mecze = meczeZDanych(dane);
+  renderPasekMeczu(mecze);
+  renderKartyDruzyn(dane, mecze);
+  renderTabele(dane);
+  renderMecze(mecze);
+  renderBadges(dane, true);
+  const pilka = document.querySelector(".pilka-bohater");
+  if (pilka && animujPilke) {
+    pilka.classList.remove("podanie");
+    void pilka.getBoundingClientRect(); // restart animacji (reflow)
+    pilka.classList.add("podanie");
+  }
+}
+
+async function sprawdzDane() {
+  if (SWIEZOSC.wToku) return; // jedno sprawdzenie naraz
+  SWIEZOSC.wToku = true;
+  SWIEZOSC.ostatnio = Date.now();
+  try {
+    const res = await fetch("dane.json", { cache: "no-cache" });
+    if (res.ok) {
+      const tekst = await res.text();
+      if (tekst !== SWIEZOSC.tekst) {
+        let nowe = null;
+        try { nowe = JSON.parse(tekst); } catch { /* okrojony zapis — czekamy na kolejny */ }
+        if (nowe) {
+          const stare = SWIEZOSC.dane;
+          const terazWyniki = sygnaturaWynikow(nowe);
+          const byloWynikow = stare ? sygnaturaWynikow(stare) : "";
+          const terazTresc = sygnaturaWidoczna(nowe);
+          const bylaTresc = stare ? sygnaturaWidoczna(stare) : "";
+          const zmianaWidoczna = terazWyniki !== byloWynikow || terazTresc !== bylaTresc;
+          SWIEZOSC.tekst = tekst;
+          SWIEZOSC.dane = nowe;
+          przerysujDane(nowe, zmianaWidoczna);
+          // komunikat RÓŻNICUJE powód; zmiana samych znaczników czasu lub
+          // statusu źródeł (ostatniSync/zrodla) jest cicha — nic do pokazania
+          if (terazWyniki !== byloWynikow) {
+            const lista = (s) => s.split("|").filter(Boolean);
+            const ile = lista(terazWyniki).filter((x) => !lista(byloWynikow).includes(x)).length;
+            pokazToast(ile === 1 ? "Nowy wynik na stronie 🏓" : `Nowe wyniki na stronie (${ile}) 🏓`);
+          } else if (zmianaWidoczna) {
+            pokazToast("Dane zaktualizowane — terminarz lub tabela");
+          }
+        }
       }
-    } catch (e) { /* sieć — kolejna próba za 10 min */ }
-  }, 600_000);
+    }
+    pokazPrzebiegiSyncu(); // panel „Automat” też na bieżąco (runs.json mały)
+    // czy w międzyczasie nie wyszła nowa wersja strony?
+    if (SWIEZOSC.wersjaStartowa && !SWIEZOSC.wersjaZgloszona) {
+      try {
+        const rw = await fetch("wersja.json", { cache: "no-cache" });
+        if (rw.ok) {
+          const w = await rw.json();
+          if (w?.wersja && w.wersja !== SWIEZOSC.wersjaStartowa) {
+            SWIEZOSC.wersjaZgloszona = true;
+            pokazToast(`Dostępna nowa wersja strony (v${w.wersja})`, { odswiez: true });
+          }
+        }
+      } catch { /* sieć — następny takt */ }
+    }
+  } catch (e) { /* sieć/błąd — dane zostają, następna próba wg planu */ }
+  SWIEZOSC.wToku = false;
+  zaplanujSprawdzenie();
+}
+
+function pilnujSwiezosci() {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible") return;
+    // komunikat czekający w ukrytej karcie pokazujemy po powrocie…
+    if (TOAST.oczekujacy) pokazToastTeraz();
+    // …i od razu sprawdzamy dane (chyba że niedawno sprawdzone)
+    if (Date.now() - SWIEZOSC.ostatnio > 45_000) sprawdzDane();
+  });
+  window.addEventListener("online", () => sprawdzDane());
+  // uchwyt testowo-poglądowy: wymuszone sprawdzenie z konsoli (testy automatu)
+  window._ktsSprawdzDane = sprawdzDane;
+  zaplanujSprawdzenie();
 }
 
 /* ===== przebiegi automatu: runs.json (zapisywany przy KAŻDYM uruchomieniu) =====
@@ -537,7 +708,7 @@ async function renderTeaserGalerii() {
 async function start() {
   // tryb dzień/noc (ikona + klik) i menu mobilne
   obsluzPrzelacznikTrybu();
-  pokazWersje();
+  pokazWersje().then((w) => { SWIEZOSC.wersjaStartowa = w; });
   pokazPrzebiegiSyncu();
   renderTeaserGalerii();
   const hamburger = $("#hamburger");
@@ -549,10 +720,12 @@ async function start() {
 
   let dane = null;
   let ok = false;
+  let tekstDanych = null;
   try {
     const res = await fetch("dane.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    dane = await res.json();
+    tekstDanych = await res.text(); // 1.7.5: surowy tekst = punkt porównania odświeżania
+    dane = JSON.parse(tekstDanych);
     ok = true;
   } catch (err) {
     console.error("Błąd ładowania dane.json:", err);
@@ -576,9 +749,13 @@ async function start() {
     renderKartyDruzyn(dane, mecze);
     renderTabele(dane);
     renderMecze(mecze);
-    pilnujSwiezosci(sygnaturaWynikow(dane)); // 1.7.0: odświeżanie w tle
   }
   renderBadges(dane ?? {}, ok);
+  // 1.7.5: pętla świeżości rusza ZAWSZE — także po błędzie startu
+  // (pierwsze udane sprawdzenie naprawia stronę bez odświeżania karty)
+  SWIEZOSC.tekst = ok ? tekstDanych : null;
+  SWIEZOSC.dane = ok ? dane : null;
+  pilnujSwiezosci();
 }
 
 document.addEventListener("DOMContentLoaded", start);
