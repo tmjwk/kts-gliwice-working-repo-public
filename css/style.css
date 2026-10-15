@@ -505,3 +505,38 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   transform: rotate(-16deg);
   filter: drop-shadow(0 2px 3px rgba(9, 16, 29, 0.2));
 }
+
+/* ===== TOAST ŚWIEŻOŚCI (1.7.5) ===== */
+/* Komunikat „nowe wyniki / dane zaktualizowane” przy odświeżaniu w tle
+   (app.js 1.7.5): pojawia się na dole ekranu, znika sam po 8 s,
+   klik = zamknij. Wariant --wersja (wyszła nowa wersja strony) dokłada
+   przycisk „Odśwież stronę” i podmienia lewą krawędź na klubowy błękit.
+   Centrowanie przez left/right + margin-inline (bez transformu —
+   transform rezerwujemy dla wejścia, a w reduced-motion go wyłączamy).
+   z-index 50: nad przyklejonym nagłówkiem (40), pod modalem wpisu
+   aktualności (60). */
+.toast-danych {
+  position: fixed; left: 1rem; right: 1rem; bottom: 1rem;
+  margin-inline: auto; width: fit-content; max-width: min(92vw, 34rem);
+  z-index: 50;
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--kts-line);
+  border-left: 4px solid var(--kts-win);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(9, 16, 29, 0.18);
+  font-size: 0.875rem; line-height: 1.35; color: var(--kts-text);
+  opacity: 0; pointer-events: none;
+  transform: translateY(10px);
+}
+.toast-danych--wersja { border-left-color: var(--kts-primary); }
+.toast-danych.widoczny { opacity: 1; pointer-events: auto; transform: translateY(0); }
+@media (prefers-reduced-motion: no-preference) {
+  .toast-danych { transition: opacity 0.25s ease, transform 0.25s ease; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-danych, .toast-danych.widoczny { transform: none; }
+}
+.toast-danych .toast-tekst { text-align: left; }
+.toast-danych .toast-btn { flex: none; }
