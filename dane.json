@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-16T19:42:20.734Z",
+  "wygenerowano": "2026-10-16T21:20:05.641Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -88,9 +88,9 @@
         {
           "pozycja": 4,
           "nazwa": "MUKS Jedynka Pszów",
-          "mecze": 4,
-          "punkty": 6,
-          "stosunek": "31:9"
+          "mecze": 5,
+          "punkty": 7,
+          "stosunek": "36:14"
         },
         {
           "pozycja": 5,
@@ -101,38 +101,38 @@
         },
         {
           "pozycja": 6,
-          "nazwa": "MKS Tajfun Kuźnia Raciborska",
+          "nazwa": "MKS Skarbek II Tarnowskie Góry",
           "mecze": 5,
           "punkty": 6,
           "stosunek": "30:20"
         },
         {
           "pozycja": 7,
+          "nazwa": "MKS Tajfun Kuźnia Raciborska",
+          "mecze": 5,
+          "punkty": 6,
+          "stosunek": "30:20"
+        },
+        {
+          "pozycja": 8,
           "nazwa": "KS Mysław Mysłowice",
           "mecze": 5,
           "punkty": 6,
           "stosunek": "27:23"
         },
         {
-          "pozycja": 8,
-          "nazwa": "MKS II Czechowice Dziedzice",
-          "mecze": 4,
-          "punkty": 4,
-          "stosunek": "25:15"
-        },
-        {
           "pozycja": 9,
           "nazwa": "KTS Olimpijczyk Zawiercie",
-          "mecze": 4,
-          "punkty": 4,
-          "stosunek": "23:17"
+          "mecze": 5,
+          "punkty": 5,
+          "stosunek": "28:22"
         },
         {
           "pozycja": 10,
-          "nazwa": "MKS Skarbek II Tarnowskie Góry",
-          "mecze": 4,
+          "nazwa": "MKS II Czechowice Dziedzice",
+          "mecze": 5,
           "punkty": 4,
-          "stosunek": "20:20"
+          "stosunek": "28:22"
         },
         {
           "pozycja": 11,
@@ -144,9 +144,9 @@
         {
           "pozycja": 12,
           "nazwa": "LZS Chespa Żywocice",
-          "mecze": 3,
-          "punkty": 0,
-          "stosunek": "7:23"
+          "mecze": 4,
+          "punkty": 2,
+          "stosunek": "14:26"
         },
         {
           "pozycja": 13,
@@ -164,20 +164,20 @@
         },
         {
           "pozycja": 15,
-          "nazwa": "LUKS GK Logistics Bodzanów",
-          "mecze": 4,
-          "punkty": 0,
-          "stosunek": "3:37"
-        },
-        {
-          "pozycja": 16,
           "nazwa": "LUKS Węgierska Górka",
           "mecze": 5,
           "punkty": 0,
           "stosunek": "7:43"
+        },
+        {
+          "pozycja": 16,
+          "nazwa": "LUKS GK Logistics Bodzanów",
+          "mecze": 5,
+          "punkty": 0,
+          "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-16T19:42:20.734Z"
+      "zaktualizowano": "2026-10-16T21:20:05.641Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-16T19:42:20.734Z"
+      "zaktualizowano": "2026-10-16T21:20:05.641Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:26"
         }
       ],
-      "zaktualizowano": "2026-10-16T19:42:20.734Z"
+      "zaktualizowano": "2026-10-16T21:20:05.641Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-16T19:42:20.734Z"
+      "zaktualizowano": "2026-10-16T21:20:05.641Z"
     }
   ],
   "meczeSzts": [
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-16T19:42:20.734Z",
+    "szts": "2026-10-16T21:20:05.641Z",
     "pzts": "2026-10-16T13:19:22.024Z"
   },
   "zrodla": {
