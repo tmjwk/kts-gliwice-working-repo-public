@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-16T18:08:52.791Z",
+  "wygenerowano": "2026-10-16T19:42:20.734Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -13,7 +13,7 @@
       "nazwa": "KTS II",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "8. miejsce · 4 pkt",
+      "stan": "5. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/"
     },
     {
@@ -27,21 +27,21 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "6. miejsce · 5 pkt",
+      "stan": "7. miejsce · 5 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "1. miejsce · 6 pkt",
+      "stan": "2. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
       "nazwa": "KTS VI",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "12. miejsce · 0 pkt",
+      "stan": "13. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -66,24 +66,24 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "MKS Skarbek Tarnowskie Góry",
+          "nazwa": "LITS Meble Anders Żywiec",
+          "mecze": 5,
+          "punkty": 10,
+          "stosunek": "38:12"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "MKS Czechowice Dziedzice",
           "mecze": 5,
           "punkty": 10,
           "stosunek": "37:13"
         },
         {
-          "pozycja": 2,
-          "nazwa": "LITS Meble Anders Żywiec",
-          "mecze": 4,
-          "punkty": 8,
-          "stosunek": "32:8"
-        },
-        {
           "pozycja": 3,
-          "nazwa": "MKS Czechowice Dziedzice",
-          "mecze": 4,
-          "punkty": 8,
-          "stosunek": "31:9"
+          "nazwa": "MKS Skarbek Tarnowskie Góry",
+          "mecze": 5,
+          "punkty": 10,
+          "stosunek": "37:13"
         },
         {
           "pozycja": 4,
@@ -94,28 +94,28 @@
         },
         {
           "pozycja": 5,
-          "nazwa": "MKS Tajfun Kuźnia Raciborska",
-          "mecze": 4,
+          "nazwa": "KTS II Gliwice",
+          "mecze": 5,
           "punkty": 6,
-          "stosunek": "26:14"
+          "stosunek": "33:17"
         },
         {
           "pozycja": 6,
+          "nazwa": "MKS Tajfun Kuźnia Raciborska",
+          "mecze": 5,
+          "punkty": 6,
+          "stosunek": "30:20"
+        },
+        {
+          "pozycja": 7,
           "nazwa": "KS Mysław Mysłowice",
           "mecze": 5,
           "punkty": 6,
           "stosunek": "27:23"
         },
         {
-          "pozycja": 7,
-          "nazwa": "MKS II Czechowice Dziedzice",
-          "mecze": 4,
-          "punkty": 4,
-          "stosunek": "25:15"
-        },
-        {
           "pozycja": 8,
-          "nazwa": "KTS II Gliwice",
+          "nazwa": "MKS II Czechowice Dziedzice",
           "mecze": 4,
           "punkty": 4,
           "stosunek": "25:15"
@@ -157,27 +157,27 @@
         },
         {
           "pozycja": 14,
-          "nazwa": "LUKS Węgierska Górka",
-          "mecze": 4,
+          "nazwa": "GUKS Byczyna",
+          "mecze": 5,
           "punkty": 0,
-          "stosunek": "5:35"
+          "stosunek": "9:41"
         },
         {
           "pozycja": 15,
-          "nazwa": "GUKS Byczyna",
-          "mecze": 4,
-          "punkty": 0,
-          "stosunek": "5:35"
-        },
-        {
-          "pozycja": 16,
           "nazwa": "LUKS GK Logistics Bodzanów",
           "mecze": 4,
           "punkty": 0,
           "stosunek": "3:37"
+        },
+        {
+          "pozycja": 16,
+          "nazwa": "LUKS Węgierska Górka",
+          "mecze": 5,
+          "punkty": 0,
+          "stosunek": "7:43"
         }
       ],
-      "zaktualizowano": "2026-10-16T18:08:52.791Z"
+      "zaktualizowano": "2026-10-16T19:42:20.734Z"
     },
     {
       "klucz": "18/138",
@@ -213,31 +213,31 @@
         },
         {
           "pozycja": 5,
+          "nazwa": "TTS Polonia II Bytom",
+          "mecze": 4,
+          "punkty": 6,
+          "stosunek": "22:18"
+        },
+        {
+          "pozycja": 6,
           "nazwa": "MKS Skarbek III Tarnowskie Góry",
           "mecze": 4,
           "punkty": 5,
           "stosunek": "24:16"
         },
         {
-          "pozycja": 6,
+          "pozycja": 7,
           "nazwa": "KTS IV Gliwice",
           "mecze": 4,
           "punkty": 5,
           "stosunek": "24:16"
         },
         {
-          "pozycja": 7,
+          "pozycja": 8,
           "nazwa": "UKS Wolej Solver Ruda Śląska",
           "mecze": 4,
           "punkty": 5,
           "stosunek": "22:18"
-        },
-        {
-          "pozycja": 8,
-          "nazwa": "TTS Polonia II Bytom",
-          "mecze": 3,
-          "punkty": 4,
-          "stosunek": "16:14"
         },
         {
           "pozycja": 9,
@@ -277,9 +277,9 @@
         {
           "pozycja": 14,
           "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
-          "mecze": 3,
+          "mecze": 4,
           "punkty": 1,
-          "stosunek": "9:21"
+          "stosunek": "13:27"
         },
         {
           "pozycja": 15,
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-16T18:08:52.791Z"
+      "zaktualizowano": "2026-10-16T19:42:20.734Z"
     },
     {
       "klucz": "18/142",
@@ -304,38 +304,38 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "KTS V Gliwice",
+          "nazwa": "ATS Ligota Łabędzka",
           "mecze": 3,
           "punkty": 6,
           "stosunek": "25:5"
         },
         {
           "pozycja": 2,
+          "nazwa": "KTS V Gliwice",
+          "mecze": 3,
+          "punkty": 6,
+          "stosunek": "25:5"
+        },
+        {
+          "pozycja": 3,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 3,
+          "punkty": 6,
+          "stosunek": "25:5"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "STS I Żernica",
           "mecze": 3,
           "punkty": 5,
           "stosunek": "21:9"
         },
         {
-          "pozycja": 3,
+          "pozycja": 5,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "22:8"
-        },
-        {
-          "pozycja": 4,
-          "nazwa": "ATS Ligota Łabędzka",
-          "mecze": 2,
-          "punkty": 4,
-          "stosunek": "16:4"
-        },
-        {
-          "pozycja": 5,
-          "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 2,
-          "punkty": 4,
-          "stosunek": "16:4"
         },
         {
           "pozycja": 6,
@@ -381,27 +381,27 @@
         },
         {
           "pozycja": 12,
-          "nazwa": "KTS VI Gliwice",
-          "mecze": 2,
-          "punkty": 0,
-          "stosunek": "4:16"
-        },
-        {
-          "pozycja": 13,
-          "nazwa": "ULKS Pławniowice",
-          "mecze": 2,
-          "punkty": 0,
-          "stosunek": "3:17"
-        },
-        {
-          "pozycja": 14,
           "nazwa": "LKS Strażak III Mikołów",
           "mecze": 3,
           "punkty": 0,
           "stosunek": "6:24"
+        },
+        {
+          "pozycja": 13,
+          "nazwa": "KTS VI Gliwice",
+          "mecze": 3,
+          "punkty": 0,
+          "stosunek": "5:25"
+        },
+        {
+          "pozycja": 14,
+          "nazwa": "ULKS Pławniowice",
+          "mecze": 3,
+          "punkty": 0,
+          "stosunek": "4:26"
         }
       ],
-      "zaktualizowano": "2026-10-16T18:08:52.791Z"
+      "zaktualizowano": "2026-10-16T19:42:20.734Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-16T18:08:52.791Z"
+      "zaktualizowano": "2026-10-16T19:42:20.734Z"
     }
   ],
   "meczeSzts": [
@@ -541,8 +541,8 @@
       "kolejka": 5,
       "gospodarz": "LUKS Węgierska Górka",
       "gosc": "KTS II Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "2:8",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS II"
@@ -1258,8 +1258,8 @@
       "kolejka": 3,
       "gospodarz": "KTS VI Gliwice",
       "gosc": "LKS Strażak II Mikołów",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "1:9",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS VI"
@@ -1746,7 +1746,7 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-16T18:08:52.791Z",
+    "szts": "2026-10-16T19:42:20.734Z",
     "pzts": "2026-10-16T13:19:22.024Z"
   },
   "zrodla": {
