@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-17T00:34:10.506Z",
+  "wygenerowano": "2026-10-17T12:14:47.975Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -115,31 +115,31 @@
         },
         {
           "pozycja": 8,
+          "nazwa": "KS Naprzód II Borucin",
+          "mecze": 5,
+          "punkty": 6,
+          "stosunek": "29:21"
+        },
+        {
+          "pozycja": 9,
           "nazwa": "KS Mysław Mysłowice",
           "mecze": 5,
           "punkty": 6,
           "stosunek": "27:23"
         },
         {
-          "pozycja": 9,
+          "pozycja": 10,
           "nazwa": "KTS Olimpijczyk Zawiercie",
           "mecze": 5,
           "punkty": 5,
           "stosunek": "28:22"
         },
         {
-          "pozycja": 10,
+          "pozycja": 11,
           "nazwa": "MKS II Czechowice Dziedzice",
           "mecze": 5,
           "punkty": 4,
           "stosunek": "28:22"
-        },
-        {
-          "pozycja": 11,
-          "nazwa": "KS Naprzód II Borucin",
-          "mecze": 4,
-          "punkty": 4,
-          "stosunek": "20:20"
         },
         {
           "pozycja": 12,
@@ -151,9 +151,9 @@
         {
           "pozycja": 13,
           "nazwa": "KTS III Gliwice",
-          "mecze": 3,
+          "mecze": 4,
           "punkty": 0,
-          "stosunek": "3:27"
+          "stosunek": "4:36"
         },
         {
           "pozycja": 14,
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-17T00:34:10.506Z"
+      "zaktualizowano": "2026-10-17T12:14:47.975Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-17T00:34:10.506Z"
+      "zaktualizowano": "2026-10-17T12:14:47.975Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:26"
         }
       ],
-      "zaktualizowano": "2026-10-17T00:34:10.506Z"
+      "zaktualizowano": "2026-10-17T12:14:47.975Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-17T00:34:10.506Z"
+      "zaktualizowano": "2026-10-17T12:14:47.975Z"
     }
   ],
   "meczeSzts": [
@@ -723,8 +723,8 @@
       "kolejka": 5,
       "gospodarz": "KTS III Gliwice",
       "gosc": "KS Naprzód II Borucin",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "1:9",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS III"
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-17T00:34:10.506Z",
-    "pzts": "2026-10-17T00:34:10.506Z"
+    "szts": "2026-10-17T12:14:47.975Z",
+    "pzts": "2026-10-17T12:14:47.975Z"
   },
   "zrodla": {
     "szts": "ok",
