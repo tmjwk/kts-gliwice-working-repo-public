@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-16T21:20:05.641Z",
+  "wygenerowano": "2026-10-17T00:34:10.506Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-16T21:20:05.641Z"
+      "zaktualizowano": "2026-10-17T00:34:10.506Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-16T21:20:05.641Z"
+      "zaktualizowano": "2026-10-17T00:34:10.506Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:26"
         }
       ],
-      "zaktualizowano": "2026-10-16T21:20:05.641Z"
+      "zaktualizowano": "2026-10-17T00:34:10.506Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-16T21:20:05.641Z"
+      "zaktualizowano": "2026-10-17T00:34:10.506Z"
     }
   ],
   "meczeSzts": [
@@ -1746,11 +1746,11 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-16T21:20:05.641Z",
-    "pzts": "2026-10-16T13:19:22.024Z"
+    "szts": "2026-10-17T00:34:10.506Z",
+    "pzts": "2026-10-17T00:34:10.506Z"
   },
   "zrodla": {
     "szts": "ok",
-    "pzts": "blad: czytnik PZTS — dane przytrzymane"
+    "pzts": "ok"
   }
 }
