@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-18T21:53:12.710Z",
+  "wygenerowano": "2026-10-18T22:25:06.268Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-18T21:53:12.710Z"
+      "zaktualizowano": "2026-10-18T22:25:06.268Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-18T21:53:12.710Z"
+      "zaktualizowano": "2026-10-18T22:25:06.268Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:26"
         }
       ],
-      "zaktualizowano": "2026-10-18T21:53:12.710Z"
+      "zaktualizowano": "2026-10-18T22:25:06.268Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-18T21:53:12.710Z"
+      "zaktualizowano": "2026-10-18T22:25:06.268Z"
     }
   ],
   "meczeSzts": [
@@ -1712,10 +1712,10 @@
       "zespol": "KTS Gliwice I"
     },
     {
-      "dataMeczu": "2026-11-28",
-      "godzina": "16:00",
-      "kolejka": 7,
-      "gospodarz": "KS Naprzód Borucin",
+      "dataMeczu": "2026-11-27",
+      "godzina": "18:00",
+      "kolejka": 8,
+      "gospodarz": "BKS Stal Bielsko-Biała",
       "gosc": "KTS Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1723,10 +1723,10 @@
       "zespol": "KTS Gliwice I"
     },
     {
-      "dataMeczu": "2026-11-27",
-      "godzina": "18:00",
-      "kolejka": 8,
-      "gospodarz": "BKS Stal Bielsko-Biała",
+      "dataMeczu": "2026-11-28",
+      "godzina": "16:00",
+      "kolejka": 7,
+      "gospodarz": "KS Naprzód Borucin",
       "gosc": "KTS Gliwice",
       "wynik": "-:-",
       "rozegrany": false,
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-18T21:53:12.710Z",
-    "pzts": "2026-10-18T21:53:12.710Z"
+    "szts": "2026-10-18T22:25:06.268Z",
+    "pzts": "2026-10-18T22:25:06.268Z"
   },
   "zrodla": {
     "szts": "ok",
