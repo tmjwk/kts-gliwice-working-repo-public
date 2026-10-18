@@ -9,13 +9,18 @@
  *  - ŚZTS (ligi 2–4 + amatorzy): pełny automat — ten skrypt pobiera
  *    tabele i terminarze przy każdym uruchomieniu (cron Actions).
  *  - PZTS (1. liga, KTS Gliwice I): pzts.pl jest za Cloudflare — runner
- *    Actions nie odczyta go bezpośrednio. Kolejność prób (29.09.2026):
+ *    Actions nie odczyta go bezpośrednio. Kolejność prób (v1.8, 20.10.2026):
  *    a) zmienna PZTS_MECZE (JSON z wklejki ręcznej — najwyższy priorytet,
- *       backup gdyby czytnik zawiódł),
- *    b) czytnik r.jina.ai — publiczna usługa renderująca strony
- *       (headless browser) omijająca Cloudflare; parsujemy Markdown:
- *       terminarz + tabela 1. ligi gr. południowej (id=82),
- *    c) zachowanie ostatniego znanego stanu z poprzedniego dane.json.
+ *       backup gdyby i most, i czytnik zawiodły),
+ *    b) MOST GOOGLE SHEETS (gviz) — kanał główny: skoroszyt „Most KTS do
+ *       PZTS” z formułami IMPORTXML/IMPORTHTML (pzts.pl czytany z adresów
+ *       Google — Cloudflare nie blokuje; samosanujący się na nowe sezony:
+ *       sonda hubu w Skan!A3 sama podchwytuje ligi nowego sezonu, sloty
+ *       I2:I7 przepinają się same); robot czyta zakładki Terminarz/Tabela
+ *       publicznym kanałem gviz CSV — bez kluczy i bez autoryzacji,
+ *    c) czytnik r.jina.ai — fallback gdy most nie odpowie (renderuje
+ *       strony headless browserem omijając Cloudflare; parsujemy Markdown),
+ *    d) zachowanie ostatniego znanego stanu z poprzedniego dane.json.
  *
  * Uruchomienie:  bun scripts/sync_statyczny.ts
  *   (z katalogu głównego repo; wymaga bun albo: npx tsx scripts/sync_statyczny.ts)
@@ -40,7 +45,11 @@
  * w workflow). Świadoma zgoda właściciela na częściowo świeże dane
  * zamiast all-or-nothing (decyzja 03.10: „wykonaj 1+2").
  *
- * Nowy sezon: zaktualizuj ZESPOLY (i ewentualnie LIGI_SZTS w szts-core.ts).
+ * Nowy sezon: PZTS przepina się SAM (most: sonda hubu w Skan!A3 łapie nowe
+ *   ligi, sloty I2:I7 wskakują same — zero edycji formuł). Ręcznie zostaje
+ *   tylko ZESPOLY (nazwa karty i NAZWA ligi do wyświetlenia — most zna
+ *   URL-e, nie nazwy) oraz ewentualnie LIGI_SZTS w szts-core.ts (ŚZTS nie
+ *   ma własnej sondy).
  */
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -98,6 +107,11 @@ interface WpisRunu {
   // bez korekt (mapa pusta / meczów brak) go pomija — runs.json
   // pozostaje wstecznie zgodny z dotychczasowym frontem.
   korekty?: string[];
+  /** v1.8: diagnostyka mostu Google Sheets — kanał, który obsłużył PZTS
+   *  (most/czytnik/recznie/zachowano/brak), sloty drużyn ze Skanu oraz
+   *  alarm o nowej drużynie (slot 2+ niepusty — dopóki import nie zostanie
+   *  rozszerzony, alarm powtarza się jawnie w każdym wpisie). */
+  most?: { kanal: string; sloty: string[]; uwaga?: string };
 }
 
 // ====== Typy danych wyjściowych (kontrakt dla strony statycznej) ======
@@ -232,6 +246,143 @@ export function parsujTabelePzts(md: string): WierszTabeliPzts[] {
     });
   }
   return wiersze;
+}
+
+/* ============================================================
+ * PZTS przez MOST GOOGLE SHEETS (gviz CSV) — kanał główny v1.8.0.
+ * Skoroszyt „Most KTS do PZTS” (Task 113–120, 19–20.10.2026): formuły
+ * IMPORTXML/IMPORTHTML w arkuszu ściągają pzts.pl z adresów Google,
+ * robot czyta gotowe tabele publicznym kanałem gviz — bez kluczy.
+ *  - Zakładka „Terminarz”: terminarz KTS (tabela 2 z druzyna/960).
+ *  - Zakładka „Tabela”: tabela ligowa (tabela 1 z ligi drużyny 1).
+ *  - Zakładka „Skan”: sloty I2:I5 — slot 2+ niepusty = NOWA DRUŻYNA PZTS
+ *    (alarm w runs.json do czasu rozszerzenia importu w arkuszu).
+ * Specyfika gviz (QA 20.10): pierwsza linia CSV = wiersz 2 arkusza;
+ * pogrubienia opakowane w *gwiazdki*; daty z osadzonym „\ng. HH:MM”;
+ * kolejka jako „matchID\nnumer”; przecinek dziesiętny w Poj.
+ * ============================================================ */
+const ARKUSZ_MOSTU = "14ubTtWQr7G_9_AytvqDn59pbMjdWR_nJfTtW1u0RIjo";
+const GVIZ = `https://docs.google.com/spreadsheets/d/${ARKUSZ_MOSTU}/gviz/tq?tqx=out:csv`;
+
+/** CSV z cudzysłowami (gviz osadza nowe linie w polach — częste). */
+export function csvNaWiersze(tekst: string): string[][] {
+  const wiersze: string[][] = [];
+  let wiersz: string[] = [];
+  let pole = "";
+  let wCudzyslowie = false;
+  for (let i = 0; i < tekst.length; i++) {
+    const znak = tekst[i];
+    if (wCudzyslowie) {
+      if (znak === '"' && tekst[i + 1] === '"') { pole += '"'; i++; }
+      else if (znak === '"') wCudzyslowie = false;
+      else pole += znak;
+    } else if (znak === '"') wCudzyslowie = true;
+    else if (znak === ",") { wiersz.push(pole); pole = ""; }
+    else if (znak === "\n") { wiersz.push(pole); wiersze.push(wiersz); pole = ""; wiersz = []; }
+    else if (znak !== "\r") pole += znak;
+  }
+  if (pole !== "" || wiersz.length > 0) { wiersz.push(pole); wiersze.push(wiersz); }
+  return wiersze;
+}
+
+/** Zakładka mostu przez gviz (retry + cache-buster — gviz potrafi
+ *  oddać pustą odpowiedź w trakcie przeliczania formuł; QA 20.10). */
+async function pobierzZakladkeMostu(nazwa: string, proby = 3): Promise<string[][]> {
+  let ostatniBlad: unknown = null;
+  for (let i = 1; i <= proby; i++) {
+    const url = `${GVIZ}&sheet=${encodeURIComponent(nazwa)}&_cb=${Date.now()}`;
+    try {
+      const res = await fetch(url, {
+        headers: { "User-Agent": "KTS-Gliwice-Sync/1.8 (most gviz)" },
+        signal: AbortSignal.timeout(30_000),
+      });
+      if (!res.ok) throw new Error(`gviz HTTP ${res.status}`);
+      const wiersze = csvNaWiersze(await res.text());
+      if (wiersze.length === 0 || wiersze.every((w) => w.every((c) => !c.trim())))
+        throw new Error("gviz pusto (formuły się przeliczają?)");
+      return wiersze;
+    } catch (err) {
+      ostatniBlad = err;
+      if (i < proby) await new Promise((r) => setTimeout(r, 5_000 * i));
+    }
+  }
+  throw ostatniBlad ?? new Error("gviz: nieznany błąd");
+}
+
+/** Zdejmuje *pogrubienia* gviz („*KTS Gliwice*” → „KTS Gliwice”). */
+function bezGwiazdek(pole: string): string {
+  return pole.replace(/\*/g, "").trim();
+}
+
+/** Parser terminarza z CSV gviz (zakładka „Terminarz”). */
+export function parsujTerminarzGviz(wiersze: string[][]): Array<MeczLigi> {
+  const mecze: Array<MeczLigi> = [];
+  for (const w of wiersze) {
+    if (w.length < 6) continue;
+    // data: „2026-09-19\ng. 16:00” (nowy wiersz osadzony w polu CSV)
+    const dm = (w[0] ?? "").match(/^(\d{4}-\d{2}-\d{2})(?:\s+g\.\s+(\d{2}:\d{2}))?/s);
+    if (!dm) continue; // wiersz nagłówka rozlania / obcy
+    const gospodarz = bezGwiazdek(w[2] ?? "");
+    const gosc = bezGwiazdek(w[3] ?? "");
+    if (!gospodarz || !gosc) continue;
+    const wynikRaw = bezGwiazdek(w[4] ?? "");
+    const rozegrany = /^\d+\s*:\s*\d+$/.test(wynikRaw);
+    // kolejka: „503\n1” — numer kolejki to OSTATNIA liczba pola (503 = match-ID)
+    const kol = (w[1] ?? "").match(/(\d+)\s*$/s);
+    mecze.push({
+      dataMeczu: dm[1],
+      godzina: dm[2] ?? null,
+      kolejka: kol ? parseInt(kol[1], 10) : null,
+      gospodarz,
+      gosc,
+      wynik: rozegrany ? wynikRaw.replace(/\s/g, "") : "-:-",
+      rozegrany,
+    });
+  }
+  return mecze;
+}
+
+/** Parser tabeli ligowej z CSV gviz (zakładka „Tabela”). */
+export function parsujTabeleGviz(wiersze: string[][]): WierszTabeliPzts[] {
+  const wynik: WierszTabeliPzts[] = [];
+  for (const w of wiersze) {
+    if (w.length < 8) continue;
+    const pozycja = parseInt(bezGwiazdek(w[0] ?? ""), 10); // „4.”
+    if (!Number.isFinite(pozycja)) continue;
+    const nazwa = bezGwiazdek(w[1] ?? "");
+    if (!nazwa) continue;
+    const liczba = (x: string): number => parseInt(bezGwiazdek(x), 10);
+    wynik.push({
+      pozycja,
+      nazwa,
+      mecze: liczba(w[2] ?? ""),
+      zwyciestwa: liczba(w[3] ?? ""),
+      remisy: liczba(w[4] ?? ""),
+      porazki: liczba(w[5] ?? ""),
+      pojedynki: bezGwiazdek(w[6] ?? ""), // „1,35…” — ratio; niewykorzystywane w dół
+      punkty: liczba(w[7] ?? ""),
+    });
+  }
+  return wynik;
+}
+
+/** Sloty drużyn PZTS ze Skanu (I2:I5; pierwsza linia CSV = wiersz 2).
+ *  Zwraca [slot1..slot4]; pusty string = slot wolny. */
+export function slotyZSkanu(wiersze: string[][]): string[] {
+  const sloty: string[] = [];
+  for (let r = 0; r < 4; r++) sloty.push((wiersze[r]?.[8] ?? "").trim());
+  return sloty;
+}
+
+// v1.8: stan mostu dla runs.json (wpis.most — wstecznie zgodne, pole opcjonalne)
+let MOST_KANAL: string = "brak"; // most | czytnik | recznie | zachowano | brak
+let MOST_SLOTY: string[] = [];
+let MOST_UWAGA: string | undefined;
+
+function opiszMost(): { kanal: string; sloty: string[]; uwaga?: string } {
+  const o: { kanal: string; sloty: string[]; uwaga?: string } = { kanal: MOST_KANAL, sloty: MOST_SLOTY };
+  if (MOST_UWAGA) o.uwaga = MOST_UWAGA;
+  return o;
 }
 
 /** Pobiera Markdown ligi przez czytnik (ponawia — darmowy limit bywa wąski).
@@ -498,35 +649,75 @@ async function main(): Promise<WynikRunu> {
     // (a) ręczna wklejka — najwyższy priorytet (backup)
     const zEnv = JSON.parse(process.env.PZTS_MECZE) as MeczLigi[];
     przyjmijMecze(zEnv, "zmienna PZTS_MECZE — wklejka ręczna", "recznie");
+    MOST_KANAL = "recznie";
   } else {
-    // (b) czytnik r.jina.ai — pełny automat
+    // (b) MOST GOOGLE SHEETS (gviz) — kanał główny v1.8
     try {
-      const md = await pobierzPztsPrzezJine();
-      const terminarz = parsujTerminarzPzts(md);
+      const skan = await pobierzZakladkeMostu("Skan");
+      MOST_SLOTY = slotyZSkanu(skan);
+      if (!MOST_SLOTY[0]) throw new Error("Skan!I2 (DRUŻYNA 1) pusty — most nie zeskanował lig");
+      const nowaDruzyna = MOST_SLOTY.findIndex((s, i) => i > 0 && s.length > 0);
+      if (nowaDruzyna > 0) {
+        MOST_UWAGA = `slot ${nowaDruzyna + 1} niepusty — nowa drużyna PZTS wykryta; import wymaga rozszerzenia arkusza (daj znać robotowi)`;
+        console.warn(`MOST: ${MOST_UWAGA}: ${MOST_SLOTY[nowaDruzyna]}`);
+      }
+      const terminarz = parsujTerminarzGviz(await pobierzZakladkeMostu("Terminarz"));
       const nasi = terminarz.filter(
         (m) => m.gospodarz.includes("KTS Gliwice") || m.gosc.includes("KTS Gliwice"),
       );
-      if (nasi.length === 0) throw new Error("parser nie znalazł meczów KTS Gliwice — zmiana strony pzts.pl?");
-      przyjmijMecze(nasi, `czytnik r.jina.ai: ${terminarz.length} meczów ligi, ${nasi.length} naszych`, "ok");
-      const tabela = parsujTabelePzts(md);
+      if (nasi.length === 0) throw new Error("most: brak meczów KTS w zakładce Terminarz (formuła się przelicza?)");
+      // Ochrona przed partial read (QA 20.10): gviz potrafi oddać STAN
+      // CZĘŚCIOWY w trakcie przeliczania formuł (np. samo A/B, reszta
+      // jeszcze pusta). Liczba meczów drużyny w sezonie nie maleje —
+      // mniej niż znamy = odrzucamy odczyt, fallback na czytnik.
+      if (staryPlik?.meczePzts && nasi.length < staryPlik.meczePzts.length) {
+        throw new Error(`most oddał mniej meczów niż znamy (${nasi.length} < ${staryPlik.meczePzts.length}) — przeliczanie w trakcie`);
+      }
+      przyjmijMecze(nasi, `most gviz: ${terminarz.length} meczów ligi, ${nasi.length} naszych`, "ok");
+      MOST_KANAL = "most";
+      const tabela = parsujTabeleGviz(await pobierzZakladkeMostu("Tabela"));
       const my = tabela.find((w) => w.nazwa.includes("KTS Gliwice"));
       if (my && Number.isFinite(my.pozycja) && Number.isFinite(my.punkty)) {
         stanPztsTabela = `${my.pozycja}. miejsce · ${my.punkty} pkt`;
-        console.log(`PZTS: tabela ligowa OK (${tabela.length} drużyn) — KTS: ${stanPztsTabela}`);
+        console.log(`PZTS: tabela ligowa z mostu OK (${tabela.length} drużyn) — KTS: ${stanPztsTabela}`);
       }
     } catch (err) {
-      pztsStan = "blad-czytnika";
-      console.warn(`PZTS: czytnik zawiódł (${(err as Error).message}) —${staryPlik?.meczePzts?.length ? " zachowuję ostatni znany stan" : " brak danych"}`);
-      if (staryPlik?.meczePzts) {
-        meczePzts = staryPlik.meczePzts;
-        console.log(`PZTS: zachowano ${meczePzts.length} meczów z poprzedniego pliku`);
-        // Zachowujemy też ostatni DOBRY stan 1. drużyny („4. miejsce · 3 pkt")
-        // zamiast degradować go do bilansu z zachowanych meczów — awaria
-        // czytnika nie może tasować karty na stronie (zbędny zapis danych).
-        const staryStan = staryPlik.zespoly?.find((z) => z.nazwa === "KTS Gliwice I")?.stan;
-        if (staryStan) stanPztsTabela = staryStan;
-      } else {
-        console.log("PZTS: brak danych (przekaż PZTS_MECZE przy uruchomieniu ręcznym)");
+      console.warn(`MOST: gviz zawiódł (${err instanceof Error ? err.message : String(err)}) — fallback na czytnik r.jina.ai`);
+    }
+
+    // (c) czytnik r.jina.ai — fallback, gdy most nie odpowiedział
+    if (meczePzts.length === 0) {
+      try {
+        const md = await pobierzPztsPrzezJine();
+        const terminarz = parsujTerminarzPzts(md);
+        const nasi = terminarz.filter(
+          (m) => m.gospodarz.includes("KTS Gliwice") || m.gosc.includes("KTS Gliwice"),
+        );
+        if (nasi.length === 0) throw new Error("parser nie znalazł meczów KTS Gliwice — zmiana strony pzts.pl?");
+        przyjmijMecze(nasi, `czytnik r.jina.ai: ${terminarz.length} meczów ligi, ${nasi.length} naszych`, "ok");
+        MOST_KANAL = "czytnik";
+        const tabela = parsujTabelePzts(md);
+        const my = tabela.find((w) => w.nazwa.includes("KTS Gliwice"));
+        if (my && Number.isFinite(my.pozycja) && Number.isFinite(my.punkty)) {
+          stanPztsTabela = `${my.pozycja}. miejsce · ${my.punkty} pkt`;
+          console.log(`PZTS: tabela ligowa OK (${tabela.length} drużyn) — KTS: ${stanPztsTabela}`);
+        }
+      } catch (err) {
+        // (d) awaria OBU kanałów — przytrzymanie ostatniego stanu
+        pztsStan = "blad-czytnika";
+        console.warn(`PZTS: most i czytnik zawiodły (${(err as Error).message}) —${staryPlik?.meczePzts?.length ? " zachowuję ostatni znany stan" : " brak danych"}`);
+        if (staryPlik?.meczePzts) {
+          meczePzts = staryPlik.meczePzts;
+          MOST_KANAL = "zachowano";
+          console.log(`PZTS: zachowano ${meczePzts.length} meczów z poprzedniego pliku`);
+          // Zachowujemy też ostatni DOBRY stan 1. drużyny („4. miejsce · 3 pkt")
+          // zamiast degradować go do bilansu z zachowanych meczów — awaria
+          // kanałów nie może tasować karty na stronie (zbędny zapis danych).
+          const staryStan = staryPlik.zespoly?.find((z) => z.nazwa === "KTS Gliwice I")?.stan;
+          if (staryStan) stanPztsTabela = staryStan;
+        } else {
+          console.log("PZTS: brak danych (przekaż PZTS_MECZE przy uruchomieniu ręcznym)");
+        }
       }
     }
   }
@@ -550,7 +741,7 @@ async function main(): Promise<WynikRunu> {
     // zmienia treść → realny commit dokładnie wtedy, gdy warto to pokazać.
     zrodla: {
       szts: sztsBlad ? `blad: ${sztsBlad.slice(0, 120)}` : "ok",
-      pzts: pztsStan === "blad-czytnika" ? "blad: czytnik PZTS — dane przytrzymane" : (pztsStan === "pominieto" ? "pominieto" : "ok"),
+      pzts: pztsStan === "blad-czytnika" ? "blad: most i czytnik PZTS — dane przytrzymane" : (pztsStan === "pominieto" ? "pominieto" : "ok"),
     },
   };
 
@@ -611,6 +802,7 @@ if (import.meta.main) {
       // pole jawne tylko gdy korekty wystąpiły (wsteczna zgodność runs.json)
       const korekty = opiszKorekty();
       if (korekty.length > 0) wpis.korekty = korekty;
+      wpis.most = opiszMost();
       zapiszRun(wpis);
       // v1.6.1: awaria któregokolwiek źródła = świadomie czerwony run
       // (widoczny w Actions), ale dane i dziennik już zapisane.
@@ -627,6 +819,7 @@ if (import.meta.main) {
       };
       const korekty = opiszKorekty();
       if (korekty.length > 0) wpis.korekty = korekty;
+      wpis.most = opiszMost();
       zapiszRun(wpis);
       process.exit(1);
     });
