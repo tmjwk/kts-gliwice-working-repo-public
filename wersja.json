@@ -1,5 +1,5 @@
 {
- "wersja": "1.7.5",
- "data": "2026-10-15T23:05:00Z",
- "opis": "Strona sama pilnuje świeżości wyników (przebudowa mechanizmu z 1.7.0): sprawdza dane adaptacyjnie — co 2 min gdy wynik w drodze, 5 min w dzień meczowy, 10 min zwykle, natychmiast po powrocie do karty; wykrywa wszystkie zmiany (wyniki, terminarz z godzinami, tabele, stan drużyn), przerysowuje sekcje bez przeładowywania strony i pokazuje krótki komunikat na dole ekranu; wykrywa też nową wersję strony (podpowiada odświeżenie) i odzyskuje dane po chwilowym błędzie sieci"
+ "wersja": "1.8.0",
+ "data": "2026-10-18T22:24:44Z",
+ "opis": "Sync danych ligowych 1.8.0 — mechanizm danych PZTS w fazie testów (badamy poprawność danych i terminowość synchronizacji): ochrona przed niepełnym odczytem źródła, zachowanie ostatniego stanu przy przejściowej awarii, automatyczne przełączanie na nowy sezon oraz rozszerzona diagnostyka przebiegów w runs.json. Bez zmian w wyglądzie strony"
 }
