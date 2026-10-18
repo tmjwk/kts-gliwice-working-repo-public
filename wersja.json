@@ -1,5 +1,5 @@
 {
- "wersja": "1.8.0",
- "data": "2026-10-18T22:24:44Z",
- "opis": "Sync danych ligowych 1.8.0 — mechanizm danych PZTS w fazie testów (badamy poprawność danych i terminowość synchronizacji): ochrona przed niepełnym odczytem źródła, zachowanie ostatniego stanu przy przejściowej awarii, automatyczne przełączanie na nowy sezon oraz rozszerzona diagnostyka przebiegów w runs.json. Bez zmian w wyglądzie strony"
+ "wersja": "1.8.1",
+ "data": "2026-10-18T22:44:47Z",
+ "opis": "Szybkość wieczornej synchronizacji (faza testów terminowości): w godzinach 18:00–00:00 czasu polskiego dane ligowe są sprawdzane co ~20 minut — wyniki lig ŚZTS powinny pojawiać się zwykle do ~30 minut od wpisania w źródle, wyniki 1. ligi do ~1,5 godziny (ta liga przechodzi przez dodatkową warstwę odświeżaną co godzinę). Bez zmian w wyglądzie strony"
 }
