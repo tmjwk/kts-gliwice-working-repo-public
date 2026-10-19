@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-18T22:25:06.268Z",
+  "wygenerowano": "2026-10-19T19:59:44.042Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -27,14 +27,14 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "7. miejsce · 5 pkt",
+      "stan": "4. miejsce · 7 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/"
     },
     {
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "2. miejsce · 6 pkt",
+      "stan": "3. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -48,7 +48,7 @@
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "9. miejsce · 2 pkt",
+      "stan": "6. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-18T22:25:06.268Z"
+      "zaktualizowano": "2026-10-19T19:59:44.042Z"
     },
     {
       "klucz": "18/138",
@@ -192,42 +192,42 @@
         },
         {
           "pozycja": 2,
-          "nazwa": "LKS Strażak Mikołów",
-          "mecze": 4,
-          "punkty": 7,
-          "stosunek": "31:9"
-        },
-        {
-          "pozycja": 3,
           "nazwa": "UKS Feniks Pyskowice",
           "mecze": 4,
           "punkty": 7,
           "stosunek": "31:9"
         },
         {
+          "pozycja": 3,
+          "nazwa": "LKS Strażak Mikołów",
+          "mecze": 5,
+          "punkty": 7,
+          "stosunek": "34:16"
+        },
+        {
           "pozycja": 4,
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 5,
+          "punkty": 7,
+          "stosunek": "31:19"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "KU AZS UJD Częstochowa",
           "mecze": 4,
           "punkty": 6,
           "stosunek": "24:16"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "TTS Polonia II Bytom",
           "mecze": 4,
           "punkty": 6,
           "stosunek": "22:18"
         },
         {
-          "pozycja": 6,
-          "nazwa": "MKS Skarbek III Tarnowskie Góry",
-          "mecze": 4,
-          "punkty": 5,
-          "stosunek": "24:16"
-        },
-        {
           "pozycja": 7,
-          "nazwa": "KTS IV Gliwice",
+          "nazwa": "MKS Skarbek III Tarnowskie Góry",
           "mecze": 4,
           "punkty": 5,
           "stosunek": "24:16"
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-18T22:25:06.268Z"
+      "zaktualizowano": "2026-10-19T19:59:44.042Z"
     },
     {
       "klucz": "18/142",
@@ -304,21 +304,21 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 4,
+          "punkty": 8,
+          "stosunek": "32:8"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "ATS Ligota Łabędzka",
           "mecze": 3,
           "punkty": 6,
           "stosunek": "25:5"
         },
         {
-          "pozycja": 2,
-          "nazwa": "KTS V Gliwice",
-          "mecze": 3,
-          "punkty": 6,
-          "stosunek": "25:5"
-        },
-        {
           "pozycja": 3,
-          "nazwa": "LKS Strażak II Mikołów",
+          "nazwa": "KTS V Gliwice",
           "mecze": 3,
           "punkty": 6,
           "stosunek": "25:5"
@@ -339,38 +339,38 @@
         },
         {
           "pozycja": 6,
+          "nazwa": "KTS KA Krokus VII Gliwice",
+          "mecze": 3,
+          "punkty": 4,
+          "stosunek": "16:14"
+        },
+        {
+          "pozycja": 7,
           "nazwa": "LKS Młodość Rudno",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "15:15"
         },
         {
-          "pozycja": 7,
+          "pozycja": 8,
           "nazwa": "ULKS Tajfun Ligota Łabędzka",
-          "mecze": 3,
+          "mecze": 4,
           "punkty": 3,
-          "stosunek": "15:15"
+          "stosunek": "18:22"
         },
         {
-          "pozycja": 8,
+          "pozycja": 9,
           "nazwa": "ULKS Ruch Pniów",
           "mecze": 3,
           "punkty": 2,
           "stosunek": "17:13"
         },
         {
-          "pozycja": 9,
-          "nazwa": "KTS KA Krokus VII Gliwice",
-          "mecze": 2,
-          "punkty": 2,
-          "stosunek": "10:10"
-        },
-        {
           "pozycja": 10,
           "nazwa": "UKS Feniks II Pyskowice",
-          "mecze": 2,
+          "mecze": 3,
           "punkty": 1,
-          "stosunek": "5:15"
+          "stosunek": "9:21"
         },
         {
           "pozycja": 11,
@@ -401,7 +401,7 @@
           "stosunek": "4:26"
         }
       ],
-      "zaktualizowano": "2026-10-18T22:25:06.268Z"
+      "zaktualizowano": "2026-10-19T19:59:44.042Z"
     },
     {
       "klucz": "18/144",
@@ -410,16 +410,16 @@
         {
           "pozycja": 1,
           "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 2,
-          "punkty": 4,
-          "stosunek": "13:7"
+          "mecze": 3,
+          "punkty": 6,
+          "stosunek": "20:10"
         },
         {
           "pozycja": 2,
           "nazwa": "KTS Gliwice",
-          "mecze": 2,
+          "mecze": 3,
           "punkty": 4,
-          "stosunek": "12:8"
+          "stosunek": "15:15"
         },
         {
           "pozycja": 3,
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-18T22:25:06.268Z"
+      "zaktualizowano": "2026-10-19T19:59:44.042Z"
     }
   ],
   "meczeSzts": [
@@ -918,8 +918,8 @@
       "kolejka": 5,
       "gospodarz": "LKS Strażak Mikołów",
       "gosc": "KTS IV Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "3:7",
+      "rozegrany": true,
       "liga": "3. Liga Mężczyzn · gr. II",
       "zespoly": [
         "KTS IV"
@@ -1402,8 +1402,8 @@
       "kolejka": 3,
       "gospodarz": "UKS Feniks II Pyskowice",
       "gosc": "KTS KA Krokus VII Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "4:6",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KA Krokus VII"
@@ -1558,8 +1558,8 @@
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
       "gosc": "LKS Strażak II Mikołów",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "3:7",
+      "rozegrany": true,
       "liga": "2. Śląska Liga Amatorów",
       "zespoly": [
         "KTS Gliwice · amatorzy"
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-18T22:25:06.268Z",
-    "pzts": "2026-10-18T22:25:06.268Z"
+    "szts": "2026-10-19T19:59:44.042Z",
+    "pzts": "2026-10-19T19:59:44.042Z"
   },
   "zrodla": {
     "szts": "ok",
