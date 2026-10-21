@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-21T07:46:53.759Z",
+  "wygenerowano": "2026-10-21T18:44:10.692Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -34,7 +34,7 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "3. miejsce · 6 pkt",
+      "stan": "4. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-21T07:46:53.759Z"
+      "zaktualizowano": "2026-10-21T18:44:10.692Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-21T07:46:53.759Z"
+      "zaktualizowano": "2026-10-21T18:44:10.692Z"
     },
     {
       "klucz": "18/142",
@@ -311,24 +311,24 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "STS I Żernica",
+          "mecze": 4,
+          "punkty": 7,
+          "stosunek": "31:9"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "ATS Ligota Łabędzka",
           "mecze": 3,
           "punkty": 6,
           "stosunek": "25:5"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "KTS V Gliwice",
           "mecze": 3,
           "punkty": 6,
           "stosunek": "25:5"
-        },
-        {
-          "pozycja": 4,
-          "nazwa": "STS I Żernica",
-          "mecze": 3,
-          "punkty": 5,
-          "stosunek": "21:9"
         },
         {
           "pozycja": 5,
@@ -396,12 +396,12 @@
         {
           "pozycja": 14,
           "nazwa": "ULKS Pławniowice",
-          "mecze": 3,
+          "mecze": 4,
           "punkty": 0,
-          "stosunek": "4:26"
+          "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-21T07:46:53.759Z"
+      "zaktualizowano": "2026-10-21T18:44:10.692Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-21T07:46:53.759Z"
+      "zaktualizowano": "2026-10-21T18:44:10.692Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-21T07:46:53.759Z",
-    "pzts": "2026-10-21T07:46:53.759Z"
+    "szts": "2026-10-21T18:44:10.692Z",
+    "pzts": "2026-10-21T18:44:10.692Z"
   },
   "zrodla": {
     "szts": "ok",
