@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-20T19:58:22.632Z",
+  "wygenerowano": "2026-10-21T07:46:53.759Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -55,7 +55,7 @@
       "nazwa": "KTS Gliwice · amatorzy",
       "liga": "2. Śląska Liga Amatorów",
       "tryb": "ŚZTS · automat",
-      "stan": "2. miejsce · 4 pkt",
+      "stan": "3. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/144/"
     }
   ],
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-20T19:58:22.632Z"
+      "zaktualizowano": "2026-10-21T07:46:53.759Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-20T19:58:22.632Z"
+      "zaktualizowano": "2026-10-21T07:46:53.759Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:26"
         }
       ],
-      "zaktualizowano": "2026-10-20T19:58:22.632Z"
+      "zaktualizowano": "2026-10-21T07:46:53.759Z"
     },
     {
       "klucz": "18/144",
@@ -416,17 +416,17 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "Bartek II Siemianowice",
+          "mecze": 3,
+          "punkty": 4,
+          "stosunek": "21:9"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "KTS Gliwice",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "15:15"
-        },
-        {
-          "pozycja": 3,
-          "nazwa": "AKS Mikołów",
-          "mecze": 2,
-          "punkty": 3,
-          "stosunek": "12:8"
         },
         {
           "pozycja": 4,
@@ -444,10 +444,10 @@
         },
         {
           "pozycja": 6,
-          "nazwa": "Bartek II Siemianowice",
-          "mecze": 2,
-          "punkty": 2,
-          "stosunek": "12:8"
+          "nazwa": "AKS Mikołów",
+          "mecze": 3,
+          "punkty": 3,
+          "stosunek": "13:17"
         },
         {
           "pozycja": 7,
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-20T19:58:22.632Z"
+      "zaktualizowano": "2026-10-21T07:46:53.759Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-20T19:58:22.632Z",
-    "pzts": "2026-10-20T19:58:22.632Z"
+    "szts": "2026-10-21T07:46:53.759Z",
+    "pzts": "2026-10-21T07:46:53.759Z"
   },
   "zrodla": {
     "szts": "ok",
