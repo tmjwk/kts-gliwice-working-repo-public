@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-21T23:14:39.865Z",
+  "wygenerowano": "2026-10-22T17:17:47.781Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-21T23:14:39.865Z"
+      "zaktualizowano": "2026-10-22T17:17:47.781Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-21T23:14:39.865Z"
+      "zaktualizowano": "2026-10-22T17:17:47.781Z"
     },
     {
       "klucz": "18/142",
@@ -333,9 +333,9 @@
         {
           "pozycja": 5,
           "nazwa": "LKS Naprzód Świbie",
-          "mecze": 3,
-          "punkty": 4,
-          "stosunek": "22:8"
+          "mecze": 4,
+          "punkty": 6,
+          "stosunek": "29:9"
         },
         {
           "pozycja": 6,
@@ -368,9 +368,9 @@
         {
           "pozycja": 10,
           "nazwa": "UKS Feniks II Pyskowice",
-          "mecze": 3,
+          "mecze": 4,
           "punkty": 1,
-          "stosunek": "9:21"
+          "stosunek": "10:28"
         },
         {
           "pozycja": 11,
@@ -401,7 +401,7 @@
           "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-21T23:14:39.865Z"
+      "zaktualizowano": "2026-10-22T17:17:47.781Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-21T23:14:39.865Z"
+      "zaktualizowano": "2026-10-22T17:17:47.781Z"
     }
   ],
   "meczeSzts": [
@@ -1410,7 +1410,7 @@
       ]
     },
     {
-      "dataMeczu": "2026-10-23",
+      "dataMeczu": "2026-10-29",
       "godzina": "19:00",
       "kolejka": 4,
       "gospodarz": "KTS KA Krokus VII Gliwice",
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-21T23:14:39.865Z",
-    "pzts": "2026-10-21T23:14:39.865Z"
+    "szts": "2026-10-22T17:17:47.781Z",
+    "pzts": "2026-10-22T17:17:47.781Z"
   },
   "zrodla": {
     "szts": "ok",
