@@ -1,24 +1,7 @@
 {
-  "wygenerowano": "2026-10-22T01:40:40.266Z",
+  "wygenerowano": "2026-10-22T05:00:31.288Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-10-15T21:30:13.766Z",
-      "czasS": 12,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": true,
-      "zmiany": "+2 wyniki (ŚZTS) · +1 w terminarzu (ŚZTS) · tabele: 18/138, 18/142 · stan drużyn",
-      "blad": null,
-      "retry": null,
-      "korekty": [
-        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
-        "2026-11-05 KTS II Gliwice–KTS Olimpijczyk Zawiercie: źródło 19:15 → korekta 19:00",
-        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
-        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
-        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
-      ]
-    },
     {
       "start": "2026-10-15T23:19:14.512Z",
       "czasS": 21,
@@ -1054,6 +1037,32 @@
     {
       "start": "2026-10-22T01:40:22.889Z",
       "czasS": 17,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": false,
+      "zmiany": "bez zmian",
+      "blad": null,
+      "retry": null,
+      "korekty": [
+        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
+        "2026-11-05 KTS II Gliwice–KTS Olimpijczyk Zawiercie: źródło 19:15 → korekta 19:00",
+        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
+        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
+        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
+      ],
+      "most": {
+        "kanal": "most",
+        "sloty": [
+          "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    {
+      "start": "2026-10-22T04:59:57.255Z",
+      "czasS": 34,
       "szts": "ok",
       "pzts": "ok",
       "zmieniono": false,
