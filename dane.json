@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-22T19:59:40.553Z",
+  "wygenerowano": "2026-10-22T21:43:30.631Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -13,7 +13,7 @@
       "nazwa": "KTS II",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "7. miejsce · 6 pkt",
+      "stan": "5. miejsce · 8 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/"
     },
     {
@@ -94,24 +94,24 @@
         },
         {
           "pozycja": 5,
+          "nazwa": "KTS II Gliwice",
+          "mecze": 6,
+          "punkty": 8,
+          "stosunek": "41:19"
+        },
+        {
+          "pozycja": 6,
           "nazwa": "KS Naprzód II Borucin",
           "mecze": 6,
           "punkty": 8,
           "stosunek": "36:24"
         },
         {
-          "pozycja": 6,
+          "pozycja": 7,
           "nazwa": "KS Mysław Mysłowice",
           "mecze": 6,
           "punkty": 8,
           "stosunek": "34:26"
-        },
-        {
-          "pozycja": 7,
-          "nazwa": "KTS II Gliwice",
-          "mecze": 5,
-          "punkty": 6,
-          "stosunek": "33:17"
         },
         {
           "pozycja": 8,
@@ -157,17 +157,17 @@
         },
         {
           "pozycja": 14,
-          "nazwa": "GUKS Byczyna",
-          "mecze": 5,
-          "punkty": 0,
-          "stosunek": "9:41"
-        },
-        {
-          "pozycja": 15,
           "nazwa": "LUKS Węgierska Górka",
           "mecze": 5,
           "punkty": 0,
           "stosunek": "7:43"
+        },
+        {
+          "pozycja": 15,
+          "nazwa": "GUKS Byczyna",
+          "mecze": 6,
+          "punkty": 0,
+          "stosunek": "11:49"
         },
         {
           "pozycja": 16,
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-22T19:59:40.553Z"
+      "zaktualizowano": "2026-10-22T21:43:30.631Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-22T19:59:40.553Z"
+      "zaktualizowano": "2026-10-22T21:43:30.631Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-22T19:59:40.553Z"
+      "zaktualizowano": "2026-10-22T21:43:30.631Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "6:14"
         }
       ],
-      "zaktualizowano": "2026-10-22T19:59:40.553Z"
+      "zaktualizowano": "2026-10-22T21:43:30.631Z"
     }
   ],
   "meczeSzts": [
@@ -554,8 +554,8 @@
       "kolejka": 6,
       "gospodarz": "KTS II Gliwice",
       "gosc": "GUKS Byczyna",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "8:2",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS II"
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-22T19:59:40.553Z",
-    "pzts": "2026-10-22T19:59:40.553Z"
+    "szts": "2026-10-22T21:43:30.631Z",
+    "pzts": "2026-10-22T21:43:30.631Z"
   },
   "zrodla": {
     "szts": "ok",
