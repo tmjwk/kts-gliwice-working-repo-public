@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-22T21:43:30.631Z",
+  "wygenerowano": "2026-10-23T07:40:13.380Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -55,7 +55,7 @@
       "nazwa": "KTS Gliwice · amatorzy",
       "liga": "2. Śląska Liga Amatorów",
       "tryb": "ŚZTS · automat",
-      "stan": "3. miejsce · 4 pkt",
+      "stan": "4. miejsce · 4 pkt",
       "url": "https://ligi.slzts.pl/liga/18/144/"
     }
   ],
@@ -177,7 +177,7 @@
           "stosunek": "3:47"
         }
       ],
-      "zaktualizowano": "2026-10-22T21:43:30.631Z"
+      "zaktualizowano": "2026-10-23T07:40:13.380Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "7:33"
         }
       ],
-      "zaktualizowano": "2026-10-22T21:43:30.631Z"
+      "zaktualizowano": "2026-10-23T07:40:13.380Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-22T21:43:30.631Z"
+      "zaktualizowano": "2026-10-23T07:40:13.380Z"
     },
     {
       "klucz": "18/144",
@@ -423,38 +423,38 @@
         },
         {
           "pozycja": 3,
+          "nazwa": "TKKF Aut Łagisza Będzin",
+          "mecze": 3,
+          "punkty": 4,
+          "stosunek": "17:13"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "KTS Gliwice",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "15:15"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "UKS Ikar Mierzęcice",
           "mecze": 2,
           "punkty": 3,
           "stosunek": "12:8"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "UKS Wolej Solver III Ruda Śląska",
           "mecze": 3,
           "punkty": 3,
           "stosunek": "15:15"
         },
         {
-          "pozycja": 6,
+          "pozycja": 7,
           "nazwa": "AKS Mikołów",
           "mecze": 3,
           "punkty": 3,
           "stosunek": "13:17"
-        },
-        {
-          "pozycja": 7,
-          "nazwa": "TKKF Aut Łagisza Będzin",
-          "mecze": 2,
-          "punkty": 2,
-          "stosunek": "8:12"
         },
         {
           "pozycja": 8,
@@ -473,12 +473,12 @@
         {
           "pozycja": 10,
           "nazwa": "UKS Huragan I Sosnowiec",
-          "mecze": 2,
+          "mecze": 3,
           "punkty": 0,
-          "stosunek": "6:14"
+          "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-22T21:43:30.631Z"
+      "zaktualizowano": "2026-10-23T07:40:13.380Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-22T21:43:30.631Z",
-    "pzts": "2026-10-22T21:43:30.631Z"
+    "szts": "2026-10-23T07:40:13.380Z",
+    "pzts": "2026-10-23T07:40:13.380Z"
   },
   "zrodla": {
     "szts": "ok",
