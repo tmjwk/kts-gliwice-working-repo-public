@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-23T23:04:41.274Z",
+  "wygenerowano": "2026-10-25T11:43:20.475Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "6:54"
         }
       ],
-      "zaktualizowano": "2026-10-23T23:04:41.274Z"
+      "zaktualizowano": "2026-10-25T11:43:20.475Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "9:41"
         }
       ],
-      "zaktualizowano": "2026-10-23T23:04:41.274Z"
+      "zaktualizowano": "2026-10-25T11:43:20.475Z"
     },
     {
       "klucz": "18/142",
@@ -304,38 +304,38 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "LKS Strażak II Mikołów",
+          "nazwa": "ATS Ligota Łabędzka",
           "mecze": 4,
           "punkty": 8,
           "stosunek": "32:8"
         },
         {
           "pozycja": 2,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 4,
+          "punkty": 8,
+          "stosunek": "32:8"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "STS I Żernica",
           "mecze": 4,
           "punkty": 7,
           "stosunek": "31:9"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 4,
           "punkty": 6,
           "stosunek": "31:9"
         },
         {
-          "pozycja": 4,
-          "nazwa": "ATS Ligota Łabędzka",
-          "mecze": 3,
-          "punkty": 6,
-          "stosunek": "25:5"
-        },
-        {
           "pozycja": 5,
           "nazwa": "KTS V Gliwice",
-          "mecze": 3,
+          "mecze": 4,
           "punkty": 6,
-          "stosunek": "25:5"
+          "stosunek": "28:12"
         },
         {
           "pozycja": 6,
@@ -401,7 +401,7 @@
           "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-23T23:04:41.274Z"
+      "zaktualizowano": "2026-10-25T11:43:20.475Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-23T23:04:41.274Z"
+      "zaktualizowano": "2026-10-25T11:43:20.475Z"
     }
   ],
   "meczeSzts": [
@@ -1101,8 +1101,8 @@
       "kolejka": 4,
       "gospodarz": "ATS Ligota Łabędzka",
       "gosc": "KTS V Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "7:3",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS V"
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-23T23:04:41.274Z",
-    "pzts": "2026-10-23T23:04:41.274Z"
+    "szts": "2026-10-25T11:43:20.475Z",
+    "pzts": "2026-10-25T11:43:20.475Z"
   },
   "zrodla": {
     "szts": "ok",
