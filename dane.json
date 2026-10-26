@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-25T11:43:20.475Z",
+  "wygenerowano": "2026-10-26T20:59:30.099Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "6:54"
         }
       ],
-      "zaktualizowano": "2026-10-25T11:43:20.475Z"
+      "zaktualizowano": "2026-10-26T20:59:30.099Z"
     },
     {
       "klucz": "18/138",
@@ -221,9 +221,9 @@
         {
           "pozycja": 6,
           "nazwa": "TTS Polonia II Bytom",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 7,
-          "stosunek": "27:23"
+          "stosunek": "31:29"
         },
         {
           "pozycja": 7,
@@ -262,24 +262,24 @@
         },
         {
           "pozycja": 12,
+          "nazwa": "GLKS Lot Konopiska",
+          "mecze": 5,
+          "punkty": 4,
+          "stosunek": "15:35"
+        },
+        {
+          "pozycja": 13,
           "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
           "mecze": 5,
           "punkty": 2,
           "stosunek": "21:29"
         },
         {
-          "pozycja": 13,
+          "pozycja": 14,
           "nazwa": "KS Unia Kalety",
           "mecze": 5,
           "punkty": 2,
           "stosunek": "16:34"
-        },
-        {
-          "pozycja": 14,
-          "nazwa": "GLKS Lot Konopiska",
-          "mecze": 4,
-          "punkty": 2,
-          "stosunek": "9:31"
         },
         {
           "pozycja": 15,
@@ -296,7 +296,7 @@
           "stosunek": "9:41"
         }
       ],
-      "zaktualizowano": "2026-10-25T11:43:20.475Z"
+      "zaktualizowano": "2026-10-26T20:59:30.099Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-25T11:43:20.475Z"
+      "zaktualizowano": "2026-10-26T20:59:30.099Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-25T11:43:20.475Z"
+      "zaktualizowano": "2026-10-26T20:59:30.099Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-25T11:43:20.475Z",
-    "pzts": "2026-10-25T11:43:20.475Z"
+    "szts": "2026-10-26T20:59:30.099Z",
+    "pzts": "2026-10-26T20:59:30.099Z"
   },
   "zrodla": {
     "szts": "ok",
