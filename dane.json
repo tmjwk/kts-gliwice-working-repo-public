@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-26T20:59:30.099Z",
+  "wygenerowano": "2026-10-26T21:04:08.351Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "6:54"
         }
       ],
-      "zaktualizowano": "2026-10-26T20:59:30.099Z"
+      "zaktualizowano": "2026-10-26T21:04:08.351Z"
     },
     {
       "klucz": "18/138",
@@ -186,23 +186,23 @@
         {
           "pozycja": 1,
           "nazwa": "UKS Huragan Sosnowiec",
-          "mecze": 5,
-          "punkty": 10,
-          "stosunek": "36:14"
+          "mecze": 6,
+          "punkty": 11,
+          "stosunek": "41:19"
         },
         {
           "pozycja": 2,
+          "nazwa": "LKS Strażak Mikołów",
+          "mecze": 6,
+          "punkty": 8,
+          "stosunek": "39:21"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "UKS Feniks Pyskowice",
           "mecze": 5,
           "punkty": 7,
           "stosunek": "35:15"
-        },
-        {
-          "pozycja": 3,
-          "nazwa": "LKS Strażak Mikołów",
-          "mecze": 5,
-          "punkty": 7,
-          "stosunek": "34:16"
         },
         {
           "pozycja": 4,
@@ -296,7 +296,7 @@
           "stosunek": "9:41"
         }
       ],
-      "zaktualizowano": "2026-10-26T20:59:30.099Z"
+      "zaktualizowano": "2026-10-26T21:04:08.351Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-26T20:59:30.099Z"
+      "zaktualizowano": "2026-10-26T21:04:08.351Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-26T20:59:30.099Z"
+      "zaktualizowano": "2026-10-26T21:04:08.351Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-26T20:59:30.099Z",
-    "pzts": "2026-10-26T20:59:30.099Z"
+    "szts": "2026-10-26T21:04:08.351Z",
+    "pzts": "2026-10-26T21:04:08.351Z"
   },
   "zrodla": {
     "szts": "ok",
