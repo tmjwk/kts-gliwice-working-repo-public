@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-26T21:04:08.351Z",
+  "wygenerowano": "2026-10-27T20:38:37.642Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "6:54"
         }
       ],
-      "zaktualizowano": "2026-10-26T21:04:08.351Z"
+      "zaktualizowano": "2026-10-27T20:38:37.642Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +296,7 @@
           "stosunek": "9:41"
         }
       ],
-      "zaktualizowano": "2026-10-26T21:04:08.351Z"
+      "zaktualizowano": "2026-10-27T20:38:37.642Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-26T21:04:08.351Z"
+      "zaktualizowano": "2026-10-27T20:38:37.642Z"
     },
     {
       "klucz": "18/144",
@@ -438,9 +438,9 @@
         {
           "pozycja": 5,
           "nazwa": "UKS Ikar Mierzęcice",
-          "mecze": 2,
+          "mecze": 3,
           "punkty": 3,
-          "stosunek": "12:8"
+          "stosunek": "16:14"
         },
         {
           "pozycja": 6,
@@ -458,17 +458,17 @@
         },
         {
           "pozycja": 8,
+          "nazwa": "UKS Wolej Solver II Ruda Śląska",
+          "mecze": 3,
+          "punkty": 2,
+          "stosunek": "14:16"
+        },
+        {
+          "pozycja": 9,
           "nazwa": "Speed Team 43 Stolarzowice",
           "mecze": 3,
           "punkty": 1,
           "stosunek": "12:18"
-        },
-        {
-          "pozycja": 9,
-          "nazwa": "UKS Wolej Solver II Ruda Śląska",
-          "mecze": 2,
-          "punkty": 0,
-          "stosunek": "8:12"
         },
         {
           "pozycja": 10,
@@ -478,7 +478,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-26T21:04:08.351Z"
+      "zaktualizowano": "2026-10-27T20:38:37.642Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-26T21:04:08.351Z",
-    "pzts": "2026-10-26T21:04:08.351Z"
+    "szts": "2026-10-27T20:38:37.642Z",
+    "pzts": "2026-10-27T20:38:37.642Z"
   },
   "zrodla": {
     "szts": "ok",
