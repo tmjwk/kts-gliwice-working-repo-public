@@ -540,3 +540,32 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .toast-danych .toast-tekst { text-align: left; }
 .toast-danych .toast-btn { flex: none; }
+
+/* ===== LUSTRO FB (1.9.0 — TEST) =====================================
+   Pasek najnowszych postów z FB w sekcji Aktualności. Karty reużywają
+   .card/.news-card/.news-media — tu tylko szpilki: nagłówek pasa,
+   plakietka trybu testowego i karta jako link. */
+.lustro-fb { margin-bottom: 2.5rem; }
+.lustro-fb-head {
+  display: flex; align-items: center; gap: .6rem;
+  margin-bottom: .75rem; flex-wrap: wrap;
+}
+.lustro-fb-head .t-h3 { margin: 0; }
+.lustro-badge {
+  font-size: .72rem; font-weight: 600; letter-spacing: .02em;
+  text-transform: uppercase; color: #7a5200;
+  background: #ffec99; border: 1px solid #d4a017;
+  border-radius: 999px; padding: 2px 10px;
+}
+.lustro-karta {
+  display: flex; flex-direction: column;
+  text-decoration: none; color: inherit;
+  transition: border-color .15s ease, transform .15s ease;
+}
+.lustro-karta:hover, .lustro-karta:focus-visible {
+  border-color: var(--kts-primary); transform: translateY(-2px);
+  outline: none;
+}
+.lustro-wiecej { color: var(--kts-primary); font-weight: 600; margin-top: auto; }
+.lustro-karta:hover .lustro-wiecej { text-decoration: underline; }
+
