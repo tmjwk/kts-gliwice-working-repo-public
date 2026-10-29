@@ -1,5 +1,5 @@
 {
- "wersja": "1.8.1",
- "data": "2026-10-18T22:44:47Z",
- "opis": "Szybkość wieczornej synchronizacji (faza testów terminowości): w godzinach 18:00–00:00 czasu polskiego dane ligowe są sprawdzane co ~20 minut — wyniki lig ŚZTS powinny pojawiać się zwykle do ~30 minut od wpisania w źródle, wyniki 1. ligi do ~1,5 godziny (ta liga przechodzi przez dodatkową warstwę odświeżaną co godzinę). Bez zmian w wyglądzie strony"
+ "wersja": "1.9.0",
+ "data": "2026-10-29T23:30:00Z",
+ "opis": "Aktualności: testowe lustro Facebooka — pasek najnowszych wpisów pobierany na żywo w przeglądarce, bez zapisu danych w repo; tryb testowy (łatwe wycofanie), reszta strony bez zmian"
 }
