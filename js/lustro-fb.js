@@ -9,9 +9,9 @@
      URL-e CDN, ważne dla bieżącej sesji),
    - read-only: token ma wyłącznie pages_show_list +
      pages_read_engagement (audyt 29.10: próba zapisu → HTTP 403),
-   - TRYB TESTOWY: źródłem jest strona testowa (Stek Chata) —
-     po potwierdzeniu ról na fanpage klubu wystarczy podmienić
-     PAGE_ID + TOKEN poniżej,
+   - TRYB TESTOWY: źródłem jest fanpage klubu (KTS Gliwice,
+     rola z biznesu klubowego potwierdzona 30.10) — podmiana
+     testowego Stek Chaty wykonana; token read-only,
    - fail-safe: kontener #lustro-fb jest domyślnie hidden;
      jeśli pobór się nie uda (sieć, token, limit), sekcja po
      prostu się nie pokazuje — reszta strony działa jak dawniej,
@@ -24,8 +24,8 @@
 
 (() => {
   /* ---- KONFIGURACJA (jedyne miejsce do podmiany test→produkcja) ---- */
-  const PAGE_ID = "856113241085444";          // TEST: Stek Chata
-  const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS1yyIPyns9vpKVdPh8ye10LF7PHZBBcupZBkuniPrZBfYM82rXAZCPEJr03g4SV9d1gWvx9ZAgFANf7QAy3hzfPSJwiO5mkUhtZAoXy8V1JYLWXykLf0nbLp1hWdZA8raABeJhu4SZCjD4u2dljFQh7fVLu5STO0ZAdASFIGGGDkZBvwhuDRVxzXZB8ZB7DZAnOoq";           // page token (read-only)
+  const PAGE_ID = "167636963360765";         // KTS Gliwice (fanpage klubu)
+  const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS7DZB6gwLbQMnd9ZAECEojkZBqnW8Mw8yP1eZBrIz1b3H21nkLegyL2GZAsB8LKJLaWSAObAZAxwqWyHzFBcuT46kczo6DLrd3YVhofKwJpQkM0lsZCW01zkUYSZBVZBiFhY783c4lZAzMykcBRfIOuvLYZClOyoehMQTGPL06mny6OeIt2SCkwI3ZCLZAy8ZD";  // page token KTS (read-only)
   const LIMIT = 3;                            // kart w pasku
   const API = "https://graph.facebook.com/v22.0";
 
