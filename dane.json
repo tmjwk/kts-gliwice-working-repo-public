@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-28T22:41:04.075Z",
+  "wygenerowano": "2026-10-29T21:02:06.844Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -177,7 +177,7 @@
           "stosunek": "6:54"
         }
       ],
-      "zaktualizowano": "2026-10-28T22:41:04.075Z"
+      "zaktualizowano": "2026-10-29T21:02:06.844Z"
     },
     {
       "klucz": "18/138",
@@ -192,17 +192,17 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "UKS Feniks Pyskowice",
+          "mecze": 6,
+          "punkty": 9,
+          "stosunek": "43:17"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "LKS Strażak Mikołów",
           "mecze": 6,
           "punkty": 8,
           "stosunek": "39:21"
-        },
-        {
-          "pozycja": 3,
-          "nazwa": "UKS Feniks Pyskowice",
-          "mecze": 5,
-          "punkty": 7,
-          "stosunek": "35:15"
         },
         {
           "pozycja": 4,
@@ -270,9 +270,9 @@
         {
           "pozycja": 13,
           "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 2,
-          "stosunek": "21:29"
+          "stosunek": "23:37"
         },
         {
           "pozycja": 14,
@@ -296,7 +296,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-10-28T22:41:04.075Z"
+      "zaktualizowano": "2026-10-29T21:02:06.844Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +401,7 @@
           "stosunek": "4:36"
         }
       ],
-      "zaktualizowano": "2026-10-28T22:41:04.075Z"
+      "zaktualizowano": "2026-10-29T21:02:06.844Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-28T22:41:04.075Z"
+      "zaktualizowano": "2026-10-29T21:02:06.844Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-28T22:41:04.075Z",
-    "pzts": "2026-10-28T22:41:04.075Z"
+    "szts": "2026-10-29T21:02:06.844Z",
+    "pzts": "2026-10-29T21:02:06.844Z"
   },
   "zrodla": {
     "szts": "ok",
