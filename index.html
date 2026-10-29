@@ -99,6 +99,17 @@
             <p class="t-small muted" id="aktualnosci-zrodlo">Migracja WordPress 2025–26 — dane ładują się…</p>
           </div>
         </div>
+
+        <!-- LUSTRO FB (1.9.0 — TEST): posty z Facebooka na żywo, bez zapisu w repo.
+             Kontener ukryty do skutecznego poboru — awaria = sekcja niewidoczna. -->
+        <div id="lustro-fb" class="lustro-fb" hidden>
+          <div class="lustro-fb-head">
+            <h3 class="t-h3">Najnowsze z Facebooka</h3>
+            <span class="lustro-badge">tryb testowy</span>
+          </div>
+          <div class="grid grid-3" id="lustro-fb-grid"></div>
+        </div>
+
         <div class="grid grid-3" id="aktualnosci-grid">
           <article class="card news-card">
             <div class="news-media news-media-brak">🏓</div>
@@ -381,6 +392,7 @@
 
   <script src="js/app.js"></script>
   <script src="js/aktualnosci.js" defer></script>
+  <script src="js/lustro-fb.js" defer></script>
 
   <!-- ===== DIALOG: pełny wpis aktualności (1.6.5) ===== -->
   <dialog id="aktualnosci-dialog" class="news-dialog" aria-label="Pełny wpis aktualności">
