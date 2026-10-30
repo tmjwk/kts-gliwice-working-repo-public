@@ -1,5 +1,5 @@
 {
- "wersja": "1.9.3",
- "data": "2026-10-31T19:30:00Z",
- "opis": "Pasek meczowy: skrót ligi przeniesiony na początek wiersza (przed godziną w „najbliższym meczu”), bez separatora — zatwierdzone przez właściciela"
+ "wersja": "1.10.0",
+ "data": "2026-10-31T21:30:00Z",
+ "opis": "Aktualności = lustro FB: hero + kafelki (posty mlodsze niż miesiąc, min. 10), pełny wpis w dialogu, archiwum na podstronie"
 }
