@@ -233,8 +233,8 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .matchbar-sep { color: rgba(255,255,255,0.55); }
 .matchbar-hour { font-weight: 700; }
-/* Skrót ligi na końcu wiersza (v1.9.2): mała, wyszarzona etykieta —
-   rozróżnia drużyny klubu na pasku bez zabierania miejsca. */
+/* Skrót ligi na POCZĄTKU wiersza (v1.9.3): mała, wyszarzona etykieta —
+   znacznik kategorii przed treścią; rozróżnia drużyny klubu. */
 .matchbar-liga {
   font-size: 0.66rem; font-weight: 600; letter-spacing: 0.05em;
   text-transform: uppercase; line-height: 1.4;
