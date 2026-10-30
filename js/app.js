@@ -294,7 +294,7 @@ function renderKartyDruzyn(dane, mecze) {
     <article class="card team-card">
       <h3 class="t-h4">${esc(z.nazwa)}</h3>
       <p class="t-small">${esc(z.liga)}</p>
-      <span class="badge ${z.tryb.startsWith("PZTS") ? "badge--team-pzts" : "badge--team"}">${esc(z.tryb)}</span>
+      <span class="badge ${z.tryb.startsWith("PZTS") ? "badge--team-pzts" : "badge--team"}">${esc(z.tryb.replace(/\s*·\s*automat\s*$/i, ""))}</span>
       <dl>
         <div class="row"><dt>Stan</dt><dd class="t-nums">${esc(z.stan ?? "—")}</dd></div>
         <div class="row"><dt>Najbliższy</dt><dd class="t-nums">${esc(nastepnyDla(mecze, z.nazwa))}</dd></div>
@@ -341,7 +341,7 @@ function wierszMeczu(m, oczekuje = false) {
         ${badge}
         ${m.kolejka ? `<span class="match-date">kolejka ${m.kolejka}</span>` : ""}
       </div>
-      <p class="match-meta">${esc(m.liga)} · ${zrodlo} · automat${etykieta}</p>
+      <p class="match-meta">${esc(m.liga)} · ${zrodlo}${etykieta}</p>
     </li>`;
 }
 
@@ -363,7 +363,7 @@ function renderMecze(mecze) {
     ? najblizsze.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")
     : `<li class="pusty-stan">
          <svg class="pilka-odpoczyna" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
-         <span class="t-small muted">Brak zaplanowanych meczów — przerwa w rozgrywkach. Nowy terminarz wpadnie automatycznie (sync co 2&nbsp;h).</span>
+         <span class="t-small muted">Brak zaplanowanych meczów — przerwa w rozgrywkach.</span>
        </li>`;
   $("#ostatnie-mecze").innerHTML = ostatnie.length
     ? ostatnie.map((m) => wierszMeczu(m)).join("")
@@ -384,15 +384,19 @@ function renderBadges(dane, ok) {
     live.classList.remove("badge-live");
     live.classList.add("badge-live--warn");
   }
-  const sSzts = formatujZnacznik(dane.ostatniSync?.szts);
-  const sPzts = formatujZnacznik(dane.ostatniSync?.pzts);
   const elSync = $("#ostatni-sync");
-  elSync.textContent =
-    `Ostatni odczyt: PZTS ${sPzts ?? "—"} · ŚZTS ${sSzts ?? "—"}`;
-  elSync.title =
-    "Moment ostatniego poprawnego odczytu każdego źródła. Wyniki nie muszą " +
-    "się zmieniać między odczytami — strona zawsze pokazuje najświeższe " +
-    "odczytane dane.";
+  // 1.10.2: element zdjęty ze strony (sekcja bez info o automacie) —
+  // guard, by usunięcie HTML nie wywalało reszty renderu.
+  if (elSync) {
+    const sSzts = formatujZnacznik(dane.ostatniSync?.szts);
+    const sPzts = formatujZnacznik(dane.ostatniSync?.pzts);
+    elSync.textContent =
+      `Ostatni odczyt: PZTS ${sPzts ?? "—"} · ŚZTS ${sSzts ?? "—"}`;
+    elSync.title =
+      "Moment ostatniego poprawnego odczytu każdego źródła. Wyniki nie muszą " +
+      "się zmieniać między odczytami — strona zawsze pokazuje najświeższe " +
+      "odczytane dane.";
+  }
 }
 
 /* ===== tryb dzień/noc ===== */
