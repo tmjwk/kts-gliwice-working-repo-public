@@ -459,6 +459,10 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   border: 1px solid var(--kts-line); border-radius: 0.9rem; padding: 0;
   width: min(92vw - 2rem, 680px); max-height: min(85vh - 2rem);
   background: var(--bg-card); color: inherit;
+  /* FIX 1.10.1: reset "* { margin: 0 }" na początku arkusza zabijał
+     domyślne margin:auto <dialog> — tym przeglądarka centruje modal
+     w obu osiach. Bez tego dialog uciekał w róg ekranu. */
+  margin: auto;
 }
 .news-dialog::backdrop { background: rgba(9, 20, 34, 0.55); backdrop-filter: blur(2px); }
 .news-dialog-tresc { padding: 1.25rem 1.4rem 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; overflow-y: auto; max-height: min(85vh - 2rem); }
@@ -466,10 +470,10 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .news-dialog-okladka img { width: 100%; max-height: 17rem; object-fit: cover; border-radius: 0.6rem; }
 .news-dialog-body { display: flex; flex-direction: column; gap: 0.75rem; }
 .news-dialog-body p { margin: 0; }
-.news-dialog-stopka { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem; border-top: 1px solid var(--kts-line); padding-top: 0.75rem; margin-top: 0.35rem; }
-.news-dialog-stopka a { color: var(--kts-link); font-weight: 600; text-decoration: none; }
-.news-dialog-stopka a:hover { text-decoration: underline; }
-.news-dialog-zamknij { align-self: center; margin-top: 0.35rem; }
+/* 1.10.1: stopka = para przycisków systemowych (.btn) — „Zamknij"
+   (outline) po lewej, „Zobacz na Facebooku" (accent = CTA wg 60-30-10)
+   po prawej. Wcześniejszy link tekstowy nie był zgodny z designem. */
+.news-dialog-stopka { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; border-top: 1px solid var(--kts-line); padding-top: 0.9rem; margin-top: 0.35rem; }
 
 /* ===== PIŁKA-BOHATER KTS (1.7.0; 1.7.4: kompozycja KTS + 5★ + 40+) ===== */
 /* Jeden wzór piłki (sprite #pilka-kts w index.html) — spójny z favicon.svg
@@ -567,23 +571,31 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .lustro-wiecej { color: var(--kts-primary); font-weight: 600; margin-top: auto; }
 .lustro-karta:hover .lustro-wiecej { text-decoration: underline; }
 
-/* hero — najnowszy post, pełna szerokość (P1) */
+/* hero — najnowszy post: SZEROKI PASEK o wysokości zwykłego kafla
+   (1.10.1, zgłoszenie właściciela: hero był za wysoki). Pełna szerokość
+   rzędu, układ poziomy: zdjęcie po lewej (rozciągnięte na wysokość
+   treści), treść po prawej; tytuł t-h4 i 4 linie zajawki jak w kafelkach
+   → wysokość wyznacza treść, nie sztuczne min-height. */
 .lustro-hero {
   grid-column: 1 / -1;
-  display: grid; grid-template-columns: minmax(0, 42%) 1fr;
+  display: grid; grid-template-columns: minmax(0, 38%) 1fr;
 }
-.lustro-hero .news-media { height: 100%; min-height: 13rem; }
-.lustro-hero .card-body { padding: 1.15rem 1.3rem; }
-.lustro-hero .card-body p { -webkit-line-clamp: 5; }
+/* media = „cover": img absolute (poza obiegiem), więc wysokość paska
+   wyznacza WYŁĄCZNIE treść — pionowe zdjęcie z FB nie rozpycha karty.
+   min-height 12rem: krótkie wpisy też dają pełnoprawny pasek. */
+.lustro-hero .news-media { height: auto; min-height: 12rem; align-self: stretch; position: relative; }
+.lustro-hero .news-media img { position: absolute; inset: 0; }
+.lustro-hero .card-body { padding: 1.15rem 1.3rem; display: flex; flex-direction: column; justify-content: center; gap: 0.45rem; }
+.lustro-hero .card-body p { -webkit-line-clamp: 4; }
 
 /* skeleton — kostki podczas poboru (P2) */
 .lustro-skeleton {
   border: 1px solid var(--kts-line); border-radius: 0.8rem;
   overflow: hidden; position: relative; background: var(--bg-card);
 }
-.lustro-skeleton--hero { display: grid; grid-template-columns: minmax(0, 42%) 1fr; }
-.lustro-skeleton--hero .skel-media { min-height: 13rem; }
-.lustro-skeleton--hero .skel-linie { padding: 1.1rem 1.3rem; }
+.lustro-skeleton--hero { display: grid; grid-template-columns: minmax(0, 38%) 1fr; }
+.lustro-skeleton--hero .skel-media { min-height: 10rem; }
+.lustro-skeleton--hero .skel-linie { padding: 1rem 1.25rem; }
 .skel-media { background: rgba(127, 127, 127, 0.16); }
 .skel-linie { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.55rem; }
 .skel-line { height: 0.85rem; border-radius: 0.3rem; background: rgba(127, 127, 127, 0.2); width: 72%; }
@@ -628,8 +640,11 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .news-dialog-okladka img { cursor: zoom-in; }
 
 @media (max-width: 720px) {
+  /* hero pionowo jak zwykły kafelek: media 10rem (identycznie
+     z bazowym .news-media) + clamp 3 — wysokość = zwykłe kafelki */
   .lustro-hero, .lustro-skeleton--hero { grid-template-columns: 1fr; }
-  .lustro-hero .news-media { min-height: 10.5rem; }
+  .lustro-hero .news-media { height: 10rem; }
+  .lustro-hero .card-body p { -webkit-line-clamp: 3; }
   .archiwum-miesiac { font-size: 1.1rem; }
 }
 
