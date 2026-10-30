@@ -1,6 +1,15 @@
 /* ============================================================
-   KTS Gliwice — LUSTRO FB (1.10.0)
+   KTS Gliwice — LUSTRO FB (1.10.1)
    Aktualności z Facebooka na żywo + archiwum na podstronie.
+
+   1.10.1 (zgłoszenia właściciela 31.10 wieczór):
+   - hero = SZEROKI PASEK o wysokości zwykłego kafla (był za wysoki):
+     tytuł t-h4 + 4 linie zajawki, zdjęcie rozciągnięte na wysokość
+     treści; na mobile pion z media 10rem jak zwykłe kafelki,
+   - dialog centrowany na środku ekranu (margin:auto — reset
+     "* {margin:0}" zabijał domyślne centrowanie <dialog>),
+   - stopka dialogu: przyciski systemowe .btn — „Zamknij" (outline)
+     i „Zobacz na Facebooku" (accent, CTA wg 60-30-10).
 
    Architektura (decyzje właściciela, 29–31.10):
    - MIRROR na żywo: przeglądarka gościa pobiera posty
@@ -139,7 +148,7 @@
       <div class="news-media${p.full_picture ? " news-media-img" : " news-media-brak"}">${mediaHTML(p)}</div>
       <div class="card-body">
         <span class="t-small t-nums text-primary" title="${esc(formatujDate(p.created_time))}">${esc(dataWzgledna(p.created_time))}</span>
-        <h3 class="t-h3">${esc(tytulZPostu(p))}</h3>
+        <h3 class="t-h4">${esc(tytulZPostu(p))}</h3>
         <p class="t-small muted">${esc(zajawkaZPostu(p, 240))}</p>
         <span class="lustro-wiecej t-small">Powiększ wpis&nbsp;↗</span>
       </div>
@@ -230,7 +239,8 @@
     podpiezKarty(kontener);
 
     // skeleton od razu (P2) — sekcja żyje, zanim dojadą dane
-    hero.innerHTML = skeleton("lustro-skeleton--hero", "13rem");
+    // (1.10.1: hero-pasek płaski, 10rem jak zwykłe kafelki)
+    hero.innerHTML = skeleton("lustro-skeleton--hero", "10rem");
     grid.innerHTML = Array.from({ length: MIN_POSTOW - 1 },
       () => skeleton("", "10rem")).join("");
 
