@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Archiwum aktualności — KTS Gliwice</title>
+  <meta name="description" content="Archiwum wpisów z Facebooka KTS Gliwice — wszystkie aktualności klubu, od najnowszych do najstarszych.">
+  <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:title" content="Archiwum aktualności — KTS Gliwice">
+  <meta property="og:description" content="Wszystkie wpisy z Facebooka klubu KTS Gliwice — chronologicznie.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tmjwk.github.io/kts-gliwice-working-repo-public/archiwum.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Tryb dzień/noc — PRZED renderowaniem (bez mignięcia jasnym tłem):
+    // wybór z localStorage, domyślnie preferencja systemu.
+    (function () {
+      try {
+        var z = localStorage.getItem("kts-theme");
+        if (!z) z = window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "day";
+        document.documentElement.setAttribute("data-theme", z);
+      } catch (e) { /* prywatny tryb przeglądarki — zostaje dzienny */ }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="KTS Gliwice — strona główna">
+        <span class="brand-mark">KTS</span>
+        <span class="brand-name">KTS GLIWICE <span class="brand-sub">/ SZKIELET</span></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Główna nawigacja">
+        <a href="index.html#aktualnosci">Aktualności</a>
+        <a href="index.html#oklubie">O klubie</a>
+        <a href="index.html#druzyny-wyniki">Drużyny i wyniki</a>
+        <a href="index.html#trenerzy">Trenerzy</a>
+        <a href="index.html#galeria">Galeria</a>
+      </nav>
+      <a class="btn btn-accent btn-sm header-cta" href="index.html#kontakt">Zapisz dziecko</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Przełącz tryb nocny" title="Przełącz tryb dzień/noc">🌙</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="start">
+
+    <!-- ===== ARCHIWUM AKTUALNOŚCI (1.10.0) ===== -->
+    <section class="section" id="archiwum">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h1 class="t-h2">Archiwum aktualności</h1>
+            <p class="t-small muted">Wszystkie wpisy z Facebooka klubu — od najnowszych do najstarszych.</p>
+            <p class="t-small t-nums text-primary" id="archiwum-count">wczytuję…</p>
+          </div>
+          <a class="btn btn-outline" href="index.html#aktualnosci">← Najnowsze na stronie głównej</a>
+        </div>
+
+        <!-- ARCHIWUM FB (1.10.0): posty grupowane po miesiącach, porcje po 25,
+             „Starsze wpisy" dokłada kolejne. Zero danych FB w repo. -->
+        <div id="archiwum-fb" class="archiwum-fb">
+          <div id="archiwum-lista"></div>
+          <div class="center archiwum-stopka">
+            <button type="button" id="archiwum-more" class="btn btn-outline" hidden>Starsze wpisy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="kontakt">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">
+          <span class="brand-mark brand-mark-sm">KTS</span>
+          <span class="footer-brand-name">KTS Gliwice</span>
+        </div>
+        <p class="t-small">[adres hali] · Gliwice</p>
+        <p class="t-small">[telefon] · [e-mail]</p>
+      </div>
+      <nav aria-label="Stopka">
+        <p class="footer-col-title">Sekcje</p>
+        <ul class="footer-links">
+          <li><a href="index.html#aktualnosci">Aktualności</a></li>
+          <li><a href="archiwum.html">Archiwum aktualności</a></li>
+          <li><a href="index.html#oklubie">O klubie</a></li>
+          <li><a href="index.html#druzyny-wyniki">Drużyny i wyniki</a></li>
+          <li><a href="index.html#trenerzy">Trenerzy</a></li>
+          <li><a href="index.html#galeria">Galeria</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="footer-col-title">Znajdź nas</p>
+        <p class="t-small">🤝 Facebook — AkademiaTenisaStolowego</p>
+        <p class="t-small footer-fade">[RODO · polityka cookies — do wdrożenia]</p>
+      </div>
+    </div>
+    <div class="container">
+      <p class="footer-bottom t-small">
+        SZKIELET projektowy · wdrożenie testowe (hosting statyczny, auto-sync wyników) · KTS Gliwice 2026
+        · <span class="t-nums" id="wersja-strony">wersja —</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ===== DIALOG: pełny wpis z Facebooka (1.10.0) =====
+       Klik w kafelek → powiększenie; klik w zdjęcie/przycisk → FB w nowej karcie. -->
+  <dialog id="aktualnosci-dialog" class="news-dialog" aria-label="Pełny wpis z Facebooka">
+    <article class="news-dialog-tresc">
+      <div data-pole="okladka" class="news-dialog-okladka"></div>
+      <p class="t-small t-nums text-primary" data-pole="data"></p>
+      <h3 class="t-h3" data-pole="tytul"></h3>
+      <div class="news-dialog-body t-body" data-pole="tresc"></div>
+      <div class="news-dialog-stopka">
+        <a class="t-small" data-pole="oryginal" target="_blank" rel="noopener">Zobacz na Facebooku ↗</a>
+        <span class="t-small muted">post z fanpage'a klubu</span>
+      </div>
+      <button type="button" class="btn btn-outline news-dialog-zamknij" data-akcja="zamknij">Zamknij</button>
+    </article>
+  </dialog>
+
+  <!-- Mini-skrypt podstrony (bez app.js): menu mobilne, tryb dzień/noc, wersja -->
+  <script>
+    (function () {
+      var h = document.getElementById("hamburger");
+      var n = document.getElementById("nav");
+      if (h && n) {
+        h.addEventListener("click", function () {
+          var open = n.classList.toggle("open");
+          h.setAttribute("aria-expanded", String(open));
+        });
+      }
+      var t = document.getElementById("theme-toggle");
+      if (t) {
+        var ikona = function () {
+          t.textContent =
+            document.documentElement.getAttribute("data-theme") === "night" ? "☀️" : "🌙";
+        };
+        ikona();
+        t.addEventListener("click", function () {
+          var z = document.documentElement.getAttribute("data-theme") === "night" ? "day" : "night";
+          document.documentElement.setAttribute("data-theme", z);
+          try { localStorage.setItem("kts-theme", z); } catch (e) { /* tryb prywatny */ }
+          ikona();
+        });
+      }
+      fetch("wersja.json", { cache: "no-cache" })
+        .then(function (r) { return r.json(); })
+        .then(function (w) {
+          var el = document.getElementById("wersja-strony");
+          if (el) el.textContent = "wersja v" + w.wersja + (w.opis ? " · " + w.opis : "");
+        })
+        .catch(function () { /* wersja niezmierzalnie istotna */ });
+    })();
+  </script>
+  <script src="js/lustro-fb.js" defer></script>
+</body>
+</html>
