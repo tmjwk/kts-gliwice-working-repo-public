@@ -241,10 +241,10 @@ function renderPasekMeczu(mecze) {
         + ` · ${formatujDate(o.dataMeczu)}`;
     }
     elO.innerHTML = zDnia.map((m) => wierszMeczuPaska(
-      `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
+      etykietaLigi(m.liga)
+      + `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
       + `<span class="matchbar-score t-nums">${esc(m.wynik)}</span>`
-      + `<span class="matchbar-team">${esc(m.gosc)}</span>`
-      + etykietaLigi(m.liga),
+      + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
     )).join("");
   } else {
     elO.textContent = "Wyniki pojawią się po pierwszej synchronizacji";
@@ -255,10 +255,10 @@ function renderPasekMeczu(mecze) {
       const etykietaD = strefaD.querySelector(".matchbar-label");
       if (etykietaD) etykietaD.textContent = `Wynik w drodze · ${etykietaDnia(wDrodze[0].dataMeczu)}`;
       elD.innerHTML = wDrodze.map((m) => wierszMeczuPaska(
-        `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
+        etykietaLigi(m.liga)
+        + `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
         + `<span class="matchbar-sep">—</span>`
-        + `<span class="matchbar-team">${esc(m.gosc)}</span>`
-        + etykietaLigi(m.liga),
+        + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
         "matchbar-match--pending",
       )).join("");
       strefaD.hidden = false;
@@ -277,11 +277,11 @@ function renderPasekMeczu(mecze) {
         + ` · ${etykietaDnia(n.dataMeczu)}`;
     }
     elN.innerHTML = zDnia.map((m) => wierszMeczuPaska(
-      (m.godzina ? `<span class="matchbar-hour t-nums">g. ${esc(m.godzina)}</span>` : "")
+      etykietaLigi(m.liga)
+      + (m.godzina ? `<span class="matchbar-hour t-nums">g. ${esc(m.godzina)}</span>` : "")
       + `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
       + `<span class="matchbar-sep">—</span>`
-      + `<span class="matchbar-team">${esc(m.gosc)}</span>`
-      + etykietaLigi(m.liga),
+      + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
     )).join("");
   } else {
     elN.textContent = "Najbliższy mecz: wg terminarza";
