@@ -96,7 +96,6 @@
         <div class="section-head">
           <div>
             <h2 class="t-h2">Aktualności</h2>
-            <p class="t-small muted" id="aktualnosci-zrodlo">Facebook klubu — dane ładują się…</p>
           </div>
         </div>
 
@@ -149,7 +148,7 @@
             </div>
             <p class="t-small muted source-note">
               Źródło: <a href="https://ligi.slzts.pl/liga/18/136/" target="_blank" rel="noreferrer">ligi.slzts.pl</a>
-              · automatyczny sync (razem z meczami) · stan: <span class="t-nums" id="tabela-stan">—</span>
+              · stan: <span class="t-nums" id="tabela-stan">—</span>
             </p>
           </div>
 
@@ -159,44 +158,11 @@
             <p class="list-title list-title-gap">🏆 Ostatnie mecze — wszystkie drużyny</p>
             <ul class="divide-list" id="ostatnie-mecze"></ul>
             <p class="t-small muted source-note">
-              Źródła: pzts.pl (1. liga) + ligi.slzts.pl (ligi 2–4 i amatorzy) ·
-              automatyczny sync
+              Źródła: pzts.pl (1. liga) + ligi.slzts.pl (ligi 2–4 i amatorzy)
             </p>
           </div>
         </div>
 
-        <!-- Mechanizm -->
-        <div class="mechanism">
-          <!-- ================================================================
-               DO USUNIĘCIA W PRZYSZŁOŚCI (Task 84, decyzja Tomka 10.10 noc):
-               wykład „Jak to działa” ukryty z widoku strony — zwiedzający
-               tego nie potrzebuje. Kanoniczny opis mechanizmu żyje w README
-               (sekcja Jak to działa). Przy wielkim sprzątaniu kodu skasować
-               CAŁY blok poniżej razem z tym komentarzem; na stronie zostaje
-               tylko mechanism-side (sygnał świeżości).
-               ================================================================ -->
-          <!--
-          <div>
-            <p class="t-small muted">
-              <strong class="text-primary">Jak to działa:</strong>
-              strona statyczna czyta <code>dane.json</code> (ładowanie z CDN —
-              natychmiast, bez serwera). Odświeżanie: GitHub Actions wg
-              harmonogramu (co 2 h) — pełny automat dla WSZYSTKICH źródeł:
-              ŚZTS bezpośrednio (ligi 2–4 + amatorzy), PZTS przez czytnik
-              r.jina.ai omijający Cloudflare (tabele + terminarz 1. ligi).
-            </p>
-            <p class="t-small muted">
-              <strong class="text-primary">PZTS (1. liga):</strong>
-              automat przez czytnik; ręczna wklejka (Actions → „Sync danych
-              ligowych” → pole pzts_mecze) pozostaje jako ścieżka awaryjna.
-            </p>
-          </div>
-          -->
-          <div class="mechanism-side">
-            <span class="t-small t-nums muted" id="ostatni-sync">Ostatni odczyt: —</span>
-            <span class="t-small t-nums muted" id="cron-aktywnosc"></span>
-          </div>
-        </div>
       </div>
     </section>
 
