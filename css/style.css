@@ -550,25 +550,14 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .toast-danych .toast-tekst { text-align: left; }
 .toast-danych .toast-btn { flex: none; }
 
-/* ===== LUSTRO FB (1.9.0 — TEST) =====================================
-   Pasek najnowszych postów z FB w sekcji Aktualności. Karty reużywają
-   .card/.news-card/.news-media — tu tylko szpilki: nagłówek pasa,
-   plakietka trybu testowego i karta jako link. */
-.lustro-fb { margin-bottom: 2.5rem; }
-.lustro-fb-head {
-  display: flex; align-items: center; gap: .6rem;
-  margin-bottom: .75rem; flex-wrap: wrap;
-}
-.lustro-fb-head .t-h3 { margin: 0; }
-.lustro-badge {
-  font-size: .72rem; font-weight: 600; letter-spacing: .02em;
-  text-transform: uppercase; color: #7a5200;
-  background: #ffec99; border: 1px solid #d4a017;
-  border-radius: 999px; padding: 2px 10px;
-}
+/* ===== LUSTRO FB (1.10.0) ===========================================
+   Aktualności z FB: hero + kafelki, skeleton, fallback, archiwum.
+   Karty reużywają .card/.news-card/.news-media — tu tylko szpilki. */
+.lustro-fb { display: flex; flex-direction: column; gap: 1.25rem; }
+.lustro-stopka { margin-top: 0.4rem; }
 .lustro-karta {
   display: flex; flex-direction: column;
-  text-decoration: none; color: inherit;
+  cursor: pointer;
   transition: border-color .15s ease, transform .15s ease;
 }
 .lustro-karta:hover, .lustro-karta:focus-visible {
@@ -577,4 +566,70 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .lustro-wiecej { color: var(--kts-primary); font-weight: 600; margin-top: auto; }
 .lustro-karta:hover .lustro-wiecej { text-decoration: underline; }
+
+/* hero — najnowszy post, pełna szerokość (P1) */
+.lustro-hero {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: minmax(0, 42%) 1fr;
+}
+.lustro-hero .news-media { height: 100%; min-height: 13rem; }
+.lustro-hero .card-body { padding: 1.15rem 1.3rem; }
+.lustro-hero .card-body p { -webkit-line-clamp: 5; }
+
+/* skeleton — kostki podczas poboru (P2) */
+.lustro-skeleton {
+  border: 1px solid var(--kts-line); border-radius: 0.8rem;
+  overflow: hidden; position: relative; background: var(--bg-card);
+}
+.lustro-skeleton--hero { display: grid; grid-template-columns: minmax(0, 42%) 1fr; }
+.lustro-skeleton--hero .skel-media { min-height: 13rem; }
+.lustro-skeleton--hero .skel-linie { padding: 1.1rem 1.3rem; }
+.skel-media { background: rgba(127, 127, 127, 0.16); }
+.skel-linie { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.55rem; }
+.skel-line { height: 0.85rem; border-radius: 0.3rem; background: rgba(127, 127, 127, 0.2); width: 72%; }
+.skel-line--krotka { width: 46%; }
+.skel-line--mini { width: 28%; height: 0.7rem; }
+.lustro-skeleton::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg, transparent 32%, rgba(140, 140, 140, 0.14) 50%, transparent 68%);
+  animation: lustro-shimmer 1.4s infinite;
+}
+@keyframes lustro-shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { .lustro-skeleton::after { animation: none; } }
+
+/* kafel awaryjny (P3) */
+.lustro-fallback {
+  grid-column: 1 / -1; text-align: center; padding: 1.4rem 1.2rem;
+  text-decoration: none; color: inherit;
+  transition: border-color .15s ease, transform .15s ease;
+}
+.lustro-fallback:hover, .lustro-fallback:focus-visible {
+  border-color: var(--kts-primary); transform: translateY(-2px); outline: none;
+}
+
+/* archiwum (1.10.0) — grupy miesięczne (P5) */
+.archiwum-fb { display: flex; flex-direction: column; gap: 0.75rem; }
+#archiwum-lista { display: flex; flex-direction: column; }
+.archiwum-grupa { display: flex; flex-direction: column; gap: 0.9rem; }
+.archiwum-miesiac {
+  display: flex; align-items: center; gap: 0.85rem;
+  margin: 1.5rem 0 0.2rem;
+  font-family: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  font-size: 1.25rem; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--kts-primary);
+}
+.archiwum-miesiac::after { content: ""; flex: 1; height: 1px; background: var(--kts-line); }
+.archiwum-grupa:first-child .archiwum-miesiac { margin-top: 0.2rem; }
+.archiwum-stopka { margin-top: 1.4rem; }
+.archiwum-koniec { margin-top: 1.2rem; }
+
+/* dialog: zdjęcie klikalne → oryginał na FB (FORMA 1.10.0) */
+.news-dialog-okladka a { display: block; }
+.news-dialog-okladka img { cursor: zoom-in; }
+
+@media (max-width: 720px) {
+  .lustro-hero, .lustro-skeleton--hero { grid-template-columns: 1fr; }
+  .lustro-hero .news-media { min-height: 10.5rem; }
+  .archiwum-miesiac { font-size: 1.1rem; }
+}
 
