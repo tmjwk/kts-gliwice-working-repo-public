@@ -185,6 +185,39 @@ function wierszMeczuPaska(html, klasy = "") {
   return `<span class="matchbar-match${klasy ? ` ${klasy}` : ""}">${html}</span>`;
 }
 
+/* Skróty lig w wierszach paska (właściciel zatwierdził 31.10):
+   poziom ligi + rodzaj; grupy pomijamy (w danych jedna grupa
+   na poziom, więc nie rozróżniają drużyn). */
+const SKROTY_LIG = {
+  "1. Liga Mężczyzn · gr. południowa": "1 LM",
+  "2. Liga Mężczyzn": "2 LM",
+  "2. Śląska Liga Amatorów": "2 ŚLA",
+  "3. Liga Mężczyzn · gr. II": "3 LM",
+  "4. Liga Mężczyzn · gr. IV": "4 LM",
+};
+
+/** Skrót ligi dla paska. Nieznana liga (np. zmiana nazwy u źródła):
+ *  heurystyka z nazwy, a gdy się nie da — pusty string
+ *  (wiersz bez etykiety; nic się nie wysypuje). */
+const skrotLigi = (liga) => {
+  if (!liga) return "";
+  if (Object.prototype.hasOwnProperty.call(SKROTY_LIG, liga)) {
+    return SKROTY_LIG[liga];
+  }
+  let m = liga.match(/^(\d+)\.\s*Liga Mężczyzn\b/);
+  if (m) return `${m[1]} LM`;
+  m = liga.match(/^(\d+)\.\s*Śląska Liga Amatorów\b/);
+  if (m) return `${m[1]} ŚLA`;
+  m = liga.match(/^(\d+)\.\s*Liga Kobiet\b/);
+  if (m) return `${m[1]} LK`;
+  return "";
+};
+
+const etykietaLigi = (liga) => {
+  const s = skrotLigi(liga);
+  return s ? `<span class="matchbar-liga">${esc(s)}</span>` : "";
+};
+
 function renderPasekMeczu(mecze) {
   const rozegrane = mecze.filter((m) => m.rozegrany)
     .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
@@ -210,7 +243,8 @@ function renderPasekMeczu(mecze) {
     elO.innerHTML = zDnia.map((m) => wierszMeczuPaska(
       `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
       + `<span class="matchbar-score t-nums">${esc(m.wynik)}</span>`
-      + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
+      + `<span class="matchbar-team">${esc(m.gosc)}</span>`
+      + etykietaLigi(m.liga),
     )).join("");
   } else {
     elO.textContent = "Wyniki pojawią się po pierwszej synchronizacji";
@@ -223,7 +257,8 @@ function renderPasekMeczu(mecze) {
       elD.innerHTML = wDrodze.map((m) => wierszMeczuPaska(
         `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
         + `<span class="matchbar-sep">—</span>`
-        + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
+        + `<span class="matchbar-team">${esc(m.gosc)}</span>`
+        + etykietaLigi(m.liga),
         "matchbar-match--pending",
       )).join("");
       strefaD.hidden = false;
@@ -245,7 +280,8 @@ function renderPasekMeczu(mecze) {
       (m.godzina ? `<span class="matchbar-hour t-nums">g. ${esc(m.godzina)}</span>` : "")
       + `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
       + `<span class="matchbar-sep">—</span>`
-      + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
+      + `<span class="matchbar-team">${esc(m.gosc)}</span>`
+      + etykietaLigi(m.liga),
     )).join("");
   } else {
     elN.textContent = "Najbliższy mecz: wg terminarza";
