@@ -1,5 +1,5 @@
 {
- "wersja": "1.10.0",
- "data": "2026-10-31T21:30:00Z",
- "opis": "Aktualności = lustro FB: hero + kafelki (posty mlodsze niż miesiąc, min. 10), pełny wpis w dialogu, archiwum na podstronie"
+ "wersja": "1.10.1",
+ "data": "2026-10-31T23:10:00Z",
+ "opis": "Poprawki lustra FB: hero jako szeroki pasek o wysokości zwykłych kafelków, dialog centrowany na środku ekranu, stopka dialogu z przyciskami systemowymi (Zobacz na Facebooku = CTA)"
 }
