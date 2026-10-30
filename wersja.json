@@ -1,5 +1,5 @@
 {
- "wersja": "1.9.2",
- "data": "2026-10-31T12:00:00Z",
- "opis": "Pasek meczowy: skrót ligi w każdym wierszu (1 LM / 2 LM / 2 ŚLA / 3 LM / 4 LM) — rozróżnienie drużyn klubu na pasku; nieznane ligi: heurystyka lub brak etykiety"
+ "wersja": "1.9.3",
+ "data": "2026-10-31T19:30:00Z",
+ "opis": "Pasek meczowy: skrót ligi przeniesiony na początek wiersza (przed godziną w „najbliższym meczu”), bez separatora — zatwierdzone przez właściciela"
 }
