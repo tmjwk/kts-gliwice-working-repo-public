@@ -90,56 +90,24 @@
       </div>
     </section>
 
-    <!-- ===== AKTUALNOŚCI (1.6.5: migracja WordPress 2025–26) ===== -->
+    <!-- ===== AKTUALNOŚCI (1.10.0: lustro FB — posty klubu na żywo) ===== -->
     <section class="section" id="aktualnosci">
       <div class="container">
         <div class="section-head">
           <div>
             <h2 class="t-h2">Aktualności</h2>
-            <p class="t-small muted" id="aktualnosci-zrodlo">Migracja WordPress 2025–26 — dane ładują się…</p>
+            <p class="t-small muted" id="aktualnosci-zrodlo">Facebook klubu — dane ładują się…</p>
           </div>
         </div>
 
-        <!-- LUSTRO FB (1.9.1 — TEST): posty z Facebooka na żywo, bez zapisu w repo.
-             Kontener ukryty do skutecznego poboru — awaria = sekcja niewidoczna. -->
-        <div id="lustro-fb" class="lustro-fb" hidden>
-          <div class="lustro-fb-head">
-            <h3 class="t-h3">Najnowsze z Facebooka</h3>
-            <span class="lustro-badge">tryb testowy</span>
-          </div>
+        <!-- LUSTRO FB (1.10.0): posty młodsze niż miesiąc (min. 10: hero + 9),
+             pełny wpis w dialogu, starsze → archiwum.html. Zero danych FB w repo. -->
+        <div id="lustro-fb" class="lustro-fb">
+          <div id="lustro-fb-hero"></div>
           <div class="grid grid-3" id="lustro-fb-grid"></div>
-        </div>
-
-        <div class="grid grid-3" id="aktualnosci-grid">
-          <article class="card news-card">
-            <div class="news-media news-media-brak">🏓</div>
-            <div class="card-body">
-              <span class="t-small t-nums text-primary">[data]</span>
-              <h3 class="t-h4">Tytuł aktualności — mecz 1. ligi</h3>
-              <p class="t-small muted">[2–3 zdania zajawki — długość sprawdzona pod mobile]</p>
-            </div>
-          </article>
-          <article class="card news-card">
-            <div class="news-media news-media-brak">🏓</div>
-            <div class="card-body">
-              <span class="t-small t-nums text-primary">[data]</span>
-              <h3 class="t-h4">Tytuł aktualności — turniej juniorski</h3>
-              <p class="t-small muted">[2–3 zdania zajawki — długość sprawdzona pod mobile]</p>
-            </div>
-          </article>
-          <article class="card news-card">
-            <div class="news-media news-media-brak">🏓</div>
-            <div class="card-body">
-              <span class="t-small t-nums text-primary">[data]</span>
-              <h3 class="t-h4">Tytuł aktualności — nabór do akademii</h3>
-              <p class="t-small muted">[2–3 zdania zajawki — długość sprawdzona pod mobile]</p>
-            </div>
-          </article>
-        </div>
-        <div class="center" style="margin-top: 1.25rem;">
-          <button type="button" id="aktualnosci-more" class="btn btn-outline" hidden>
-            Pokaż więcej (jeszcze <span id="aktualnosci-more-n">0</span>)
-          </button>
+          <div class="center lustro-stopka">
+            <a class="btn btn-outline" href="archiwum.html">Starsze wpisy — archiwum →</a>
+          </div>
         </div>
       </div>
     </section>
@@ -337,6 +305,7 @@
         <p class="footer-col-title">Sekcje</p>
         <ul class="footer-links">
           <li><a href="#aktualnosci">Aktualności</a></li>
+          <li><a href="archiwum.html">Archiwum aktualności</a></li>
           <li><a href="#oklubie">O klubie</a></li>
           <li><a href="#druzyny-wyniki">Drużyny i wyniki</a></li>
           <li><a href="#trenerzy">Trenerzy</a></li>
@@ -391,19 +360,19 @@
   </svg>
 
   <script src="js/app.js"></script>
-  <script src="js/aktualnosci.js" defer></script>
   <script src="js/lustro-fb.js" defer></script>
 
-  <!-- ===== DIALOG: pełny wpis aktualności (1.6.5) ===== -->
-  <dialog id="aktualnosci-dialog" class="news-dialog" aria-label="Pełny wpis aktualności">
+  <!-- ===== DIALOG: pełny wpis z Facebooka (1.10.0) =====
+       Klik w kafelek → powiększenie; klik w zdjęcie/przycisk → FB w nowej karcie. -->
+  <dialog id="aktualnosci-dialog" class="news-dialog" aria-label="Pełny wpis z Facebooka">
     <article class="news-dialog-tresc">
       <div data-pole="okladka" class="news-dialog-okladka"></div>
       <p class="t-small t-nums text-primary" data-pole="data"></p>
       <h3 class="t-h3" data-pole="tytul"></h3>
       <div class="news-dialog-body t-body" data-pole="tresc"></div>
       <div class="news-dialog-stopka">
-        <a class="t-small" data-pole="oryginal" target="_blank" rel="noopener">Oryginał na starej stronie ↗</a>
-        <span class="t-small muted">podgląd migracji — bez stylu docelowego</span>
+        <a class="t-small" data-pole="oryginal" target="_blank" rel="noopener">Zobacz na Facebooku ↗</a>
+        <span class="t-small muted">post z fanpage'a klubu</span>
       </div>
       <button type="button" class="btn btn-outline news-dialog-zamknij" data-akcja="zamknij">Zamknij</button>
     </article>
