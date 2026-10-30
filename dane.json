@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-30T13:07:58.000Z",
+  "wygenerowano": "2026-10-30T20:42:29.865Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -34,7 +34,7 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "6. miejsce · 6 pkt",
+      "stan": "7. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/"
     },
     {
@@ -66,17 +66,17 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "MKS Skarbek Tarnowskie Góry",
+          "mecze": 7,
+          "punkty": 13,
+          "stosunek": "50:20"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "LITS Meble Anders Żywiec",
           "mecze": 6,
           "punkty": 12,
           "stosunek": "48:12"
-        },
-        {
-          "pozycja": 2,
-          "nazwa": "MKS Skarbek Tarnowskie Góry",
-          "mecze": 6,
-          "punkty": 11,
-          "stosunek": "42:18"
         },
         {
           "pozycja": 3,
@@ -115,24 +115,24 @@
         },
         {
           "pozycja": 8,
-          "nazwa": "MKS Tajfun Kuźnia Raciborska",
-          "mecze": 6,
-          "punkty": 6,
-          "stosunek": "33:27"
-        },
-        {
-          "pozycja": 9,
           "nazwa": "KTS Olimpijczyk Zawiercie",
           "mecze": 6,
           "punkty": 6,
           "stosunek": "33:27"
         },
         {
-          "pozycja": 10,
+          "pozycja": 9,
           "nazwa": "MKS Skarbek II Tarnowskie Góry",
           "mecze": 6,
           "punkty": 6,
           "stosunek": "32:28"
+        },
+        {
+          "pozycja": 10,
+          "nazwa": "MKS Tajfun Kuźnia Raciborska",
+          "mecze": 7,
+          "punkty": 6,
+          "stosunek": "35:35"
         },
         {
           "pozycja": 11,
@@ -177,7 +177,7 @@
           "stosunek": "6:54"
         }
       ],
-      "zaktualizowano": "2026-10-30T13:07:58.000Z"
+      "zaktualizowano": "2026-10-30T20:42:29.865Z"
     },
     {
       "klucz": "18/138",
@@ -213,17 +213,17 @@
         },
         {
           "pozycja": 5,
+          "nazwa": "KU AZS UJD Częstochowa",
+          "mecze": 6,
+          "punkty": 9,
+          "stosunek": "37:23"
+        },
+        {
+          "pozycja": 6,
           "nazwa": "LKS Strażak Mikołów",
           "mecze": 6,
           "punkty": 8,
           "stosunek": "39:21"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "KU AZS UJD Częstochowa",
-          "mecze": 5,
-          "punkty": 7,
-          "stosunek": "29:21"
         },
         {
           "pozycja": 7,
@@ -256,37 +256,37 @@
         {
           "pozycja": 11,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 4,
-          "stosunek": "26:24"
+          "stosunek": "30:30"
         },
         {
           "pozycja": 12,
           "nazwa": "GLKS Lot Konopiska",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 4,
-          "stosunek": "15:35"
+          "stosunek": "17:43"
         },
         {
           "pozycja": 13,
+          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
+          "mecze": 6,
+          "punkty": 3,
+          "stosunek": "22:38"
+        },
+        {
+          "pozycja": 14,
           "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
           "mecze": 6,
           "punkty": 2,
           "stosunek": "23:37"
         },
         {
-          "pozycja": 14,
+          "pozycja": 15,
           "nazwa": "KS Unia Kalety",
           "mecze": 6,
           "punkty": 2,
           "stosunek": "17:43"
-        },
-        {
-          "pozycja": 15,
-          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
-          "mecze": 5,
-          "punkty": 1,
-          "stosunek": "16:34"
         },
         {
           "pozycja": 16,
@@ -296,7 +296,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-10-30T13:07:58.000Z"
+      "zaktualizowano": "2026-10-30T20:42:29.865Z"
     },
     {
       "klucz": "18/142",
@@ -339,31 +339,31 @@
         },
         {
           "pozycja": 6,
+          "nazwa": "ULKS Ruch Pniów",
+          "mecze": 5,
+          "punkty": 6,
+          "stosunek": "33:17"
+        },
+        {
+          "pozycja": 7,
           "nazwa": "KTS V Gliwice",
           "mecze": 5,
           "punkty": 6,
           "stosunek": "30:20"
         },
         {
-          "pozycja": 7,
+          "pozycja": 8,
           "nazwa": "ULKS Tajfun Ligota Łabędzka",
           "mecze": 5,
           "punkty": 5,
           "stosunek": "25:25"
         },
         {
-          "pozycja": 8,
+          "pozycja": 9,
           "nazwa": "LKS Młodość Rudno",
           "mecze": 5,
           "punkty": 5,
           "stosunek": "24:26"
-        },
-        {
-          "pozycja": 9,
-          "nazwa": "ULKS Ruch Pniów",
-          "mecze": 4,
-          "punkty": 4,
-          "stosunek": "25:15"
         },
         {
           "pozycja": 10,
@@ -396,12 +396,12 @@
         {
           "pozycja": 14,
           "nazwa": "ULKS Pławniowice",
-          "mecze": 4,
+          "mecze": 5,
           "punkty": 0,
-          "stosunek": "4:36"
+          "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-10-30T13:07:58.000Z"
+      "zaktualizowano": "2026-10-30T20:42:29.865Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +478,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-30T13:07:58.000Z"
+      "zaktualizowano": "2026-10-30T20:42:29.865Z"
     }
   ],
   "meczeSzts": [
@@ -1746,8 +1746,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-30T13:07:58.000Z",
-    "pzts": "2026-10-30T13:07:58.000Z"
+    "szts": "2026-10-30T20:42:29.865Z",
+    "pzts": "2026-10-30T20:42:29.865Z"
   },
   "zrodla": {
     "szts": "ok",
