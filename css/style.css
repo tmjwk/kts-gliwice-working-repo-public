@@ -233,6 +233,15 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .matchbar-sep { color: rgba(255,255,255,0.55); }
 .matchbar-hour { font-weight: 700; }
+/* Skrót ligi na końcu wiersza (v1.9.2): mała, wyszarzona etykieta —
+   rozróżnia drużyny klubu na pasku bez zabierania miejsca. */
+.matchbar-liga {
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase; line-height: 1.4;
+  color: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 0.3rem; padding: 0 0.32rem;
+}
 .matchbar-match--pending { position: relative; padding-left: 0.9rem; }
 .matchbar-match--pending::before {
   content: ""; position: absolute; left: 0.1rem; top: 50%;
