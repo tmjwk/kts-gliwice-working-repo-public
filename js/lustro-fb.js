@@ -258,12 +258,6 @@
       widoczne.forEach((p) => cache.set(p.id, p));
       hero.innerHTML = kartaHero(widoczne[0]);
       grid.innerHTML = widoczne.slice(1).map(karta).join("");
-
-      const zrodlo = $("#aktualnosci-zrodlo");
-      if (zrodlo) {
-        zrodlo.textContent =
-          `Facebook klubu · ${widoczne.length} ${widoczne.length === 1 ? "wpis" : "wpisów"} · ładowane na żywo`;
-      }
     } catch (e) {
       console.warn("[lustro-fb] pominięto:", e.message);
       hero.innerHTML = "";
