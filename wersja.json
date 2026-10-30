@@ -1,5 +1,5 @@
 {
- "wersja": "1.9.1",
- "data": "2026-10-30T00:00:00Z",
- "opis": "Lustro FB: podmiana zrodla testowego (Stek Chata) na fanpage klubu KTS Gliwice — rola potwierdzona 30.10; finalny dowod ze kwestia to wylacznie uprawnienia"
+ "wersja": "1.9.2",
+ "data": "2026-10-31T12:00:00Z",
+ "opis": "Pasek meczowy: skrót ligi w każdym wierszu (1 LM / 2 LM / 2 ŚLA / 3 LM / 4 LM) — rozróżnienie drużyn klubu na pasku; nieznane ligi: heurystyka lub brak etykiety"
 }
