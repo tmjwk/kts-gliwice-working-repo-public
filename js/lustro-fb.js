@@ -1,39 +1,47 @@
 /* ============================================================
-   KTS Gliwice — LUSTRO FB (1.9.0 — TEST)
-   Najnowsze posty z Facebooka renderowane NA ŻYWO w przeglądarce.
+   KTS Gliwice — LUSTRO FB (1.10.0)
+   Aktualności z Facebooka na żywo + archiwum na podstronie.
 
-   Architektura (decyzja właściciela, 29.10):
-   - MIRROR: dane pobierane bezpośrednio z Graph API przy każdej
-     wizycie; do repo NIE trafia ani jeden bajt danych z FB
-     (żadnych JSON-ów ani zdjęć — obrazki to świeże, podpisane
+   Architektura (decyzje właściciela, 29–31.10):
+   - MIRROR na żywo: przeglądarka gościa pobiera posty
+     bezpośrednio z Graph API przy każdej wizycie; do repo NIE
+     trafia ani bajt danych z FB (zdjęcia = świeże, podpisane
      URL-e CDN, ważne dla bieżącej sesji),
    - read-only: token ma wyłącznie pages_show_list +
      pages_read_engagement (audyt 29.10: próba zapisu → HTTP 403),
-   - TRYB TESTOWY: źródłem jest fanpage klubu (KTS Gliwice,
-     rola z biznesu klubowego potwierdzona 30.10) — podmiana
-     testowego Stek Chaty wykonana; token read-only,
-   - fail-safe: kontener #lustro-fb jest domyślnie hidden;
-     jeśli pobór się nie uda (sieć, token, limit), sekcja po
-     prostu się nie pokazuje — reszta strony działa jak dawniej,
-   - zero cookie, zero localStorage, zero SDK (RODO-clean).
-
-   Wycofanie: usunąć <script> + kontener z index.html (albo
-   samo wywołanie init() poniżej) — sekcja znika bez śladu.
+   - STRONA GŁÓWNA (#lustro-fb): posty młodsze niż 30 dni
+     (rolling), minimum 10 (1 hero + 9 kafelków) — przy deficycie
+     dopełniamy starszymi (decyzja Q1b),
+   - ARCHIWUM (#archiwum-fb na archiwum.html): wszystkie posty
+     chronologicznie, nagłówki miesięcy, porcje po 25,
+     „Starsze wpisy” dokłada kolejne (paginacja API),
+   - FORMA: klik w kafelek → <dialog> z pełną treścią posta;
+     klik w powiększenie lub przycisk → oryginał na Facebooku
+     w nowej karcie (target=_blank),
+   - skeleton podczas poboru; awaria = kafel zastępczy z linkiem
+     do fanpage'a; zero cookie/localStorage/SDK (RODO-clean),
+   - posty bez tekstu (zdjęcia/reele) pokazujemy z datą i obrazem.
    ============================================================ */
 "use strict";
 
 (() => {
-  /* ---- KONFIGURACJA (jedyne miejsce do podmiany test→produkcja) ---- */
-  const PAGE_ID = "167636963360765";         // KTS Gliwice (fanpage klubu)
-  const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS7DZB6gwLbQMnd9ZAECEojkZBqnW8Mw8yP1eZBrIz1b3H21nkLegyL2GZAsB8LKJLaWSAObAZAxwqWyHzFBcuT46kczo6DLrd3YVhofKwJpQkM0lsZCW01zkUYSZBVZBiFhY783c4lZAzMykcBRfIOuvLYZClOyoehMQTGPL06mny6OeIt2SCkwI3ZCLZAy8ZD";  // page token KTS (read-only)
-  const LIMIT = 3;                            // kart w pasku
+  /* ---- KONFIGURACJA ---- */
+  const PAGE_ID = "167636963360765";            // KTS Gliwice (fanpage klubu)
+  const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS7DZB6gwLbQMnd9ZAECEojkZBqnW8Mw8yP1eZBrIz1b3H21nkLegyL2GZAsB8LKJLaWSAObAZAxwqWyHzFBcuT46kczo6DLrd3YVhofKwJpQkM0lsZCW01zkUYSZBVZBiFhY783c4lZAzMykcBRfIOuvLYZClOyoehMQTGPL06mny6OeIt2SCkwI3ZCLZAy8ZD";    // page token KTS (read-only)
   const API = "https://graph.facebook.com/v22.0";
+  const FIELDS = "id,message,story,created_time,permalink_url,full_picture";
+  const OKNO_DNI = 30;            // rolling window głównej (Q2)
+  const MIN_POSTOW = 10;          // 1 hero + 9 kafelków (P1 + decyzja 31.10)
+  const LIMIT_GLOWNA = 50;        // wystarcza na okno + dopełnienie
+  const PORCJA_ARCHIWUM = 25;     // porcja „Starsze wpisy” (Q4a)
+  const FANPAGE_URL = "https://www.facebook.com/AkademiaTenisaStolowego";
 
-  const $ = (sel) => document.querySelector(sel);
+  const $ = (sel, el = document) => el.querySelector(sel);
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   }[c]));
 
+  /* ---- daty ---- */
   const formatujDate = (iso) => {
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return "";
@@ -41,70 +49,308 @@
       { day: "2-digit", month: "2-digit", year: "numeric" });
   };
 
-  /** Tytuł = pierwsza niepusta linijka postu (ucięta do 90 znaków). */
-  const tytulZPostu = (msg) => {
-    const pierwsza = String(msg || "").split("\n")
-      .map((l) => l.trim()).filter(Boolean)[0] || "(wpis bez tekstu)";
-    return pierwsza.length > 90 ? pierwsza.slice(0, 87) + "…" : pierwsza;
+  /** „wczoraj”, „3 dni temu”, „2 tyg. temu”, „rok temu”… (P4) */
+  const dataWzgledna = (iso) => {
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+    const s = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (s < 60) return "właśnie teraz";
+    if (s < 3600) return `${Math.floor(s / 60)} min temu`;
+    if (s < 86400) return `${Math.floor(s / 3600)} godz. temu`;
+    const dni = Math.floor(s / 86400);
+    if (dni === 1) return "wczoraj";
+    if (dni < 7) return `${dni} dni temu`;
+    if (dni < 30) {
+      const t = Math.floor(dni / 7);
+      return t === 1 ? "tydzień temu" : `${t} tyg. temu`;
+    }
+    if (dni < 365) {
+      const m = Math.floor(dni / 30);
+      return m === 1 ? "miesiąc temu" : `${m} mies. temu`;
+    }
+    const l = Math.floor(dni / 365);
+    if (l === 1) return "rok temu";
+    if (l % 10 >= 2 && l % 10 <= 4 && (l % 100 < 12 || l % 100 > 14)) {
+      return `${l} lata temu`;
+    }
+    return `${l} lat temu`;
   };
 
-  /** Zajawka = reszta treści (bez pierwszej linijki), ok. 150 znaków. */
-  const zajawkaZPostu = (msg) => {
-    const lines = String(msg || "").split("\n")
-      .map((l) => l.trim()).filter(Boolean);
+  /** Tytuł = pierwsza niepusta linijka (ucięta do 90 zn.). */
+  const tytulZPostu = (p) => {
+    const pierwsza = String(p.message || p.story || "")
+      .split("\n").map((l) => l.trim()).filter(Boolean)[0];
+    const t = pierwsza || "(wpis bez tekstu)";
+    return t.length > 90 ? t.slice(0, 87) + "…" : t;
+  };
+
+  /** Zajawka = reszta treści po pierwszej linijce. */
+  const zajawkaZPostu = (p, max = 150) => {
+    const lines = String(p.message || p.story || "")
+      .split("\n").map((l) => l.trim()).filter(Boolean);
     const reszta = lines.slice(1).join(" ");
-    const t = (reszta || lines[0] || "").slice(0, 150);
-    return (t.length >= 150 ? t.slice(0, 147) + "…" : t) || "—";
+    const t = (reszta || lines[0] || "").slice(0, max);
+    return (t.length >= max ? t.slice(0, max - 3) + "…" : t) || "—";
   };
 
-  const karta = (p) => `
-    <a class="card news-card lustro-karta" href="${esc(p.permalink_url)}"
-       target="_blank" rel="noopener"
-       aria-label="Post na Facebooku: ${esc(tytulZPostu(p.message))}">
-      <div class="news-media${p.full_picture ? " news-media-img" : " news-media-brak"}">
-        ${p.full_picture
-          ? `<img src="${esc(p.full_picture)}" alt="" loading="lazy" decoding="async">`
-          : `<span aria-hidden="true">🏓</span>`}
-      </div>
-      <div class="card-body">
-        <span class="t-small t-nums text-primary">${formatujDate(p.created_time)}</span>
-        <h3 class="t-h4">${esc(tytulZPostu(p.message))}</h3>
-        <p class="t-small muted">${esc(zajawkaZPostu(p.message))}</p>
-        <span class="lustro-wiecej t-small">Zobacz na Facebooku&nbsp;↗</span>
-      </div>
-    </a>`;
+  /** Pełna treść do dialogu: linijka → akapit. */
+  const akapityPostu = (p) =>
+    String(p.message || p.story || "")
+      .split(/\n+/).map((l) => l.trim()).filter(Boolean);
 
-  async function init() {
-    const kontener = $("#lustro-fb");
-    const grid = $("#lustro-fb-grid");
-    if (!kontener || !grid) return;            // brak kontenera = stop
-
-    const url = `${API}/${PAGE_ID}/posts`
-      + `?fields=id,message,created_time,permalink_url,full_picture`
-      + `&limit=${LIMIT}&access_token=${ACCESS_TOKEN}`;
-
+  /* ---- pobieranie (tylko GET) ---- */
+  async function pobierzPosty({ limit, url } = {}) {
+    const cel = url || `${API}/${PAGE_ID}/posts`
+      + `?fields=${encodeURIComponent(FIELDS)}`
+      + `&limit=${limit}&access_token=${ACCESS_TOKEN}`;
     const kontrola = new AbortController();
-    const zegar = setTimeout(() => kontrola.abort(), 10000);
+    const zegar = setTimeout(() => kontrola.abort(), 12000);
     try {
-      const r = await fetch(url, { signal: kontrola.signal });
+      const r = await fetch(cel, { signal: kontrola.signal });
       const d = await r.json();
       if (d.error) throw new Error(d.error.message);
-      const posty = Array.isArray(d.data) ? d.data : [];
-      if (!posty.length) throw new Error("brak postów");
-
-      grid.innerHTML = posty.map(karta).join("");
-      kontener.hidden = false;                  // pokaz dopiero po sukcesie
-    } catch (e) {
-      /* fail-safe: sekcja zostaje ukryta, strona działa jak bez lustra */
-      console.warn("[lustro-fb] pominięto:", e.message);
+      return { posty: Array.isArray(d.data) ? d.data : [],
+               next: d.paging && d.paging.next || null };
     } finally {
       clearTimeout(zegar);
     }
   }
 
+  /* ---- kafelki ---- */
+  const mediaHTML = (p) => p.full_picture
+    ? `<img src="${esc(p.full_picture)}" alt="" loading="lazy" decoding="async">`
+    : `<span aria-hidden="true">🏓</span>`;
+
+  const karta = (p) => `
+    <article class="card news-card news-klik lustro-karta" data-post-id="${esc(p.id)}"
+             tabindex="0" role="button" aria-label="Powiększ wpis: ${esc(tytulZPostu(p))}">
+      <div class="news-media${p.full_picture ? " news-media-img" : " news-media-brak"}">${mediaHTML(p)}</div>
+      <div class="card-body">
+        <span class="t-small t-nums text-primary" title="${esc(formatujDate(p.created_time))}">${esc(dataWzgledna(p.created_time))}</span>
+        <h3 class="t-h4">${esc(tytulZPostu(p))}</h3>
+        <p class="t-small muted">${esc(zajawkaZPostu(p))}</p>
+        <span class="lustro-wiecej t-small">Powiększ wpis&nbsp;↗</span>
+      </div>
+    </article>`;
+
+  const kartaHero = (p) => `
+    <article class="card news-card news-klik lustro-karta lustro-hero" data-post-id="${esc(p.id)}"
+             tabindex="0" role="button" aria-label="Powiększ wpis: ${esc(tytulZPostu(p))}">
+      <div class="news-media${p.full_picture ? " news-media-img" : " news-media-brak"}">${mediaHTML(p)}</div>
+      <div class="card-body">
+        <span class="t-small t-nums text-primary" title="${esc(formatujDate(p.created_time))}">${esc(dataWzgledna(p.created_time))}</span>
+        <h3 class="t-h3">${esc(tytulZPostu(p))}</h3>
+        <p class="t-small muted">${esc(zajawkaZPostu(p, 240))}</p>
+        <span class="lustro-wiecej t-small">Powiększ wpis&nbsp;↗</span>
+      </div>
+    </article>`;
+
+  const kartaFallback = () => `
+    <a class="card news-card lustro-fallback" href="${FANPAGE_URL}"
+       target="_blank" rel="noopener">
+      <div class="news-media news-media-brak">🏓</div>
+      <div class="card-body">
+        <h3 class="t-h4">Chwilowo nie można pobrać aktualności</h3>
+        <p class="t-small muted">Zobacz wpisy bezpośrednio na Facebooku klubu.</p>
+        <span class="lustro-wiecej t-small">Otwórz fanpage&nbsp;↗</span>
+      </div>
+    </a>`;
+
+  const skeleton = (klasa, wysokosc) => `
+    <div class="lustro-skeleton ${klasa}" aria-hidden="true">
+      <div class="skel-media" style="min-height:${wysokosc}"></div>
+      <div class="skel-linie"><div class="skel-line"></div><div class="skel-line skel-line--krotka"></div><div class="skel-line skel-line--mini"></div></div>
+    </div>`;
+
+  /* ---- dialog: pełny wpis (FORMA — decyzja 31.10) ---- */
+  const cache = new Map();   // id → post (klik w kartę)
+  let dialogPodpiety = false;
+
+  function otworzPost(p) {
+    const dlg = $("#aktualnosci-dialog");
+    if (!dlg || !p) return;
+    const okladka = dlg.querySelector('[data-pole="okladka"]');
+    if (okladka) {
+      okladka.innerHTML = p.full_picture
+        ? `<a href="${esc(p.permalink_url)}" target="_blank" rel="noopener"
+              title="Otwórz post na Facebooku">
+             <img src="${esc(p.full_picture)}" alt="" decoding="async"></a>`
+        : "";
+    }
+    const elData = dlg.querySelector('[data-pole="data"]');
+    if (elData) {
+      elData.textContent =
+        `${formatujDate(p.created_time)} · ${dataWzgledna(p.created_time)}`;
+    }
+    const elTytul = dlg.querySelector('[data-pole="tytul"]');
+    if (elTytul) elTytul.textContent = tytulZPostu(p);
+    const elTresc = dlg.querySelector('[data-pole="tresc"]');
+    if (elTresc) {
+      const akapity = akapityPostu(p);
+      elTresc.innerHTML = akapity.length
+        ? akapity.map((a) => `<p>${esc(a)}</p>`).join("")
+        : "<p>(wpis bez treści tekstowej — zobacz zdjęcie/wideo na Facebooku)</p>";
+    }
+    const oryginal = dlg.querySelector('[data-pole="oryginal"]');
+    if (oryginal) oryginal.href = p.permalink_url || FANPAGE_URL;
+
+    if (!dialogPodpiety) {
+      const zamykanie = dlg.querySelector('[data-akcja="zamknij"]');
+      if (zamykanie) zamykanie.addEventListener("click", () => dlg.close());
+      dlg.addEventListener("click", (e) => {
+        if (e.target === dlg) dlg.close();      // klik w tło zamyka
+      });
+      dialogPodpiety = true;
+    }
+    dlg.showModal();
+  }
+
+  /** Delegacja klików/klawiatury na kontenerze kart. */
+  function podpiezKarty(kontener) {
+    kontener.addEventListener("click", (e) => {
+      const kartaEl = e.target.closest(".news-klik");
+      if (!kartaEl) return;
+      otworzPost(cache.get(kartaEl.dataset.postId));
+    });
+    kontener.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const kartaEl = e.target.closest(".news-klik");
+      if (!kartaEl) return;
+      e.preventDefault();
+      otworzPost(cache.get(kartaEl.dataset.postId));
+    });
+  }
+
+  /* ===== STRONA GŁÓWNA ===== */
+  async function initGlowna() {
+    const kontener = $("#lustro-fb");
+    const hero = $("#lustro-fb-hero");
+    const grid = $("#lustro-fb-grid");
+    if (!kontener || !hero || !grid) return;
+    podpiezKarty(kontener);
+
+    // skeleton od razu (P2) — sekcja żyje, zanim dojadą dane
+    hero.innerHTML = skeleton("lustro-skeleton--hero", "13rem");
+    grid.innerHTML = Array.from({ length: MIN_POSTOW - 1 },
+      () => skeleton("", "10rem")).join("");
+
+    try {
+      const { posty } = await pobierzPosty({ limit: LIMIT_GLOWNA });
+      if (!posty.length) throw new Error("brak postów");
+
+      const granica = Date.now() - OKNO_DNI * 86400 * 1000;
+      const wOknie = posty.filter(
+        (p) => new Date(p.created_time).getTime() >= granica).length;
+      // Q1b: przy deficycie dopełniamy starszymi do MIN_POSTOW
+      const ile = Math.max(Math.min(wOknie, posty.length), Math.min(MIN_POSTOW, posty.length));
+      const widoczne = posty.slice(0, ile);
+
+      widoczne.forEach((p) => cache.set(p.id, p));
+      hero.innerHTML = kartaHero(widoczne[0]);
+      grid.innerHTML = widoczne.slice(1).map(karta).join("");
+
+      const zrodlo = $("#aktualnosci-zrodlo");
+      if (zrodlo) {
+        zrodlo.textContent =
+          `Facebook klubu · ${widoczne.length} ${widoczne.length === 1 ? "wpis" : "wpisów"} · ładowane na żywo`;
+      }
+    } catch (e) {
+      console.warn("[lustro-fb] pominięto:", e.message);
+      hero.innerHTML = "";
+      grid.innerHTML = kartaFallback();      // P3: kafel awaryjny
+    }
+  }
+
+  /* ===== ARCHIWUM (podstrona) ===== */
+  const MIESIACE = ["styczeń", "luty", "marzec", "kwiecień", "maj",
+    "czerwiec", "lipiec", "sierpień", "wrzesień", "październik",
+    "listopad", "grudzień"];
+
+  async function initArchiwum() {
+    const arch = $("#archiwum-fb");
+    const lista = $("#archiwum-lista");
+    const przycisk = $("#archiwum-more");
+    const licznik = $("#archiwum-count");
+    if (!arch || !lista) return;
+    podpiezKarty(arch);
+
+    let nastepnyUrl = null;
+    let wczytane = 0;
+    let biezacaGrupa = null;
+
+    const naglowekMiesiaca = (iso) => {
+      const [r, m] = iso.slice(0, 7).split("-");
+      return `${MIESIACE[Number(m) - 1]} ${r}`;
+    };
+
+    function dodajPosty(posty) {
+      for (const p of posty) {
+        cache.set(p.id, p);
+        const klucz = p.created_time.slice(0, 7);
+        if (!biezacaGrupa || biezacaGrupa.dataset.miesiac !== klucz) {
+          biezacaGrupa = document.createElement("section");
+          biezacaGrupa.dataset.miesiac = klucz;
+          biezacaGrupa.className = "archiwum-grupa";
+          biezacaGrupa.innerHTML =
+            `<h3 class="archiwum-miesiac">${esc(naglowekMiesiaca(p.created_time))}</h3>
+             <div class="grid grid-3"></div>`;
+          lista.appendChild(biezacaGrupa);
+        }
+        biezacaGrupa.querySelector(".grid").insertAdjacentHTML("beforeend", karta(p));
+        wczytane += 1;
+      }
+      if (licznik) {
+        licznik.textContent = `Wczytano ${wczytane} ${wczytane === 1 ? "wpis" : "wpisów"} — od najnowszych`;
+      }
+    }
+
+    try {
+      const pierwsza = await pobierzPosty({ limit: PORCJA_ARCHIWUM });
+      if (!pierwsza.posty.length) throw new Error("brak postów");
+      dodajPosty(pierwsza.posty);
+      nastepnyUrl = pierwsza.next;
+    } catch (e) {
+      console.warn("[archiwum] pominięto:", e.message);
+      lista.innerHTML = kartaFallback();
+      if (licznik) licznik.textContent = "";
+      return;
+    }
+
+    if (przycisk) {
+      if (!nastepnyUrl) {
+        przycisk.hidden = true;
+      } else {
+        przycisk.hidden = false;
+        przycisk.addEventListener("click", async () => {
+          przycisk.disabled = true;
+          przycisk.textContent = "Wczytuję…";
+          try {
+            const { posty, next } = await pobierzPosty({ url: nastepnyUrl });
+            dodajPosty(posty);
+            nastepnyUrl = next;
+            przycisk.textContent = "Starsze wpisy";
+            przycisk.disabled = false;
+            if (!nastepnyUrl) {
+              przycisk.hidden = true;
+              const koniec = document.createElement("p");
+              koniec.className = "t-small muted center archiwum-koniec";
+              koniec.textContent = "To wszystkie wpisy w historii fanpage’a 🏓";
+              arch.appendChild(koniec);
+            }
+          } catch (e) {
+            przycisk.textContent = "Błąd — spróbuj ponownie";
+            przycisk.disabled = false;
+          }
+        });
+      }
+    }
+  }
+
+  /* ---- start ---- */
+  const start = () => { initGlowna(); initArchiwum(); };
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
+    document.addEventListener("DOMContentLoaded", start, { once: true });
   } else {
-    init();
+    start();
   }
 })();
