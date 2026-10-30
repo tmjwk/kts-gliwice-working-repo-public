@@ -1,5 +1,5 @@
 {
- "wersja": "1.10.1",
- "data": "2026-10-31T23:10:00Z",
- "opis": "Poprawki lustra FB: hero jako szeroki pasek o wysokości zwykłych kafelków, dialog centrowany na środku ekranu, stopka dialogu z przyciskami systemowymi (Zobacz na Facebooku = CTA)"
+ "wersja": "1.10.2",
+ "data": "2026-11-01T00:40:00Z",
+ "opis": "Przyciski dialogu razem na środku; hero pokazuje zdjęcie w całości (contain); sekcja Drużyny i wyniki bez info o automacie; usunięty wiersz źródła w Aktualnościach; przywrócona pełna galeria (131 albumów, 916 zdjęć) po regresji z 05.10"
 }
