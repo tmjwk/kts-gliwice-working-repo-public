@@ -1,5 +1,5 @@
 {
- "wersja": "1.11.0",
- "data": "2026-11-01T03:10:00Z",
- "opis": "Reel bez pasów: przeglądarka mierzy czarne pasy miniatur wideo (canvas, CORS CDN FB) i kadruje okładki — hero, kafelki, archiwum i dialog; zdjęcia nietykane, pomiar nieudany = wygląd dotychczasowy"
+ "wersja": "1.12.0",
+ "data": "2026-11-01T04:20:00Z",
+ "opis": "Kafelek drużyny wariant C: klik otwiera dialog z zakładkami (tabela/wyniki/najbliższe) oraz pełną podstronę druzyna.html?id=… — tabela, terminarz i wyniki per drużyna"
 }
