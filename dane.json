@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-31T19:36:28.071Z",
+  "wygenerowano": "2026-10-31T20:57:42.242Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:36:28.071Z"
+      "zaktualizowano": "2026-10-31T20:57:42.242Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:36:28.071Z"
+      "zaktualizowano": "2026-10-31T20:57:42.242Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:36:28.071Z"
+      "zaktualizowano": "2026-10-31T20:57:42.242Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:36:28.071Z"
+      "zaktualizowano": "2026-10-31T20:57:42.242Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:36:28.071Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-10-31T19:36:28.071Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -1930,7 +1930,7 @@
     {
       "zespol": "KTS II",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1480/kts-ii-gliwice/",
-      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "zawodnicy": [
         {
           "nazwisko": "Bartosz Kwodawski",
@@ -2003,7 +2003,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Roman Wiła",
+          "nazwisko": "Roman Wiża",
           "licencja": "08898",
           "narodowosc": "Polska",
           "rok": 1968,
@@ -2037,10 +2037,10 @@
     {
       "zespol": "KTS III",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
-      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "zawodnicy": [
         {
-          "nazwisko": "Micha? Rosiek",
+          "nazwisko": "Michał Rosiek",
           "licencja": "08894",
           "narodowosc": "Polska",
           "rok": 1995,
@@ -2050,7 +2050,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Micha? Bodnar",
+          "nazwisko": "Michał Bodnar",
           "licencja": "08882",
           "narodowosc": "Polska",
           "rok": 2003,
@@ -2060,7 +2060,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Rafa? Adach",
+          "nazwisko": "Rafał Adach",
           "licencja": "08881",
           "narodowosc": "Polska",
           "rok": 1995,
@@ -2090,7 +2090,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Jakub D?browski",
+          "nazwisko": "Jakub Dąbrowski",
           "licencja": "08885",
           "narodowosc": "Polska",
           "rok": 2001,
@@ -2104,7 +2104,7 @@
     {
       "zespol": "KTS IV",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
-      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "zawodnicy": [
         {
           "nazwisko": "Piotr Zemła",
@@ -2127,7 +2127,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Roman Wiła",
+          "nazwisko": "Roman Wiża",
           "licencja": "08898",
           "narodowosc": "Polska",
           "rok": 1968,
@@ -2137,7 +2137,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Pawe? Stefanów",
+          "nazwisko": "Paweł Stefanów",
           "licencja": "08897",
           "narodowosc": "Polska",
           "rok": 1975,
@@ -2147,7 +2147,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Rafa? Opozda",
+          "nazwisko": "Rafał Opozda",
           "licencja": "08892",
           "narodowosc": "Polska",
           "rok": 1974,
@@ -2157,7 +2157,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Marcin Macha?",
+          "nazwisko": "Marcin Machał",
           "licencja": "07756",
           "narodowosc": "Polska",
           "rok": 2011,
@@ -2167,7 +2167,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Jaros?aw Koz?owski",
+          "nazwisko": "Jarosław Kozłowski",
           "licencja": "08887",
           "narodowosc": "Polska",
           "rok": 1975,
@@ -2191,10 +2191,10 @@
     {
       "zespol": "KTS V",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1557/kts-v-gliwice/",
-      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "zawodnicy": [
         {
-          "nazwisko": "Grzegorz Macha?",
+          "nazwisko": "Grzegorz Machał",
           "licencja": "08890",
           "narodowosc": "Polska",
           "rok": 1982,
@@ -2204,7 +2204,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Miros?aw Soko?owski",
+          "nazwisko": "Mirosław Sokołowski",
           "licencja": "08895",
           "narodowosc": "Polska",
           "rok": 1976,
@@ -2224,7 +2224,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Piotr ?agowski",
+          "nazwisko": "Piotr Łagowski",
           "licencja": "08889",
           "narodowosc": "Polska",
           "rok": 1972,
@@ -2234,7 +2234,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Marcin Macha?",
+          "nazwisko": "Marcin Machał",
           "licencja": "07756",
           "narodowosc": "Polska",
           "rok": 2011,
@@ -2254,7 +2254,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Adam Pasi?ski",
+          "nazwisko": "Adam Pasiński",
           "licencja": "11329",
           "narodowosc": "Polska",
           "rok": 1975,
@@ -2268,7 +2268,7 @@
     {
       "zespol": "KTS VI",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
-      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "zawodnicy": [
         {
           "nazwisko": "Wojciech Wieczorek",
@@ -2281,7 +2281,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Pawe? Kajdrowicz",
+          "nazwisko": "Paweł Kajdrowicz",
           "licencja": "11323",
           "narodowosc": "Polska",
           "rok": 2005,
@@ -2291,7 +2291,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "?ukasz Stopka",
+          "nazwisko": "Łukasz Stopka",
           "licencja": "11333",
           "narodowosc": "Polska",
           "rok": 1987,
@@ -2345,10 +2345,10 @@
     {
       "zespol": "KA Krokus VII",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1558/kts-ka-krokus-vii-gliwice/",
-      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "zawodnicy": [
         {
-          "nazwisko": "?ukasz Francka",
+          "nazwisko": "Łukasz Francka",
           "licencja": "11324",
           "narodowosc": "Polska",
           "rok": 1986,
@@ -2358,7 +2358,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Andrzej ?amojda",
+          "nazwisko": "Andrzej Żamojda",
           "licencja": "11334",
           "narodowosc": "Polska",
           "rok": 1962,
@@ -2408,7 +2408,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Mariusz ??czycki",
+          "nazwisko": "Mariusz Łęczycki",
           "licencja": "11327",
           "narodowosc": "Polska",
           "rok": 1974,
@@ -2422,10 +2422,10 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zaktualizowano": "2026-10-31T20:57:42.242Z",
       "zawodnicy": [
         {
-          "nazwisko": "Pawe? Stefanów",
+          "nazwisko": "Paweł Stefanów",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1975,
@@ -2455,7 +2455,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Grzegorz Macha?",
+          "nazwisko": "Grzegorz Machał",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1982,
@@ -2465,7 +2465,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Zdzis?aw Domeradzki",
+          "nazwisko": "Zdzisław Domeradzki",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": null,
@@ -2475,7 +2475,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Rafa? Opozda",
+          "nazwisko": "Rafał Opozda",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1974,
@@ -2495,7 +2495,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Miros?aw Soko?owski",
+          "nazwisko": "Mirosław Sokołowski",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1976,
@@ -2505,7 +2505,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Adam Pasi?ski",
+          "nazwisko": "Adam Pasiński",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1975,
@@ -2515,7 +2515,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Jaros?aw Koz?owski",
+          "nazwisko": "Jarosław Kozłowski",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1975,
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-31T19:36:28.071Z",
-    "pzts": "2026-10-31T19:36:28.071Z"
+    "szts": "2026-10-31T20:57:42.242Z",
+    "pzts": "2026-10-31T20:57:42.242Z"
   },
   "zrodla": {
     "szts": "ok",
