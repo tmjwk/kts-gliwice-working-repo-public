@@ -344,6 +344,35 @@
     </article>
   </dialog>
 
+  <!-- ===== DIALOG: szczegóły drużyny (1.12.0 — wariant C) =====
+       Klik w kafelek drużyny → podsumowanie z zakładkami (tabela /
+       ostatnie wyniki / najbliższe mecze / skład gdy sync dostarczy
+       dane.sklady); przycisk prowadzi na pełną podstronę druzyna.html.
+       Zakładka „Skład” ukryta dopóki dane nie istnieją. -->
+  <dialog id="druzyna-dialog" class="news-dialog druzyna-dialog" aria-label="Szczegóły drużyny">
+    <article class="news-dialog-tresc">
+      <header class="druzyna-dialog-naglowek">
+        <h3 class="t-h3" data-pole="nazwa"></h3>
+        <p class="t-small muted" data-pole="liga"></p>
+        <span class="badge" data-pole="tryb"></span>
+      </header>
+      <div class="zakladki" role="tablist" aria-label="Dane drużyny">
+        <button type="button" class="zakladka" role="tab" data-zak="tabela" aria-selected="true">Tabela</button>
+        <button type="button" class="zakladka" role="tab" data-zak="wyniki" aria-selected="false">Ostatnie wyniki</button>
+        <button type="button" class="zakladka" role="tab" data-zak="najblizsze" aria-selected="false">Najbliższe mecze</button>
+        <button type="button" class="zakladka" role="tab" data-zak="sklad" aria-selected="false" hidden>Skład</button>
+      </div>
+      <div class="zakladka-panel" data-panel="tabela" role="tabpanel"></div>
+      <div class="zakladka-panel" data-panel="wyniki" role="tabpanel" hidden></div>
+      <div class="zakladka-panel" data-panel="najblizsze" role="tabpanel" hidden></div>
+      <div class="zakladka-panel" data-panel="sklad" role="tabpanel" hidden></div>
+      <div class="news-dialog-stopka">
+        <button type="button" class="btn btn-outline" data-akcja="zamknij">Zamknij</button>
+        <a class="btn btn-accent" data-pole="strona">Pełna strona drużyny&nbsp;<span aria-hidden="true">→</span></a>
+      </div>
+    </article>
+  </dialog>
+
   <!-- ===== PASEK ANKIETY (etap projektowy — z wersją finalną usunąć wraz z sekcją #opinia) ===== -->
   <aside class="pasek-ankiety" aria-label="Ankieta dotycząca wersji testowej strony">
     <p class="pasek-ankiety-info">
