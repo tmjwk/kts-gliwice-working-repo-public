@@ -388,7 +388,9 @@ export async function pobierzHtmlDruzyny(url: string, probyMax = 2): Promise<str
   for (let i = 1; i <= probyMax; i++) {
     try {
       const res = await fetch(url, {
-        headers: { "User-Agent": "KTS-Gliwice-Sync/1.0 (strona klubowa; składy drużyn)" },
+        // UA MUSI być czystym ASCII (polskie znaki w wartości nagłówka HTTP
+        // = odrzucenie przez fetch; wykryte na runie 01.11 19:18 UTC)
+        headers: { "User-Agent": "KTS-Gliwice-Sync/1.0 (klubowa strona; team rosters)" },
         signal: AbortSignal.timeout(30_000),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status} dla ${url}`);
