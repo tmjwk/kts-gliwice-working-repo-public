@@ -427,21 +427,23 @@ function otworzDruzyne(z) {
             ? `<a href="${esc(z.url)}" target="_blank" rel="noreferrer">↗</a>` : "—"}.</p>`;
   }
 
-  // panele: wyniki / najbliższe (wiersze jak na stronie — spójny wygląd)
-  const rozegrane = nasze.filter((m) => m.rozegrany)
-    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
-  const wDrodze = nasze.filter(meczRozpoczety)
-    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
-  const przyszle = nasze.filter((m) => !m.rozegrany && !meczRozpoczety(m))
-    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? -1 : 1));
+  // panele: wyniki / najbliższe (wiersze jak na stronie — spójny wygląd).
+  // v1.12.3 (właściciel 31.10): zakładka „Wyniki” pokazuje WSZYSTKIE mecze
+  // sezonu (nie 5 ostatnich); sortowanie bierze pod uwagę także GODZINĘ,
+  // żeby mecze z tego samego dnia nie latały w losowej kolejności.
+  const poDacie = (a, b) => (a.dataMeczu === b.dataMeczu ? 0 : a.dataMeczu < b.dataMeczu ? -1 : 1);
+  const poGodzinie = (a, b) => (a.godzina ?? "").localeCompare(b.godzina ?? "");
+  const odNajstarszego = (a, b) => poDacie(a, b) || poGodzinie(a, b);
+  const odNajnowszego = (a, b) => -odNajstarszego(a, b);   // najświeższe na górze
+
+  const rozegrane = nasze.filter((m) => m.rozegrany).sort(odNajnowszego);
+  const wDrodze = nasze.filter(meczRozpoczety).sort(odNajnowszego);
+  const przyszle = nasze.filter((m) => !m.rozegrany && !meczRozpoczety(m)).sort(odNajstarszego);
 
   const pWyniki = dlg.querySelector('[data-panel="wyniki"]');
   if (pWyniki) {
-    const lista = rozegrane.slice(0, 5);
-    pWyniki.innerHTML = lista.length
-      ? `<ul class="divide-list">${lista.map((m) => wierszMeczu(m)).join("")}</ul>`
-        + (rozegrane.length > 5
-            ? `<p class="t-small muted">+ ${rozegrane.length - 5} wcześniejszych — pełna lista na stronie drużyny.</p>` : "")
+    pWyniki.innerHTML = rozegrane.length
+      ? `<ul class="divide-list">${rozegrane.map((m) => wierszMeczu(m)).join("")}</ul>`
       : `<p class="t-small muted">Brak rozegranych meczów tej drużyny w danych.</p>`;
   }
   const pNajblizsze = dlg.querySelector('[data-panel="najblizsze"]');
