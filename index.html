@@ -346,9 +346,10 @@
 
   <!-- ===== DIALOG: szczegóły drużyny (1.12.0 — wariant C) =====
        Klik w kafelek drużyny → podsumowanie z zakładkami (tabela /
-       ostatnie wyniki / najbliższe mecze / skład gdy sync dostarczy
+       wyniki / najbliższe mecze / skład gdy sync dostarczy
        dane.sklady); przycisk prowadzi na pełną podstronę druzyna.html.
-       Zakładka „Skład” ukryta dopóki dane nie istnieją. -->
+       Zakładka „Skład” ukryta dopóki dane nie istnieją.
+       1.12.3: „Wyniki” = wszystkie mecze sezonu (decyzja właściciela 31.10). -->
   <dialog id="druzyna-dialog" class="news-dialog druzyna-dialog" aria-label="Szczegóły drużyny">
     <article class="news-dialog-tresc">
       <header class="druzyna-dialog-naglowek">
@@ -358,7 +359,7 @@
       </header>
       <div class="zakladki" role="tablist" aria-label="Dane drużyny">
         <button type="button" class="zakladka" role="tab" data-zak="tabela" aria-selected="true">Tabela</button>
-        <button type="button" class="zakladka" role="tab" data-zak="wyniki" aria-selected="false">Ostatnie wyniki</button>
+        <button type="button" class="zakladka" role="tab" data-zak="wyniki" aria-selected="false">Wyniki</button>
         <button type="button" class="zakladka" role="tab" data-zak="najblizsze" aria-selected="false">Najbliższe mecze</button>
         <button type="button" class="zakladka" role="tab" data-zak="sklad" aria-selected="false" hidden>Skład</button>
       </div>
