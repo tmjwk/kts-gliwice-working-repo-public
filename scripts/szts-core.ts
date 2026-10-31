@@ -290,6 +290,26 @@ export function meczeZespolu(mecze: MeczLigi[], nazwaSzts: string): MeczLigi[] {
  * Nazwiska dziedziczą wadę latin1 serwisu („?ukasz Strof") — naprawa
  * mapą NAPRAWA_IMION (konwencja lustrzana z NAPRAWA_NAZW; nowe
  * uszkodzenie = widoczne „?" = sygnał do dopisania wiersza).
+ *
+ * v1.9.1 (01.11.2026) — diagnoza kodowania + weryfikacja PZTS ISL.
+ * Zapytano: czy „?" da się naprawić rozpoznaniem kodowania? NIE —
+ * uszkodzenie NIE jest w transporcie: ligi.slzts.pl deklaruje UTF-8
+ * i poprawnie koduje własne nagłówki („Imię i nazwisko"), a „?" to
+ * dosłowny ASCII 0x3F już w bajtach strony — i w BAZIE: slugi URL
+ * zawodników też mają „?" („/zawodnik/…/?ukasz-strof/"), tytuły
+ * lig też („2. Liga M??czyzn"), i w sezonach 14–17 identycznie.
+ * Rejestr litery jest zniszczony po stronie serwera — dekodowanie
+ * niczego nie przywróci. Co ZA TO da się zrobić automatycznie:
+ *  1) NAPRAWA_IMION — pełne nazwiska zweryfikowane w rejestrze PZTS
+ *     ISL (isl.pzts.pl/api/licenses/playerLicenses — Cloudflare, ale
+ *     czytelny przez renderujące czytniki; łącznik = nr licencji ŚZTS,
+ *     który jest stabilnym ASCII i pokrywa się z numeracją PZTS;
+ *     „Wi?a”→Wiża koryguje wcześniejszy wpis „Wiła” wg rejestru);
+ *  2) naprawImiona — słownik imion z literami spoza latin-1
+ *     (ó przetrwa w latin-1, więc go nie ruszamy); imiona to zamknięty
+ *     zbiór, naprawa tylko przy JEDNOZNACZnym dopasowaniu maski;
+ *     nie dotyczy ostatniego tokena (nazwisko — otwarty zbiór, tam
+ *     tylko mapa + jawne „?" w logu syncu).
  * ============================================================ */
 
 export interface ZawodnikSkladu {
@@ -303,15 +323,90 @@ export interface ZawodnikSkladu {
   skutecznosc: string | null; // tylko PZTS („75%")
 }
 
-/** Naprawa imion/nazwisk naszych zawodników (wada latin1 ŚZTS). */
+/**
+ * Naprawa imion/nazwisk naszych zawodników (wada latin1 ŚZTS).
+ * Klucz = nazwa dokładnie taka, jak ją widzi parser (z „?").
+ * Wartości (poza odnotowanymi) zweryfikowane 01.11.2026 w rejestrze
+ * PZTS ISL — 1:1 po numerze licencji ŚZTS (all "KTS Gliwice").
+ * Utrzymywać ALFABETYCZNIE; nowe uszkodzone nazwisko = dopisać wiersz
+ * (weryfikacja: isl.pzts.pl/api/licenses/playerLicenses po licencji,
+ * ewentualnie klub/lokalne źródła dla amatorów bez licencji).
+ */
 const NAPRAWA_IMION: Readonly<Record<string, string>> = {
-  "?ukasz Strof": "Łukasz Strof",
-  "Roman Wi?a": "Roman Wiła",
-  "Piotr Zem?a": "Piotr Zemła",
-  "Artur Bia?ek": "Artur Białek",
-  "Jaros?aw Tomicki": "Jarosław Tomicki",
-  "Daniel ?asak": "Daniel Łasak",
+  "Adam Pasi?ski": "Adam Pasiński", // 11329
+  "Andrzej ?amojda": "Andrzej Żamojda", // 11334
+  "Artur Bia?ek": "Artur Białek", // 01591
+  "Daniel ?asak": "Daniel Łasak", // amator bez licencji PZTS — weryfikacja klubowa
+  "Grzegorz Macha?": "Grzegorz Machał", // 08890
+  "Jakub D?browski": "Jakub Dąbrowski", // 08885
+  "Jaros?aw Koz?owski": "Jarosław Kozłowski", // 08887
+  "Jaros?aw Tomicki": "Jarosław Tomicki", // 01596
+  "Marcin Macha?": "Marcin Machał", // 07756
+  "Mariusz ??czycki": "Mariusz Łęczycki", // 11327
+  "Micha? Bodnar": "Michał Bodnar", // 08882
+  "Micha? Rosiek": "Michał Rosiek", // 08894
+  "Miros?aw Soko?owski": "Mirosław Sokołowski", // 08895
+  "Pawe? Kajdrowicz": "Paweł Kajdrowicz", // 11323
+  "Pawe? Stefanów": "Paweł Stefanów", // 08897
+  "Piotr ?agowski": "Piotr Łagowski", // 08889
+  "Piotr Zem?a": "Piotr Zemła", // 08899
+  "Rafa? Adach": "Rafał Adach", // 08881
+  "Rafa? Opozda": "Rafał Opozda", // 08892
+  "Roman Wi?a": "Roman Wiża", // 08898 — korekta: wcześniej „Wiła", rejestr PZTS mówi „Wiża"
+  "Zdzis?aw Domeradzki": "Zdzisław Domeradzki", // amator; potwierdzenie: FB klubu (GP Gliwic 2019)
+  "?ukasz Francka": "Łukasz Francka", // 11324
+  "?ukasz Strof": "Łukasz Strof", // 01594
+  "?ukasz Stopka": "Łukasz Stopka", // 11333
 };
+
+/**
+ * Imiona z literami spoza latin-1 (ą ć ę ł ń ś ź ż — bez ó, które
+ * uszkodzenie ŚZTS zostawia w spokoju). Zamknięty zbiór → naprawa
+ * słownikowa jest deterministyczna. Każda maska (patrz maskaUszkodzenia)
+ * musi w całym słowniku mieć dokładnie JEDNOKROTNY obraz — złote
+ * reguły: „?ukasz”→Łukasz, „Micha?”→Michał, „Rafa?”→Rafał,
+ * „Jaros?aw”→Jarosław, „Pawe?”→Paweł, „Zdzis?aw”→Zdzisław.
+ */
+const IMIONA_PL: ReadonlyArray<string> = [
+  "Bartłomiej", "Błażej", "Bogusław", "Bogusława", "Bolesław", "Bożena",
+  "Bronisław", "Czesław", "Elżbieta", "Grażyna", "Jarosław", "Łucja",
+  "Łukasz", "Małgorzata", "Michał", "Mieczysław", "Miłosz", "Mirosława",
+  "Mirosław", "Paweł", "Przemysław", "Radosław", "Rafał", "Sławomira",
+  "Sławomir", "Stanisława", "Stanisław", "Wacława", "Wacław", "Wiesława",
+  "Wiesław", "Władysław", "Włodzimierz", "Zdzisława", "Zdzisław", "Żaneta",
+];
+
+/** Odwzorowanie szkody ŚZTS: litery spoza latin-1 → „?" (ó zostaje). */
+const maskaUszkodzenia = (s: string): string =>
+  s.replace(/[ąćęłńśźżĄĆĘŁŃŚŹŻ]/g, "?");
+
+/**
+ * Słownikowa naprawa JEDNEGO tokenu (słowa). Warunek bezpieczeństwa:
+ * maska tokenu pasuje do dokładnie jednego imienia ze słownika —
+ * zero lub >1 trafień = token bez zmian („?" zostaje widoczne).
+ * (Nazwiska — ostatni token — są celowo POMIJANE: otwarty zbiór,
+ * pomyłka byłaby gorsza niż jawne „?"; naprawia ich tylko mapa.)
+ */
+export function naprawImie(token: string): string {
+  if (!token.includes("?")) return token;
+  const kandydaci = IMIONA_PL.filter((imie) => maskaUszkodzenia(imie) === token);
+  return kandydaci.length === 1 ? kandydaci[0] : token;
+}
+
+/**
+ * Naprawa pełnego wpisu „Imię [Drugie] Nazwisko": mapa pełnych nazwisk
+ * (najwyżej priorytetu) → naprawa imion słownikowa (wszystkie tokeny
+ * oprócz ostatniego). Nieznane uszkodzenia zostają jawne.
+ */
+export function naprawNazwiskoZawodnika(nazwaRaw: string): string {
+  const zMapy = NAPRAWA_IMION[nazwaRaw];
+  if (zMapy !== undefined) return zMapy;
+  const tokeny = nazwaRaw.split(" ");
+  if (tokeny.length < 2) return nazwaRaw;
+  return tokeny
+    .map((t, i) => (i === tokeny.length - 1 ? t : naprawImie(t)))
+    .join(" ");
+}
 
 /** Parsuje sekcję „Skład zespołu" podstrony drużyny ŚZTS. */
 export function parsujSklad(html: string): ZawodnikSkladu[] {
@@ -343,7 +438,14 @@ export function parsujSklad(html: string): ZawodnikSkladu[] {
     if (/^nr licencji$/i.test(komorki[0])) continue;
     const nazwaRaw = komorki[1];
     if (!nazwaRaw) continue; // pusty wiersz
-    const nazwisko = NAPRAWA_IMION[nazwaRaw] ?? nazwaRaw;
+    const nazwisko = naprawNazwiskoZawodnika(nazwaRaw);
+    // jawność: nierozpoznane uszkodzenie zostaje widoczne i zgłoszone
+    // w logu syncu (sygnał do weryfikacji w ISL i dopisania do mapy)
+    if (nazwisko.includes("?")) {
+      console.warn(`SKŁAD: nierozpoznane „?” w nazwisku „${nazwisko}” — ` +
+        `dopisz do NAPRAWA_IMION (weryfikacja: isl.pzts.pl/api/licenses, ` +
+        `klucz = nr licencji „${komorki[0] || "brak"}”)`);
+    }
     wynik.push({
       nazwisko,
       licencja: /^\d{3,6}$/.test(komorki[0]) ? komorki[0] : null,
