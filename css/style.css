@@ -403,6 +403,40 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .gal-fb-link { margin-left: 0.5rem; color: var(--kts-link); text-decoration: none; white-space: nowrap; }
 .gal-fb-link:hover, .gal-fb-link:focus-visible { text-decoration: underline; }
 
+/* 1.14.0 — pełna historia 2012–2026: lata FB na żądanie + paginacja + stany ładowania */
+.gal-filtry { scroll-margin-top: 5.5rem; }
+.gal-chip-fb { border-style: dashed; border-color: rgba(90, 149, 255, 0.55); }
+.gal-chip-fb .gal-chip-fb-mark {
+  display: inline-block; margin-left: 0.32rem; padding: 0.08rem 0.34rem;
+  border-radius: 0.38rem; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.05em;
+  background: var(--kts-primary-light); color: var(--kts-link);
+  vertical-align: 0.14em; font-variant-numeric: tabular-nums;
+}
+.gal-chip-fb.is-aktywny { border-style: solid; }
+.gal-chip-fb:hover .gal-chip-fb-mark, .gal-chip-fb.is-aktywny .gal-chip-fb-mark { background: transparent; }
+
+.gal-ladowanie {
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  padding: 3.25rem 1rem; text-align: center;
+  color: var(--kts-text-muted); font-size: 0.95rem; line-height: 1.55;
+}
+.gal-spinner {
+  width: 2.4rem; height: 2.4rem; border-radius: 50%;
+  border: 3px solid var(--kts-line); border-top-color: var(--kts-link);
+  animation: gal-spin 0.9s linear infinite;
+}
+@keyframes gal-spin { to { transform: rotate(360deg); } }
+.gal-blad p { margin: 0 0 0.25rem; }
+
+.gal-wiecej-wrap { display: flex; justify-content: center; margin: 0.25rem 0 2.5rem; }
+.gal-wiecej {
+  min-height: 44px; padding: 0 1.4rem; border-radius: 999px; cursor: pointer;
+  font: inherit; font-size: 0.875rem; font-weight: 600;
+  background: var(--bg-card); color: var(--kts-text-muted);
+  border: 1px dashed var(--kts-line); font-variant-numeric: tabular-nums;
+}
+.gal-wiecej:hover, .gal-wiecej:focus-visible { border-color: var(--kts-link); color: var(--kts-link); }
+
 .gal-siatka { display: grid; gap: 0.5rem; grid-template-columns: repeat(2, 1fr); }
 @media (min-width: 40rem) { .gal-siatka { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 64rem) { .gal-siatka { grid-template-columns: repeat(4, 1fr); } }
