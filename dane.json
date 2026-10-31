@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-30T23:53:13.094Z",
+  "wygenerowano": "2026-10-31T19:18:06.883Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -7,56 +7,72 @@
       "liga": "1. Liga Mężczyzn · gr. południowa",
       "tryb": "PZTS · automat",
       "stan": "4. miejsce · 7 pkt",
-      "url": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/"
+      "url": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
+      "tabela": "pzts/1lm",
+      "wiersz": "KTS Gliwice"
     },
     {
       "nazwa": "KTS II",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
       "stan": "7. miejsce · 8 pkt",
-      "url": "https://ligi.slzts.pl/liga/18/136/"
+      "url": "https://ligi.slzts.pl/liga/18/136/",
+      "tabela": "18/136",
+      "wiersz": "KTS II Gliwice"
     },
     {
       "nazwa": "KTS III",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
       "stan": "15. miejsce · 0 pkt",
-      "url": "https://ligi.slzts.pl/liga/18/136/"
+      "url": "https://ligi.slzts.pl/liga/18/136/",
+      "tabela": "18/136",
+      "wiersz": "KTS III Gliwice"
     },
     {
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
       "stan": "4. miejsce · 9 pkt",
-      "url": "https://ligi.slzts.pl/liga/18/138/"
+      "url": "https://ligi.slzts.pl/liga/18/138/",
+      "tabela": "18/138",
+      "wiersz": "KTS IV Gliwice"
     },
     {
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
       "stan": "7. miejsce · 6 pkt",
-      "url": "https://ligi.slzts.pl/liga/18/142/"
+      "url": "https://ligi.slzts.pl/liga/18/142/",
+      "tabela": "18/142",
+      "wiersz": "KTS V Gliwice"
     },
     {
       "nazwa": "KTS VI",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
       "stan": "10. miejsce · 2 pkt",
-      "url": "https://ligi.slzts.pl/liga/18/142/"
+      "url": "https://ligi.slzts.pl/liga/18/142/",
+      "tabela": "18/142",
+      "wiersz": "KTS VI Gliwice"
     },
     {
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
       "stan": "4. miejsce · 8 pkt",
-      "url": "https://ligi.slzts.pl/liga/18/142/"
+      "url": "https://ligi.slzts.pl/liga/18/142/",
+      "tabela": "18/142",
+      "wiersz": "KTS KA Krokus VII Gliwice"
     },
     {
       "nazwa": "KTS Gliwice · amatorzy",
       "liga": "2. Śląska Liga Amatorów",
       "tryb": "ŚZTS · automat",
       "stan": "4. miejsce · 4 pkt",
-      "url": "https://ligi.slzts.pl/liga/18/144/"
+      "url": "https://ligi.slzts.pl/liga/18/144/",
+      "tabela": "18/144",
+      "wiersz": "KTS Gliwice"
     }
   ],
   "tabele": [
@@ -177,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-10-30T23:53:13.094Z"
+      "zaktualizowano": "2026-10-31T19:18:06.883Z"
     },
     {
       "klucz": "18/138",
@@ -296,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-10-30T23:53:13.094Z"
+      "zaktualizowano": "2026-10-31T19:18:06.883Z"
     },
     {
       "klucz": "18/142",
@@ -401,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-10-30T23:53:13.094Z"
+      "zaktualizowano": "2026-10-31T19:18:06.883Z"
     },
     {
       "klucz": "18/144",
@@ -478,7 +494,85 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-30T23:53:13.094Z"
+      "zaktualizowano": "2026-10-31T19:18:06.883Z"
+    },
+    {
+      "klucz": "pzts/1lm",
+      "nazwa": "1. Liga Mężczyzn · gr. południowa",
+      "wiersze": [
+        {
+          "pozycja": 1,
+          "nazwa": "UKS Piast Poprawa Ostrzeszów",
+          "mecze": 6,
+          "punkty": 12,
+          "stosunek": "6-0-0"
+        },
+        {
+          "pozycja": 2,
+          "nazwa": "MATS UR Rzeszów",
+          "mecze": 5,
+          "punkty": 8,
+          "stosunek": "4-0-1"
+        },
+        {
+          "pozycja": 3,
+          "nazwa": "BKS Stal Bielsko-Biała",
+          "mecze": 5,
+          "punkty": 8,
+          "stosunek": "4-0-1"
+        },
+        {
+          "pozycja": 4,
+          "nazwa": "KTS Gliwice",
+          "mecze": 6,
+          "punkty": 7,
+          "stosunek": "3-1-2"
+        },
+        {
+          "pozycja": 5,
+          "nazwa": "KS Naprzód Borucin",
+          "mecze": 5,
+          "punkty": 6,
+          "stosunek": "3-0-2"
+        },
+        {
+          "pozycja": 6,
+          "nazwa": "Advatech ZKS Zielona Góra",
+          "mecze": 6,
+          "punkty": 6,
+          "stosunek": "3-0-3"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "J. Sz. AZS Politechnika KATS Kraków",
+          "mecze": 5,
+          "punkty": 5,
+          "stosunek": "2-1-2"
+        },
+        {
+          "pozycja": 8,
+          "nazwa": "GMKS Strzelec Frysztak",
+          "mecze": 5,
+          "punkty": 2,
+          "stosunek": "1-0-4"
+        },
+        {
+          "pozycja": 9,
+          "nazwa": "PGE Fibrain AZS Politechnika Rzeszów",
+          "mecze": 5,
+          "punkty": 0,
+          "stosunek": "0-0-5"
+        },
+        {
+          "pozycja": 10,
+          "nazwa": "Jom-Elektro Orzeł Lizawice",
+          "mecze": 6,
+          "punkty": 0,
+          "stosunek": "0-0-6"
+        }
+      ],
+      "zaktualizowano": "2026-10-31T19:18:06.883Z",
+      "kolumna4": "Z–R–P"
     }
   ],
   "meczeSzts": [
@@ -1745,9 +1839,10 @@
       "zespol": "KTS Gliwice I"
     }
   ],
+  "sklady": [],
   "ostatniSync": {
-    "szts": "2026-10-30T23:53:13.094Z",
-    "pzts": "2026-10-30T23:53:13.094Z"
+    "szts": "2026-10-31T19:18:06.883Z",
+    "pzts": "2026-10-31T19:18:06.883Z"
   },
   "zrodla": {
     "szts": "ok",
