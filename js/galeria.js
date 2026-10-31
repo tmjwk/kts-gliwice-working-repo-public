@@ -2,6 +2,13 @@
    KTS Gliwice — galeria (podstrona): render z galeria.json,
    filtry roku, lightbox (klawiatura + swipe), tryb dzień/noc.
    Samodzielny skrypt podstrony (nie wymaga app.js).
+
+   v1.14.0: pełna historia 2012–2026 —
+   - paginacja „Pokaż więcej” (BATCH albumów naraz),
+   - chipy lat FB na żądanie (współpraca z js/galeria-fb.js
+     przez window.__GALFB: lataFB / stanRoku / wczytajRok),
+   - stany ładowania/błędu roku FB w miejscu albumów,
+   - kotwica #album-slug rozszerza paginację, żeby dosięgnąć celu.
    ============================================================ */
 "use strict";
 
@@ -58,6 +65,8 @@ function formatujDate(iso) {
 /* ===== dane + stan ===== */
 let GALERIA = [];
 let FILTR = null; // null = wszystkie lata
+let POKAZ = 60;   // v1.14.0: ile albumów naraz w renderze (paginacja)
+const BATCH = 60; // v1.14.0: przyrost po „Pokaż więcej”
 
 /* ===== tryb dzień/noc (jak app.js) ===== */
 function ustawIkoneTrybu() {
@@ -76,19 +85,30 @@ function renderStatystyki() {
 }
 
 function renderFiltry() {
-  const lata = [...new Set(GALERIA.map((a) => (a.data || "").slice(0, 4)).filter(Boolean))]
-    .sort().reverse();
+  /* v1.14.0: chipy = lata w danych + lata dostępne na żądanie z FB
+     (window.__GALFB.lataFB — js/galeria-fb.js). Rok FB jeszcze
+     niewczytany dostaje klasę gal-chip-fb (przerywana ramka + znaczek FB)
+     i przy kliknięciu uruchamia dociągnięcie z Graph API. */
+  const lataGalerii = new Set(GALERIA.map((a) => (a.data || "").slice(0, 4)).filter(Boolean));
+  const lataFB = (window.__GALFB && Array.isArray(window.__GALFB.lataFB))
+    ? window.__GALFB.lataFB.map(String) : [];
+  const lata = [...new Set([...lataGalerii, ...lataFB])].sort().reverse();
   const wrap = $("#gal-filtry");
-  const chip = (label, wartosc, aktywny) => `
-    <button class="gal-chip${aktywny ? " is-aktywny" : ""}" type="button"
-            data-rok="${wartosc ?? ""}">${esc(label)}</button>`;
+  const chip = (label, wartosc, aktywny, fb) => `
+    <button class="gal-chip${aktywny ? " is-aktywny" : ""}${fb ? " gal-chip-fb" : ""}" type="button"
+            data-rok="${wartosc ?? ""}"${fb ? ` aria-label="Dociągnij zdjęcia z roku ${esc(label)} z Facebooka"` : ""}>${esc(label)}${fb ? `<span class="gal-chip-fb-mark" aria-hidden="true">FB</span>` : ""}</button>`;
   wrap.innerHTML = chip("Wszystkie", "", FILTR === null)
-    + lata.map((r) => chip(r, r, FILTR === r)).join("");
+    + lata.map((r) => chip(r, r, FILTR === r, !lataGalerii.has(r))).join("");
   wrap.querySelectorAll(".gal-chip").forEach((b) => {
     b.addEventListener("click", () => {
       FILTR = b.dataset.rok === "" ? null : b.dataset.rok;
+      POKAZ = BATCH;   // nowy widok = od pierwszej paczki
       renderFiltry();
       renderAlbumy();
+      // rok dostępny tylko na FB → dociągnij (i pokaż stan ładowania)
+      if (b.classList.contains("gal-chip-fb") && window.__GALFB) {
+        window.__GALFB.wczytajRok(FILTR);
+      }
     });
   });
 }
@@ -97,10 +117,35 @@ function renderAlbumy() {
   const widoczne = GALERIA.filter((a) => !FILTR || (a.data || "").startsWith(FILTR));
   const kontener = $("#gal-albumy");
   if (widoczne.length === 0) {
+    /* v1.14.0: rok FB w trakcie poboru / po błędzie → właściwy komunikat
+       zamiast „brak albumów” (stan trzyma js/galeria-fb.js) */
+    const stanFB = FILTR && window.__GALFB ? window.__GALFB.stanRoku(FILTR) : null;
+    if (stanFB === "laduje") {
+      kontener.innerHTML = `
+        <div class="gal-ladowanie" role="status">
+          <span class="gal-spinner" aria-hidden="true"></span>
+          <span id="gal-ladowanie-txt">Dociągam zdjęcia z roku ${esc(FILTR)} z Facebooka…</span>
+        </div>`;
+      return;
+    }
+    if (stanFB === "blad") {
+      kontener.innerHTML = `
+        <div class="gal-ladowanie gal-blad" role="alert">
+          <p>Zdjęcia z roku ${esc(FILTR)} nie udało się pobrać z Facebooka<br>
+             (chwilowa awaria połączenia lub API — archiwum 2023–2024 działa normalnie).</p>
+          <button class="gal-chip" id="gal-retry" type="button">Spróbuj ponownie</button>
+        </div>`;
+      const btn = $("#gal-retry");
+      if (btn) btn.addEventListener("click", () => {
+        if (window.__GALFB) window.__GALFB.wczytajRok(FILTR);
+      });
+      return;
+    }
     kontener.innerHTML = `<p class="t-small muted">Brak albumów w tym roku.</p>`;
     return;
   }
-  kontener.innerHTML = widoczne.map((a) => {
+  const pokazane = widoczne.slice(0, POKAZ);
+  kontener.innerHTML = pokazane.map((a) => {
     const idx = GALERIA.indexOf(a);
     const fotosy = a.zdjecia.map((src, i) => {
       const mini = (a.miniatury && a.miniatury[i]) || src;   // v1.5.0: miniatura WebP
@@ -125,13 +170,31 @@ function renderAlbumy() {
         </div>
         <div class="gal-siatka">${fotosy}</div>
       </article>`;
-  }).join("");
+  }).join("")
+    /* v1.14.0: paginacja — DOM nie rozrasta się bez końca (galeria ma
+       teraz ~1,6 tys. albumów potencjalnie; render paczkami po BATCH) */
+    + (widoczne.length > POKAZ
+      ? `<div class="gal-wiecej-wrap"><button class="gal-wiecej" id="gal-wiecej" type="button">
+           Pokaż więcej · kolejne ${Math.min(BATCH, widoczne.length - POKAZ)}
+           z pozostałych ${widoczne.length - POKAZ} albumów
+         </button></div>`
+      : "");
 
   kontener.querySelectorAll(".gal-foto").forEach((btn) => {
     btn.addEventListener("click", () => {
       otworzLightbox(Number(btn.dataset.album), Number(btn.dataset.foto));
     });
   });
+  const wiecej = $("#gal-wiecej");
+  if (wiecej) {
+    wiecej.addEventListener("click", () => {
+      const pierwszyNowy = widoczne[POKAZ];   // pierwszy album nowej paczki
+      POKAZ += BATCH;
+      renderAlbumy();
+      const cel = pierwszyNowy ? document.getElementById("album-" + pierwszyNowy.slug) : null;
+      if (cel) cel.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 }
 
 /* ===== lightbox ===== */
@@ -221,6 +284,26 @@ async function pokazWersje() {
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
 }
 
+/* ===== kotwica #album-slug (v1.14.0: współpracuje z paginacją) =====
+   Cel w DOM → przewinięcie; cel w GALERIA, ale pozarenderowany →
+   dołóż paczkę i spróbuj ponownie (odpalane też po dociągnięciu roku FB). */
+function przewinDoAlbumu() {
+  const hash = decodeURIComponent(location.hash.replace("#", ""));
+  if (!hash.startsWith("album-")) return;
+  const cel = document.getElementById(hash);
+  if (cel) {
+    cel.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  const slug = hash.replace(/^album-/, "");
+  if (POKAZ < GALERIA.length && GALERIA.some((a) => a.slug === slug)) {
+    POKAZ += BATCH;
+    renderAlbumy();
+    setTimeout(przewinDoAlbumu, 60);
+  }
+}
+window.przewinDoAlbumu = przewinDoAlbumu;
+
 /* ===== start ===== */
 async function start() {
   // tryb dzień/noc + menu mobilne (jak app.js)
@@ -256,16 +339,12 @@ async function start() {
     const da = a.data ?? "", db = b.data ?? "";
     return da > db ? -1 : da < db ? 1 : 0;
   });
+  // wejście z linku #album-slug (np. ze strony głównej);
+  // v1.14.0: album może być poza pierwszą paczką paginacji — rozszerzamy
   renderStatystyki();
   renderFiltry();
   renderAlbumy();
-
-  // wejście z linku #album-slug (np. ze strony głównej)
-  const hash = decodeURIComponent(location.hash.replace("#", ""));
-  if (hash.startsWith("album-")) {
-    const cel = document.getElementById(hash);
-    if (cel) cel.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  przewinDoAlbumu();
 }
 
 document.addEventListener("DOMContentLoaded", start);
