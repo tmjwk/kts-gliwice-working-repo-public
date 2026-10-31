@@ -1,5 +1,5 @@
 {
- "wersja": "1.10.4",
- "data": "2026-11-01T11:30:00Z",
- "opis": "Opcja A „smart-wysrodkowanie” zdjęć w powiększeniu, kafelkach i hero: obraz zajmuje tylko tyle miejsca, ile sam potrzebuje (auto + max-*) — koniec pustych pasów obok pionowych okładek reeli"
+ "wersja": "1.10.5",
+ "data": "2026-10-31T21:30:00Z",
+ "opis": "Wieczny token maszynowy (system user): lustro FB czyta posty tokenem bez zegara danych — koniec kalendarzowych odnowień zgody"
 }
