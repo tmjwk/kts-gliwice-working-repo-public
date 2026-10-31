@@ -94,9 +94,14 @@ function tabelaDlaZespolu(dane, z) {
   return tabele.find((x) => x.nazwa === z.liga) ?? null;
 }
 
-/** Nasz wiersz: dokładnie albo z granicą słowa (KTS II ≠ KTS III). */
+/** Nasz wiersz: najpierw jawne wiązanie z syncu (z.wiersz), potem
+ *  heurystyki (dokładnie → granica słowa; KTS II ≠ KTS III). */
 function wierszDlaZespolu(tabela, z) {
   if (!tabela) return null;
+  if (z.wiersz) {
+    const jawnie = tabela.wiersze.find((w) => w.nazwa === z.wiersz);
+    if (jawnie) return jawnie;
+  }
   const n = normNazwa(z.nazwa);
   const trafienie = tabela.wiersze.find((w) => w.nazwa === n);
   if (trafienie) return trafienie;
@@ -154,9 +159,10 @@ function wierszMeczuDruzyny(m, nazwa) {
 }
 
 function htmlTabeli(tabela, naszWiersz) {
+  const kol4 = tabela.kolumna4 || "Sety";   // v1.12.1: PZTS = „Z–R–P”
   return `<div class="table-scroll">
     <table class="league-table">
-      <thead><tr><th>Drużyna</th><th class="num">M</th><th class="num">Pkt</th><th class="num">Sety</th></tr></thead>
+      <thead><tr><th>Drużyna</th><th class="num">M</th><th class="num">Pkt</th><th class="num">${esc(kol4)}</th></tr></thead>
       <tbody>${tabela.wiersze.map((w) => `
         <tr class="${w === naszWiersz ? "is-ours" : ""}">
           <td>${w.pozycja}. ${esc(w.nazwa)}</td>
