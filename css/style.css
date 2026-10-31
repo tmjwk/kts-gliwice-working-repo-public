@@ -306,7 +306,12 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 
 /* ===== tabela ligowa ===== */
 .table-caption { font-size: 0.875rem; font-weight: 600; color: var(--kts-ink); margin-bottom: 0.5rem; }
-.table-scroll { max-height: 30rem; overflow-y: auto; }
+/* 1.12.3 (raport właściciela 31.10, zrzut 2): cienki pasek przewijania
+   systemowy (overlay, Windows 11) rysuje się NAD treścią i zasłaniał
+   ostatnią kolumnę tabel („Skut.”, „Pkt”). Prawy padding WEWNĘTRZNY
+   kontenera przewijania odsuwa tabelę od strefy paska — pasek klasyczny
+   (zabierający szerokość) tylko powiększy luz, nigdy nie nachodzi. */
+.table-scroll { max-height: 30rem; overflow-y: auto; padding-right: 1.1rem; }
 .league-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
 .league-table th {
   position: sticky; top: 0; background: var(--bg-card); font-size: 0.8rem; color: var(--kts-text-muted);
