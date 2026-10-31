@@ -1,5 +1,5 @@
 {
- "wersja": "1.12.1",
- "data": "2026-10-31T19:20:00Z",
- "opis": "Obs\u0142uga danych syncu v1.9: tabela 1. ligi PZTS (kolumna Z\u2013R\u2013P), jawne wi\u0105zania zesp\u00f3\u0142\u2192tabela\u2192wiersz, zak\u0142adka Sk\u0142ad gdy dane.sklady p\u0142ynie"
+ "wersja": "1.12.3",
+ "data": "2026-11-01T00:00:00Z",
+ "opis": "Zakładka „Wyniki” w dialogu drużyny: wszystkie mecze sezonu, sortowanie data+godzina; pasek przewijania nie zasłania już ostatniej kolumny tabel"
 }
