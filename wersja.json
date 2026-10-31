@@ -1,5 +1,5 @@
 {
- "wersja": "1.12.0",
- "data": "2026-11-01T04:20:00Z",
- "opis": "Kafelek drużyny wariant C: klik otwiera dialog z zakładkami (tabela/wyniki/najbliższe) oraz pełną podstronę druzyna.html?id=… — tabela, terminarz i wyniki per drużyna"
+ "wersja": "1.12.1",
+ "data": "2026-11-01T05:50:00Z",
+ "opis": "Obsługa danych syncu v1.9: tabela 1. ligi PZTS (kolumna Z–R–P), jawne wiązania zespół→tabela→wiersz, zakładka Skład gdy dane.sklady płynie"
 }
