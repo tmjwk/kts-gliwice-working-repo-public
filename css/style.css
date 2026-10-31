@@ -668,3 +668,38 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .archiwum-miesiac { font-size: 1.1rem; }
 }
 
+/* ===== KADROWANIE MINIATUR WIDEO (1.11.0) ===========================
+   Reele FB = poziomy film na pionowym płótnie 9:16 z czarnymi pasami
+   WYPALONYMI w pliku miniatury (61% pikseli reela-hero to ramka).
+   js/lustro-fb.js mierzy pasy w <canvas> (CDN FB wysyła ACAO: *) i
+   wpisuje na <img> klasę .news-crop + zmienne:
+     --kadruj-x/--kadruj-y  = środek TREŚCI w % (object-position),
+     --kadruj-ar            = proporcje treści bez pasów (dialog).
+   My centrujemy okno kadru na treści: object-fit: cover + object-
+   position → pasy wypadają poza ramkę, obraz wypełnia całość.
+   Bez klasy (zdjęcia / pomiar nieudany) — wygląd bazowy bez zmian.
+   UWAGA na kolejność: te reguły MUSZĄ iść po bazowych definicjach
+   .news-media-img img / .lustro-hero .news-media img / okładki. */
+/* siatka + archiwum: media ma stałą wysokość 10rem — cover wypełnia */
+.news-media-img img.news-crop {
+  width: 100%; height: 100%; max-width: 100%; max-height: 100%;
+  object-fit: cover;
+  object-position: var(--kadruj-x, 50%) var(--kadruj-y, 50%);
+}
+/* hero: img absolute inset:0 (pozycjonowanie zostaje z bazy) — cover
+   na całą kolumnę media; max-height:none, by rozciągnął się na stewkę */
+.lustro-hero .news-media img.news-crop {
+  width: 100%; height: 100%; max-width: 100%; max-height: none;
+  object-fit: cover;
+  object-position: var(--kadruj-x, 50%) var(--kadruj-y, 50%);
+}
+/* dialog: ramka o proporcjach TREŚCI (nie całego pliku z pasami) —
+   aspect-ratio wyznacza wysokość, max-height 20rem przycina szerokość,
+   cover + object-position trzyma okno kadru na treści */
+.news-dialog-okladka img.news-crop {
+  width: 100%; height: auto; aspect-ratio: var(--kadruj-ar, 16 / 9);
+  max-width: 100%; max-height: 20rem;
+  object-fit: cover;
+  object-position: var(--kadruj-x, 50%) var(--kadruj-y, 50%);
+}
+
