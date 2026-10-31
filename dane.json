@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-31T19:18:06.883Z",
+  "wygenerowano": "2026-10-31T19:20:26.894Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:18:06.883Z"
+      "zaktualizowano": "2026-10-31T19:20:26.894Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:18:06.883Z"
+      "zaktualizowano": "2026-10-31T19:20:26.894Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:18:06.883Z"
+      "zaktualizowano": "2026-10-31T19:20:26.894Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:18:06.883Z"
+      "zaktualizowano": "2026-10-31T19:20:26.894Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:18:06.883Z",
+      "zaktualizowano": "2026-10-31T19:20:26.894Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1839,10 +1839,610 @@
       "zespol": "KTS Gliwice I"
     }
   ],
-  "sklady": [],
+  "sklady": [
+    {
+      "zespol": "KTS II",
+      "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1480/kts-ii-gliwice/",
+      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zawodnicy": [
+        {
+          "nazwisko": "Bartosz Kwodawski",
+          "licencja": "01592",
+          "narodowosc": "Polska",
+          "rok": 1980,
+          "zwyciestwa": 11,
+          "porazki": 3,
+          "punkty": "33:9",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Dariusz Steuer",
+          "licencja": "01593",
+          "narodowosc": "Polska",
+          "rok": 1981,
+          "zwyciestwa": 8,
+          "porazki": 6,
+          "punkty": "20:18",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Łukasz Strof",
+          "licencja": "01594",
+          "narodowosc": "Polska",
+          "rok": 1978,
+          "zwyciestwa": 7,
+          "porazki": 7,
+          "punkty": "14:14",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Karol Szotek",
+          "licencja": "01595",
+          "narodowosc": "Polska",
+          "rok": 1981,
+          "zwyciestwa": 5,
+          "porazki": 5,
+          "punkty": "10:10",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Piotr Szary",
+          "licencja": "00472",
+          "narodowosc": "Polska",
+          "rok": 2009,
+          "zwyciestwa": 2,
+          "porazki": 0,
+          "punkty": "6:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jarosław Tomicki",
+          "licencja": "01596",
+          "narodowosc": "Polska",
+          "rok": 1980,
+          "zwyciestwa": 2,
+          "porazki": 0,
+          "punkty": "6:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Krzysztof Piwowarski",
+          "licencja": "08893",
+          "narodowosc": "Polska",
+          "rok": 1979,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Roman Wiła",
+          "licencja": "08898",
+          "narodowosc": "Polska",
+          "rok": 1968,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Piotr Zemła",
+          "licencja": "08899",
+          "narodowosc": "Polska",
+          "rok": 1969,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Artur Białek",
+          "licencja": "01591",
+          "narodowosc": "Polska",
+          "rok": 1992,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        }
+      ]
+    },
+    {
+      "zespol": "KTS III",
+      "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
+      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zawodnicy": [
+        {
+          "nazwisko": "Micha? Rosiek",
+          "licencja": "08894",
+          "narodowosc": "Polska",
+          "rok": 1995,
+          "zwyciestwa": 3,
+          "porazki": 5,
+          "punkty": "6:10",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Micha? Bodnar",
+          "licencja": "08882",
+          "narodowosc": "Polska",
+          "rok": 2003,
+          "zwyciestwa": 1,
+          "porazki": 11,
+          "punkty": "2:24",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Rafa? Adach",
+          "licencja": "08881",
+          "narodowosc": "Polska",
+          "rok": 1995,
+          "zwyciestwa": 0,
+          "porazki": 2,
+          "punkty": "0:4",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Bartosz Sowa",
+          "licencja": "08896",
+          "narodowosc": "Polska",
+          "rok": 1994,
+          "zwyciestwa": 0,
+          "porazki": 10,
+          "punkty": "0:30",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Robert Bukowski",
+          "licencja": "08884",
+          "narodowosc": "Polska",
+          "rok": 1992,
+          "zwyciestwa": 0,
+          "porazki": 4,
+          "punkty": "0:8",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jakub D?browski",
+          "licencja": "08885",
+          "narodowosc": "Polska",
+          "rok": 2001,
+          "zwyciestwa": 0,
+          "porazki": 12,
+          "punkty": "0:36",
+          "skutecznosc": null
+        }
+      ]
+    },
+    {
+      "zespol": "KTS IV",
+      "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
+      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zawodnicy": [
+        {
+          "nazwisko": "Piotr Zemła",
+          "licencja": "08899",
+          "narodowosc": "Polska",
+          "rok": 1969,
+          "zwyciestwa": 8,
+          "porazki": 0,
+          "punkty": "8:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Krzysztof Piwowarski",
+          "licencja": "08893",
+          "narodowosc": "Polska",
+          "rok": 1979,
+          "zwyciestwa": 8,
+          "porazki": 4,
+          "punkty": "8:4",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Roman Wiła",
+          "licencja": "08898",
+          "narodowosc": "Polska",
+          "rok": 1968,
+          "zwyciestwa": 8,
+          "porazki": 4,
+          "punkty": "8:4",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Pawe? Stefanów",
+          "licencja": "08897",
+          "narodowosc": "Polska",
+          "rok": 1975,
+          "zwyciestwa": 6,
+          "porazki": 2,
+          "punkty": "6:2",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Rafa? Opozda",
+          "licencja": "08892",
+          "narodowosc": "Polska",
+          "rok": 1974,
+          "zwyciestwa": 1,
+          "porazki": 0,
+          "punkty": "1:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Marcin Macha?",
+          "licencja": "07756",
+          "narodowosc": "Polska",
+          "rok": 2011,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jaros?aw Koz?owski",
+          "licencja": "08887",
+          "narodowosc": "Polska",
+          "rok": 1975,
+          "zwyciestwa": 0,
+          "porazki": 3,
+          "punkty": "0:3",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Krzysztof Kroker",
+          "licencja": "08888",
+          "narodowosc": "Polska",
+          "rok": 2007,
+          "zwyciestwa": 0,
+          "porazki": 4,
+          "punkty": "0:4",
+          "skutecznosc": null
+        }
+      ]
+    },
+    {
+      "zespol": "KTS V",
+      "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1557/kts-v-gliwice/",
+      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zawodnicy": [
+        {
+          "nazwisko": "Grzegorz Macha?",
+          "licencja": "08890",
+          "narodowosc": "Polska",
+          "rok": 1982,
+          "zwyciestwa": 8,
+          "porazki": 1,
+          "punkty": "8:1",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Miros?aw Soko?owski",
+          "licencja": "08895",
+          "narodowosc": "Polska",
+          "rok": 1976,
+          "zwyciestwa": 8,
+          "porazki": 2,
+          "punkty": "8:2",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jakub Piwowarski",
+          "licencja": "11330",
+          "narodowosc": "Polska",
+          "rok": 2007,
+          "zwyciestwa": 5,
+          "porazki": 5,
+          "punkty": "5:5",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Piotr ?agowski",
+          "licencja": "08889",
+          "narodowosc": "Polska",
+          "rok": 1972,
+          "zwyciestwa": 2,
+          "porazki": 0,
+          "punkty": "2:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Marcin Macha?",
+          "licencja": "07756",
+          "narodowosc": "Polska",
+          "rok": 2011,
+          "zwyciestwa": 1,
+          "porazki": 2,
+          "punkty": "1:2",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Adam Makselon",
+          "licencja": "08891",
+          "narodowosc": "Polska",
+          "rok": 1972,
+          "zwyciestwa": 1,
+          "porazki": 5,
+          "punkty": "1:5",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Adam Pasi?ski",
+          "licencja": "11329",
+          "narodowosc": "Polska",
+          "rok": 1975,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        }
+      ]
+    },
+    {
+      "zespol": "KTS VI",
+      "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
+      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zawodnicy": [
+        {
+          "nazwisko": "Wojciech Wieczorek",
+          "licencja": "07757",
+          "narodowosc": "Polska",
+          "rok": 2013,
+          "zwyciestwa": 5,
+          "porazki": 5,
+          "punkty": "5:5",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Pawe? Kajdrowicz",
+          "licencja": "11323",
+          "narodowosc": "Polska",
+          "rok": 2005,
+          "zwyciestwa": 3,
+          "porazki": 7,
+          "punkty": "3:7",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "?ukasz Stopka",
+          "licencja": "11333",
+          "narodowosc": "Polska",
+          "rok": 1987,
+          "zwyciestwa": 2,
+          "porazki": 4,
+          "punkty": "2:4",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Andrzej Rozik",
+          "licencja": "11332",
+          "narodowosc": "Polska",
+          "rok": 1966,
+          "zwyciestwa": 1,
+          "porazki": 3,
+          "punkty": "1:3",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Marcin Jaskulski",
+          "licencja": "08886",
+          "narodowosc": "Polska",
+          "rok": 1979,
+          "zwyciestwa": 1,
+          "porazki": 9,
+          "punkty": "1:9",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Adam Borek",
+          "licencja": "08883",
+          "narodowosc": "Polska",
+          "rok": 1986,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Antoni Kulczycki",
+          "licencja": "07754",
+          "narodowosc": "Polska",
+          "rok": 2009,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        }
+      ]
+    },
+    {
+      "zespol": "KA Krokus VII",
+      "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1558/kts-ka-krokus-vii-gliwice/",
+      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zawodnicy": [
+        {
+          "nazwisko": "?ukasz Francka",
+          "licencja": "11324",
+          "narodowosc": "Polska",
+          "rok": 1986,
+          "zwyciestwa": 7,
+          "porazki": 3,
+          "punkty": "7:3",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Andrzej ?amojda",
+          "licencja": "11334",
+          "narodowosc": "Polska",
+          "rok": 1962,
+          "zwyciestwa": 7,
+          "porazki": 3,
+          "punkty": "7:3",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jacek Prusaczyk",
+          "licencja": "11331",
+          "narodowosc": "Polska",
+          "rok": 1973,
+          "zwyciestwa": 6,
+          "porazki": 4,
+          "punkty": "6:4",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jacek Groyecki",
+          "licencja": "11325",
+          "narodowosc": "Polska",
+          "rok": 1960,
+          "zwyciestwa": 1,
+          "porazki": 5,
+          "punkty": "1:5",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Leszek Lolo",
+          "licencja": "11326",
+          "narodowosc": "Polska",
+          "rok": 1971,
+          "zwyciestwa": 1,
+          "porazki": 3,
+          "punkty": "1:3",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Zbigniew Olejnik",
+          "licencja": "11328",
+          "narodowosc": "Polska",
+          "rok": 1972,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Mariusz ??czycki",
+          "licencja": "11327",
+          "narodowosc": "Polska",
+          "rok": 1974,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        }
+      ]
+    },
+    {
+      "zespol": "KTS Gliwice · amatorzy",
+      "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
+      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zawodnicy": [
+        {
+          "nazwisko": "Pawe? Stefanów",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1975,
+          "zwyciestwa": 3,
+          "porazki": 1,
+          "punkty": "3:1",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Krzysztof Piwowarski",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1979,
+          "zwyciestwa": 3,
+          "porazki": 1,
+          "punkty": "3:1",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Piotr Zemła",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1969,
+          "zwyciestwa": 3,
+          "porazki": 0,
+          "punkty": "3:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Grzegorz Macha?",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1982,
+          "zwyciestwa": 2,
+          "porazki": 2,
+          "punkty": "2:2",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Zdzis?aw Domeradzki",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": null,
+          "zwyciestwa": 2,
+          "porazki": 7,
+          "punkty": "2:7",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Rafa? Opozda",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1974,
+          "zwyciestwa": 1,
+          "porazki": 2,
+          "punkty": "1:2",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Marcin Zygmunt",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1970,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Miros?aw Soko?owski",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1976,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Adam Pasi?ski",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1975,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jaros?aw Koz?owski",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1975,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": "0:0",
+          "skutecznosc": null
+        }
+      ]
+    }
+  ],
   "ostatniSync": {
-    "szts": "2026-10-31T19:18:06.883Z",
-    "pzts": "2026-10-31T19:18:06.883Z"
+    "szts": "2026-10-31T19:20:26.894Z",
+    "pzts": "2026-10-31T19:20:26.894Z"
   },
   "zrodla": {
     "szts": "ok",
