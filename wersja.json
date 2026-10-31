@@ -1,5 +1,5 @@
 {
- "wersja": "1.10.3",
- "data": "2026-11-01T10:30:00Z",
- "opis": "Zdjęcia w kafelkach aktualności i w powiększeniu pokazywane w całości (contain zamiast cover — koniec z obcinaniem głów)"
+ "wersja": "1.10.4",
+ "data": "2026-11-01T11:30:00Z",
+ "opis": "Opcja A „smart-wysrodkowanie” zdjęć w powiększeniu, kafelkach i hero: obraz zajmuje tylko tyle miejsca, ile sam potrzebuje (auto + max-*) — koniec pustych pasów obok pionowych okładek reeli"
 }
