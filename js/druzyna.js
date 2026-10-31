@@ -287,12 +287,16 @@ function ustawIkoneTrybu() {
   const naszWiersz = wierszDlaZespolu(tabela, zespol);
   const sklad = skladDlaZespolu(dane, zespol);
 
-  const wDrodze = nasze.filter(meczRozpoczety)
-    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
-  const przyszle = nasze.filter((m) => !m.rozegrany && !meczRozpoczety(m))
-    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? -1 : 1));
-  const rozegrane = nasze.filter((m) => m.rozegrany)
-    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
+  // v1.12.3: sortowanie z GODZINĄ jako drugim kluczem (mecze z tego samego
+  // dnia w kolejności chronologicznej) — spójnie z zakładką „Wyniki” dialogu.
+  const poDacie = (a, b) => (a.dataMeczu === b.dataMeczu ? 0 : a.dataMeczu < b.dataMeczu ? -1 : 1);
+  const poGodzinie = (a, b) => (a.godzina ?? "").localeCompare(b.godzina ?? "");
+  const odNajstarszego = (a, b) => poDacie(a, b) || poGodzinie(a, b);
+  const odNajnowszego = (a, b) => -odNajstarszego(a, b);
+
+  const wDrodze = nasze.filter(meczRozpoczety).sort(odNajnowszego);
+  const przyszle = nasze.filter((m) => !m.rozegrany && !meczRozpoczety(m)).sort(odNajstarszego);
+  const rozegrane = nasze.filter((m) => m.rozegrany).sort(odNajnowszego);
 
   const zrodloHost = (() => {
     try { return new URL(zespol.url).hostname; } catch { return "źródło"; }
