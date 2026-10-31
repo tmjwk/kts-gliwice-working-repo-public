@@ -48,7 +48,7 @@
 (() => {
   /* ---- KONFIGURACJA ---- */
   const PAGE_ID = "167636963360765";            // KTS Gliwice (fanpage klubu)
-  const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS92XpZBQ1q2tZBg8sTbTHnTz4kJqgjQuZAlt2Ku83tWkKu0bY9cFMNPZA3q5N3DgccCldMQIU1qZCyzyIVN08H0kLMZAcSI4O5Gn6p27dJ27EjuchVBKmL5x6avkkeMt50ZBLUNflAFdSGlet1b57IGIfFMvI86r9NTJH3drt0JP6LwQsylXlqbIgZDZD";    // page token KTS z SYSTEM USERA (read-only, bez zegara danych — 1.10.5)
+  const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS3EIBlIZCLF0j63uEDSZCZBB8L4GWfXowpf6T8via0Xtzg00hrZCSI12nArcbamySv1Ttj8nCN6IfdE1UkOxxJ5zPCzyh1PrlhU10LfIrZCl9MheWt5YBs52jd65PHV1s5gYzlBFbh3jQLmIi6B6i7iPHMYoRrOKfXqHaYonMLMSGXZBrRYAsu9NcZD";    // page token KTS z SYSTEM USERA (read-only, bez zegara danych — 1.10.5)
   const API = "https://graph.facebook.com/v22.0";
   const FIELDS = "id,message,story,created_time,permalink_url,full_picture";
   const OKNO_DNI = 30;            // rolling window głównej (Q2)
