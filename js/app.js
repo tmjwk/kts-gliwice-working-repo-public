@@ -335,9 +335,16 @@ function tabelaDlaZespolu(dane, z) {
   return tabele.find((x) => x.nazwa === z.liga) ?? null;
 }
 
-/** Nasz wiersz w tabeli — patrz komentarz bloku wyżej. */
+/** Nasz wiersz w tabeli — najpierw jawne wiązanie z syncu (z.wiersz =
+ *  dokładna nazwa u źródła; „KTS Gliwice” w 1. lidze PZTS ≠ nazwa karty
+ *  „KTS Gliwice I”), potem heurystyki (dokładnie → granica słowa:
+ *  „KTS II” ⊂ „KTS II Gliwice”, ale NIE „KTS III…”). */
 function wierszDlaZespolu(tabela, z) {
   if (!tabela) return null;
+  if (z.wiersz) {
+    const jawnie = tabela.wiersze.find((w) => w.nazwa === z.wiersz);
+    if (jawnie) return jawnie;
+  }
   const n = normNazwa(z.nazwa);
   const trafienie = tabela.wiersze.find((w) => w.nazwa === n);
   if (trafienie) return trafienie;
@@ -358,12 +365,15 @@ function skladDlaZespolu(dane, z) {
   return (dane?.sklady ?? []).find((s) => slugZespolu(s.zespol) === cel) ?? null;
 }
 
-/** HTML tabeli ligowej (dialog i podstrona współdzielą układ). */
+/** HTML tabeli ligowej (dialog i podstrona współdzielą układ).
+ *  v1.12.1: kolumna4 = etykieta 4. kolumny z danych („Sety” domyślnie;
+ *  tabela PZTS ma „Z–R–P”, bo źródło nie wystawia bilansu setów). */
 function htmlTabeli(tabela, naszWiersz, { maxWys = "" } = {}) {
   if (!tabela) return "";
+  const kol4 = tabela.kolumna4 || "Sety";
   return `<div class="table-scroll${maxWys ? ` ${maxWys}` : ""}">
     <table class="league-table">
-      <thead><tr><th>Drużyna</th><th class="num">M</th><th class="num">Pkt</th><th class="num">Sety</th></tr></thead>
+      <thead><tr><th>Drużyna</th><th class="num">M</th><th class="num">Pkt</th><th class="num">${esc(kol4)}</th></tr></thead>
       <tbody>${tabela.wiersze.map((w) => `
         <tr class="${w === naszWiersz ? "is-ours" : ""}">
           <td>${w.pozycja}. ${esc(w.nazwa)}</td>
