@@ -60,6 +60,10 @@ import {
   parsujTabele,
   parsujTerminarz,
   pobierzHtml,
+  parsujSklad,
+  parsujLinkiDruzyn,
+  pobierzHtmlDruzyny,
+  type ZawodnikSkladu,
   STATYSTYKI_POBIERANIA,
   KOREKTY_ZASTOSOWANE,
   type MeczLigi,
@@ -74,7 +78,9 @@ const PZTS_LIGA_URL = "https://www.pzts.pl/rozgrywki-ligowe/liga/?id=82";
 const JINA_URL = `https://r.jina.ai/${PZTS_LIGA_URL}`;
 
 const ZESPOLY = [
-  { nazwa: "KTS Gliwice I", liga: "1. Liga Mężczyzn · gr. południowa", tryb: "PZTS · automat", url: "https://pzts.pl/rozgrywki-ligowe/druzyna/960/", ligaKlucz: null as string | null },
+  // ligaKlucz od v1.9 = KLUCZ TABELI w dane.tabele (jawne wiązanie dla
+  // dialogu/podstrony drużyny): ŚZTS → „sezon/grupa”, PZTS → „pzts/1lm”.
+  { nazwa: "KTS Gliwice I", liga: "1. Liga Mężczyzn · gr. południowa", tryb: "PZTS · automat", url: "https://pzts.pl/rozgrywki-ligowe/druzyna/960/", ligaKlucz: "pzts/1lm" as string | null },
   { nazwa: "KTS II", liga: "2. Liga Mężczyzn", tryb: "ŚZTS · automat", url: "https://ligi.slzts.pl/liga/18/136/", ligaKlucz: "18/136" },
   { nazwa: "KTS III", liga: "2. Liga Mężczyzn", tryb: "ŚZTS · automat", url: "https://ligi.slzts.pl/liga/18/136/", ligaKlucz: "18/136" },
   { nazwa: "KTS IV", liga: "3. Liga Mężczyzn · gr. II", tryb: "ŚZTS · automat", url: "https://ligi.slzts.pl/liga/18/138/", ligaKlucz: "18/138" },
@@ -107,6 +113,10 @@ interface WpisRunu {
   // bez korekt (mapa pusta / meczów brak) go pomija — runs.json
   // pozostaje wstecznie zgodny z dotychczasowym frontem.
   korekty?: string[];
+  /** v1.9: moment ostatniego ODŚWIEŻENIA składów ŚZTS (zegar TTL —
+   *  runs.json zapisywany przy każdym przebiegu, więc zegar przetrzyma
+   *  nawet przebieg bez commita dane.json). null = jeszcze nie czytano. */
+  skladyOdczyt?: string | null;
   /** v1.8: diagnostyka mostu Google Sheets — kanał, który obsłużył PZTS
    *  (most/czytnik/recznie/zachowano/brak), sloty drużyn ze Skanu oraz
    *  alarm o nowej drużynie (slot 2+ niepusty — dopóki import nie zostanie
@@ -126,15 +136,36 @@ interface MeczPzts extends MeczLigi {
 interface Dane {
   wygenerowano: string;
   sezon: string;
-  zespoly: Array<{ nazwa: string; liga: string; tryb: string; stan: string; url: string }>;
-  tabele: Array<{ klucz: string; nazwa: string; wiersze: unknown[]; zaktualizowano: string }>;
+  /** v1.9: zespoly zyskują jawne wiązania — tabela (klucz w tabele[])
+   *  i wiersz (dokładna nazwa wiersza u źródła; „KTS Gliwice” w 1. lidze
+   *  PZTS vs nazwa karty „KTS Gliwice I”). Front (1.12.1) używa ich
+   *  zamiast heurystyk dopasowywania nazw. */
+  zespoly: Array<{
+    nazwa: string; liga: string; tryb: string; stan: string; url: string;
+    tabela?: string | null; wiersz?: string | null;
+  }>;
+  /** v1.9: kolumna4 = nagłówek 4. kolumny tabeli (domyślnie „Sety”;
+   *  PZTS ma Z–R–P, bo źródło nie wystawia bilansu setów). */
+  tabele: Array<{ klucz: string; nazwa: string; wiersze: unknown[]; zaktualizowano: string; kolumna4?: string }>;
   meczeSzts: MeczSzts[];
   meczePzts: MeczPzts[];
+  /** v1.9: składy drużyn ze statystykami (ŚZTS: podstrony /druzyna/…
+   *  z TTL 12 h; PZTS: zakładka „Skład” mostu Google Sheets, opcjonalna).
+   *  Pole opcjonalne — stary front bez niego działa. */
+  sklady?: SkladDruzyny[];
   ostatniSync: { szts: string | null; pzts: string | null };
   /** v1.6.1 (poziom 2): status per źródło. "ok" jest stabilne (nie szumi
    *  w ochronie przed zapisem bez zmian); awaria i wyzdrowienie zmieniają
    *  treść → realny commit — dokładnie wtedy, gdy warto to pokazać. */
   zrodla: { szts: string; pzts: string };
+}
+
+/** Skład drużyny — kontrakt dla dialogu i podstrony drużyny (front 1.12+). */
+interface SkladDruzyny {
+  zespol: string; // nazwa z ZESPOLY (klucz dopasowania po slugu)
+  zrodlo: string; // URL podstrony u źródła
+  zaktualizowano: string;
+  zawodnicy: ZawodnikSkladu[];
 }
 
 /** Polska odmiana liczebników (1 zwycięstwo, 2 zwycięstwa, 5 zwycięstw). */
@@ -374,10 +405,73 @@ export function slotyZSkanu(wiersze: string[][]): string[] {
   return sloty;
 }
 
+/** v1.9: Parser składu 1. drużyny z zakładki „Skład 960” mostu (gviz CSV).
+ *  Zakładkę tworzy właściciel w arkuszu mostu formułą w A1:
+ *  =IMPORTHTML("https://pzts.pl/rozgrywki-ligowe/druzyna/960/";"table";1)
+ *  (tabela 1 strony drużyny = skład; tabela 2 = terminarz — ten czyta już
+ *  istniejąca zakładka „Terminarz”). Pierwsza linia CSV to nagłówek
+ *  tabeli źródłowej („Nazwisko i imię”, „Nr licencji”, „Pojedynki”,
+ *  „Zwycięstwa”, „Porażki”, „Skuteczność”). Komórka zawodnika u PZTS jest
+ *  zbita (imię i nazwisko + wiek w klamrze + kraj) — IMPORTHTML skleja ją
+ *  w jeden ciąg, więc nazwisko oczyszczamy z „(NN l.)” i kraju. Wiek NIE
+ *  jest przeliczany na rok ur. (ekstrapolacja = fałszywa dokładność —
+ *  ŚZTS podaje prawdziwy rok, PZTS wiek).
+ *  UWAGA (QA 01.11): nazwa celowo „Skład 960”, nie „Skład” — w moście
+ *  istnieje już zakładka „Skład” będąca KOPIĄ Skanu (ścieżki discovery).
+ *  Parser dodatkowo waliduje, że wiersze wyglądają na zawodników. */
+export function parsujSkladGviz(wiersze: string[][]): ZawodnikSkladu[] {
+  const KRAJE = new Set([
+    "Polska", "Ukraina", "Białoruś", "Czechy", "Słowacja", "Niemcy",
+    "Francja", "Chorwacja", "Litwa", "Łotwa", "Rosja",
+  ]);
+  const wynik: ZawodnikSkladu[] = [];
+  for (const w of wiersze) {
+    if (w.length < 6) continue;
+    const surowy = bezGwiazdek(w[0] ?? "");
+    if (!surowy || /nazwisko i imi[ęe]/i.test(surowy)) continue; // nagłówek
+    // ścieżka/URL (skan discovery, nie skład) — odrzucamy jawnie (QA 01.11:
+    // zakładka „Skład” w moście okazała się kopią Skanu — ścieżki lig)
+    if (surowy.includes("/") || /^https?/i.test(surowy)) continue;
+    if (/^(ścieżka|liga url|herb|id|url drużyny)$/i.test(surowy)) continue;
+    const bezWieku = surowy.replace(/\(\s*\d+\s*(?:l\.|lat)\s*\)/gi, " ");
+    const czesci = bezWieku.split(/[\s\n]+/).map((c) => c.trim()).filter(Boolean);
+    let narodowosc: string | null = null;
+    if (czesci.length > 1 && KRAJE.has(czesci[czesci.length - 1])) {
+      narodowosc = czesci.pop() ?? null;
+    }
+    const nazwisko = czesci.join(" ");
+    if (!nazwisko || !/[a-ząćęłńóśźż]/i.test(nazwisko)) continue;
+    const liczba = (x: string): number | null => {
+      const n = parseInt(bezGwiazdek(x ?? ""), 10);
+      return Number.isFinite(n) ? n : null;
+    };
+    wynik.push({
+      nazwisko,
+      licencja: /^\d{3,6}$/.test(bezGwiazdek(w[1] ?? "")) ? bezGwiazdek(w[1]) : null,
+      narodowosc,
+      rok: null,
+      zwyciestwa: liczba(w[3]),
+      porazki: liczba(w[4]),
+      punkty: null,
+      skutecznosc: bezGwiazdek(w[5] ?? "") || null,
+    });
+  }
+  // walidacja sensowności: prawdziwy skład ma statystyki liczbowe; gdy
+  // wiersze ich nie mają (ktoś wkleił w zakładkę co innego), zwracamy
+  // pustkę — skład po prostu nie płynie (front go ukryje)
+  const zLiczbami = wynik.filter(
+    (z) => z.licencja !== null || z.zwyciestwa !== null || z.porazki !== null || z.skutecznosc !== null,
+  );
+  return zLiczbami.length >= Math.max(1, Math.ceil(wynik.length / 2)) ? wynik : [];
+}
+
 // v1.8: stan mostu dla runs.json (wpis.most — wstecznie zgodne, pole opcjonalne)
 let MOST_KANAL: string = "brak"; // most | czytnik | recznie | zachowano | brak
 let MOST_SLOTY: string[] = [];
 let MOST_UWAGA: string | undefined;
+// v1.9: zegar TTL składów (modułowo — widoczny też w wrapperze błędów;
+// ustawiany w main() po ≥1 udanym odczycie składu)
+let SKLADY_ODCZYT_TS: string | null = null;
 
 function opiszMost(): { kanal: string; sloty: string[]; uwaga?: string } {
   const o: { kanal: string; sloty: string[]; uwaga?: string } = { kanal: MOST_KANAL, sloty: MOST_SLOTY };
@@ -481,7 +575,7 @@ export function opiszZmiany(stary: Dane | null, nowy: Dane): string {
   };
   raportMeczy("ŚZTS", stary.meczeSzts ?? [], nowy.meczeSzts);
   raportMeczy("PZTS", stary.meczePzts ?? [], nowy.meczePzts);
-  const wierszeTabel = (t: Dane["tabele"]) => JSON.stringify(t.map((x) => [x.klucz, x.wiersze]));
+  const wierszeTabel = (t: Dane["tabele"]) => JSON.stringify(t.map((x) => [x.klucz, x.wiersze, x.kolumna4 ?? null]));
   if (wierszeTabel(stary.tabele ?? []) !== wierszeTabel(nowy.tabele)) {
     const klucze = nowy.tabele
       .filter((nt) => {
@@ -493,6 +587,15 @@ export function opiszZmiany(stary: Dane | null, nowy: Dane): string {
   }
   const stanyDruzyn = (d: Dane) => JSON.stringify(d.zespoly.map((z) => [z.nazwa, z.stan]));
   if (stanyDruzyn(stary) !== stanyDruzyn(nowy)) czesci.push("stan drużyn");
+  // v1.9: zmiany składów (nowy zawodnik, statystyki, zniknięcie)
+  const sygnaturaSkladow = (d: Dane) =>
+    JSON.stringify((d.sklady ?? []).map((s) => [s.zespol, s.zawodnicy]));
+  if (sygnaturaSkladow(stary) !== sygnaturaSkladow(nowy)) {
+    const nowe = new Set((nowy.sklady ?? []).map((s) => s.zespol));
+    const stare = new Set((stary.sklady ?? []).map((s) => s.zespol));
+    const dodatki = [...nowe].filter((x) => !stare.has(x)).length;
+    czesci.push(dodatki > 0 ? `+${dodatki} ${odmien(dodatki, ["skład", "składy", "składów"])}` : "składy (statystyki)");
+  }
   return czesci.length > 0 ? czesci.join(" · ") : "bez zmian";
 }
 
@@ -525,6 +628,7 @@ type WynikRunu = {
   blad: string | null; // treść błędu źródła (izolacja: błąd NIE ubija runu)
   retry: string | null; // opis użycia ponowień („ŚZTS: sukces po 2. próbie…”)
   korekty: string[]; // v1.7.5: stan korekt godzin (opiszKorekty) — jawnie
+  skladyOdczyt: string | null; // v1.9: zegar TTL składów (do runs.json)
 };
 
 /** Opis użycia ponowień dla runs.json — pomiar błędów przejściowych w locie. */
@@ -578,12 +682,41 @@ async function main(): Promise<WynikRunu> {
   for (const z of staryPlik?.zespoly ?? []) {
     if (z.tryb.startsWith("ŚZTS")) stany.set(z.nazwa, z.stan);
   }
+  // v1.9: jawne wiązanie zespół→wiersz tabeli — przy awarii ŚZTS
+  // trzymamy poprzednie (konwencja lustrzana ze stanami wyżej)
+  const WIERSZE_NASZE = new Map<string, string>();
+  for (const z of staryPlik?.zespoly ?? []) {
+    if (z.wiersz) WIERSZE_NASZE.set(z.nazwa, z.wiersz);
+  }
   let sztsBlad: string | null = null;
+
+  // v1.9: składy ŚZTS — TTL 12 h, ale zegar żyje w runs.json (zapisywanym
+  // przy KAŻDYM przebiegu), nie w dane.json (tam znaczniki są maskowane
+  // przy ochronie przed szumem — zegar by nie przetrwał przebiegu bez
+  // commita i odświeżanie strzelałoby przy każdym runie: 84–252 zapytań
+  // dziennie zamiast ~14). Statystyki składów zmieniają się po meczach —
+  // 12 h w zupełności wystarcza.
+  const SKLAD_TTL_MS = 12 * 60 * 60 * 1000;
+  let ostatniOdczytSkladow: Date | null = null;
+  try {
+    const runs = JSON.parse(readFileSync(RUNY_WYJSCIE, "utf-8")) as { runs?: WpisRunu[] };
+    for (let i = (runs.runs ?? []).length - 1; i >= 0; i--) {
+      const ts = runs.runs?.[i]?.skladyOdczyt;
+      if (ts) { ostatniOdczytSkladow = new Date(ts); break; }
+    }
+  } catch { /* brak/uszkodzony runs.json — pierwsze czytanie */ }
+  const ODSWIEZ_SKLADY =
+    !ostatniOdczytSkladow || Date.now() - ostatniOdczytSkladow.getTime() > SKLAD_TTL_MS;
+  const skladyStare = new Map<string, SkladDruzyny>();
+  for (const s of staryPlik?.sklady ?? []) skladyStare.set(s.zespol, s);
+  const skladyNowe = new Map<string, SkladDruzyny | null>();
 
   try {
     const tabeleNowe: Dane["tabele"] = [];
     const meczeMap = new Map<string, MeczSzts>();
     const stanyNowe = new Map<string, string>();
+    // v1.9: wiersz OUR w tabeli per zespół (jawne wiązanie dla frontu)
+    const wierszeNasze = new Map<string, string>();
 
     for (const liga of LIGI_SZTS) {
       const html = await pobierzHtml(liga.url);
@@ -599,10 +732,14 @@ async function main(): Promise<WynikRunu> {
       );
       const terminarz = parsujTerminarz(html);
 
+      // v1.9: linki do podstron drużyn (sekcja „Tabela ligowa”)
+      const linkiDruzyn = parsujLinkiDruzyn(html);
+
       for (const { nasza, szts } of pary) {
         const z = nasi.find((x) => x.nazwa === nasza);
         const wiersz = tabela.find((t) => t.nazwa === szts);
         if (z && wiersz) stanyNowe.set(nasza, `${wiersz.pozycja}. miejsce · ${wiersz.punkty} pkt`);
+        wierszeNasze.set(nasza, szts);
         for (const m of meczeZespolu(terminarz, szts)) {
           const klucz = `${m.dataMeczu}|${m.gospodarz}|${m.gosc}`;
           const istniejacy = meczeMap.get(klucz);
@@ -612,6 +749,35 @@ async function main(): Promise<WynikRunu> {
             meczeMap.set(klucz, { ...m, liga: z?.liga ?? liga.nazwa, zespoly: [nasza] });
           }
         }
+
+        // v1.9: skład drużyny — TYLKO w oknie odświeżania (zegar TTL w
+        // runs.json, patrz blok konfiguracji wyżej); poza oknem trzymamy
+        // stary wpis 1:1 (bez dotykania zaktualizowano → brak szumu w
+        // dane.json). Awaria podstrony = stare dane lub brak — NIE ubija
+        // runu (składy to dodatek, nie fundament).
+        const starySklad = skladyStare.get(nasza);
+        if (!ODSWIEZ_SKLADY) {
+          skladyNowe.set(nasza, starySklad ?? null);
+          continue;
+        }
+        const urlDruzyny = linkiDruzyn.get(szts);
+        if (!urlDruzyny) {
+          console.warn(`SKŁAD: brak linku podstrony dla „${szts}” w ${liga.klucz} — pomijam`);
+          skladyNowe.set(nasza, starySklad ?? null);
+          continue;
+        }
+        try {
+          const htmlDruzyny = await pobierzHtmlDruzyny(urlDruzyny);
+          const zawodnicy = parsujSklad(htmlDruzyny);
+          if (zawodnicy.length === 0) throw new Error("0 zawodników — zmiana struktury strony drużyny?");
+          skladyNowe.set(nasza, { zespol: nasza, zrodlo: urlDruzyny, zaktualizowano: teraz, zawodnicy });
+          SKLADY_ODCZYT_TS = teraz; // ≥1 sukces = zegar TYKA (totalna awaria
+                                    // zostawia zegar — następna próba w runie)
+          console.log(`SKŁAD ${nasza}: ${zawodnicy.length} zawodników (${urlDruzyny})`);
+        } catch (errSklad) {
+          console.warn(`SKŁAD ${nasza}: odczyt nieudany (${(errSklad as Error).message}) — ${starySklad ? "trzymam stary" : "pomijam"}`);
+          skladyNowe.set(nasza, starySklad ?? null);
+        }
       }
       console.log(`${liga.klucz}: tabela ${tabela.length} drużyn, terminarz ${terminarz.length} meczów, dopasowano ${pary.length}/${nasi.length}`);
     }
@@ -620,6 +786,8 @@ async function main(): Promise<WynikRunu> {
     meczeSzts = [...meczeMap.values()];
     stany.clear();
     for (const [k, v] of stanyNowe) stany.set(k, v);
+    WIERSZE_NASZE.clear();
+    for (const [k, v] of wierszeNasze) WIERSZE_NASZE.set(k, v);
     sztsSync = teraz;
   } catch (err) {
     sztsBlad = err instanceof Error ? err.message : String(err);
@@ -633,6 +801,28 @@ async function main(): Promise<WynikRunu> {
   let pztsSync: string | null = staryPlik?.ostatniSync?.pzts ?? null;
   let stanPztsTabela: string | null = null; // „4. miejsce · 3 pkt” z tabeli ligi
   let pztsStan: StanPzts = "pominieto";
+  // v1.9: pełna tabela 1. ligi z mostu (klienta: dialog + podstrona drużyny);
+  // PZTS nie wystawia bilansu setów → 4. kolumna = Z–R–P (kolumna4)
+  let tabelaPzts: Dane["tabele"][number] | null = null;
+  // v1.9: skład 1. drużyny z zakładki „Skład” mostu (opcjonalna — jeśli
+  // właściciel jej nie dodał, skład PZTS po prostu nie płynie;
+  // formuły do wklejenia w arkuszu: patrz README/worklog 01.11)
+  let skladPzts: SkladDruzyny | null = null;
+
+  /** Wiersze tabeli PZTS → format tabel strony (kolumna4 = Z–R–P). */
+  const zbudujTabelePzts = (w: WierszTabeliPzts[], zaktualizowano: string): Dane["tabele"][number] => ({
+    klucz: "pzts/1lm",
+    nazwa: "1. Liga Mężczyzn · gr. południowa",
+    wiersze: w.map((x) => ({
+      pozycja: x.pozycja,
+      nazwa: x.nazwa,
+      mecze: x.mecze,
+      punkty: x.punkty,
+      stosunek: `${x.zwyciestwa}-${x.remisy}-${x.porazki}`,
+    })),
+    zaktualizowano,
+    kolumna4: "Z–R–P",
+  });
 
   const przyjmijMecze = (lista: MeczLigi[], zrodlo: string, stan: StanPzts): void => {
     meczePzts = lista.map((m) => ({
@@ -679,7 +869,31 @@ async function main(): Promise<WynikRunu> {
       const my = tabela.find((w) => w.nazwa.includes("KTS Gliwice"));
       if (my && Number.isFinite(my.pozycja) && Number.isFinite(my.punkty)) {
         stanPztsTabela = `${my.pozycja}. miejsce · ${my.punkty} pkt`;
+        WIERSZE_NASZE.set("KTS Gliwice I", my.nazwa);
+        tabelaPzts = zbudujTabelePzts(tabela, teraz);
         console.log(`PZTS: tabela ligowa z mostu OK (${tabela.length} drużyn) — KTS: ${stanPztsTabela}`);
+      }
+      // v1.9: zakładka „Skład 960” mostu (formuła IMPORTHTML tabela 1
+      // strony drużyny 960 — instrukcja w worklogu 01.11) — tolerancyjnie:
+      // brak zakładki / błąd / dane niesensowne = pomijamy, run trwa dalej
+      try {
+        const wierszeSkladu = await pobierzZakladkeMostu("Skład 960");
+        const zawodnicy = parsujSkladGviz(wierszeSkladu);
+        if (zawodnicy.length > 0) {
+          skladPzts = {
+            zespol: "KTS Gliwice I",
+            zrodlo: "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
+            zaktualizowano: teraz,
+            zawodnicy,
+          };
+          console.log(`PZTS: skład z mostu OK (${zawodnicy.length} zawodników)`);
+        } else {
+          // gviz dla NIEISTNIEJĄCEJ zakładki oddaje pierwszą (Skan) bez
+          // błędu (zweryfikowane 01.11) — rozróżniamy to jawnie w logu
+          console.warn('PZTS: zakładka „Skład 960” bez zawodników (najpewniej nie istnieje — gviz oddał zawartość innej zakładki). Instrukcja: nowa zakładka „Skład 960”, w A1 formuła =IMPORTHTML("https://pzts.pl/rozgrywki-ligowe/druzyna/960/";"table";1)');
+        }
+      } catch (errSklad) {
+        console.warn(`PZTS: zakładka „Skład 960” mostu niedostępna (${(errSklad as Error).message}) — skład 1. drużyny pominięty (instrukcja: w A1 nowej zakładki „Skład 960” wklej =IMPORTHTML("https://pzts.pl/rozgrywki-ligowe/druzyna/960/";"table";1))`);
       }
     } catch (err) {
       console.warn(`MOST: gviz zawiódł (${err instanceof Error ? err.message : String(err)}) — fallback na czytnik r.jina.ai`);
@@ -700,6 +914,8 @@ async function main(): Promise<WynikRunu> {
         const my = tabela.find((w) => w.nazwa.includes("KTS Gliwice"));
         if (my && Number.isFinite(my.pozycja) && Number.isFinite(my.punkty)) {
           stanPztsTabela = `${my.pozycja}. miejsce · ${my.punkty} pkt`;
+          WIERSZE_NASZE.set("KTS Gliwice I", my.nazwa);
+          tabelaPzts = zbudujTabelePzts(tabela, teraz);
           console.log(`PZTS: tabela ligowa OK (${tabela.length} drużyn) — KTS: ${stanPztsTabela}`);
         }
       } catch (err) {
@@ -715,6 +931,12 @@ async function main(): Promise<WynikRunu> {
           // kanałów nie może tasować karty na stronie (zbędny zapis danych).
           const staryStan = staryPlik.zespoly?.find((z) => z.nazwa === "KTS Gliwice I")?.stan;
           if (staryStan) stanPztsTabela = staryStan;
+          // v1.9: awaria mostu przytrzymuje też ostatnią znaną tabelę
+          // i skład 1. ligi (izolacja awarii — jak mecze)
+          const staraTabela = (staryPlik.tabele ?? []).find((t) => t.klucz === "pzts/1lm");
+          if (staraTabela) tabelaPzts = staraTabela;
+          const starySklad = (staryPlik.sklady ?? []).find((s) => s.zespol === "KTS Gliwice I");
+          if (starySklad) skladPzts = starySklad;
         } else {
           console.log("PZTS: brak danych (przekaż PZTS_MECZE przy uruchomieniu ręcznym)");
         }
@@ -723,6 +945,25 @@ async function main(): Promise<WynikRunu> {
   }
 
   // ===== 3. Skład danych + zapis =====
+  // v1.9: tabela 1. ligi PZTS doklejana do tabel ŚZTS (bez duplikatu —
+  // po awarii mostu tabele mogą już zawierać przytrzymaną wersję pzts/1lm)
+  const tabeleFinal = [...tabele.filter((t) => t.klucz !== "pzts/1lm")];
+  if (tabelaPzts) tabeleFinal.push(tabelaPzts);
+
+  // v1.9: składy — porządek jak ZESPOLY; awaria ŚZTS trzyma stare
+  // (izolacja awarii: skład to dodatek, nie fundament)
+  const skladyFinal: SkladDruzyny[] = [];
+  for (const z of ZESPOLY) {
+    if (z.nazwa === "KTS Gliwice I") {
+      if (skladPzts) skladyFinal.push(skladPzts);
+    } else {
+      const s = sztsBlad
+        ? skladyStare.get(z.nazwa) ?? null
+        : skladyNowe.get(z.nazwa) ?? null;
+      if (s) skladyFinal.push(s);
+    }
+  }
+
   const dane: Dane = {
     wygenerowano: teraz,
     sezon: SEZON,
@@ -732,10 +973,16 @@ async function main(): Promise<WynikRunu> {
       tryb: z.tryb,
       stan: z.nazwa === "KTS Gliwice I" ? (stanPztsTabela ?? bilansPzts(meczePzts)) : stany.get(z.nazwa) ?? "—",
       url: z.url,
+      // v1.9: jawne wiązania dla dialogu/podstrony drużyny (front 1.12.1+):
+      // tabela = klucz w tabele[], wiersz = dokładna nazwa u źródła
+      // („KTS Gliwice” w 1. lidze ≠ nazwa karty „KTS Gliwice I”)
+      tabela: z.ligaKlucz,
+      wiersz: WIERSZE_NASZE.get(z.nazwa) ?? null,
     })),
-    tabele,
+    tabele: tabeleFinal,
     meczeSzts,
     meczePzts,
+    sklady: skladyFinal,
     ostatniSync: { szts: sztsSync, pzts: pztsSync },
     // v1.6.1 (poziom 2): status per źródło — „ok” stabilne, awaria/wyzdrowienie
     // zmienia treść → realny commit dokładnie wtedy, gdy warto to pokazać.
@@ -767,17 +1014,20 @@ async function main(): Promise<WynikRunu> {
       return {
         szts: sztsBlad ? "blad" : "ok", pzts: pztsStan, zmieniono: false,
         zmiany: zmianyPelne, blad: sztsBlad, retry: opiszRetry(), korekty: opiszKorekty(),
+        skladyOdczyt: SKLADY_ODCZYT_TS,
       };
     }
   }
   writeFileSync(WYJSCIE, doZapisu, "utf-8");
   console.log(
     `Zapisano ${WYJSCIE}: ${dane.zespoly.length} zespołów, ${dane.tabele.length} tabel, ` +
-      `${dane.meczeSzts.length} meczów ŚZTS, ${dane.meczePzts.length} meczów PZTS`,
+      `${dane.meczeSzts.length} meczów ŚZTS, ${dane.meczePzts.length} meczów PZTS, ` +
+      `${dane.sklady?.length ?? 0} składów`,
   );
   return {
     szts: sztsBlad ? "blad" : "ok", pzts: pztsStan, zmieniono: true,
     zmiany: zmianyPelne, blad: sztsBlad, retry: opiszRetry(), korekty: opiszKorekty(),
+    skladyOdczyt: SKLADY_ODCZYT_TS,
   };
 }
 
@@ -798,6 +1048,7 @@ if (import.meta.main) {
         start: startIso(), czasS: czasTrwania(),
         szts: w.szts, pzts: w.pzts, zmieniono: w.zmieniono, zmiany: w.zmiany,
         blad: w.blad, retry: w.retry,
+        skladyOdczyt: w.skladyOdczyt,
       };
       // pole jawne tylko gdy korekty wystąpiły (wsteczna zgodność runs.json)
       const korekty = opiszKorekty();
@@ -816,6 +1067,7 @@ if (import.meta.main) {
         szts: FAZA_RUNU === "szts" ? "blad" : "ok",
         pzts: FAZA_RUNU === "pzts" ? "blad-czytnika" : "pominieto",
         zmieniono: false, zmiany: "—", blad: msg.slice(0, 300), retry: opiszRetry(),
+        skladyOdczyt: SKLADY_ODCZYT_TS,
       };
       const korekty = opiszKorekty();
       if (korekty.length > 0) wpis.korekty = korekty;
