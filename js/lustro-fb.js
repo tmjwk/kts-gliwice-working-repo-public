@@ -1,6 +1,18 @@
 /* ============================================================
-   KTS Gliwice — LUSTRO FB (1.10.1)
+   KTS Gliwice — LUSTRO FB (1.10.5)
    Aktualności z Facebooka na żywo + archiwum na podstronie.
+
+   1.10.5 (31.10, wieczór — „wieczny token”):
+   - ACCESS_TOKEN = page token wygenerowany z tokenu UŻYTKOWNIKA
+     SYSTEMOWEGO (system user „Tomasz Jaworski” w biznesie klubowym
+     „Akademia Tenisa Stołowego”) — debug_token: typ PAGE,
+     expires_at = 0 ORAZ data_access_expires_at = 0, czyli BEZ
+     zegara zgody OAuth, który w tokenie user-based katował
+     26.01.2027. Koniec kalendarzowych odnowień — pełna automatyka.
+   - token nadal read-only: pages_show_list +
+     pages_read_engagement (audyt 29.10: próba zapisu → HTTP 403),
+   - regeneracja (gdyby trzeba): skrypt fb_system_user_page_token.py
+     w warsztacie — token systemowy w sejfie, NIE w repo.
 
    1.10.1 (zgłoszenia właściciela 31.10 wieczór):
    - hero = SZEROKI PASEK o wysokości zwykłego kafla (był za wysoki):
@@ -36,7 +48,7 @@
 (() => {
   /* ---- KONFIGURACJA ---- */
   const PAGE_ID = "167636963360765";            // KTS Gliwice (fanpage klubu)
-  const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS7DZB6gwLbQMnd9ZAECEojkZBqnW8Mw8yP1eZBrIz1b3H21nkLegyL2GZAsB8LKJLaWSAObAZAxwqWyHzFBcuT46kczo6DLrd3YVhofKwJpQkM0lsZCW01zkUYSZBVZBiFhY783c4lZAzMykcBRfIOuvLYZClOyoehMQTGPL06mny6OeIt2SCkwI3ZCLZAy8ZD";    // page token KTS (read-only)
+  const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS92XpZBQ1q2tZBg8sTbTHnTz4kJqgjQuZAlt2Ku83tWkKu0bY9cFMNPZA3q5N3DgccCldMQIU1qZCyzyIVN08H0kLMZAcSI4O5Gn6p27dJ27EjuchVBKmL5x6avkkeMt50ZBLUNflAFdSGlet1b57IGIfFMvI86r9NTJH3drt0JP6LwQsylXlqbIgZDZD";    // page token KTS z SYSTEM USERA (read-only, bez zegara danych — 1.10.5)
   const API = "https://graph.facebook.com/v22.0";
   const FIELDS = "id,message,story,created_time,permalink_url,full_picture";
   const OKNO_DNI = 30;            // rolling window głównej (Q2)
