@@ -281,6 +281,133 @@ export function meczeZespolu(mecze: MeczLigi[], nazwaSzts: string): MeczLigi[] {
   return mecze.filter((m) => m.gospodarz === nazwaSzts || m.gosc === nazwaSzts);
 }
 
+/* ============================================================
+ * v1.9.0: SKŁADY DRUŻYN (podstrony /druzyna/… na ligi.slzts.pl).
+ * Struktura potwierdzona inspekcją 01.11.2026 (fixture 18/136/1480):
+ * sekcja „Skład zespołu w sezonie 2026/2027" → tabela
+ * [Nr licencji, Imię i nazwisko (link), Narodowość, Rok ur.,
+ *  Zwycięstwa, Porażki, Punkty]. Wiersz nagłówkowy ma td.header-top.
+ * Nazwiska dziedziczą wadę latin1 serwisu („?ukasz Strof") — naprawa
+ * mapą NAPRAWA_IMION (konwencja lustrzana z NAPRAWA_NAZW; nowe
+ * uszkodzenie = widoczne „?" = sygnał do dopisania wiersza).
+ * ============================================================ */
+
+export interface ZawodnikSkladu {
+  nazwisko: string;
+  licencja: string | null;
+  narodowosc: string | null;
+  rok: number | null;
+  zwyciestwa: number | null;
+  porazki: number | null;
+  punkty: string | null; // „33:9" — bilans pojedynków
+  skutecznosc: string | null; // tylko PZTS („75%")
+}
+
+/** Naprawa imion/nazwisk naszych zawodników (wada latin1 ŚZTS). */
+const NAPRAWA_IMION: Readonly<Record<string, string>> = {
+  "?ukasz Strof": "Łukasz Strof",
+  "Roman Wi?a": "Roman Wiła",
+  "Piotr Zem?a": "Piotr Zemła",
+  "Artur Bia?ek": "Artur Białek",
+  "Jaros?aw Tomicki": "Jarosław Tomicki",
+  "Daniel ?asak": "Daniel Łasak",
+};
+
+/** Parsuje sekcję „Skład zespołu" podstrony drużyny ŚZTS. */
+export function parsujSklad(html: string): ZawodnikSkladu[] {
+  const start = html.indexOf("Skład zespołu");
+  if (start < 0) return [];
+  const frag = html.slice(start, html.indexOf("</table>", start));
+  const wiersze = frag.match(/<tr[^>]*>[\s\S]*?<\/tr>/g) ?? [];
+
+  // liczba ALBO null — 0 jest WARTOŚCIĄ (0 zwycięstw ≠ brak danych);
+  // rok dodatkowo w sensownym zakresie (źródło ŚZTS wystawia „-0001"
+  // dla zawodników bez roku ur. — artefakt zero-date, widoczny 01.11)
+  const liczba = (s: string): number | null => {
+    const n = parseInt(s, 10);
+    return Number.isFinite(n) ? n : null;
+  };
+  const rok = (s: string): number | null => {
+    const n = liczba(s);
+    return n !== null && n >= 1900 && n <= 2100 ? n : null;
+  };
+
+  const wynik: ZawodnikSkladu[] = [];
+  for (const w of wiersze) {
+    // POZYCYJNE komórki (bez filtrowania pustych — pusta wartość nie może
+    // przesunąć kolumn; formatowanie: <td class=…>…</td> x 7)
+    const komorki = [...w.matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/g)]
+      .map((m) => czystaKomorka(m[1]));
+    if (komorki.length !== 7) continue;
+    // nagłówek: „Nr licencji | Imię i nazwisko | …" — pomijamy
+    if (/^nr licencji$/i.test(komorki[0])) continue;
+    const nazwaRaw = komorki[1];
+    if (!nazwaRaw) continue; // pusty wiersz
+    const nazwisko = NAPRAWA_IMION[nazwaRaw] ?? nazwaRaw;
+    wynik.push({
+      nazwisko,
+      licencja: /^\d{3,6}$/.test(komorki[0]) ? komorki[0] : null,
+      narodowosc: komorki[2] || null,
+      rok: rok(komorki[3]),
+      zwyciestwa: liczba(komorki[4]),
+      porazki: liczba(komorki[5]),
+      punkty: /^\d+\s*:\s*\d+$/.test(komorki[6]) ? komorki[6].replace(/\s/g, "") : null,
+      skutecznosc: null,
+    });
+  }
+  return wynik;
+}
+
+/**
+ * Mapa nazwa drużyny → adres podstrony /druzyna/… z sekcji „Tabela ligowa"
+ * strony ligowej (tam nazwy drużyn są linkami). Klucz = nazwa PO naprawie
+ * (naprawNazwe) — spójna z nazwami wierszy tabeli, po których dopasowujemy
+ * nasze zespoły (dopasujZespoly → pary.nasza/szts).
+ */
+export function parsujLinkiDruzyn(html: string): Map<string, string> {
+  const mapa = new Map<string, string>();
+  const start = html.indexOf("Tabela ligowa");
+  if (start < 0) return mapa;
+  const frag = html.slice(start, html.indexOf("</table>", start));
+  for (const m of frag.matchAll(/<a[^>]+href="(\/druzyna\/[^"]+)"[^>]*>([\s\S]*?)<\/a>/g)) {
+    const nazwa = naprawNazwe(czystaKomorka(m[2]));
+    if (nazwa) mapa.set(nazwa, `https://ligi.slzts.pl${m[1]}`);
+  }
+  return mapa;
+}
+
+/**
+ * Pobiera podstronę drużyny — LIGHTER niż pobierzHtml (liga):
+ * 2 próby, timeout 30 s, walidacja obecności sekcji „Skład zespołu".
+ * Składy mają TTL 12 h (sync_statyczny.ts), więc 7 podstron co 12 h
+ * = 14 zapytań dziennie — łagodnie dla ligi.slzts.pl (bazowe obciążenie
+ * to 48 zapytań o strony ligowe).
+ */
+export async function pobierzHtmlDruzyny(url: string, probyMax = 2): Promise<string> {
+  let ostatniBlad: unknown = null;
+  for (let i = 1; i <= probyMax; i++) {
+    try {
+      const res = await fetch(url, {
+        headers: { "User-Agent": "KTS-Gliwice-Sync/1.0 (strona klubowa; składy drużyn)" },
+        signal: AbortSignal.timeout(30_000),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status} dla ${url}`);
+      const tekst = (await res.text()).replace(/^\uFEFF/, "");
+      if (!tekst.includes("Skład zespołu")) {
+        throw new Error(`strona bez sekcji składu (${tekst.length} B) — przejściowa awaria ŚZTS?`);
+      }
+      return tekst;
+    } catch (err) {
+      ostatniBlad = err;
+      if (i < probyMax) {
+        console.warn(`pobierzHtmlDruzyny: próba ${i}/${probyMax} nieudana (${(err as Error).message}) — czekam ${10 * i} s`);
+        await new Promise((r) => setTimeout(r, 10_000 * i));
+      }
+    }
+  }
+  throw ostatniBlad ?? new Error(`nieznany błąd pobierania: ${url}`);
+}
+
 /**
  * Dopasowuje nasze zespoły (nazwy z panelu/bazy) do wierszy tabeli ŚZTS.
  * Zasady: kandydat musi zawierać „Gliwice"/„Krokus" (miasto), a tokeny
