@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-31T19:20:26.894Z",
+  "wygenerowano": "2026-10-31T19:36:28.071Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:20:26.894Z"
+      "zaktualizowano": "2026-10-31T19:36:28.071Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:20:26.894Z"
+      "zaktualizowano": "2026-10-31T19:36:28.071Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:20:26.894Z"
+      "zaktualizowano": "2026-10-31T19:36:28.071Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:20:26.894Z"
+      "zaktualizowano": "2026-10-31T19:36:28.071Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-10-31T19:20:26.894Z",
+      "zaktualizowano": "2026-10-31T19:36:28.071Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1841,6 +1841,93 @@
   ],
   "sklady": [
     {
+      "zespol": "KTS Gliwice I",
+      "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
+      "zaktualizowano": "2026-10-31T19:36:28.071Z",
+      "zawodnicy": [
+        {
+          "nazwisko": "Yunchyk Valentyn",
+          "licencja": "1597",
+          "narodowosc": "Ukraina",
+          "rok": null,
+          "zwyciestwa": 9,
+          "porazki": 3,
+          "punkty": null,
+          "skutecznosc": "75%"
+        },
+        {
+          "nazwisko": "Białek Artur",
+          "licencja": "1591",
+          "narodowosc": "Polska",
+          "rok": null,
+          "zwyciestwa": 7,
+          "porazki": 5,
+          "punkty": null,
+          "skutecznosc": "58%"
+        },
+        {
+          "nazwisko": "Tomicki Jarosław",
+          "licencja": "1596",
+          "narodowosc": "Polska",
+          "rok": null,
+          "zwyciestwa": 6,
+          "porazki": 6,
+          "punkty": null,
+          "skutecznosc": "50%"
+        },
+        {
+          "nazwisko": "Szary Piotr",
+          "licencja": "472",
+          "narodowosc": "Polska",
+          "rok": null,
+          "zwyciestwa": 4,
+          "porazki": 8,
+          "punkty": null,
+          "skutecznosc": "33%"
+        },
+        {
+          "nazwisko": "Kwodawski Bartosz",
+          "licencja": "1592",
+          "narodowosc": "Polska",
+          "rok": null,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": null,
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Steuer Dariusz",
+          "licencja": "1593",
+          "narodowosc": "Polska",
+          "rok": null,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": null,
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Strof Łukasz",
+          "licencja": "1594",
+          "narodowosc": "Polska",
+          "rok": null,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": null,
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Szotek Karol",
+          "licencja": "1595",
+          "narodowosc": "Polska",
+          "rok": null,
+          "zwyciestwa": 0,
+          "porazki": 0,
+          "punkty": null,
+          "skutecznosc": null
+        }
+      ]
+    },
+    {
       "zespol": "KTS II",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1480/kts-ii-gliwice/",
       "zaktualizowano": "2026-10-31T19:20:26.894Z",
@@ -2441,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-31T19:20:26.894Z",
-    "pzts": "2026-10-31T19:20:26.894Z"
+    "szts": "2026-10-31T19:36:28.071Z",
+    "pzts": "2026-10-31T19:36:28.071Z"
   },
   "zrodla": {
     "szts": "ok",
