@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Drużyna — KTS Gliwice</title>
+  <meta name="description" content="Drużyny KTS Gliwice — tabela ligowa, terminarz, wyniki i skład. Dane synchronizowane automatycznie ze źródeł ligowych.">
+  <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Tryb dzień/noc — PRZED renderowaniem (bez mignięcia jasnym tłem):
+    // wybór z localStorage, domyślnie preferencja systemu.
+    (function () {
+      try {
+        var z = localStorage.getItem("kts-theme");
+        if (!z) z = window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "day";
+        document.documentElement.setAttribute("data-theme", z);
+      } catch (e) { /* prywatny tryb przeglądarki — zostaje dzienny */ }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="KTS Gliwice — strona główna">
+        <span class="brand-mark">KTS</span>
+        <span class="brand-name">KTS GLIWICE <span class="brand-sub">/ DRUŻYNA</span></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Główna nawigacja">
+        <a href="index.html#aktualnosci">Aktualności</a>
+        <a href="index.html#oklubie">O klubie</a>
+        <a href="index.html#druzyny-wyniki" aria-current="page">Drużyny i wyniki</a>
+        <a href="index.html#trenerzy">Trenerzy</a>
+        <a href="galeria.html">Galeria</a>
+      </nav>
+      <a class="btn btn-accent btn-sm header-cta" href="index.html#kontakt">Zapisz dziecko</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Przełącz tryb nocny" title="Przełącz tryb dzień/noc">🌙</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== DRUŻYNA (renderuje js/druzyna.js z ?id=…) ===== -->
+    <section class="section" id="druzyna-strona">
+      <div class="container">
+        <a class="gal-powrot" href="index.html#druzyny-wyniki">← Wróć do drużyn i wyników</a>
+
+        <div class="section-head-row">
+          <h1 class="t-h2" id="druzyna-nazwa" style="font-size: 2.25rem;">Drużyna</h1>
+        </div>
+        <div class="druzyna-naglowek">
+          <span class="t-small muted" id="druzyna-liga">…</span>
+          <span class="druzyna-badges" id="druzyna-badges"></span>
+        </div>
+        <p class="t-small muted section-desc" id="druzyna-opis">
+          Tabela, terminarz i wyniki tej drużyny — synchronizowane automatycznie
+          ze źródeł ligowych (co 2 h, dogrzanie w wieczory meczowe).
+        </p>
+
+        <div id="druzyna-tresc">
+          <div class="lustro-skeleton" aria-hidden="true">
+            <div class="skel-linie"><div class="skel-line"></div><div class="skel-line skel-line--krotka"></div><div class="skel-line skel-line--mini"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="kontakt">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">
+          <span class="brand-mark brand-mark-sm">KTS</span>
+          <span class="footer-brand-name">KTS Gliwice</span>
+        </div>
+        <p class="t-small">[adres hali] · Gliwice</p>
+        <p class="t-small">[telefon] · [e-mail]</p>
+      </div>
+      <nav aria-label="Stopka">
+        <p class="footer-col-title">Sekcje</p>
+        <ul class="footer-links">
+          <li><a href="index.html#aktualnosci">Aktualności</a></li>
+          <li><a href="archiwum.html">Archiwum aktualności</a></li>
+          <li><a href="index.html#oklubie">O klubie</a></li>
+          <li><a href="index.html#druzyny-wyniki">Drużyny i wyniki</a></li>
+          <li><a href="index.html#trenerzy">Trenerzy</a></li>
+          <li><a href="galeria.html">Galeria</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="footer-col-title">Znajdź nas</p>
+        <p class="t-small">🤝 Facebook — AkademiaTenisaStolowego</p>
+        <p class="t-small footer-fade">[RODO · polityka cookies — do wdrożenia]</p>
+      </div>
+    </div>
+    <div class="container">
+      <p class="footer-bottom t-small">
+        SZKIELET projektowy · wdrożenie testowe (hosting statyczny, auto-sync wyników) · KTS Gliwice 2026
+        · <span class="t-nums" id="wersja-strony">wersja —</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="js/druzyna.js"></script>
+</body>
+</html>
