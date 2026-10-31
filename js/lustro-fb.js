@@ -1,6 +1,24 @@
 /* ============================================================
-   KTS Gliwice — LUSTRO FB (1.10.5)
+   KTS Gliwice — LUSTRO FB (1.11.0)
    Aktualności z Facebooka na żywo + archiwum na podstronie.
+
+   1.11.0 (31.10, noc — „reel bez pasów”):
+   - KADROWANIE MINIATUR WIDEO w przeglądarce: FB wypala poziomy
+     film w pionowe płótno 9:16, więc plik miniatury reela ma
+     wypalone czarne pasy (zweryfikowane: 61% pikseli hero-reela
+     to ramka; żaden wariant z Graph API nie daje wersji czystej).
+     CDN FB wysyła access-control-allow-origin: * (zweryfikowane
+     dla scontent- i external-), więc miniaturę da się wczytać
+     do <canvas> z crossOrigin="anonymous" i zmierzyć pasy
+     deterministycznie (RGB ≤ 20 = rząd ramki; zero AI, zero
+     zapytań dodatkowych poza jednym obrazkiem).
+   - wynik pomiaru = środek TREŚCI w % → CSS (img.news-crop)
+     stosuje object-fit: cover + object-position — pasy wypadają
+     poza ramkę, obraz wypełnia kafelek/hero/okładkę dialogu;
+   - bezpieczniki: kadrowane WYŁĄCZNIE media_type=video (zdjęcia
+     pasów nie mają, a ciemne foto nocne złapałoby fałszywe
+     pasy); pas > 45% wymiaru albo treść < 15% wymiaru = rezygnacja;
+     pomiar nieudany (CORS/timeout/awaria) = wygląd jak dotąd.
 
    1.10.5 (31.10, wieczór — „wieczny token”):
    - ACCESS_TOKEN = page token wygenerowany z tokenu UŻYTKOWNIKA
@@ -50,7 +68,7 @@
   const PAGE_ID = "167636963360765";            // KTS Gliwice (fanpage klubu)
   const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS3EIBlIZCLF0j63uEDSZCZBB8L4GWfXowpf6T8via0Xtzg00hrZCSI12nArcbamySv1Ttj8nCN6IfdE1UkOxxJ5zPCzyh1PrlhU10LfIrZCl9MheWt5YBs52jd65PHV1s5gYzlBFbh3jQLmIi6B6i7iPHMYoRrOKfXqHaYonMLMSGXZBrRYAsu9NcZD";    // page token KTS z SYSTEM USERA (read-only, bez zegara danych — 1.10.5)
   const API = "https://graph.facebook.com/v22.0";
-  const FIELDS = "id,message,story,created_time,permalink_url,full_picture";
+  const FIELDS = "id,message,story,created_time,permalink_url,full_picture,attachments{media_type}";
   const OKNO_DNI = 30;            // rolling window głównej (Q2)
   const MIN_POSTOW = 10;          // 1 hero + 9 kafelków (P1 + decyzja 31.10)
   const LIMIT_GLOWNA = 50;        // wystarcza na okno + dopełnienie
@@ -142,8 +160,96 @@
     ? `<img src="${esc(p.full_picture)}" alt="" loading="lazy" decoding="async">`
     : `<span aria-hidden="true">🏓</span>`;
 
+  /** Czy wpis ma załącznik wideo (reel/YouTube) — tylko takie kadrujemy. */
+  const jestVideo = (p) =>
+    !!(p.attachments && p.attachments.data && p.attachments.data[0]
+       && p.attachments.data[0].media_type === "video");
+
+  /* ---- 1.11.0: pomiar czarnych pasów miniatury (patrz nagłówek) ---- */
+  const POMIARY_KADRU = new Map();   // url → Promise<{x, y, ar} | null>
+
+  /** Procentowa pozycja środka treści + proporcje treści bez pasów.
+   *  Zwraca null, gdy pomiar się nie uda albo pasy wyglądają na
+   *  fałszywe (ciemny kadr zamiast letterboxu) — wtedy kafelek
+   *  zostaje w wyglądzie bazowym (contain). */
+  function zmierzPasy(url) {
+    if (POMIARY_KADRU.has(url)) return POMIARY_KADRU.get(url);
+    const pomiar = new Promise((resolve) => {
+      const img = new Image();
+      const stop = setTimeout(() => resolve(null), 8000);
+      img.crossOrigin = "anonymous";          // wymagane do odczytu pikseli
+      img.onload = () => {
+        clearTimeout(stop);
+        try {
+          const iw = img.naturalWidth, ih = img.naturalHeight;
+          if (!iw || !ih) return resolve(null);
+          // pomiar w miniaturze ~160 px — dokładność wystarcza,
+          // koszt dekodowania pomijalny
+          const skala = Math.min(1, 160 / Math.max(iw, ih));
+          const w = Math.max(2, Math.round(iw * skala));
+          const h = Math.max(2, Math.round(ih * skala));
+          const cv = document.createElement("canvas");
+          cv.width = w; cv.height = h;
+          const cx = cv.getContext("2d", { willReadFrequently: true });
+          cx.drawImage(img, 0, 0, w, h);
+          const px = cx.getImageData(0, 0, w, h).data;
+          const czarny = (i) => px[i] <= 20 && px[i + 1] <= 20 && px[i + 2] <= 20;
+          const rzad = (y) => {
+            for (let x = 0; x < w; x++) if (!czarny((y * w + x) * 4)) return false;
+            return true;
+          };
+          const kolumna = (x) => {
+            for (let y = 0; y < h; y++) if (!czarny((y * w + x) * 4)) return false;
+            return true;
+          };
+          let gora = 0; while (gora < h && rzad(gora)) gora++;
+          let dol = 0; while (dol < h && rzad(h - 1 - dol)) dol++;
+          let lewa = 0; while (lewa < w && kolumna(lewa)) lewa++;
+          let prawa = 0; while (prawa < w && kolumna(w - 1 - prawa)) prawa++;
+          // bezpieczniki: pas dłuższy niż 45% wymiaru albo treść
+          // węższa/niższa niż 15% wymiaru to nie letterbox, tylko
+          // ciemny kadr — kadrowanie odstaje (wygląd bazowy)
+          if (gora > h * 0.45 || dol > h * 0.45) return resolve(null);
+          if (lewa > w * 0.45 || prawa > w * 0.45) return resolve(null);
+          const trescW = w - lewa - prawa, trescH = h - gora - dol;
+          if (trescW < w * 0.15 || trescH < h * 0.15) return resolve(null);
+          resolve({
+            x: +(((lewa + trescW / 2) / w) * 100).toFixed(2),
+            y: +(((gora + trescH / 2) / h) * 100).toFixed(2),
+            ar: +(trescW / trescH).toFixed(4),
+          });
+        } catch (e) {
+          resolve(null);   // canvas tainted (brak CORS) — wygląd bazowy
+        }
+      };
+      img.onerror = () => { clearTimeout(stop); resolve(null); };
+      img.src = url;
+    });
+    POMIARY_KADRU.set(url, pomiar);
+    return pomiar;
+  }
+
+  /** Wpis pomiaru w obrazek: klasa + zmienne CSS (patrz style.css). */
+  function zastosujKadry(img, kadr) {
+    if (!img || !kadr) return;
+    img.style.setProperty("--kadruj-x", kadr.x + "%");
+    img.style.setProperty("--kadruj-y", kadr.y + "%");
+    img.style.setProperty("--kadruj-ar", String(kadr.ar));
+    img.classList.add("news-crop");
+  }
+
+  /** Kadruje wszystkie wideo w kontenerze (hero/siatka/archiwum). */
+  function kadrujWideo(kontener) {
+    if (!kontener) return;
+    kontener.querySelectorAll('article[data-video="1"] img').forEach((img) => {
+      const url = img.getAttribute("src");
+      if (!url) return;
+      zmierzPasy(url).then((kadr) => zastosujKadry(img, kadr));
+    });
+  }
+
   const karta = (p) => `
-    <article class="card news-card news-klik lustro-karta" data-post-id="${esc(p.id)}"
+    <article class="card news-card news-klik lustro-karta" data-post-id="${esc(p.id)}"${jestVideo(p) ? ' data-video="1"' : ""}
              tabindex="0" role="button" aria-label="Powiększ wpis: ${esc(tytulZPostu(p))}">
       <div class="news-media${p.full_picture ? " news-media-img" : " news-media-brak"}">${mediaHTML(p)}</div>
       <div class="card-body">
@@ -155,7 +261,7 @@
     </article>`;
 
   const kartaHero = (p) => `
-    <article class="card news-card news-klik lustro-karta lustro-hero" data-post-id="${esc(p.id)}"
+    <article class="card news-card news-klik lustro-karta lustro-hero" data-post-id="${esc(p.id)}"${jestVideo(p) ? ' data-video="1"' : ""}
              tabindex="0" role="button" aria-label="Powiększ wpis: ${esc(tytulZPostu(p))}">
       <div class="news-media${p.full_picture ? " news-media-img" : " news-media-brak"}">${mediaHTML(p)}</div>
       <div class="card-body">
@@ -197,6 +303,12 @@
               title="Otwórz post na Facebooku">
              <img src="${esc(p.full_picture)}" alt="" decoding="async"></a>`
         : "";
+      // 1.11.0: okładka wideo bez pasów — ten sam pomiar (cache),
+      // proporcje ramki = proporcje treści (patrz style.css)
+      if (p.full_picture && jestVideo(p)) {
+        const img = okladka.querySelector("img");
+        zmierzPasy(p.full_picture).then((kadr) => zastosujKadry(img, kadr));
+      }
     }
     const elData = dlg.querySelector('[data-pole="data"]');
     if (elData) {
@@ -270,6 +382,7 @@
       widoczne.forEach((p) => cache.set(p.id, p));
       hero.innerHTML = kartaHero(widoczne[0]);
       grid.innerHTML = widoczne.slice(1).map(karta).join("");
+      kadrujWideo(kontener);   // 1.11.0: pomiary pasów wideo (hero + siatka)
     } catch (e) {
       console.warn("[lustro-fb] pominięto:", e.message);
       hero.innerHTML = "";
@@ -315,6 +428,9 @@
         biezacaGrupa.querySelector(".grid").insertAdjacentHTML("beforeend", karta(p));
         wczytane += 1;
       }
+      kadrujWideo(lista);   // 1.11.0: pomiary pasów wideo — CAŁA lista
+                             // (pomiar cache'owany per URL, więc dosypywanie
+                             // „Starszych wpisów” nic nie kosztuje podwójnie)
       if (licznik) {
         licznik.textContent = `Wczytano ${wczytane} ${wczytane === 1 ? "wpis" : "wpisów"} — od najnowszych`;
       }
