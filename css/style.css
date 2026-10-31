@@ -445,8 +445,13 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 /* ===== AKTUALNOŚCI — migracja WordPress 2025–26 (1.6.5) ===== */
 /* 1.10.3 (właściciel: „obcina ludziom głowy”): zdjęcia kafelków W CAŁOŚCI —
    object-fit contain zamiast cover; pasy uzupełnia neutralne tło .news-media. */
+/* 1.10.4 (właściciel, opcja A „smart-wysrodkowanie”): obraz dobiera rozmiar
+   SAM (width/height auto + max-*), flex kontenera centruje w obu osiach —
+   element <img> nie rozciąga się już na całą ramkę. Wizualnie kafelek ten
+   sam (tło .news-media/LQIP wypełnia pasy), ale wzorzec spójny z modalem
+   i hero; obraz nie jest też powiększany ponad rozmiar naturalny. */
 .news-media-img { padding: 0; background-size: cover; background-position: center; }
-.news-media-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.news-media-img img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
 .news-media-brak { font-size: 2rem; opacity: 0.55; }
 .news-klik { cursor: pointer; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
 .news-klik:hover { border-color: var(--kts-primary); box-shadow: 0 6px 18px rgba(15, 76, 130, 0.12); }
@@ -469,7 +474,14 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .news-dialog::backdrop { background: rgba(9, 20, 34, 0.55); backdrop-filter: blur(2px); }
 .news-dialog-tresc { padding: 1.25rem 1.4rem 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; overflow-y: auto; max-height: min(85vh - 2rem); }
 .news-dialog-okladka:empty { display: none; }
-.news-dialog-okladka img { width: 100%; max-height: 20rem; object-fit: contain; border-radius: 0.6rem; background: var(--kts-neutral); }
+/* 1.10.4: okładka w powiększeniu = SMART-WYSRODKOWANIE (opcja A). Wcześniej
+   img na siłę brał 100% szerokości + WŁASNE szare tło → pionowa okładka
+   reela 720×1280 zostawiała ~72% szerokości dialogu jako puste pasy (zrzut
+   właściciela). Teraz: rozmiar naturalny z clampem max-*, margin-inline:auto
+   centruje, wokół obrazu widać czyste tło karty — zero pasów. Kotwica <a>
+   musi być blokiem, inaczej centrowanie nie łapie (inline nie centruje). */
+.news-dialog-okladka a { display: block; }
+.news-dialog-okladka img { display: block; width: auto; height: auto; max-width: 100%; max-height: 20rem; margin-inline: auto; object-fit: contain; border-radius: 0.6rem; }
 .news-dialog-body { display: flex; flex-direction: column; gap: 0.75rem; }
 .news-dialog-body p { margin: 0; }
 /* 1.10.1: stopka = para przycisków systemowych (.btn) — „Zamknij"
@@ -584,11 +596,15 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   display: grid; grid-template-columns: minmax(0, 38%) 1fr;
 }
 /* media = zdjęcie W CAŁOŚCI (1.10.2, właściciel: cover obcinał teksty
-   na zdjęciach): object-fit contain + img absolute (poza obiegiem), więc
-   wysokość paska wyznacza treść, a pionowe zdjęcie z FB nie rozpycha
-   karty. min-height 12rem: krótkie wpisy też dają pełnoprawny pasek. */
+   na zdjęciach): img absolute (poza obiegiem), więc wysokość paska
+   wyznacza treść, a pionowe zdjęcie z FB nie rozpycha karty.
+   1.10.4 (opcja A): absolute + margin:auto + rozmiar auto z max-* —
+   element obejmujący DOKŁADNIE obraz, wycentrowany w kolumnie (klasyczne
+   centrowanie absolutne; wysokość kolumny definitywna przez rozciągnięcie
+   gridowe, więc max-height:100% się rozwiązuje). min-height 12rem: krótkie
+   wpisy też dają pełnoprawny pasek. */
 .lustro-hero .news-media { height: auto; min-height: 12rem; align-self: stretch; position: relative; }
-.lustro-hero .news-media img { position: absolute; inset: 0; object-fit: contain; }
+.lustro-hero .news-media img { position: absolute; inset: 0; margin: auto; width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
 .lustro-hero .card-body { padding: 1.15rem 1.3rem; display: flex; flex-direction: column; justify-content: center; gap: 0.45rem; }
 .lustro-hero .card-body p { -webkit-line-clamp: 4; }
 
