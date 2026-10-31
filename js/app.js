@@ -291,7 +291,8 @@ function renderPasekMeczu(mecze) {
 function renderKartyDruzyn(dane, mecze) {
   const wrap = $("#karty-druzyn");
   wrap.innerHTML = dane.zespoly.map((z) => `
-    <article class="card team-card">
+    <article class="card team-card team-klik" data-slug="${esc(slugZespolu(z.nazwa))}" tabindex="0" role="button"
+             aria-label="Otwórz szczegóły drużyny: ${esc(z.nazwa)}">
       <h3 class="t-h4">${esc(z.nazwa)}</h3>
       <p class="t-small">${esc(z.liga)}</p>
       <span class="badge ${z.tryb.startsWith("PZTS") ? "badge--team-pzts" : "badge--team"}">${esc(z.tryb.replace(/\s*·\s*automat\s*$/i, ""))}</span>
@@ -299,8 +300,235 @@ function renderKartyDruzyn(dane, mecze) {
         <div class="row"><dt>Stan</dt><dd class="t-nums">${esc(z.stan ?? "—")}</dd></div>
         <div class="row"><dt>Najbliższy</dt><dd class="t-nums">${esc(nastepnyDla(mecze, z.nazwa))}</dd></div>
       </dl>
+      <span class="team-wiecej t-small">Szczegóły, tabela i terminarz&nbsp;↗</span>
       ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło: tabela ligowa ↗</a>` : ""}
     </article>`).join("");
+}
+
+/* ===== 1.12.0: szczegóły drużyny — dialog z zakładkami + podstrona =====
+   Decyzja właściciela 31.10 (wariant C): klik w kafelek otwiera
+   PODSUMOWANIE (dialog: tabela / ostatnie wyniki / najbliższe mecze,
+   skład gdy sync dostarczy dane.sklady), a przycisk „Pełna strona
+   drużyny” prowadzi na druzyna.html?id=… (stabilny URL do
+   udostępniania). Wiązanie zespół→tabela: jawnie (z.tabela z syncu)
+   albo po nazwie ligi; nasz wiersz — dokładnie albo z granicą słowa
+   („KTS II” ⊂ „KTS II Gliwice”, ale NIE „KTS III…”). */
+
+/** Slug drużyny do URL (identyczny w js/druzyna.js — jedno miejsce
+ *  prawdy dla kształtu linków podstrony). */
+function slugZespolu(nazwa) {
+  const mapa = { ą: "a", ć: "c", ę: "e", ł: "l", ń: "n", ó: "o", ś: "s", ź: "z", ż: "z" };
+  return String(nazwa).toLowerCase()
+    .replace(/[ąćęłńóśźż]/g, (c) => mapa[c])
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/** Tabela ligowa drużyny: jawne wiązanie z syncu (z.tabela = klucz)
+ *  albo dopasowanie nazwy ligi do nazwy tabeli (ŚZTS). */
+function tabelaDlaZespolu(dane, z) {
+  const tabele = dane?.tabele ?? [];
+  if (z.tabela) {
+    const t = tabele.find((x) => x.klucz === z.tabela);
+    if (t) return t;
+  }
+  return tabele.find((x) => x.nazwa === z.liga) ?? null;
+}
+
+/** Nasz wiersz w tabeli — patrz komentarz bloku wyżej. */
+function wierszDlaZespolu(tabela, z) {
+  if (!tabela) return null;
+  const n = normNazwa(z.nazwa);
+  const trafienie = tabela.wiersze.find((w) => w.nazwa === n);
+  if (trafienie) return trafienie;
+  try {
+    const re = new RegExp(`\\b${n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`);
+    return tabela.wiersze.find((w) => re.test(w.nazwa)) ?? null;
+  } catch { return null; }
+}
+
+/** Mecze jednej drużyny (ŚZTS: zespoly[], PZTS: zespol). */
+function meczeDruzyny(mecze, nazwa) {
+  return mecze.filter((m) => druzynyMeczu(m).includes(nazwa));
+}
+
+/** Skład drużyny z danych syncu (dane.sklady) — brak = null. */
+function skladDlaZespolu(dane, z) {
+  const cel = slugZespolu(z.nazwa);
+  return (dane?.sklady ?? []).find((s) => slugZespolu(s.zespol) === cel) ?? null;
+}
+
+/** HTML tabeli ligowej (dialog i podstrona współdzielą układ). */
+function htmlTabeli(tabela, naszWiersz, { maxWys = "" } = {}) {
+  if (!tabela) return "";
+  return `<div class="table-scroll${maxWys ? ` ${maxWys}` : ""}">
+    <table class="league-table">
+      <thead><tr><th>Drużyna</th><th class="num">M</th><th class="num">Pkt</th><th class="num">Sety</th></tr></thead>
+      <tbody>${tabela.wiersze.map((w) => `
+        <tr class="${w === naszWiersz ? "is-ours" : ""}">
+          <td>${w.pozycja}. ${esc(w.nazwa)}</td>
+          <td class="num">${w.mecze}</td>
+          <td class="num">${w.punkty}</td>
+          <td class="num">${esc(w.stosunek)}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table></div>`;
+}
+
+let dialogDruzynyPodpiety = false;
+
+function otworzDruzyne(z) {
+  const dlg = $("#druzyna-dialog");
+  if (!dlg || !z) return;
+  const dane = SWIEZOSC.dane;
+  if (!dane) return;
+  const mecze = meczeZDanych(dane);
+  const nasze = meczeDruzyny(mecze, z.nazwa);
+  const tabela = tabelaDlaZespolu(dane, z);
+  const naszWiersz = wierszDlaZespolu(tabela, z);
+  const sklad = skladDlaZespolu(dane, z);
+
+  const ustaw = (pole, wartosc) => {
+    const el = dlg.querySelector(`[data-pole="${pole}"]`);
+    if (el) el.textContent = wartosc;
+  };
+  ustaw("nazwa", z.nazwa);
+  ustaw("liga", z.liga);
+  const elTryb = dlg.querySelector('[data-pole="tryb"]');
+  if (elTryb) {
+    elTryb.textContent = z.tryb.replace(/\s*·\s*automat\s*$/i, "");
+    elTryb.className = "badge " + (z.tryb.startsWith("PZTS") ? "badge--team-pzts" : "badge--team");
+  }
+  const strona = dlg.querySelector('[data-pole="strona"]');
+  if (strona) strona.href = `druzyna.html?id=${encodeURIComponent(slugZespolu(z.nazwa))}`;
+
+  // panel: tabela
+  const pTabela = dlg.querySelector('[data-panel="tabela"]');
+  if (pTabela) {
+    pTabela.innerHTML = tabela
+      ? htmlTabeli(tabela, naszWiersz, { maxWys: "table-scroll--dialog" })
+        + `<p class="t-small muted source-note">Źródło: ${z.url
+            ? `<a href="${esc(z.url)}" target="_blank" rel="noreferrer">${esc(tabela.nazwa)}</a>`
+            : esc(tabela.nazwa)} · stan: <span class="t-nums">${formatujZnacznik(tabela.zaktualizowano) ?? "—"}</span></p>`
+      : `<p class="t-small muted">Pełna tabela tej ligi jeszcze nie płynie z automatycznego
+         odczytu (pzts.pl czytany mostem Google Sheets — rozszerzenie w toku).
+         Wyniki i terminarz tej drużyny są dostępne w zakładkach obok;
+         tabela u źródła: ${z.url
+            ? `<a href="${esc(z.url)}" target="_blank" rel="noreferrer">↗</a>` : "—"}.</p>`;
+  }
+
+  // panele: wyniki / najbliższe (wiersze jak na stronie — spójny wygląd)
+  const rozegrane = nasze.filter((m) => m.rozegrany)
+    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
+  const wDrodze = nasze.filter(meczRozpoczety)
+    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
+  const przyszle = nasze.filter((m) => !m.rozegrany && !meczRozpoczety(m))
+    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? -1 : 1));
+
+  const pWyniki = dlg.querySelector('[data-panel="wyniki"]');
+  if (pWyniki) {
+    const lista = rozegrane.slice(0, 5);
+    pWyniki.innerHTML = lista.length
+      ? `<ul class="divide-list">${lista.map((m) => wierszMeczu(m)).join("")}</ul>`
+        + (rozegrane.length > 5
+            ? `<p class="t-small muted">+ ${rozegrane.length - 5} wcześniejszych — pełna lista na stronie drużyny.</p>` : "")
+      : `<p class="t-small muted">Brak rozegranych meczów tej drużyny w danych.</p>`;
+  }
+  const pNajblizsze = dlg.querySelector('[data-panel="najblizsze"]');
+  if (pNajblizsze) {
+    const lista = [...wDrodze, ...przyszle].slice(0, 5);
+    pNajblizsze.innerHTML = lista.length
+      ? `<ul class="divide-list">${lista.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")}</ul>`
+        + (wDrodze.length + przyszle.length > 5
+            ? `<p class="t-small muted">+ ${wDrodze.length + przyszle.length - 5} kolejnych — pełny terminarz na stronie drużyny.</p>` : "")
+      : `<p class="t-small muted">Brak zaplanowanych meczów — przerwa w rozgrywkach.</p>`;
+  }
+
+  // panel: skład (tylko gdy sync dostarczył dane.sklady)
+  const pSklad = dlg.querySelector('[data-panel="sklad"]');
+  const zSklad = dlg.querySelector('[data-zak="sklad"]');
+  if (pSklad && zSklad) {
+    if (sklad && sklad.zawodnicy?.length) {
+      pSklad.innerHTML = htmlSkladu(sklad, "table-scroll--dialog");
+      zSklad.hidden = false;
+    } else {
+      pSklad.innerHTML = "";
+      zSklad.hidden = true;
+    }
+  }
+
+  // domyślna zakładka: tabela (a dla lig bez tabeli — wyniki)
+  aktywujZakladke(dlg, tabela ? "tabela" : "wyniki");
+
+  if (!dialogDruzynyPodpiety) {
+    const zamknij = dlg.querySelector('[data-akcja="zamknij"]');
+    if (zamknij) zamknij.addEventListener("click", () => dlg.close());
+    dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+    dlg.querySelectorAll(".zakladka").forEach((prz) => {
+      prz.addEventListener("click", () => aktywujZakladke(dlg, prz.dataset.zak));
+    });
+    dialogDruzynyPodpiety = true;
+  }
+  dlg.showModal();
+}
+
+function aktywujZakladke(dlg, nazwa) {
+  dlg.querySelectorAll(".zakladka").forEach((prz) => {
+    const on = prz.dataset.zak === nazwa;
+    prz.classList.toggle("is-aktywny", on);
+    prz.setAttribute("aria-selected", String(on));
+    prz.tabIndex = on ? 0 : -1;
+  });
+  dlg.querySelectorAll(".zakladka-panel").forEach((panel) => {
+    panel.hidden = panel.dataset.panel !== nazwa;
+  });
+}
+
+/** Wspólny HTML tabeli składu (dialog + podstrona; dane.sklady z syncu). */
+function htmlSkladu(sklad, maxWys = "") {
+  const z = sklad.zawodnicy ?? [];
+  const maSkutecznosc = z.some((x) => x.skutecznosc);
+  return `<div class="table-scroll${maxWys ? ` ${maxWys}` : ""}">
+    <table class="sklad-table">
+      <thead><tr>
+        <th>Zawodnik</th><th class="num">Zwyc.</th><th class="num">Poraż.</th>
+        ${maSkutecznosc ? '<th class="num">Skut.</th>' : '<th class="num">Sety</th>'}
+      </tr></thead>
+      <tbody>${z.map((x) => `
+        <tr>
+          <td>${esc(x.nazwisko)}${x.rok ? ` <span class="t-small muted">(${esc(x.rok)})</span>` : ""}</td>
+          <td class="num">${x.zwyciestwa ?? "—"}</td>
+          <td class="num">${x.porazki ?? "—"}</td>
+          <td class="num">${maSkutecznosc ? esc(x.skutecznosc ?? "—") : esc(x.punkty ?? "—")}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table></div>
+    <p class="t-small muted source-note">Źródło: ${sklad.zrodlo
+      ? `<a href="${esc(sklad.zrodlo)}" target="_blank" rel="noreferrer">${esc(new URL(sklad.zrodlo).hostname)}</a>` : "—"}
+      · stan: <span class="t-nums">${formatujZnacznik(sklad.zaktualizowano) ?? "—"}</span></p>`;
+}
+
+/** Delegacja klików/klawiatury na kartach drużyn (raz — kontener żyje). */
+function podpiezKartyDruzyn() {
+  const wrap = $("#karty-druzyn");
+  if (!wrap) return;
+  const otworz = (kartaEl) => {
+    const slug = kartaEl.dataset.slug;
+    const z = (SWIEZOSC.dane?.zespoly ?? []).find((x) => slugZespolu(x.nazwa) === slug);
+    otworzDruzyne(z);
+  };
+  wrap.addEventListener("click", (e) => {
+    if (e.target.closest("a")) return;   // „Źródło” działa normalnie
+    const kartaEl = e.target.closest(".team-klik");
+    if (kartaEl) otworz(kartaEl);
+  });
+  wrap.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const kartaEl = e.target.closest(".team-klik");
+    if (!kartaEl) return;
+    e.preventDefault();
+    otworz(kartaEl);
+  });
 }
 
 function renderTabele(dane) {
@@ -751,6 +979,7 @@ async function start() {
   pokazWersje().then((w) => { SWIEZOSC.wersjaStartowa = w; });
   pokazPrzebiegiSyncu();
   renderTeaserGalerii();
+  podpiezKartyDruzyn();   // 1.12.0: dialog szczegółów (kontener żyje mimo przerysowań)
   const hamburger = $("#hamburger");
   const nav = $("#nav");
   hamburger.addEventListener("click", () => {
