@@ -114,6 +114,14 @@ function dzisISO() {
   return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
 }
 
+/* 1.20.0: porównywarki meczów — data, potem godzina (mecze z tego
+   samego dnia nie mogą latać w losowej kolejności); wspólne dla
+   dialogu drużyny, listy najbliższych i grup ostatnich meczów. */
+const poDacie = (a, b) => (a.dataMeczu < b.dataMeczu ? -1 : a.dataMeczu > b.dataMeczu ? 1 : 0);
+const poGodzinie = (a, b) => (a.godzina ?? "").localeCompare(b.godzina ?? "");
+const odNajstarszego = (a, b) => poDacie(a, b) || poGodzinie(a, b);
+const odNajnowszego = (a, b) => odNajstarszego(b, a);   // najświeższe na górze
+
 /** Etykieta dnia dla człowieka: „dziś" / „jutro" / „21.09.2026". */
 function etykietaDnia(iso) {
   const dzis = dzisISO();
@@ -429,13 +437,8 @@ function otworzDruzyne(z) {
 
   // panele: wyniki / najbliższe (wiersze jak na stronie — spójny wygląd).
   // v1.12.3 (właściciel 31.10): zakładka „Wyniki” pokazuje WSZYSTKIE mecze
-  // sezonu (nie 5 ostatnich); sortowanie bierze pod uwagę także GODZINĘ,
-  // żeby mecze z tego samego dnia nie latały w losowej kolejności.
-  const poDacie = (a, b) => (a.dataMeczu === b.dataMeczu ? 0 : a.dataMeczu < b.dataMeczu ? -1 : 1);
-  const poGodzinie = (a, b) => (a.godzina ?? "").localeCompare(b.godzina ?? "");
-  const odNajstarszego = (a, b) => poDacie(a, b) || poGodzinie(a, b);
-  const odNajnowszego = (a, b) => -odNajstarszego(a, b);   // najświeższe na górze
-
+  // sezonu (nie 5 ostatnich); porównywarki wspólne (1.20.0) biorą pod
+  // uwagę także GODZINĘ.
   const rozegrane = nasze.filter((m) => m.rozegrany).sort(odNajnowszego);
   const wDrodze = nasze.filter(meczRozpoczety).sort(odNajnowszego);
   const przyszle = nasze.filter((m) => !m.rozegrany && !meczRozpoczety(m)).sort(odNajstarszego);
@@ -543,24 +546,13 @@ function podpiezKartyDruzyn() {
   });
 }
 
-function renderTabele(dane) {
-  const tabela = dane.tabele.find((t) => t.klucz === "18/136");
-  const tbody = $("#tabela-liga");
-  if (!tabela) {
-    tbody.innerHTML = `<tr><td colspan="4" class="muted t-small">Tabela niedostępna — spróbuj odświeżyć.</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = tabela.wiersze.map((w) => `
-    <tr class="${w.nazwa.includes("Gliwice") ? "is-ours" : ""}">
-      <td>${w.pozycja}. ${esc(w.nazwa)}</td>
-      <td class="num">${w.mecze}</td>
-      <td class="num">${w.punkty}</td>
-      <td class="num">${esc(w.stosunek)}</td>
-    </tr>`).join("");
-  $("#tabela-stan").textContent = formatujZnacznik(tabela.zaktualizowano) ?? "—";
-}
+/* 1.20.0: wielka tabela 2. ligi ZNIKNĘŁA z sekcji „Drużyny i wyniki”
+   (decyzja właściciela 02.11: te same dane żyją w kartach drużyn —
+   dialog i druzyna.html). Pełne tabele dalej płyną z dane.json
+   (tabele[]) i są renderowane przez htmlTabeli() w dialogach oraz
+   na podstronach drużyn; funkcja renderTabele() została usunięta. */
 
-function wierszMeczu(m, oczekuje = false) {
+function wierszMeczu(m, oczekuje = false, wGrupie = false) {
   const nasze = druzynyMeczu(m);
   const derby = nasze.length > 1;
   const st = statusMeczu(m);
@@ -572,6 +564,8 @@ function wierszMeczu(m, oczekuje = false) {
       : st ? `<span class="badge badge--${st}">${st}</span>` : "";
   const etykieta = nasze.length > 0 && !derby ? ` · ${nasze[0]}` : "";
   const zrodlo = m.liga.startsWith("1. Liga") ? "pzts.pl" : "ligi.slzts.pl";
+  // wGrupie = wiersz wewnątrz grupy drużyny („Ostatnie mecze”):
+  // liga i źródło są w nagłówku grupy, meta zduplikowana by schodziła
   return `
     <li>
       <div class="match-row">
@@ -581,33 +575,99 @@ function wierszMeczu(m, oczekuje = false) {
         ${badge}
         ${m.kolejka ? `<span class="match-date">kolejka ${m.kolejka}</span>` : ""}
       </div>
-      <p class="match-meta">${esc(m.liga)} · ${zrodlo}${etykieta}</p>
+      ${wGrupie ? "" : `<p class="match-meta">${esc(m.liga)} · ${zrodlo}${etykieta}</p>`}
     </li>`;
 }
 
-function renderMecze(mecze) {
+/* 1.20.0: „1 mecz / 2 mecze / 5 meczów” — licznik w tytule kafelka. */
+function liczbaMeczy(n) {
+  if (n === 1) return "1 mecz";
+  const r10 = n % 10, r100 = n % 100;
+  if (r10 >= 2 && r10 <= 4 && (r100 < 12 || r100 > 14)) return `${n} mecze`;
+  return `${n} meczów`;
+}
+
+/* 1.20.0: kafelki meczów — trójkąciki rozwijają treść (wzór „O klubie”).
+   Podpinane RAZ przy starcie: kontener i przyciski żyją mimo przerysowań
+   w pętli świeżości (render zamienia tylko wnętrza paneli), więc stan
+   rozwinięcia przetrwa odświeżenie danych bez zamykania gościa. */
+function podpinKafelkiMeczy() {
+  [["#przelacz-najblizsze", "#najblizsze-mecze-panel"],
+   ["#przelacz-ostatnie", "#ostatnie-mecze-panel"]].forEach(([selPrzycisku, selPanelu]) => {
+    const przycisk = $(selPrzycisku);
+    const panel = $(selPanelu);
+    if (!przycisk || !panel || przycisk.dataset.podpiety) return;
+    przycisk.dataset.podpiety = "1";
+    przycisk.addEventListener("click", () => {
+      const otwarte = przycisk.getAttribute("aria-expanded") === "true";
+      przycisk.setAttribute("aria-expanded", String(!otwarte));
+      panel.hidden = otwarte;
+    });
+  });
+}
+
+function renderMecze(dane, mecze) {
   const dzis = dzisISO();
-  // „Najbliższe": przyszłe + te już rozpoczęte, lecz bez wyniku w źródle
-  // (kiedyś padnie — plakietka „wynik w drodze" tłumaczy, dlaczego tu wisi).
+
+  /* „Najbliższe” (1.20.0: WSZYSTKIE przyszłe, nie tylko 6 — kafelek
+     rozwijany): przyszłe + rozpoczęte bez wyniku w źródle (kiedyś padnie;
+     plakietka „wynik w drodze” tłumaczy, dlaczego tu wisi), sortowanie
+     od najbliższego do najdalszego — data, potem godzina. */
   const najblizsze = mecze
     .filter((m) => !m.rozegrany && (m.dataMeczu >= dzis || meczRozpoczety(m)))
-    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? -1 : 1))
-    .slice(0, 6);
-  const ostatnie = mecze
-    .filter((m) => m.rozegrany)
-    .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
+    .sort(odNajstarszego);
 
   // 1.7.0: pusty terminarz nie jest błędem — to przerwa w rozgrywkach;
   // piłka (#pilka-kts) spoczywa, komunikat tłumaczy, skąd wezmą się dane.
-  $("#najblizsze-mecze").innerHTML = najblizsze.length
-    ? najblizsze.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")
-    : `<li class="pusty-stan">
-         <svg class="pilka-odpoczyna" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
-         <span class="t-small muted">Brak zaplanowanych meczów — przerwa w rozgrywkach.</span>
-       </li>`;
-  $("#ostatnie-mecze").innerHTML = ostatnie.length
-    ? ostatnie.map((m) => wierszMeczu(m)).join("")
-    : `<li class="t-small muted">Brak rozegranych meczów w bazie.</li>`;
+  const elNajblizsze = $("#najblizsze-mecze");
+  if (elNajblizsze) {
+    elNajblizsze.innerHTML = najblizsze.length
+      ? najblizsze.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")
+      : `<li class="pusty-stan">
+           <svg class="pilka-odpoczyna" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
+           <span class="t-small muted">Brak zaplanowanych meczów — przerwa w rozgrywkach.</span>
+         </li>`;
+  }
+  const licznikNajblizsze = $("#najblizsze-mecze-licznik");
+  if (licznikNajblizsze) licznikNajblizsze.textContent = liczbaMeczy(najblizsze.length);
+
+  /* „Ostatnie” (1.20.0): pogrupowane wg DRUŻYN w kolejności sezonu
+     (dane.zespoly = 1. liga → … → amatorzy — decyzja właściciela 02.11:
+     „od 1-szej ligi w dół”), w grupie chronologicznie OD NAJNOWSZEGO.
+     Derby naszych drużyn trafia do grupy wyżej notowanej drużyny
+     (pokazujemy raz, nie dwa razy). */
+  const zespoly = dane?.zespoly ?? [];
+  const kolejnosc = zespoly.map((z) => z.nazwa);
+  const rozegrane = mecze.filter((m) => m.rozegrany);
+  const grupy = new Map();                 // nazwa drużyny → mecze
+  for (const m of rozegrane) {
+    const nasze = druzynyMeczu(m);
+    let klucz = kolejnosc.find((nazwa) => nasze.includes(nazwa));
+    if (!klucz) klucz = nasze[0] ?? "Inne";   // mecz poza zespoly — na koniec
+    if (!grupy.has(klucz)) grupy.set(klucz, []);
+    grupy.get(klucz).push(m);
+  }
+  const klucze = [...grupy.keys()].sort((a, b) => {
+    const ia = kolejnosc.indexOf(a), ib = kolejnosc.indexOf(b);
+    return (ia === -1 ? Infinity : ia) - (ib === -1 ? Infinity : ib)
+      || a.localeCompare(b, "pl");
+  });
+
+  const elGrupy = $("#ostatnie-mecze-grupy");
+  if (elGrupy) {
+    elGrupy.innerHTML = klucze.length
+      ? klucze.map((nazwa) => {
+          const z = zespoly.find((x) => x.nazwa === nazwa);
+          const lista = grupy.get(nazwa).sort(odNajnowszego);
+          return `<section class="mecz-grupa">
+            <p class="list-title mecz-grupa-naglowek">${esc(nazwa)}${z ? ` <span class="t-small muted">· ${esc(z.liga)}</span>` : ""}</p>
+            <ul class="divide-list">${lista.map((m) => wierszMeczu(m, false, true)).join("")}</ul>
+          </section>`;
+        }).join("")
+      : `<p class="t-small muted">Brak rozegranych meczów w bazie.</p>`;
+  }
+  const licznikOstatnie = $("#ostatnie-mecze-licznik");
+  if (licznikOstatnie) licznikOstatnie.textContent = liczbaMeczy(rozegrane.length);
 }
 
 function renderBadges(dane, ok) {
@@ -818,8 +878,7 @@ function przerysujDane(dane, animujPilke) {
   const mecze = meczeZDanych(dane);
   renderPasekMeczu(mecze);
   renderKartyDruzyn(dane, mecze);
-  renderTabele(dane);
-  renderMecze(mecze);
+  renderMecze(dane, mecze);
   renderBadges(dane, true);
   const pilka = document.querySelector(".pilka-bohater");
   if (pilka && animujPilke) {
@@ -1065,6 +1124,7 @@ async function start() {
   renderTeaserGalerii();
   wypelnijLicznikGalerii();   // 1.16.0: badge sekcji = licznik CAŁEJ galerii (bot)
   podpiezKartyDruzyn();   // 1.12.0: dialog szczegółów (kontener żyje mimo przerysowań)
+  podpinKafelkiMeczy();   // 1.20.0: trójkąciki kafelków meczów (jw. — podpięte raz)
   const hamburger = $("#hamburger");
   const nav = $("#nav");
   hamburger.addEventListener("click", () => {
@@ -1101,8 +1161,7 @@ async function start() {
     const mecze = meczeZDanych(dane);
     renderPasekMeczu(mecze);
     renderKartyDruzyn(dane, mecze);
-    renderTabele(dane);
-    renderMecze(mecze);
+    renderMecze(dane, mecze);
   }
   renderBadges(dane ?? {}, ok);
   // 1.7.5: pętla świeżości rusza ZAWSZE — także po błędzie startu
