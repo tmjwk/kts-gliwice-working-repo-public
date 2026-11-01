@@ -75,8 +75,8 @@
   const FB = window.KTSFB;
 
   /* ===== scalenie z galeria.js (render wspólny) =====
-     GALERIA/renderStatystyki/renderFiltry/renderAlbumy to globalne
-     deklaracje js/galeria.js — klasyczne skrypty współdzielą zakres. */
+     GALERIA/renderFiltry/renderAlbumy to globalne deklaracje
+     js/galeria.js — klasyczne skrypty współdzielą zakres. */
 
   /* zgoda galeria.js na rozpoczęcie zastępowania: start() tamtego
      pliku na końcu.resolve'uje window.__GAL_START (także po błędzie
@@ -108,7 +108,6 @@
       return da > db ? -1 : da < db ? 1 : 0;
     });
     POKAZ = BATCH;                       // nowy widok = od pierwszej paczki
-    renderStatystyki();
     renderFiltry();
     /* filtr ustawiony na rok, którego dane właśnie zniknęły (np. 2023
        z archiwum) → dociągnij ten rok z FB od razu, bez klepania */
@@ -137,7 +136,6 @@
       const da = a.data ?? "", db = b.data ?? "";
       return da > db ? -1 : da < db ? 1 : 0;
     });
-    renderStatystyki();
     renderFiltry();
     renderAlbumy();
     return dodane;
@@ -177,15 +175,17 @@
     };
   }
 
-  /* ===== notka zakresu ===== */
-  function noteZakresu(nowe) {
-    return "<strong>Zakres galerii: 2012–2026.</strong> "
-      + "Wszystkie lata to zakładka „Zdjęcia” na Facebooku klubu, "
-      + "dociągana na żywo — start pokazuje najnowsze lata, a starsze "
-      + "(w tym 2023–2024) doładujesz jednym kliknięciem w filtrach "
-      + "powyżej. Pliki nie są kopiowane do serwisu."
-      + (nowe ? ` <strong>Ostatnio: ${nowe}.</strong>` : "");
-  }
+  /* ===== notka zakresu =====
+     1.16.0: bez liczników (decyzja właściciela — liczby na stronie galerii
+     zbędne; pełny licznik całej galerii żyje na stronie głównej) i bez
+     tekstów ładowania — podczas poboru notka pokazuje kręcącą się piłkę. */
+  const NOTKA_ZAKRESU = "<strong>Zakres galerii: 2012–2026.</strong> "
+    + "Wszystkie lata to zakładka „Zdjęcia” na Facebooku klubu, "
+    + "dociągana na żywo — start pokazuje najnowsze lata, a starsze "
+    + "(w tym 2023–2024) doładujesz jednym kliknięciem w filtrach "
+    + "powyżej. Pliki nie są kopiowane do serwisu.";
+
+  const PILKA_NOTKI = FB.pilka("gal-pilka gal-pilka--notka");
 
   /* ===== D. rok na żądanie (2012–2024) ===== */
   async function wczytajRok(rok) {
@@ -194,35 +194,30 @@
     const stan = STAN_LAT.get(r);
     if (stan === "ok" || stan === "laduje") return;   // już wczytany / w trakcie
     STAN_LAT.set(r, "laduje");
-    renderAlbumy();                                    // pokaż spinner roku
-    ustawNote(`<strong>Rok ${r}:</strong> dociągam zdjęcia z Facebooka klubu…`);
+    renderAlbumy();                                    // pokaż piłkę ładowania
+    ustawNote(PILKA_NOTKI);
     try {
       const od = `${r}-01-01`, doIso = `${r + 1}-01-01`;
-      const naPostep = (n) => {
-        const el = document.getElementById("gal-ladowanie-txt");
-        if (el) el.textContent = `Dociągam zdjęcia z roku ${r} z Facebooka… (dotąd: ${FB.fmtLiczba(n)} zdjęć)`;
-      };
       // posty to tylko metadane — ich awaria nie wywala roku (spada na albumy/miesiące)
       const [listaPostow, mapaZdjec] = await Promise.all([
         FB.posty(od, doIso).catch((e) => {
           console.warn(`Lustro galerii FB — posty roku ${r} niedostępne (grupuję po albumach/miesiącach):`, e);
           return [];
         }),
-        FB.zdjecia(od, doIso, { naPostep }),
+        FB.zdjecia(od, doIso),
       ]);
       const albumy = FB.zbudujAlbumy(mapaZdjec, FB.mapaFotoPost(listaPostow), WIDZIANE_FOTO);
       zapiszPermalinki(albumy);
-      const dodane = dolaczAlbumyFB(albumy);
+      dolaczAlbumyFB(albumy);
       STAN_LAT.set(r, "ok");
-      const nZdjec = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
-      ustawNote(noteZakresu(dodane ? `rok ${r}: ${FB.liczba(dodane, ["album", "albumy", "albumów"])} · ${FB.liczba(nZdjec, ["zdjęcie", "zdjęcia", "zdjęć"])}` : null));
+      ustawNote(NOTKA_ZAKRESU);
       // po dociągnięciu roku: dosięgnij celu, jeśli w URL czeka kotwica #album-…
       if (typeof window.przewinDoAlbumu === "function") window.przewinDoAlbumu();
     } catch (err) {
       console.error(`Lustro galerii FB — rok ${r} błąd poboru:`, err);
       STAN_LAT.set(r, "blad");
       renderAlbumy();                                  // komunikat + „Spróbuj ponownie”
-      ustawNote(`<strong>Rok ${r}:</strong> nie udało się pobrać zdjęć z Facebooka — `
+      ustawNote(`<strong>Rok ${r}:</strong> nie udało się pobrać zdjęć — `
         + "spróbuj ponownie za chwilę.");
     }
   }
@@ -237,7 +232,7 @@
 
   /* ===== E. start: lustro najnowszych lat (zastępuje archiwum) ===== */
   async function start() {
-    ustawNote(`<strong>Lata ${OD_ROKU}–${new Date().getFullYear()}:</strong> dociągam zdjęcia z Facebooka klubu…`);
+    ustawNote(PILKA_NOTKI);
 
     let listaPostow, mapaZdjec;
     try {
@@ -278,11 +273,7 @@
       console.warn("Lustro galerii FB: statyczne archiwum nie potwierdziło startu — zastępuję bez niego.");
     }
     zastapStatyczne(albumy);
-
-    const nZdjec = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
-    ustawNote(noteZakresu(
-      `lata ${FB.zakresLat(albumy)}: ${FB.liczba(albumy.length, ["album", "albumy", "albumów"])} · `
-      + `${FB.liczba(nZdjec, ["zdjęcie", "zdjęcia", "zdjęć"])}`));
+    ustawNote(NOTKA_ZAKRESU);
   }
 
   if (document.readyState === "loading") {
