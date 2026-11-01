@@ -1,5 +1,5 @@
 {
- "wersja": "1.15.0",
- "data": "2026-11-01T00:23:42Z",
- "opis": "Galeria = jedno lustro FB 2012–2026 (podejście B): lata 2023–2024 też z Facebooka — start pokazuje najnowsze lata, pozostałe dociągane na żądanie; archiwum lokalne zostaje jako zapas przy awarii FB. Liczniki zawsze prawdziwe: liczby z zakresem lat, przeliczane na żywo (galeria i strona główna — teaser okładek z FB)"
+ "wersja": "1.16.0",
+ "data": "2026-11-01T01:16:14Z",
+ "opis": "Galeria: badge licznika przy \"Galeria klubu\" usunięty (liczby zbędne na miejscu), a na stronie głównej badge pokazuje liczbę zdjęć CAŁEJ galerii — liczy ją automat co 2 h (galeria-licznik.json). Ładowanie zdjęć pokazuje kręcąca się piłka KTS zamiast tekstu, przyciski lat bez dopiska \"FB\""
 }
