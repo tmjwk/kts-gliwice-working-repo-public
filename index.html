@@ -228,10 +228,13 @@
     <section class="section sponsors">
       <div class="container center">
         <h2 class="t-h4 sponsors-title">Sponsorzy i partnerzy</h2>
-        <div class="sponsors-row">
-          <span>[LOGO 1]</span><span>[LOGO 2]</span><span>[LOGO 3]</span><span>[LOGO 4]</span><span>[LOGO 5]</span>
-        </div>
-        <p class="t-small muted">[Układ zależny od wymogów umownych sponsorów — Q11]</p>
+        <!-- 1.18.0: kafelki buduje js/sponsorzy.js z sponsorzy.json
+             (auto-sync co 2 h z arkusza Google właściciela — workflow
+             sync-dane.yml + scripts/sync_sponsorzy.ts; właściciel edytuje
+             arkusz, nie kod strony). Q11 domknięte 02.11: brak znanych
+             wymogów umownych → układ neutralny płaski, równy, łatwy
+             do przestawienia, gdy sponsorzy zgłoszą wymagania. -->
+        <div class="sponsors-row"></div>
       </div>
     </section>
 
@@ -330,6 +333,7 @@
   <script src="js/app.js"></script>
   <script src="js/lustro-fb.js" defer></script>
   <script src="js/powrot-gora.js" defer></script>
+  <script src="js/sponsorzy.js" defer></script>
 
   <!-- ===== DIALOG: pełny wpis z Facebooka (1.10.1) =====
        Klik w kafelek → powiększenie na środku ekranu; klik w zdjęcie/
