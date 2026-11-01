@@ -381,23 +381,26 @@
     const strefaPrzycisku = $("#lustro-rozwin-strefa");
     const przycisk = $("#lustro-rozwin");
     const etykieta = przycisk ? przycisk.querySelector(".etykieta") : null;
+    const stopka = $("#lustro-starsze");   // 1.20.1: „Pokaż starsze wpisy” po rozwinięciu
     if (!kontener || !hero || !grid) return;
     podpiezKarty(kontener);
 
-    /* stan rozwinięcia + widoczność przycisku zależna od viewportu */
+    /* stan rozwinięcia + widoczność przycisków zależna od viewportu */
     let rozwinieta = false;
     let ilePostow = 0;
 
     const stanPrzycisku = () => {
       if (!strefaPrzycisku || !przycisk || !etykieta) return;
-      if (rozwinieta) {
-        strefaPrzycisku.hidden = false;      // „Zwiń” zawsze dostępne
-        etykieta.textContent = "Zwiń";
-        return;
-      }
       const start = MOBILE_MQ.matches ? START_MOBILE : START_DESKTOP;
-      strefaPrzycisku.hidden = ilePostow <= start;   // nic do odsłonięcia
-      etykieta.textContent = "Rozwiń";
+      const maRozwijac = ilePostow > start;
+      // „Zwiń” wisi po rozwinięciu (nawet gdy w nowym porcie nie ma
+      // czego dokładać — da się wrócić do porcji startowej)
+      strefaPrzycisku.hidden = !maRozwijac && !rozwinieta;
+      etykieta.textContent = rozwinieta ? "Zwiń" : "Rozwiń";
+      // 1.20.1 (właściciel 02.11): „Pokaż starsze wpisy” dopiero PO
+      // ROZWINIĘCIU; wyjątek: gdy rozwijać nie ma czego (przycisk
+      // „Rozwiń” ukryty) — stopka od razu, bo to jedyna droga do archiwum
+      if (stopka) stopka.hidden = maRozwijac && !rozwinieta;
     };
 
     if (przycisk) {
@@ -453,6 +456,7 @@
       kontener.classList.remove("rozwinieta");
       ilePostow = 0;
       if (strefaPrzycisku) strefaPrzycisku.hidden = true;
+      if (stopka) stopka.hidden = false;   // kafel awaryjny — zostaw drogę do archiwum
       hero.innerHTML = "";
       grid.innerHTML = kartaFallback();      // P3: kafel awaryjny
     }
