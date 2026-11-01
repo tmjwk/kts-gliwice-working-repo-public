@@ -1,5 +1,5 @@
 {
- "wersja": "1.17.2",
+ "wersja": "1.18.0",
  "data": "2026-11-02T00:00:00Z",
- "opis": "Naprawa 1.17.1: przywrócone js/lustro-fb.js na stronie głównej i w archiwum (skrypt przycisku przypadkiem zajął jego miejsce — aktualności FB i archiwum były martwe); przycisk powrotu na górę bez zmian"
+ "opis": "Sponsorzy i partnerzy: sekcja na stronie głównej zasilana arkuszem Google (auto-sync co 2 h, hotlink logotypów z elegancką degradacją do nazwy tekstowej)"
 }
