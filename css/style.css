@@ -269,6 +269,9 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 64rem) {
+  /* .results-grid: układ 2-kolumnowy tabeli+meczów — na stronie głównej
+     usunięty (1.20.0: kafelki rozwijane), ALE wciąż używany przez
+     js/druzyna.js (sekcja „Tabela i mecze” podstrony drużyny) */
   .grid-2.results-grid { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
   .grid-4 { grid-template-columns: repeat(4, 1fr); }
@@ -337,6 +340,37 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .match-score--P { color: var(--kts-loss); }
 .match-score--derby { color: var(--kts-link); }
 .match-meta { font-size: 0.78rem; color: var(--kts-text-muted); margin-top: 0.15rem; }
+
+/* ===== mecze: kafelki rozwijane (1.20.0 — decyzja właściciela 02.11) =====
+   Wielka tabela 2. ligi zniknęła (pełne tabele żyją w kartach drużyn:
+   dialog i druzyna.html); terminarz i wyniki to dwa kafelki pełnej
+   szerokości. Zwinięte = sam pasek tytułu z licznikiem i trójkącikiem,
+   rozwinięte = pełna lista. Trójkącik i mechanika = wzór „O klubie”. */
+.mecze-kafelki { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.mecz-kafel { padding: 0; }
+.mecz-przelacz {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; width: 100%; padding: 0.95rem 1.25rem;
+  background: transparent; border: none; cursor: pointer;
+  font-family: var(--font-body); text-align: left; color: inherit;
+  transition: background-color 0.15s ease;
+}
+.mecz-przelacz:hover, .mecz-przelacz:focus-visible {
+  background: var(--kts-primary-light); outline: none;
+}
+.mecz-tytul { font-size: 0.95rem; font-weight: 600; color: var(--kts-ink); }
+.mecz-zestawienie {
+  display: inline-flex; align-items: center; gap: 0.7rem;
+  flex: none; color: var(--kts-text-muted);
+}
+.mecz-licznik { font-size: 0.85rem; }
+.mecz-panel { padding: 0.1rem 1.25rem 1.1rem; }
+/* grupy drużyn w „Ostatnich meczach”: nagłówek = nazwa + liga,
+   mecze w grupie od najnowszego (decyzja właściciela 02.11) */
+.mecz-grupa + .mecz-grupa { margin-top: 1rem; }
+.mecz-grupa-naglowek { margin-bottom: 0.15rem; }
+.mecz-grupa-naglowek .muted { font-weight: 500; }
+.mecze-zrodla { padding: 0 0.25rem; }
 
 /* ===== mechanizm ===== */
 .mechanism {
@@ -426,7 +460,21 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .oklubie-lista li::marker { color: var(--kts-primary); }
 @media (prefers-reduced-motion: reduce) {
   .oklubie-trojkat, .oklubie-przelacz { transition: none; }
+  .trojkat-rozwin, .przelacz-rozwin, .mecz-przelacz { transition: none; }
 }
+
+/* ===== trójkącik rozwijania — wspólne (1.20.0, wzór „O klubie”) =====
+   Czysty CSS z borderów; po rozwinięciu obraca się o 180°. Reguła
+   zasięgowa: trójkącik obraca się wewnątrz KAŻDEGO przodka
+   aria-expanded="true" — dotyczy „Rozwiń” aktualności i obu kafelków
+   meczów; „O klubie” ma własne klasy (oklubie-trojkat) niżej. */
+.trojkat-rozwin {
+  width: 0; height: 0;
+  border-left: 0.42rem solid transparent; border-right: 0.42rem solid transparent;
+  border-top: 0.5rem solid currentColor;
+  transition: transform 0.18s ease;
+}
+[aria-expanded="true"] .trojkat-rozwin { transform: rotate(180deg); }
 
 /* ===== footer ===== */
 .footer { background: var(--kts-ink-fixed); color: rgba(255,255,255,0.8); padding: 2.5rem 0 2rem; margin-top: auto; }
@@ -730,6 +778,36 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .lustro-wiecej { color: var(--kts-primary); font-weight: 600; margin-top: auto; }
 .lustro-karta:hover .lustro-wiecej { text-decoration: underline; }
+
+/* 1.20.0 — porcje aktualności (decyzja właściciela 02.11: „kafelki
+   zajmują za dużo miejsca”): DESKTOP (≥40rem) start = hero + 3 kafelki,
+   „Rozwiń” dokłada 6 (do 10); MOBILE (<40rem) start = hero + 1,
+   „Rozwiń” dokłada 2 (do 4) — reszta tylko w archiwum. Renderer zna
+   liczbę postów, nie viewport — tury przydziela klasa, widoczność
+   reguluje CSS: .lustro-tura-2 = mobile dopiero po „Rozwiń”
+   (desktop od razu), .lustro-tura-3 = desktop dopiero po „Rozwiń”
+   (mobile nigdy). Kontener .rozwinieta zdejmuje blokady. */
+.lustro-fb:not(.rozwinieta) .lustro-tura-3 { display: none; }
+@media (max-width: 40rem) {
+  .lustro-tura-3 { display: none; }                              /* mobile: tylko archiwum */
+  .lustro-fb:not(.rozwinieta) .lustro-tura-2 { display: none; }  /* mobile: po „Rozwiń” */
+}
+
+/* przycisk „Rozwiń” pod kafelkami — ten sam charakter co „O klubie”
+   (obrys, trójkącik z obrotu, etykieta Rozwiń/Zwiń) */
+.lustro-rozwin-strefa { margin-top: 0.1rem; }
+.przelacz-rozwin {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  padding: 0.45rem 1.05rem;
+  background: transparent; color: var(--kts-primary);
+  border: 1px solid var(--kts-line); border-radius: 0.6rem;
+  font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.przelacz-rozwin:hover, .przelacz-rozwin:focus-visible {
+  border-color: var(--kts-primary); background: var(--kts-primary-light);
+}
 
 /* hero — najnowszy post: SZEROKI PASEK o wysokości zwykłego kafla
    (1.10.1, zgłoszenie właściciela: hero był za wysoki). Pełna szerokość
