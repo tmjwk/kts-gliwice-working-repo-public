@@ -57,7 +57,6 @@
 
         <div class="section-head-row">
           <h1 class="t-h2" style="font-size: 2.25rem;">Galeria klubu</h1>
-          <span class="badge badge-outline-primary t-nums" id="gal-statystyki">—</span>
         </div>
         <p class="t-small muted section-desc">
           Pełna historia klubu od 2012 roku: turnieje, obozy, mecze i
@@ -120,6 +119,30 @@
       </p>
     </div>
   </footer>
+
+  <!-- ===== SPRITE PIŁKI KTS (jak w index.html; 1.16.0) — kręcąca się piłka
+       = wskaźnik ładowania zdjęć z FB (zamiast tekstu „dociągam…”). ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="kula-gradient" cx="32%" cy="28%" r="75%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="45%" stop-color="#fdfcf8"/>
+        <stop offset="75%" stop-color="#ece8dd"/>
+        <stop offset="100%" stop-color="#d9d4c5"/>
+      </radialGradient>
+      <path id="gwiazdka" d="M0,-9 L2.02,-2.78 L8.56,-2.78 L3.27,1.07 L5.29,7.29 L0,3.44 L-5.29,7.29 L-3.27,1.07 L-8.56,-2.78 L-2.02,-2.78 Z"/>
+      <symbol id="pilka-kts" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="57" fill="url(#kula-gradient)"/>
+        <use href="#gwiazdka" transform="translate(60 30)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(77.6 35.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(42.4 35.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(88.6 50.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(31.4 50.7)" fill="#0057b8"/>
+        <text x="60" y="84" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="30" font-weight="700" fill="#0057b8" text-anchor="middle" letter-spacing="1.5" stroke="#0057b8" stroke-width="0.7" paint-order="stroke fill">KTS</text>
+        <text x="60" y="106" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="21" font-weight="700" fill="#0057b8" text-anchor="middle" letter-spacing="0.5" stroke="#0057b8" stroke-width="0.5" paint-order="stroke fill">40+</text>
+      </symbol>
+    </defs>
+  </svg>
 
   <!-- ===== LIGHTBOX (podgląd zdjęcia) ===== -->
   <div class="gal-lightbox" id="gal-lightbox" role="dialog" aria-modal="true" aria-label="Podgląd zdjęcia" hidden>
