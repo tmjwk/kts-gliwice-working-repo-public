@@ -1,6 +1,18 @@
 /* ============================================================
-   KTS Gliwice — LUSTRO FB (1.11.0)
+   KTS Gliwice — LUSTRO FB (1.20.0)
    Aktualności z Facebooka na żywo + archiwum na podstronie.
+
+   1.20.0 (02.11, decyzja właściciela: „kafelki zajmują za dużo
+   miejsca”): STRONA GŁÓWNA w PORCJACH ROZWIJANYCH — desktop (≥40 rem)
+   start = hero + 3 kafelki, „Rozwiń” dokłada 6 (do 10); mobile
+   (<40 rem) start = hero + 1, „Rozwiń” dokłada 2 (do 4); reszta tylko
+   przez „Pokaż starsze wpisy” → archiwum.html. Mechanika: renderer
+   przydziela kartom TURY (.lustro-tura-2 / .lustro-tura-3), a widoczność
+   reguluje CSS (media query + klasa .rozwinieta na kontenerze) — ten sam
+   kod serwuje oba układy bez przerenderowania. Przycisk „Rozwiń” =
+   trójkącik z „O klubie” (obrót 180°, aria-expanded, po rozwinięciu
+   etykieta „Zwiń”); jego widoczność liczy się na żywo pod viewport
+   (matchMedia) — znika, gdy poza porcją nie ma już nic.
 
    1.11.0 (31.10, noc — „reel bez pasów”):
    - KADROWANIE MINIATUR WIDEO w przeglądarce: FB wypala poziomy
@@ -248,8 +260,8 @@
     });
   }
 
-  const karta = (p) => `
-    <article class="card news-card news-klik lustro-karta" data-post-id="${esc(p.id)}"${jestVideo(p) ? ' data-video="1"' : ""}
+  const karta = (p, dodatkowaKlasa = "") => `
+    <article class="card news-card news-klik lustro-karta${dodatkowaKlasa ? " " + dodatkowaKlasa : ""}" data-post-id="${esc(p.id)}"${jestVideo(p) ? ' data-video="1"' : ""}
              tabindex="0" role="button" aria-label="Powiększ wpis: ${esc(tytulZPostu(p))}">
       <div class="news-media${p.full_picture ? " news-media-img" : " news-media-brak"}">${mediaHTML(p)}</div>
       <div class="card-body">
@@ -355,18 +367,60 @@
   }
 
   /* ===== STRONA GŁÓWNA ===== */
+  /* 1.20.0: progi porcji — DESKTOP 4 (hero + 3) / MOBILE 2 (hero + 1);
+     granica 40 rem = moment, w którym kafelki układają się w 1 kolumnę
+     (ta sama co w CSS .lustro-tura-*). */
+  const MOBILE_MQ = window.matchMedia("(max-width: 40rem)");
+  const START_DESKTOP = 4;
+  const START_MOBILE = 2;
+
   async function initGlowna() {
     const kontener = $("#lustro-fb");
     const hero = $("#lustro-fb-hero");
     const grid = $("#lustro-fb-grid");
+    const strefaPrzycisku = $("#lustro-rozwin-strefa");
+    const przycisk = $("#lustro-rozwin");
+    const etykieta = przycisk ? przycisk.querySelector(".etykieta") : null;
     if (!kontener || !hero || !grid) return;
     podpiezKarty(kontener);
 
+    /* stan rozwinięcia + widoczność przycisku zależna od viewportu */
+    let rozwinieta = false;
+    let ilePostow = 0;
+
+    const stanPrzycisku = () => {
+      if (!strefaPrzycisku || !przycisk || !etykieta) return;
+      if (rozwinieta) {
+        strefaPrzycisku.hidden = false;      // „Zwiń” zawsze dostępne
+        etykieta.textContent = "Zwiń";
+        return;
+      }
+      const start = MOBILE_MQ.matches ? START_MOBILE : START_DESKTOP;
+      strefaPrzycisku.hidden = ilePostow <= start;   // nic do odsłonięcia
+      etykieta.textContent = "Rozwiń";
+    };
+
+    if (przycisk) {
+      przycisk.addEventListener("click", () => {
+        rozwinieta = !rozwinieta;
+        kontener.classList.toggle("rozwinieta", rozwinieta);
+        przycisk.setAttribute("aria-expanded", String(rozwinieta));
+        stanPrzycisku();
+      });
+      // obrót telefonu / zmiana okna: policz progi od nowa
+      if (typeof MOBILE_MQ.addEventListener === "function") {
+        MOBILE_MQ.addEventListener("change", stanPrzycisku);
+      } else if (typeof MOBILE_MQ.addListener === "function") {
+        MOBILE_MQ.addListener(stanPrzycisku);   // starsze Safari
+      }
+    }
+
     // skeleton od razu (P2) — sekcja żyje, zanim dojadą dane
-    // (1.10.1: hero-pasek płaski, 10rem jak zwykłe kafelki)
+    // (1.10.1: hero-pasek płaski, 10rem jak zwykłe kafelki;
+    //  1.20.0: 3 kostki z turami — mobile od razu widzi hero + 1)
     hero.innerHTML = skeleton("lustro-skeleton--hero", "10rem");
-    grid.innerHTML = Array.from({ length: MIN_POSTOW - 1 },
-      () => skeleton("", "10rem")).join("");
+    grid.innerHTML = ["", "lustro-tura-2", "lustro-tura-2"]
+      .map((tura) => skeleton(tura, "10rem")).join("");
 
     try {
       const { posty } = await pobierzPosty({ limit: LIMIT_GLOWNA });
@@ -381,10 +435,24 @@
 
       widoczne.forEach((p) => cache.set(p.id, p));
       hero.innerHTML = kartaHero(widoczne[0]);
-      grid.innerHTML = widoczne.slice(1).map(karta).join("");
+      // 1.20.0: tury porcji — pozycja wśród wszystkich postów (hero = 0):
+      // 1 = zawsze widoczna, 2–3 = desktop od razu / mobile po „Rozwiń”,
+      // 4+ = desktop po „Rozwiń” / mobile tylko archiwum (CSS .lustro-tura-*)
+      grid.innerHTML = widoczne.slice(1).map((p, i) => {
+        const nr = i + 1;
+        const tura = nr >= 4 ? "lustro-tura-3" : nr >= 2 ? "lustro-tura-2" : "";
+        return karta(p, tura);
+      }).join("");
       kadrujWideo(kontener);   // 1.11.0: pomiary pasów wideo (hero + siatka)
+
+      ilePostow = widoczne.length;
+      stanPrzycisku();
     } catch (e) {
       console.warn("[lustro-fb] pominięto:", e.message);
+      rozwinieta = false;
+      kontener.classList.remove("rozwinieta");
+      ilePostow = 0;
+      if (strefaPrzycisku) strefaPrzycisku.hidden = true;
       hero.innerHTML = "";
       grid.innerHTML = kartaFallback();      // P3: kafel awaryjny
     }
