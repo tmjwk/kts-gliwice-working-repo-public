@@ -90,7 +90,9 @@
       </div>
     </section>
 
-    <!-- ===== AKTUALNOŚCI (1.10.0: lustro FB — posty klubu na żywo) ===== -->
+    <!-- ===== AKTUALNOŚCI (1.10.0: lustro FB — posty klubu na żywo;
+         1.20.0: porcje rozwijane — desktop hero+3 i „Rozwiń” dokłada 6,
+         mobile hero+1 i „Rozwiń” dokłada 2; potem „Pokaż starsze wpisy”) ===== -->
     <section class="section" id="aktualnosci">
       <div class="container">
         <div class="section-head">
@@ -100,12 +102,22 @@
         </div>
 
         <!-- LUSTRO FB (1.10.0): posty młodsze niż miesiąc (min. 10: hero + 9),
-             pełny wpis w dialogu, starsze → archiwum.html. Zero danych FB w repo. -->
+             pełny wpis w dialogu, starsze → archiwum.html. Zero danych FB w repo.
+             1.20.0: start = 4 najnowsze (desktop) / 2 (mobile), trójkącik
+             „Rozwiń” dokłada kolejne (desktop +6, mobile +2) — decyzja
+             właściciela 02.11: sekcja przestaje zjadać ekran. -->
         <div id="lustro-fb" class="lustro-fb">
           <div id="lustro-fb-hero"></div>
           <div class="grid grid-3" id="lustro-fb-grid"></div>
+          <div class="center lustro-rozwin-strefa" id="lustro-rozwin-strefa" hidden>
+            <button type="button" class="przelacz-rozwin" id="lustro-rozwin"
+                    aria-expanded="false" aria-controls="lustro-fb-grid">
+              <span class="trojkat-rozwin" aria-hidden="true"></span>
+              <span class="etykieta">Rozwiń</span>
+            </button>
+          </div>
           <div class="center lustro-stopka">
-            <a class="btn btn-outline" href="archiwum.html">Starsze wpisy — archiwum →</a>
+            <a class="btn btn-outline" href="archiwum.html">Pokaż starsze wpisy →</a>
           </div>
         </div>
       </div>
@@ -129,38 +141,43 @@
         <!-- Karty drużyn -->
         <div class="grid grid-4" id="karty-druzyn"></div>
 
-        <!-- Tabela 2. LM + mecze -->
-        <div class="grid grid-2 gap-lg results-grid">
-          <div class="card card-pad">
-            <p class="table-caption">2. Liga Mężczyzn (ŚZTS) — pełna tabela, sync na żywo</p>
-            <div class="table-scroll">
-              <table class="league-table">
-                <thead>
-                  <tr>
-                    <th>Drużyna</th>
-                    <th class="num">M</th>
-                    <th class="num">Pkt</th>
-                    <th class="num">Sety</th>
-                  </tr>
-                </thead>
-                <tbody id="tabela-liga"></tbody>
-              </table>
+        <!-- 1.20.0: wielka tabela 2. ligi ZNIKNĘŁA (pełne tabele żyją w kartach
+             drużyn — dialog i druzyna.html); terminarz i wyniki to dwa kafelki
+             pełnej szerokości: pasek tytułu z licznikiem i trójkącikiem
+             rozwijania (wzór „O klubie”), treść zwinięta domyślnie. -->
+        <div class="mecze-kafelki">
+
+          <div class="card mecz-kafel">
+            <button type="button" class="mecz-przelacz" id="przelacz-najblizsze"
+                    aria-expanded="false" aria-controls="najblizsze-mecze-panel">
+              <span class="mecz-tytul">📅 Najbliższe mecze — wszystkie drużyny</span>
+              <span class="mecz-zestawienie">
+                <span class="mecz-licznik t-nums" id="najblizsze-mecze-licznik"></span>
+                <span class="trojkat-rozwin" aria-hidden="true"></span>
+              </span>
+            </button>
+            <div class="mecz-panel" id="najblizsze-mecze-panel" hidden>
+              <ul class="divide-list" id="najblizsze-mecze"></ul>
             </div>
-            <p class="t-small muted source-note">
-              Źródło: <a href="https://ligi.slzts.pl/liga/18/136/" target="_blank" rel="noreferrer">ligi.slzts.pl</a>
-              · stan: <span class="t-nums" id="tabela-stan">—</span>
-            </p>
           </div>
 
-          <div class="card card-pad">
-            <p class="list-title">📅 Najbliższe mecze — wszystkie drużyny</p>
-            <ul class="divide-list" id="najblizsze-mecze"></ul>
-            <p class="list-title list-title-gap">🏆 Ostatnie mecze — wszystkie drużyny</p>
-            <ul class="divide-list" id="ostatnie-mecze"></ul>
-            <p class="t-small muted source-note">
-              Źródła: pzts.pl (1. liga) + ligi.slzts.pl (ligi 2–4 i amatorzy)
-            </p>
+          <div class="card mecz-kafel">
+            <button type="button" class="mecz-przelacz" id="przelacz-ostatnie"
+                    aria-expanded="false" aria-controls="ostatnie-mecze-panel">
+              <span class="mecz-tytul">🏆 Ostatnie mecze — wszystkie drużyny</span>
+              <span class="mecz-zestawienie">
+                <span class="mecz-licznik t-nums" id="ostatnie-mecze-licznik"></span>
+                <span class="trojkat-rozwin" aria-hidden="true"></span>
+              </span>
+            </button>
+            <div class="mecz-panel" id="ostatnie-mecze-panel" hidden>
+              <div id="ostatnie-mecze-grupy"></div>
+            </div>
           </div>
+
+          <p class="t-small muted mecze-zrodla">
+            Źródła: pzts.pl (1. liga) + ligi.slzts.pl (ligi 2–4 i amatorzy)
+          </p>
         </div>
 
       </div>
