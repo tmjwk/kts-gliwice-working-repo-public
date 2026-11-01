@@ -80,30 +80,18 @@ function ustawIkoneTrybu() {
 
 /* ===== render ===== */
 
-/* 1.15.0: statystyki opisują DOKŁADNIE to, co jest w GALERIA — liczba
-   po polsku (1 album / 2–4 albumy / 5+ albumów) + zakres wczytanych
-   lat (np. „2025–2026”, po dociągnięciu 2012 — „2012, 2025–2026”).
-   Zawsze prawdziwe: przeliczane po każdej zmianie zawartości. */
-function renderStatystyki() {
-  const el = $("#gal-statystyki");
-  if (!el) return;
-  if (!GALERIA.length) { el.textContent = "—"; return; }
-  const nZdjec = GALERIA.reduce((s, a) => s + a.zdjecia.length, 0);
-  const K = window.KTSFB;   // js/galeria-fb-core.js (ładowany przed tym plikiem)
-  const nA = K ? K.liczba(GALERIA.length, ["album", "albumy", "albumów"])
-               : `${GALERIA.length} albumów`;
-  const nZ = K ? K.liczba(nZdjec, ["zdjęcie", "zdjęcia", "zdjęć"])
-               : `${nZdjec} zdjęć`;
-  const zakres = K ? K.zakresLat(GALERIA) : "";
-  el.textContent = zakres ? `${nA} · ${nZ} · ${zakres}` : `${nA} · ${nZ}`;
-  el.title = "Zakres lat aktualnie wczytanych w galerii — starsze lata\ndociągniesz w filtrach powyżej (przyciski z znacznikiem FB).";
-}
+/* 1.16.0 (decyzja właściciela): badge z liczbą albumów/zdjęć przy nagłówku
+   „Galeria klubu” USUNIĘTY — liczby wczytanych lat nie były potrzebne
+   (pełny licznik CAŁEJ galerii żyje na stronie głównej, zasilany przez bota).
+   Wskaźnik ładowania roku = kręcąca się piłka KTS (sprite #pilka-kts,
+   znacznik buduje wspólny silnik js/galeria-fb-core.js), nie tekst „dociągam…” */
+const PILKA_LADOWANIA = window.KTSFB ? window.KTSFB.pilka() : "";
 
 function renderFiltry() {
   /* v1.14.0: chipy = lata w danych + lata dostępne na żądanie z FB
      (window.__GALFB.lataFB — js/galeria-fb.js). Rok FB jeszcze
-     niewczytany dostaje klasę gal-chip-fb (przerywana ramka + znaczek FB)
-     i przy kliknięciu uruchamia dociągnięcie z Graph API. */
+     niewczytany dostaje klasę gal-chip-fb (przerywana ramka — klik
+     dociąga z Graph API). v1.16.0: bez dopiska „FB” (decyzja właściciela). */
   const lataGalerii = new Set(GALERIA.map((a) => (a.data || "").slice(0, 4)).filter(Boolean));
   const lataFB = (window.__GALFB && Array.isArray(window.__GALFB.lataFB))
     ? window.__GALFB.lataFB.map(String) : [];
@@ -111,7 +99,7 @@ function renderFiltry() {
   const wrap = $("#gal-filtry");
   const chip = (label, wartosc, aktywny, fb) => `
     <button class="gal-chip${aktywny ? " is-aktywny" : ""}${fb ? " gal-chip-fb" : ""}" type="button"
-            data-rok="${wartosc ?? ""}"${fb ? ` aria-label="Dociągnij zdjęcia z roku ${esc(label)} z Facebooka"` : ""}>${esc(label)}${fb ? `<span class="gal-chip-fb-mark" aria-hidden="true">FB</span>` : ""}</button>`;
+            data-rok="${wartosc ?? ""}"${fb ? ` aria-label="Dociągnij zdjęcia z roku ${esc(label)}"` : ""}>${esc(label)}</button>`;
   wrap.innerHTML = chip("Wszystkie", "", FILTR === null)
     + lata.map((r) => chip(r, r, FILTR === r, !lataGalerii.has(r))).join("");
   wrap.querySelectorAll(".gal-chip").forEach((b) => {
@@ -137,9 +125,8 @@ function renderAlbumy() {
     const stanFB = FILTR && window.__GALFB ? window.__GALFB.stanRoku(FILTR) : null;
     if (stanFB === "laduje") {
       kontener.innerHTML = `
-        <div class="gal-ladowanie" role="status">
-          <span class="gal-spinner" aria-hidden="true"></span>
-          <span id="gal-ladowanie-txt">Dociągam zdjęcia z roku ${esc(FILTR)} z Facebooka…</span>
+        <div class="gal-ladowanie" role="status" aria-label="Dociągam zdjęcia z roku ${esc(FILTR)}">
+          ${PILKA_LADOWANIA}
         </div>`;
       return;
     }
@@ -364,7 +351,6 @@ async function start() {
   });
   // wejście z linku #album-slug (np. ze strony głównej);
   // v1.14.0: album może być poza pierwszą paczką paginacji — rozszerzamy
-  renderStatystyki();
   renderFiltry();
   renderAlbumy();
   przewinDoAlbumu();
