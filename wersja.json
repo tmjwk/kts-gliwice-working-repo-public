@@ -1,5 +1,5 @@
 {
- "wersja": "1.16.0",
- "data": "2026-11-01T01:16:14Z",
- "opis": "Galeria: badge licznika przy \"Galeria klubu\" usunięty (liczby zbędne na miejscu), a na stronie głównej badge pokazuje liczbę zdjęć CAŁEJ galerii — liczy ją automat co 2 h (galeria-licznik.json). Ładowanie zdjęć pokazuje kręcąca się piłka KTS zamiast tekstu, przyciski lat bez dopiska \"FB\""
+ "wersja": "1.17.0",
+ "data": "2026-11-02T00:00:00Z",
+ "opis": "Galeria: ładowanie przyrostowe — start od bieżącego roku, a starsze lata (2025→2012) dobiegają same, gdy gość przewija; klik w rok wczytuje go natychmiast poza kolejką; karta w tle pauzuje kolejkę; piłka w przycisku roku i pod listą; teaser na stronie głównej pobiera bieżący rok (lżej o ~3 MB)"
 }
