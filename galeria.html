@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
   <title>Galeria zdjęć — KTS Gliwice</title>
-  <meta name="description" content="Galeria KTS Gliwice — pełna historia klubu od 2012 roku: turnieje, obozy, mecze i życie klubu. Archiwum 2023–2024 ze starej strony oraz zdjęcia z lat 2012–2022 i 2025–2026 z Facebooka klubu, dociągane na żywo.">
+  <meta name="description" content="Galeria KTS Gliwice — pełna historia klubu od 2012 roku: turnieje, obozy, mecze i życie klubu. Wszystkie lata z zakładki „Zdjęcia” na Facebooku klubu, dociągane na żywo — od najnowszych, a starsze dobiegają same wraz z przewijaniem.">
   <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -62,16 +62,18 @@
           Pełna historia klubu od 2012 roku: turnieje, obozy, mecze i
           codzienne życie — wszystkie lata z zakładki „Zdjęcia” na
           Facebooku klubu, dociągane na żywo. Start pokazuje najnowsze
-          lata; starsze (w tym 2023–2024) doładujesz jednym kliknięciem
-          w filtrach. Kliknij zdjęcie, aby otworzyć podgląd.
+          albumy, a starsze lata dobiegają same, gdy przewijasz — albo
+          wczytasz je jednym kliknięciem w filtrach. Kliknij zdjęcie,
+          aby otworzyć podgląd.
         </p>
 
         <!-- Zakres archiwum + status lustra FB (aktualizuje js/galeria-fb.js) -->
         <div class="gal-notatka" role="note" id="gal-notatka">
           <strong>Zakres galerii: 2012–2026.</strong>
           Wszystkie lata pochodzą z zakładki „Zdjęcia” na Facebooku klubu
-          i dociągają się na żywo — start pokazuje najnowsze lata, a starsze
-          doładujesz w filtrach powyżej. Pliki nie są kopiowane do serwisu.
+          i dociągają się na żywo — start od najnowszego roku, a starsze
+          dobiegają same wraz z przewijaniem lub jednym kliknięciem
+          w filtrach. Pliki nie są kopiowane do serwisu.
         </div>
 
         <!-- Filtry roku (renderuje js/galeria.js) -->
@@ -79,6 +81,12 @@
 
         <!-- Albumy (renderuje js/galeria.js) -->
         <div id="gal-albumy"></div>
+
+        <!-- 1.17.0: piłka pod listą — „kolejny rok w drodze” (pokazuje i chowa
+             js/galeria-fb.js; widoczna tylko, gdy gość przy dnie i pobór leci) -->
+        <div class="gal-dol" id="gal-dol" role="status" aria-label="Dociągam kolejne zdjęcia" hidden>
+          <svg class="gal-pilka gal-pilka--dol" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
+        </div>
       </div>
     </section>
   </main>
