@@ -464,6 +464,18 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .gal-cta { margin-top: 1.5rem; }
 
+/* 1.15.0: szkielet teasera podczas poboru z FB (wzór .lustro-skeleton) */
+.gal-teaser-skel {
+  position: relative; overflow: hidden; border-radius: 0.5rem; aspect-ratio: 1;
+  background: rgba(127, 127, 127, 0.16);
+}
+.gal-teaser-skel::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg, transparent 32%, rgba(140, 140, 140, 0.14) 50%, transparent 68%);
+  animation: lustro-shimmer 1.4s infinite;
+}
+@media (prefers-reduced-motion: reduce) { .gal-teaser-skel::after { animation: none; } }
+
 /* lightbox */
 .gal-lightbox {
   position: fixed; inset: 0; z-index: 60; display: none;
