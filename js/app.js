@@ -1011,19 +1011,31 @@ async function renderTeaserGalerii() {
   /* szkielet podczas poboru (wzór .lustro-skeleton) */
   wrap.innerHTML = '<span class="gal-teaser-skel" aria-hidden="true"></span>'.repeat(6);
 
-  /* 1) lustro FB na żywo — okno dwóch ostatnich lat (wiek okna
-     liczymy od bieżącego roku, więc teaser nie starzeje się w 2027+) */
+  /* 1) lustro FB na żywo — 1.17.0: BIEŻĄCY rok (lżejszy pobór: ~2 MB
+     zamiast okna 2 lat ~5 MB); gdy mało albumów (np. styczeń), dołóż
+     rok poprzedni, żeby zebrać 6 okładek. Wiek roku liczymy dynamicznie,
+     więc teaser nie starzeje się w 2027+. */
   const K = window.KTSFB;
   if (K) {
     try {
-      const odRoku = String(Math.max(2012, new Date().getFullYear() - 1));
+      const rok = Math.max(2012, new Date().getFullYear());
       const [posty, zdjecia] = await Promise.all([
-        K.posty(`${odRoku}-01-01`, null, { stopPrzedIso: `${odRoku}-01-01` }).catch(() => []),
-        K.zdjecia(`${odRoku}-01-01`, null),
+        K.posty(`${rok}-01-01`, null, { stopPrzedIso: `${rok}-01-01` }).catch(() => []),
+        K.zdjecia(`${rok}-01-01`, null),
       ]);
-      const albumy = K.zbudujAlbumy(zdjecia, K.mapaFotoPost(posty), new Set());
-      if (!albumy.length) throw new Error("FB nie zwrócił zdjęć");
+      const widziane = new Set();   // dedup foto na granicy lat
+      let albumy = K.zbudujAlbumy(zdjecia, K.mapaFotoPost(posty), widziane);
+      if (albumy.length < 6 && rok - 1 >= 2012) {
+        try {
+          const [posty2, zdjecia2] = await Promise.all([
+            K.posty(`${rok - 1}-01-01`, `${rok}-01-01`).catch(() => []),
+            K.zdjecia(`${rok - 1}-01-01`, `${rok}-01-01`),
+          ]);
+          albumy = albumy.concat(K.zbudujAlbumy(zdjecia2, K.mapaFotoPost(posty2), widziane));
+        } catch (e) { /* rok poprzedni opcjonalny — nie wywala teasera */ }
+      }
       albumy.sort(wgDaty);
+      if (!albumy.length) throw new Error("FB nie zwrócił zdjęć");
       okladki(albumy);
       return;
     } catch (err) {
