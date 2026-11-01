@@ -391,6 +391,43 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .sponsor-tile img { height: 2.1rem; }
 }
 
+/* ===== O klubie — lustro dokumentu Google (1.19.0: pierwszy akapit + trójkącik) ===== */
+.oklubie-tresc { max-width: 46rem; }
+.oklubie-prowadzenie { font-size: 1.02rem; line-height: 1.75; color: var(--kts-text); }
+.oklubie-przelacz {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  margin-top: 0.9rem; padding: 0.45rem 1.05rem;
+  background: transparent; color: var(--kts-primary);
+  border: 1px solid var(--kts-line); border-radius: 0.6rem;
+  font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.oklubie-przelacz:hover, .oklubie-przelacz:focus-visible {
+  border-color: var(--kts-primary); background: var(--kts-primary-light);
+}
+/* TRÓJKĄCIK: czysty CSS (obrys z borderów); po rozwinięciu obraca się o 180° */
+.oklubie-trojkat {
+  width: 0; height: 0;
+  border-left: 0.42rem solid transparent; border-right: 0.42rem solid transparent;
+  border-top: 0.5rem solid currentColor;
+  transition: transform 0.18s ease;
+}
+.oklubie-przelacz[aria-expanded="true"] .oklubie-trojkat { transform: rotate(180deg); }
+.oklubie-rozwijane { margin-top: 1rem; }
+.oklubie-naglowek {
+  font-family: var(--font-display); font-weight: 600; font-size: 1.35rem;
+  line-height: 1.2; color: var(--kts-ink); margin: 1.5rem 0 0.4rem; letter-spacing: 0.01em;
+}
+.oklubie-naglowek:first-child { margin-top: 0; }
+.oklubie-akapit { line-height: 1.75; color: var(--kts-text); margin: 0 0 0.75rem; }
+.oklubie-lista { margin: 0.15rem 0 0.9rem; padding-left: 1.35rem; display: grid; gap: 0.35rem; }
+.oklubie-lista li { line-height: 1.65; color: var(--kts-text); }
+.oklubie-lista li::marker { color: var(--kts-primary); }
+@media (prefers-reduced-motion: reduce) {
+  .oklubie-trojkat, .oklubie-przelacz { transition: none; }
+}
+
 /* ===== footer ===== */
 .footer { background: var(--kts-ink-fixed); color: rgba(255,255,255,0.8); padding: 2.5rem 0 2rem; margin-top: auto; }
 .footer-grid { display: grid; gap: 2rem; }
