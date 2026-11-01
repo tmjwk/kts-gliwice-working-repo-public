@@ -1,5 +1,5 @@
 /* ============================================================
-   KTS Gliwice — O KLUBIE: lustro dokumentu Google + trójkącik (1.19.0)
+   KTS Gliwice — O KLUBIE: lustro dokumentu Google + trójkącik (1.20.1)
 
    Sekcja #oklubie na stronie głównej. Dane: o-klubie.json w korzeniu
    strony, generowany automatycznie z dokumentu Google właściciela
@@ -10,8 +10,14 @@
    - widoczny PIERWSZY AKAPIT dokumentu, po nim przycisk z TRÓJKĄCIKIEM
      (▾) rozwijający resztę treści; po rozwinięciu trójkącik obraca się
      do góry (▴), etykieta zmienia się na „Zwiń”;
-   - dostępność: prawdziwy <button> + aria-expanded + aria-controls;
-     zwinięta treść ma atrybut hidden (wypada z tabulacji i czytników);
+   - 1.20.1: przyciski po PRAWEJ (strefa flex) + DOLNY „Zwiń” na końcu
+     rozwiniętej treści — nie trzeba przewijać do góry, aby zwinąć;
+     po zwinięciu dolnym przyciskiem strona wraca do początku sekcji
+     (scroll-margin-top chroni nagłówek przed przyklejonym headerem);
+   - dostępność: prawdziwe <button> + aria-expanded + aria-controls
+     (oba przyciski współdzielą stan); zwinięta treść ma atrybut hidden
+     (wypada z tabulacji i czytników) — dolny przycisk także, bo żyje
+     WEWNĄTRZ rozwijanej treści;
    - HTML w index.html zawiera STATYCZNY pierwszy akapit (SEO, brak JS);
      ten moduł podmienia go na treść z o-klubie.json i dopiero wtedy
      dokłada rozwijanie — brak pliku / błąd sieci = zostaje fallback;
@@ -80,10 +86,14 @@
       rozwijane.hidden = true;
       for (const e of reszta) rozwijane.appendChild(wezel(e));
 
-      const trojkat = document.createElement("span");
-      trojkat.className = "oklubie-trojkat";
-      trojkat.setAttribute("aria-hidden", "true");
+      const zrobTrojkat = () => {
+        const t = document.createElement("span");
+        t.className = "oklubie-trojkat";
+        t.setAttribute("aria-hidden", "true");
+        return t;
+      };
 
+      /* górny przycisk: Rozwiń ↔ Zwiń (1.20.1: w strefie = po prawej) */
       const etykieta = document.createElement("span");
       etykieta.className = "oklubie-etykieta";
       etykieta.textContent = ETYKIETA_ROZWIN;
@@ -93,16 +103,57 @@
       przycisk.className = "oklubie-przelacz";
       przycisk.setAttribute("aria-expanded", "false");
       przycisk.setAttribute("aria-controls", "oklubie-rozwijane");
-      przycisk.append(trojkat, etykieta);
+      przycisk.append(zrobTrojkat(), etykieta);
+
+      const strefa = document.createElement("div");
+      strefa.className = "oklubie-przelacz-strefa";
+      strefa.appendChild(przycisk);
+
+      /* 1.20.1 — dolny „Zwiń”: żyje wewnątrz rozwijanej treści, więc
+         znika razem z nią; trójkącik wskazuje w górę (stan rozwinięcia
+         = aria-expanded true na przycisku), klik zwija i wraca do
+         początku sekcji */
+      const etykietaDol = document.createElement("span");
+      etykietaDol.className = "oklubie-etykieta";
+      etykietaDol.textContent = ETYKIETA_ZWIN;
+
+      const przyciskDol = document.createElement("button");
+      przyciskDol.type = "button";
+      przyciskDol.className = "oklubie-przelacz oklubie-przelacz--dol";
+      przyciskDol.setAttribute("aria-expanded", "true");
+      przyciskDol.setAttribute("aria-controls", "oklubie-rozwijane");
+      przyciskDol.append(zrobTrojkat(), etykietaDol);
+
+      const strefaDol = document.createElement("div");
+      strefaDol.className = "oklubie-przelacz-strefa";
+      strefaDol.appendChild(przyciskDol);
+      rozwijane.appendChild(strefaDol);
+
+      /* wspólny stan — oba przyciski tego samego regionu */
+      const ustawStan = (otwarte) => {
+        przycisk.setAttribute("aria-expanded", String(otwarte));
+        przyciskDol.setAttribute("aria-expanded", String(otwarte));
+        rozwijane.hidden = !otwarte;
+        etykieta.textContent = otwarte ? ETYKIETA_ZWIN : ETYKIETA_ROZWIN;
+      };
+
+      const zwin = (doPoczatkuSekcji) => {
+        ustawStan(false);
+        if (doPoczatkuSekcji) {
+          // po zwinięciu od dołu treść pod skokiem ucieka w górę —
+          // przewijamy do nagłówka sekcji (scroll-margin-top w CSS
+          // robi luz na przyklejony header); smooth z html{scroll-behavior}
+          const sekcja = document.getElementById("oklubie");
+          if (sekcja && sekcja.scrollIntoView) sekcja.scrollIntoView({ block: "start" });
+        }
+      };
 
       przycisk.addEventListener("click", () => {
-        const otwarte = przycisk.getAttribute("aria-expanded") === "true";
-        przycisk.setAttribute("aria-expanded", String(!otwarte));
-        rozwijane.hidden = otwarte;
-        etykieta.textContent = otwarte ? ETYKIETA_ROZWIN : ETYKIETA_ZWIN;
+        ustawStan(przycisk.getAttribute("aria-expanded") !== "true");
       });
+      przyciskDol.addEventListener("click", () => zwin(true));
 
-      pojemnik.append(przycisk, rozwijane);
+      pojemnik.append(strefa, rozwijane);
     })
     .catch(() => {
       /* błąd sieci/brak pliku → nic nie robimy: sekcja pokazuje
