@@ -87,6 +87,15 @@ jobs:
         continue-on-error: true
         run: bun scripts/sync_sponsorzy.ts
 
+      # 1.19.0: treść sekcji „O klubie” z dokumentu Google właściciela.
+      # Właściciel edytuje wyłącznie DOKUMENT — skrypt zapisuje o-klubie.json
+      # TYLKO przy realnej zmianie treści (bez szumu commitów co 2 h).
+      # Awaria = ostrzeżenie ::warning, run NIE czerwienieje (liga
+      # ważniejsza); strona trzyma ostatni zapisany stan w repo.
+      - name: O klubie (dokument Google)
+        continue-on-error: true
+        run: bun scripts/sync_o_klubie.ts
+
       # Od v1.5.2: runs.json zapisywany PRZY KAŻDYM uruchomieniu (także pustym)
       # → commit powstaje zawsze (panel „Automat: ✓/✗" na stronie). Historia
       # dane.json pozostaje czysta (skrypt nadal nie zapisuje go bez zmian).
@@ -100,6 +109,7 @@ jobs:
           if [ -f runs.json ]; then git add runs.json; fi
           if [ -f galeria-licznik.json ]; then git add galeria-licznik.json; fi
           if [ -f sponsorzy.json ]; then git add sponsorzy.json; fi
+          if [ -f o-klubie.json ]; then git add o-klubie.json; fi
           if git diff --cached --quiet; then
             echo "Brak zmian — dane aktualne."
           else
