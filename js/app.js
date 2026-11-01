@@ -948,26 +948,22 @@ async function pokazPrzebiegiSyncu() {
     "na stronie zostają ostatnie znane dane. Historia: runs.json w repo.";
 }
 
-/* ===== galeria: teaser okładek (pełna galeria na podstronie) ===== */
+/* ===== galeria: teaser okładek (pełna galeria na podstronie) =====
+   1.15.0: teaser NA ŻYWO z zakładki „Zdjęcia” na FB (silnik
+   js/galeria-fb-core.js) — najnowsze albumy klubu zamiast zamarzniętego
+   archiwum 2023–24. Badge opisuje dokładnie to, co wczytano (liczba
+   albumów/zdjęć + zakres lat) i przelicza się sam. Awaria FB →
+   archiwum lokalne z uczciwą etykietą „archiwum 2023–2024”;
+   nigdy nie pokazujemy liczby, która nie odpowiada widocznym zdjęciom. */
 async function renderTeaserGalerii() {
   const wrap = $("#gal-teaser");
   const badge = $("#gal-count");
   if (!wrap) return;
-  try {
-    const res = await fetch("galeria.json", { cache: "no-cache" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const albumy = await res.json();
-    albumy.sort((a, b) => {
-      const da = a.data ?? "", db = b.data ?? "";
-      return da > db ? -1 : da < db ? 1 : 0;
-    });
-    if (badge) {
-      const n = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
-      badge.textContent = `${albumy.length} albumów · ${n} zdjęć`;
-    }
+
+  const okladki = (albumy) => {
     wrap.innerHTML = albumy.slice(0, 6).map((a) => {
-      const mini = (a.miniatury && a.miniatury[0]) || a.zdjecia[0];   // v1.5.0: miniatura WebP
-      const lqip = a.lqip && a.lqip[0];                              // v1.5.0: placeholder blur-up
+      const mini = (a.miniatury && a.miniatury[0]) || a.zdjecia[0];
+      const lqip = a.lqip && a.lqip[0];
       return `
       <a href="galeria.html#album-${esc(a.slug)}" aria-label="${esc(a.tytul)}">
         ${lqip ? `<span class="lqip" style="background-image:url('${lqip}')" aria-hidden="true"></span>` : ""}
@@ -978,9 +974,64 @@ async function renderTeaserGalerii() {
         <span class="gal-teaser-label">${a.data ? esc(formatujDate(a.data)) : ""} · ${esc(a.tytul)}</span>
       </a>`;
     }).join("");
+  };
+  const wgDaty = (a, b) => {
+    const da = a.data ?? "", db = b.data ?? "";
+    return da > db ? -1 : da < db ? 1 : 0;
+  };
+
+  /* szkielet podczas poboru (wzór .lustro-skeleton) */
+  wrap.innerHTML = '<span class="gal-teaser-skel" aria-hidden="true"></span>'.repeat(6);
+  if (badge) badge.textContent = "dociągam z Facebooka…";
+
+  /* 1) lustro FB na żywo — okno dwóch ostatnich lat (wiek okna
+     liczymy od bieżącego roku, więc teaser nie starzeje się w 2027+) */
+  const K = window.KTSFB;
+  if (K) {
+    try {
+      const odRoku = String(Math.max(2012, new Date().getFullYear() - 1));
+      const [posty, zdjecia] = await Promise.all([
+        K.posty(`${odRoku}-01-01`, null, { stopPrzedIso: `${odRoku}-01-01` }).catch(() => []),
+        K.zdjecia(`${odRoku}-01-01`, null),
+      ]);
+      const albumy = K.zbudujAlbumy(zdjecia, K.mapaFotoPost(posty), new Set());
+      if (!albumy.length) throw new Error("FB nie zwrócił zdjęć");
+      albumy.sort(wgDaty);
+      if (badge) {
+        const n = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
+        const zakres = K.zakresLat(albumy);
+        badge.textContent = zakres
+          ? `${K.liczba(albumy.length, ["album", "albumy", "albumów"])} · ${K.liczba(n, ["zdjęcie", "zdjęcia", "zdjęć"])} · ${zakres}`
+          : K.liczba(n, ["zdjęcie", "zdjęcia", "zdjęć"]);
+        badge.title = "Zakres lat wczytanych z Facebooka. Pełna galeria (2012–2026) — na podstronie.";
+      }
+      okladki(albumy);
+      return;
+    } catch (err) {
+      console.warn("Teaser galerii: lustro FB niedostępne — archiwum lokalne:", err);
+    }
+  }
+
+  /* 2) fallback: archiwum lokalne (2023–24) z uczciwą etykietą zakresu */
+  try {
+    const res = await fetch("galeria.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const albumy = await res.json();
+    albumy.sort(wgDaty);
+    const K2 = window.KTSFB;
+    if (badge) {
+      const n = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
+      const zakres = K2 ? K2.zakresLat(albumy) : "";
+      const nA = K2 ? K2.liczba(albumy.length, ["album", "albumy", "albumów"]) : `${albumy.length} albumów`;
+      const nZ = K2 ? K2.liczba(n, ["zdjęcie", "zdjęcia", "zdjęć"]) : `${n} zdjęć`;
+      badge.textContent = zakres ? `${nA} · ${nZ} · archiwum ${zakres}` : `${nA} · ${nZ}`;
+      badge.title = "Facebook chwilowo niedostępny — pokazuję archiwum lokalne. Pełna galeria na podstronie.";
+    }
+    okladki(albumy);
   } catch (err) {
     console.error("Błąd ładowania galeria.json:", err);
-    if (badge) badge.textContent = "galeria niedostępna";
+    wrap.innerHTML = "";
+    if (badge) badge.textContent = "galeria chwilowo niedostępna";
   }
 }
 
