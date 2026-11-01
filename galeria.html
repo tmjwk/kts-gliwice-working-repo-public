@@ -61,19 +61,18 @@
         </div>
         <p class="t-small muted section-desc">
           Pełna historia klubu od 2012 roku: turnieje, obozy, mecze i
-          codzienne życie. Lata 2023–2024 — ze starej strony klubu;
-          pozostałe lata — zdjęcia z zakładki „Zdjęcia” na Facebooku klubu,
-          dociągane na żywo po wybraniu roku w filtrach. Kliknij zdjęcie,
-          aby otworzyć podgląd.
+          codzienne życie — wszystkie lata z zakładki „Zdjęcia” na
+          Facebooku klubu, dociągane na żywo. Start pokazuje najnowsze
+          lata; starsze (w tym 2023–2024) doładujesz jednym kliknięciem
+          w filtrach. Kliknij zdjęcie, aby otworzyć podgląd.
         </p>
 
         <!-- Zakres archiwum + status lustra FB (aktualizuje js/galeria-fb.js) -->
         <div class="gal-notatka" role="note" id="gal-notatka">
           <strong>Zakres galerii: 2012–2026.</strong>
-          Lata 2023–2024 — archiwum starej strony klubu; lata 2025–2026 —
-          zdjęcia z Facebooka klubu dociągane na żywo. Starsze lata
-          (2012–2022) — wybierz rok w filtrach powyżej, a zdjęcia dociągną
-          się z Facebooka. Pliki nie są kopiowane do serwisu.
+          Wszystkie lata pochodzą z zakładki „Zdjęcia” na Facebooku klubu
+          i dociągają się na żywo — start pokazuje najnowsze lata, a starsze
+          doładujesz w filtrach powyżej. Pliki nie są kopiowane do serwisu.
         </div>
 
         <!-- Filtry roku (renderuje js/galeria.js) -->
@@ -134,8 +133,9 @@
     </p>
   </div>
 
+  <script src="js/galeria-fb-core.js"></script>
   <script src="js/galeria.js"></script>
-  <!-- Lustro zdjęć FB 2025–2026 (po galeria.js: dokłada albumy do tego samego renderu) -->
+  <!-- Lustro zdjęć FB — zastępuje archiwum statyczne danymi na żywo (1.15.0) -->
   <script src="js/galeria-fb.js"></script>
 
   <!-- ===== PASEK ANKIETY (etap projektowy — z wersją finalną usunąć; patrz index.html #opinia) ===== -->
