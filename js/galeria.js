@@ -91,15 +91,32 @@ function renderFiltry() {
   /* v1.14.0: chipy = lata w danych + lata dostępne na żądanie z FB
      (window.__GALFB.lataFB — js/galeria-fb.js). Rok FB jeszcze
      niewczytany dostaje klasę gal-chip-fb (przerywana ramka — klik
-     dociąga z Graph API). v1.16.0: bez dopiska „FB” (decyzja właściciela). */
+     dociąga z Graph API). v1.16.0: bez dopiska „FB” (decyzja
+     właściciela). v1.17.0: stan roku z __GALFB.stanRoku —
+     „laduje” = malutka piłka w chipie (kolejka/klik pobiera rok),
+     „blad” = chip przygaszony z podkreśleniem kropkowanym
+     (klik = ponowna próba). */
   const lataGalerii = new Set(GALERIA.map((a) => (a.data || "").slice(0, 4)).filter(Boolean));
   const lataFB = (window.__GALFB && Array.isArray(window.__GALFB.lataFB))
     ? window.__GALFB.lataFB.map(String) : [];
+  const stanRoku = (r) => (window.__GALFB && window.__GALFB.stanRoku)
+    ? window.__GALFB.stanRoku(r) : null;
   const lata = [...new Set([...lataGalerii, ...lataFB])].sort().reverse();
   const wrap = $("#gal-filtry");
-  const chip = (label, wartosc, aktywny, fb) => `
-    <button class="gal-chip${aktywny ? " is-aktywny" : ""}${fb ? " gal-chip-fb" : ""}" type="button"
-            data-rok="${wartosc ?? ""}"${fb ? ` aria-label="Dociągnij zdjęcia z roku ${esc(label)}"` : ""}>${esc(label)}</button>`;
+  const chip = (label, wartosc, aktywny, fb) => {
+    const stan = fb ? stanRoku(wartosc) : null;
+    const cls = "gal-chip" + (aktywny ? " is-aktywny" : "") + (fb ? " gal-chip-fb" : "")
+      + (stan === "blad" ? " gal-chip-blad" : "");
+    const dodatek = stan === "laduje"
+      ? ` aria-label="Dociągam zdjęcia z roku ${esc(label)}"`
+      : stan === "blad"
+        ? ` aria-label="Rok ${esc(label)}: nie udało się pobrać — kliknij, aby spróbować ponownie"
+           title="Nie udało się pobrać — kliknij, aby spróbować ponownie"`
+        : fb ? ` aria-label="Dociągnij zdjęcia z roku ${esc(label)}"` : "";
+    const pilka = stan === "laduje" && window.KTSFB
+      ? window.KTSFB.pilka("gal-pilka gal-pilka--chip") : "";
+    return `<button class="${cls}" type="button" data-rok="${wartosc ?? ""}"${dodatek}>${esc(label)}${pilka}</button>`;
+  };
   wrap.innerHTML = chip("Wszystkie", "", FILTR === null)
     + lata.map((r) => chip(r, r, FILTR === r, !lataGalerii.has(r))).join("");
   wrap.querySelectorAll(".gal-chip").forEach((b) => {
