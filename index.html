@@ -166,11 +166,19 @@
       </div>
     </section>
 
-    <!-- ===== O KLUBIE (placeholder) ===== -->
+    <!-- ===== O KLUBIE (1.19.0: lustro dokumentu Google — pierwszy akapit + trójkącik) =====
+         Treść sekcji = dokument Google właściciela (auto-sync co 2 h:
+         scripts/sync_o_klubie.ts → o-klubie.json → js/o-klubie.js).
+         Poniższy akapit to STATYCZNY FALLBACK (SEO / brak JS / awaria
+         pobioru) — moduł podmienia go na treść z o-klubie.json i dokłada
+         przycisk rozwijania. Fallback odświeżamy przy istotnych zmianach
+         pierwszego akapitu dokumentu. -->
     <section class="section" id="oklubie">
       <div class="container">
         <h2 class="t-h2">O klubie</h2>
-        <p class="t-small muted">[Sekcja historii i osiągnięć klubu — treści po decyzji redakcyjnej]</p>
+        <div id="oklubie-tresc" class="oklubie-tresc">
+          <p class="oklubie-prowadzenie">Klub Tenisa Stołowego Gliwice, funkcjonujący również jako KTS Gliwice / Akademia Tenisa Stołowego, to gliwicki klub tenisa stołowego, którego siedziba znajduje się przy ul. Partyzantów 25, 44-113 Gliwice, w Centrum Sportowo-Kulturalnym „Łabędź” Gliwickiego Ośrodka Sportu.</p>
+        </div>
       </div>
     </section>
 
@@ -334,6 +342,8 @@
   <script src="js/lustro-fb.js" defer></script>
   <script src="js/powrot-gora.js" defer></script>
   <script src="js/sponsorzy.js" defer></script>
+  <!-- 1.19.0: O klubie — lustro dokumentu Google (pierwszy akapit + trójkącik) -->
+  <script src="js/o-klubie.js" defer></script>
 
   <!-- ===== DIALOG: pełny wpis z Facebooka (1.10.1) =====
        Klik w kafelek → powiększenie na środku ekranu; klik w zdjęcie/
