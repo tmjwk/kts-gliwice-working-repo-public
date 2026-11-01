@@ -79,9 +79,24 @@ function ustawIkoneTrybu() {
 }
 
 /* ===== render ===== */
+
+/* 1.15.0: statystyki opisują DOKŁADNIE to, co jest w GALERIA — liczba
+   po polsku (1 album / 2–4 albumy / 5+ albumów) + zakres wczytanych
+   lat (np. „2025–2026”, po dociągnięciu 2012 — „2012, 2025–2026”).
+   Zawsze prawdziwe: przeliczane po każdej zmianie zawartości. */
 function renderStatystyki() {
+  const el = $("#gal-statystyki");
+  if (!el) return;
+  if (!GALERIA.length) { el.textContent = "—"; return; }
   const nZdjec = GALERIA.reduce((s, a) => s + a.zdjecia.length, 0);
-  $("#gal-statystyki").textContent = `${GALERIA.length} albumów · ${nZdjec} zdjęć`;
+  const K = window.KTSFB;   // js/galeria-fb-core.js (ładowany przed tym plikiem)
+  const nA = K ? K.liczba(GALERIA.length, ["album", "albumy", "albumów"])
+               : `${GALERIA.length} albumów`;
+  const nZ = K ? K.liczba(nZdjec, ["zdjęcie", "zdjęcia", "zdjęć"])
+               : `${nZdjec} zdjęć`;
+  const zakres = K ? K.zakresLat(GALERIA) : "";
+  el.textContent = zakres ? `${nA} · ${nZ} · ${zakres}` : `${nA} · ${nZ}`;
+  el.title = "Zakres lat aktualnie wczytanych w galerii — starsze lata\ndociągniesz w filtrach powyżej (przyciski z znacznikiem FB).";
 }
 
 function renderFiltry() {
@@ -132,7 +147,7 @@ function renderAlbumy() {
       kontener.innerHTML = `
         <div class="gal-ladowanie gal-blad" role="alert">
           <p>Zdjęcia z roku ${esc(FILTR)} nie udało się pobrać z Facebooka<br>
-             (chwilowa awaria połączenia lub API — archiwum 2023–2024 działa normalnie).</p>
+             (chwilowa awaria połączenia lub API).</p>
           <button class="gal-chip" id="gal-retry" type="button">Spróbuj ponownie</button>
         </div>`;
       const btn = $("#gal-retry");
@@ -326,11 +341,19 @@ async function start() {
   try {
     const res = await fetch("galeria.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    GALERIA = await res.json();
+    const dane = await res.json();
+    // 1.15.0: gdyby lustro FB zdążyło już zastąpić archiwum (bardzo wolny
+    // pobór galeria.json), nie nadpisujemy go — wygrywa dane na żywo
+    if (window.__GALFB_ZASTAPIONE === true) {
+      window.__GAL_START_ZAKONCZONY = true;
+      return;
+    }
+    GALERIA = dane;
   } catch (err) {
     console.error("Błąd ładowania galeria.json:", err);
     $("#gal-albumy").innerHTML =
       `<p class="t-small muted">Galeria chwilowo niedostępna — odśwież stronę.</p>`;
+    window.__GAL_START_ZAKONCZONY = true;   // 1.15.0: lustro FB może zastępować
     return;
   }
 
@@ -345,6 +368,9 @@ async function start() {
   renderFiltry();
   renderAlbumy();
   przewinDoAlbumu();
+  // 1.15.0: sygnał dla js/galeria-fb.js — statyczne archiwum wyrenderowane
+  // (także po błędzie ładowania), lustro FB może bezpiecznie zastępować
+  window.__GAL_START_ZAKONCZONY = true;
 }
 
 document.addEventListener("DOMContentLoaded", start);
