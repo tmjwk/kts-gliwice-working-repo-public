@@ -449,6 +449,16 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .oklubie-przelacz[aria-expanded="true"] .oklubie-trojkat { transform: rotate(180deg); }
 .oklubie-rozwijane { margin-top: 1rem; }
+/* 1.20.1: strefa przycisku „Rozwiń/Zwiń” po PRAWEJ + dolny „Zwiń”
+   na końcu rozwiniętej treści (właściciel 02.11: „teraz trzeba
+   przewijać z powrotem do góry aby zwinąć”). Dolny przycisk żyje
+   WEWNĄTRZ rozwijanej treści — znika razem z nią, a jego trójkącik
+   wskazuje w górę (jest w stanie aria-expanded=true). */
+.oklubie-przelacz-strefa { display: flex; justify-content: flex-end; }
+.oklubie-przelacz--dol { margin-top: 1.25rem; }
+/* po zwinięciu dolnym przyciskiem JS przewija do początku sekcji —
+   scroll-margin chroni nagłówek sekcji przed przyklejonym headerem */
+#oklubie { scroll-margin-top: 4.75rem; }
 .oklubie-naglowek {
   font-family: var(--font-display); font-weight: 600; font-size: 1.35rem;
   line-height: 1.2; color: var(--kts-ink); margin: 1.5rem 0 0.4rem; letter-spacing: 0.01em;
@@ -594,7 +604,9 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   background: linear-gradient(transparent, rgba(9,16,29,0.88)); color: #fff;
   font-size: 0.72rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.gal-cta { margin-top: 1.5rem; }
+/* 1.20.1: CTA „Otwórz pełną galerię” po PRAWEJ (właściciel 02.11:
+   przyciski akcji na stronie głównej naturalnie po prawej) */
+.gal-cta { margin-top: 1.5rem; text-align: right; }
 
 /* 1.15.0: szkielet teasera podczas poboru z FB (wzór .lustro-skeleton) */
 .gal-teaser-skel {
@@ -766,7 +778,10 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    Aktualności z FB: hero + kafelki, skeleton, fallback, archiwum.
    Karty reużywają .card/.news-card/.news-media — tu tylko szpilki. */
 .lustro-fb { display: flex; flex-direction: column; gap: 1.25rem; }
-.lustro-stopka { margin-top: 0.4rem; }
+/* 1.20.1: stopka „Pokaż starsze wpisy” po PRAWEJ i pokazywana przez
+   js/lustro-fb.js DOPERO po rozwinięciu porcji (gdy rozwinąć nie ma
+   czego — od razu; startowo ukryta atrybutem hidden w index.html). */
+.lustro-stopka { margin-top: 0.4rem; display: flex; justify-content: flex-end; }
 .lustro-karta {
   display: flex; flex-direction: column;
   cursor: pointer;
@@ -794,8 +809,10 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 
 /* przycisk „Rozwiń” pod kafelkami — ten sam charakter co „O klubie”
-   (obrys, trójkącik z obrotu, etykieta Rozwiń/Zwiń) */
-.lustro-rozwin-strefa { margin-top: 0.1rem; }
+   (obrys, trójkącik z obrotu, etykieta Rozwiń/Zwiń).
+   1.20.1 (właściciel 02.11): przyciski akcji sekcji po PRAWEJ — naturalna
+   strona „czytaj dalej / więcej” w układzie od lewej do prawej. */
+.lustro-rozwin-strefa { margin-top: 0.1rem; display: flex; justify-content: flex-end; }
 .przelacz-rozwin {
   display: inline-flex; align-items: center; gap: 0.55rem;
   padding: 0.45rem 1.05rem;
