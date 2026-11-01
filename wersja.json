@@ -1,5 +1,5 @@
 {
- "wersja": "1.17.1",
+ "wersja": "1.17.2",
  "data": "2026-11-02T00:00:00Z",
- "opis": "Przycisk powrotu na górę strony (wszystkie podstrony): pojawia się po przewinięciu ~ekranu w dół, klik = natychmiastowy powrót na górę; ukryty przy lightboxie; szanuje tryb zmniejszonego ruchu"
+ "opis": "Naprawa 1.17.1: przywrócone js/lustro-fb.js na stronie głównej i w archiwum (skrypt przycisku przypadkiem zajął jego miejsce — aktualności FB i archiwum były martwe); przycisk powrotu na górę bez zmian"
 }
