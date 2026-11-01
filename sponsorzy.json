@@ -1,0 +1,47 @@
+{
+  "wygenerowano": "2026-11-01T21:45:18.035Z",
+  "sponsorzy": [
+    {
+      "lp": 1,
+      "nazwa": "Miasto Gliwice",
+      "url": "https://gliwice.eu/urzad-miejski",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/3/3a/POL_Gliwice_COA.svg",
+      "kategoria": null
+    },
+    {
+      "lp": 2,
+      "nazwa": "POLTING",
+      "url": "https://polting.com.pl/",
+      "logo": "https://i0.wp.com/polting.com.pl/wp-content/uploads/2020/04/Logo-polting-SA-e1716984787884.png?w=480&ssl=1",
+      "kategoria": null
+    },
+    {
+      "lp": 3,
+      "nazwa": "WOLF",
+      "url": "https://www.wolf.eu/pl-pl",
+      "logo": "https://sanundo.de/media/image/01/d7/bf/wolf.png",
+      "kategoria": null
+    },
+    {
+      "lp": 4,
+      "nazwa": "KSSE / VDS",
+      "url": "https://www.vds.pl/",
+      "logo": "https://www.ksse.pl/_img/_templates12/logo_ksse.svg",
+      "kategoria": null
+    },
+    {
+      "lp": 5,
+      "nazwa": "SUBLIPOINT",
+      "url": "https://sublipoint.pl/",
+      "logo": "https://sublipoint.pl/skins/store_user/store_503bf3f30590406694aa74087dc692ce_2/images/logo.png",
+      "kategoria": "Sponsorzy Sprzętowi"
+    },
+    {
+      "lp": 6,
+      "nazwa": "AGA SPORT",
+      "url": "https://agasport.eu/",
+      "logo": "https://agasport.eu/images/frontend/theme/bianco/_editor/prod/355b976949fa85988daa568e25beb270.png",
+      "kategoria": "Sponsorzy Sprzętowi"
+    }
+  ]
+}
