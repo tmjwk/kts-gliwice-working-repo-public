@@ -948,16 +948,44 @@ async function pokazPrzebiegiSyncu() {
     "na stronie zostają ostatnie znane dane. Historia: runs.json w repo.";
 }
 
+/* ===== galeria: licznik CAŁEJ galerii (badge przy nagłówku sekcji) =====
+   1.16.0 (decyzja właściciela): badge ma mówić, ile zdjęć jest w CAŁEJ
+   galerii (2012–…), a nie w oknie wczytanych lat — i ma się liczyć
+   automatycznie, bo zdjęć stale przybywa. Pełne policzenie = przejście
+   całego stronicowania FB (~14 stron po 1000 rekordów), więc robi to BOT
+   (scripts/licznik_galerii.ts, krok workflow sync-dane.yml co 2 h) i
+   zapisuje galeria-licznik.json — strona tylko czyta. Podczas poboru:
+   kręcąca się piłka (zamiast tekstu „dociągam…”). Brak danych = brak
+   badge (nigdy nie pokazujemy liczby, która nie odpowiada prawdzie). */
+async function wypelnijLicznikGalerii() {
+  const badge = $("#gal-count");
+  if (!badge) return;
+  const K = window.KTSFB;
+  badge.setAttribute("role", "status");
+  badge.innerHTML = K ? K.pilka("gal-pilka gal-pilka--badge") : "…";
+  try {
+    const res = await fetch("galeria-licznik.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const d = await res.json();
+    const n = Number(d && d.zdjecia);
+    if (!Number.isFinite(n) || n <= 0) throw new Error("brak liczby zdjęć");
+    const nZ = K ? K.liczba(n, ["zdjęcie", "zdjęcia", "zdjęć"]) : `${n} zdjęć`;
+    badge.textContent = (d.od && d.do) ? `${nZ} · ${d.od}–${d.do}` : nZ;
+    badge.title = "Wszystkie zdjęcia w galerii (zakładka „Zdjęcia” na FB klubu). "
+      + "Licznik odświeża się automatycznie razem z danymi ligowymi.";
+  } catch (err) {
+    console.warn("Licznik galerii niedostępny — ukrywam badge:", err);
+    badge.style.display = "none";   // .badge ma display:inline-flex — hidden nie wystarczy
+  }
+}
+
 /* ===== galeria: teaser okładek (pełna galeria na podstronie) =====
    1.15.0: teaser NA ŻYWO z zakładki „Zdjęcia” na FB (silnik
    js/galeria-fb-core.js) — najnowsze albumy klubu zamiast zamarzniętego
-   archiwum 2023–24. Badge opisuje dokładnie to, co wczytano (liczba
-   albumów/zdjęć + zakres lat) i przelicza się sam. Awaria FB →
-   archiwum lokalne z uczciwą etykietą „archiwum 2023–2024”;
-   nigdy nie pokazujemy liczby, która nie odpowiada widocznym zdjęciom. */
+   archiwum 2023–24. Awaria FB → archiwum lokalne (bez etykiety liczb —
+   badge sekcji to od 1.16.0 osobny licznik CAŁEJ galerii, patrz wyżej). */
 async function renderTeaserGalerii() {
   const wrap = $("#gal-teaser");
-  const badge = $("#gal-count");
   if (!wrap) return;
 
   const okladki = (albumy) => {
@@ -982,7 +1010,6 @@ async function renderTeaserGalerii() {
 
   /* szkielet podczas poboru (wzór .lustro-skeleton) */
   wrap.innerHTML = '<span class="gal-teaser-skel" aria-hidden="true"></span>'.repeat(6);
-  if (badge) badge.textContent = "dociągam z Facebooka…";
 
   /* 1) lustro FB na żywo — okno dwóch ostatnich lat (wiek okna
      liczymy od bieżącego roku, więc teaser nie starzeje się w 2027+) */
@@ -997,14 +1024,6 @@ async function renderTeaserGalerii() {
       const albumy = K.zbudujAlbumy(zdjecia, K.mapaFotoPost(posty), new Set());
       if (!albumy.length) throw new Error("FB nie zwrócił zdjęć");
       albumy.sort(wgDaty);
-      if (badge) {
-        const n = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
-        const zakres = K.zakresLat(albumy);
-        badge.textContent = zakres
-          ? `${K.liczba(albumy.length, ["album", "albumy", "albumów"])} · ${K.liczba(n, ["zdjęcie", "zdjęcia", "zdjęć"])} · ${zakres}`
-          : K.liczba(n, ["zdjęcie", "zdjęcia", "zdjęć"]);
-        badge.title = "Zakres lat wczytanych z Facebooka. Pełna galeria (2012–2026) — na podstronie.";
-      }
       okladki(albumy);
       return;
     } catch (err) {
@@ -1012,26 +1031,16 @@ async function renderTeaserGalerii() {
     }
   }
 
-  /* 2) fallback: archiwum lokalne (2023–24) z uczciwą etykietą zakresu */
+  /* 2) fallback: archiwum lokalne (2023–24) */
   try {
     const res = await fetch("galeria.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const albumy = await res.json();
     albumy.sort(wgDaty);
-    const K2 = window.KTSFB;
-    if (badge) {
-      const n = albumy.reduce((s, a) => s + a.zdjecia.length, 0);
-      const zakres = K2 ? K2.zakresLat(albumy) : "";
-      const nA = K2 ? K2.liczba(albumy.length, ["album", "albumy", "albumów"]) : `${albumy.length} albumów`;
-      const nZ = K2 ? K2.liczba(n, ["zdjęcie", "zdjęcia", "zdjęć"]) : `${n} zdjęć`;
-      badge.textContent = zakres ? `${nA} · ${nZ} · archiwum ${zakres}` : `${nA} · ${nZ}`;
-      badge.title = "Facebook chwilowo niedostępny — pokazuję archiwum lokalne. Pełna galeria na podstronie.";
-    }
     okladki(albumy);
   } catch (err) {
     console.error("Błąd ładowania galeria.json:", err);
     wrap.innerHTML = "";
-    if (badge) badge.textContent = "galeria chwilowo niedostępna";
   }
 }
 
@@ -1042,6 +1051,7 @@ async function start() {
   pokazWersje().then((w) => { SWIEZOSC.wersjaStartowa = w; });
   pokazPrzebiegiSyncu();
   renderTeaserGalerii();
+  wypelnijLicznikGalerii();   // 1.16.0: badge sekcji = licznik CAŁEJ galerii (bot)
   podpiezKartyDruzyn();   // 1.12.0: dialog szczegółów (kontener żyje mimo przerysowań)
   const hamburger = $("#hamburger");
   const nav = $("#nav");
