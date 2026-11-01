@@ -77,6 +77,16 @@ jobs:
         continue-on-error: true
         run: bun scripts/licznik_galerii.ts
 
+      # 1.18.0: sponsorzy i partnerzy z arkusza Google właściciela (Q11).
+      # Właściciel edytuje wyłącznie ARKUSZ (LP · Nazwa · URL · Logo URL ·
+      # Aktywny Tak/Nie · Kategoria) — skrypt zapisuje sponsorzy.json
+      # TYLKO przy realnej zmianie listy (bez szumu commitów co 2 h).
+      # Awaria = ostrzeżenie ::warning, run NIE czerwienieje (liga
+      # ważniejsza); strona trzyma ostatni zapisany stan w repo.
+      - name: Sponsorzy (arkusz Google)
+        continue-on-error: true
+        run: bun scripts/sync_sponsorzy.ts
+
       # Od v1.5.2: runs.json zapisywany PRZY KAŻDYM uruchomieniu (także pustym)
       # → commit powstaje zawsze (panel „Automat: ✓/✗" na stronie). Historia
       # dane.json pozostaje czysta (skrypt nadal nie zapisuje go bez zmian).
@@ -89,6 +99,7 @@ jobs:
           git add dane.json
           if [ -f runs.json ]; then git add runs.json; fi
           if [ -f galeria-licznik.json ]; then git add galeria-licznik.json; fi
+          if [ -f sponsorzy.json ]; then git add sponsorzy.json; fi
           if git diff --cached --quiet; then
             echo "Brak zmian — dane aktualne."
           else
