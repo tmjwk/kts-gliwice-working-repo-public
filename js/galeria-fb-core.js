@@ -189,7 +189,15 @@ window.KTSFB = (function () {
     return albumy;
   }
 
-  /* ---- pomocniki tekstu (wspólne dla badge'ów galerii i teasera) ---- */
+  /* ---- pomocniki tekstu (wspólne dla galerii i teasera) ---- */
+
+  /* piłka KTS (sprite #pilka-kts w HTML strony) — wskaźnik ładowania
+     zamiast tekstu „dociągam…” (decyzja właściciela, 1.16.0);
+     cls = klasa CSS rozmiaru (domyślnie .gal-pilka). */
+  function pilka(cls) {
+    return '<svg class="' + (cls || "gal-pilka") + '" viewBox="0 0 120 120"'
+      + ' aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>';
+  }
 
   /* polska odmiana: liczba(3, ["album","albumy","albumów"]) → "3 albumy" */
   function liczba(n, formy) {
@@ -225,6 +233,6 @@ window.KTSFB = (function () {
   return {
     PAGE_ID, API,
     pobierz, zdjecia, posty, mapaFotoPost, tytulZPosta, zbudujAlbumy,
-    liczba, fmtLiczba, zakresLat,
+    liczba, fmtLiczba, zakresLat, pilka,
   };
 })();
