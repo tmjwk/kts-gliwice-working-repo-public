@@ -1,5 +1,5 @@
 {
- "wersja": "1.18.0",
+ "wersja": "1.19.0",
  "data": "2026-11-02T00:00:00Z",
- "opis": "Sponsorzy i partnerzy: sekcja na stronie głównej zasilana arkuszem Google (auto-sync co 2 h, hotlink logotypów z elegancką degradacją do nazwy tekstowej)"
+ "opis": "O klubie: lustro dokumentu Google — widoczny pierwszy akapit, resztę rozwija trójkącik (auto-sync co 2 h, statyczny fallback dla SEO i braku JS)"
 }
