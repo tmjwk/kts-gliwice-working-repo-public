@@ -105,18 +105,21 @@
              pełny wpis w dialogu, starsze → archiwum.html. Zero danych FB w repo.
              1.20.0: start = 4 najnowsze (desktop) / 2 (mobile), trójkącik
              „Rozwiń” dokłada kolejne (desktop +6, mobile +2) — decyzja
-             właściciela 02.11: sekcja przestaje zjadać ekran. -->
+             właściciela 02.11: sekcja przestaje zjadać ekran.
+             1.20.1 (właściciel 02.11): przyciski po PRAWEJ; „Pokaż starsze
+             wpisy” pojawia się dopiero PO ROZWINIĘCIU (a gdy rozwijać
+             nie ma czego — od razu, jako jedyna droga do archiwum). -->
         <div id="lustro-fb" class="lustro-fb">
           <div id="lustro-fb-hero"></div>
           <div class="grid grid-3" id="lustro-fb-grid"></div>
-          <div class="center lustro-rozwin-strefa" id="lustro-rozwin-strefa" hidden>
+          <div class="lustro-rozwin-strefa" id="lustro-rozwin-strefa" hidden>
             <button type="button" class="przelacz-rozwin" id="lustro-rozwin"
                     aria-expanded="false" aria-controls="lustro-fb-grid">
               <span class="trojkat-rozwin" aria-hidden="true"></span>
               <span class="etykieta">Rozwiń</span>
             </button>
           </div>
-          <div class="center lustro-stopka">
+          <div class="lustro-stopka" id="lustro-starsze" hidden>
             <a class="btn btn-outline" href="archiwum.html">Pokaż starsze wpisy →</a>
           </div>
         </div>
