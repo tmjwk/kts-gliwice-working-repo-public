@@ -95,7 +95,9 @@ function renderFiltry() {
      właściciela). v1.17.0: stan roku z __GALFB.stanRoku —
      „laduje” = malutka piłka w chipie (kolejka/klik pobiera rok),
      „blad” = chip przygaszony z podkreśleniem kropkowanym
-     (klik = ponowna próba). */
+     (klik = ponowna próba). v1.22.0 (właściciel 02.11): rok już
+     WCZYTANY dostaje trwałą malutką piłeczkę (bez obrotu) — widać,
+     które lata są już pobrane, a które dopiero czekają. */
   const lataGalerii = new Set(GALERIA.map((a) => (a.data || "").slice(0, 4)).filter(Boolean));
   const lataFB = (window.__GALFB && Array.isArray(window.__GALFB.lataFB))
     ? window.__GALFB.lataFB.map(String) : [];
@@ -115,7 +117,12 @@ function renderFiltry() {
         : fb ? ` aria-label="Dociągnij zdjęcia z roku ${esc(label)}"` : "";
     const pilka = stan === "laduje" && window.KTSFB
       ? window.KTSFB.pilka("gal-pilka gal-pilka--chip") : "";
-    return `<button class="${cls}" type="button" data-rok="${wartosc ?? ""}"${dodatek}>${esc(label)}${pilka}</button>`;
+    /* 1.22.0: piłeczka roku już wczytanego — tylko dla prawdziwych lat
+       („Wszystkie” to filtr, nie rok); statyczna, bez cienia. */
+    const gotowe = !fb && wartosc && stan !== "laduje" && window.KTSFB
+      ? window.KTSFB.pilka("gal-pilka gal-pilka--gotowe") : "";
+    const dodatekGotowe = gotowe ? ` title="Zdjęcia tego roku są już wczytane"` : "";
+    return `<button class="${cls}" type="button" data-rok="${wartosc ?? ""}"${dodatek}${dodatekGotowe}>${esc(label)}${pilka}${gotowe}</button>`;
   };
   wrap.innerHTML = chip("Wszystkie", "", FILTR === null)
     + lata.map((r) => chip(r, r, FILTR === r, !lataGalerii.has(r))).join("");
