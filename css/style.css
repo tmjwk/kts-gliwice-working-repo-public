@@ -302,6 +302,17 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .team-card .row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
 .team-card dt { color: var(--kts-text-muted); font-size: 0.875rem; }
 .team-card dd { font-size: 0.875rem; font-weight: 500; text-align: right; }
+/* 1.22.0: FORMA SEZONU — pasek piłeczek (po jednej na mecz z terminarza):
+   nierozegrany = pusty obrys, wygrana = zielona, przegrana = czerwona,
+   remis = żółto-pomarańczowa; licznik „rozegrane/wszystkie" w prawym.
+   Kolory miękkie — czytelne na jasnej karcie i w trybie nocnym. */
+.team-forma { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-top: 0.85rem; }
+.forma-pilka { width: 0.62rem; height: 0.62rem; border-radius: 999px; flex: none; }
+.forma-pilka--wygrana { background: #4ade80; }
+.forma-pilka--przegrana { background: #f87171; }
+.forma-pilka--remis { background: #fbbf24; }
+.forma-pilka--przyszla { background: transparent; border: 1px solid #aebccd; }
+.team-forma-licznik { margin-left: auto; font-size: 0.8rem; color: var(--kts-text-muted); }
 .team-card .source-link {
   margin-top: auto; padding-top: 0.75rem; font-size: 0.85rem; font-weight: 600;
   color: var(--kts-link); text-decoration: none;
@@ -566,6 +577,13 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .gal-pilka { animation: gal-pilka-spin 1.1s linear infinite; }
 }
 @keyframes gal-pilka-spin { to { transform: rotate(360deg); } }
+/* 1.22.0 (właściciel 02.11): trwała piłeczka przy roku już WCZYTANYM —
+   statyczna (bez obrotu), mniejsza i bez cienia niż wskaźnik pobioru;
+   świadomie PO @media obrotu, żeby animation:none wygrywało kaskadę */
+.gal-pilka--gotowe {
+  width: 0.8rem; height: 0.8rem; margin-left: 0.4rem; flex: none;
+  animation: none; filter: none; opacity: 0.85;
+}
 .gal-blad p { margin: 0 0 0.25rem; }
 
 .gal-wiecej-wrap { display: flex; justify-content: center; margin: 0.25rem 0 2.5rem; }
