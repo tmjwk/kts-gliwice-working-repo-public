@@ -327,13 +327,31 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .forma-pilka--przyszla { background: transparent; border: 1px solid #aebccd; }
 .team-forma-licznik { margin-left: auto; font-size: 0.8rem; color: var(--kts-text-muted); }
 
-/* 1.23.0 (zgłoszenie właściciela 02.11): piłeczki większe i w szerszych
-   odstępach na ekranach dotykowych — łatwiej trafić palcem; obszar
-   trafienia rośnie razem z odstępem (nadal bez nakładania). */
+/* 1.23.1 (zgłoszenie właściciela 02.11: „nie umiem trafić w te piłeczki
+   na telefonie — palcem”): na ekranach dotykowych piłeczka staje się
+   DUŻĄ celą dotykową (~32×40 px — tyle, co zwykły przycisk listy),
+   a widoczna kulka jest wycentrowana w środku (::before). Celami są
+   same elementy (nie pseudoelement ::after jak na desktopie), stykają
+   się w rzędzie bez odstępu — strefy się nie nakładają i między celami
+   nie ma „martwych pasów”; pasek nadal wygląda jak drobne piłeczki. */
 @media (pointer: coarse) {
-  .team-forma { gap: 0.45rem 0.6rem; }
-  .forma-pilka { width: 0.72rem; height: 0.72rem; }
-  .forma-pilka::after { inset: -0.45rem -0.3rem; }
+  .team-forma { gap: 0.2rem 0; }
+  .team-forma .forma-pilka {
+    width: 2rem; height: 2.5rem;
+    background: transparent; border: 0; border-radius: 0;
+  }
+  .team-forma .forma-pilka::after { content: none; }   /* cela = cały element */
+  .team-forma .forma-pilka::before {
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 0.85rem; height: 0.85rem; border-radius: 999px;
+    transform: translate(-50%, -50%);
+  }
+  .team-forma .forma-pilka--wygrana::before { background: #4ade80; }
+  .team-forma .forma-pilka--przegrana::before { background: #f87171; }
+  .team-forma .forma-pilka--remis::before { background: #fbbf24; }
+  .team-forma .forma-pilka--przyszla::before {
+    background: transparent; border: 1px solid #aebccd;
+  }
 }
 
 /* 1.23.0: DYMEK PIŁECZKI FORMY — data + mecze + status meczu.
