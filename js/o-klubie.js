@@ -7,9 +7,12 @@
    Właściciel edytuje DOKUMENT — nie kod strony.
 
    ZASADY (decyzja właściciela 02.11):
-   - widoczny PIERWSZY AKAPIT dokumentu, po nim przycisk z TRÓJKĄCIKIEM
-     (▾) rozwijający resztę treści; po rozwinięciu trójkącik obraca się
-     do góry (▴), etykieta zmienia się na „Zwiń”;
+   - 1.22.0: widoczny CAŁY WSTĘP dokumentu — wszystkie akapity przed
+     pierwszym nagłówkiem sekcji (właściciel: „miałaś pokazywać cały
+     pierwszy akapit” — w dokumencie wstęp to dwa akapity, a przycisk
+     rozwalał tekst w pół zdania); po wstępie przycisk z TRÓJKĄCIKIEM
+     (▾) rozwijający resztę treści; po rozwinięciu trójkącik obraca
+     się do góry (▴), etykieta zmienia się na „Zwiń”;
    - 1.20.1: przyciski po PRAWEJ (strefa flex) + DOLNY „Zwiń” na końcu
      rozwiniętej treści — nie trzeba przewijać do góry, aby zwinąć;
      po zwinięciu dolnym przyciskiem strona wraca do początku sekcji
@@ -71,14 +74,24 @@
       const elementy = Array.isArray(d && d.elementy) ? d.elementy : [];
       if (elementy.length === 0) return; // pusty plik → zostaje fallback statyczny
 
-      const wstep = wezel(elementy[0]);
-      if (wstep.nodeName === "P") wstep.classList.add("oklubie-prowadzenie");
-      const reszta = elementy.slice(1);
+      /* 1.22.0: wstęp = WSZYSTKIE elementy przed pierwszym nagłówkiem
+         sekcji (typowo 2 akapity). Dokument bez wstępu (zaczyna się od
+         nagłówka) → pokazujemy pierwszy element, żeby sekcja nie była
+         pusta; dokument bez nagłówków w ogóle → całość widoczna,
+         bez przycisku. */
+      const granica = elementy.findIndex((e) => e.typ === "naglowek");
+      const ileWstepu = granica > 0 ? granica : granica === 0 ? 1 : elementy.length;
+      const czescWstepu = elementy.slice(0, ileWstepu);
+      const reszta = elementy.slice(ileWstepu);
 
       pojemnik.textContent = ""; // znika statyczny fallback z HTML
-      pojemnik.appendChild(wstep);
+      czescWstepu.forEach((e, i) => {
+        const n = wezel(e);
+        if (i === 0 && n.nodeName === "P") n.classList.add("oklubie-prowadzenie");
+        pojemnik.appendChild(n);
+      });
 
-      if (reszta.length === 0) return; // jednoakapitowy dokument — bez trójkącika
+      if (reszta.length === 0) return; // wstęp = cały dokument — bez trójkącika
 
       const rozwijane = document.createElement("div");
       rozwijane.id = "oklubie-rozwijane";
