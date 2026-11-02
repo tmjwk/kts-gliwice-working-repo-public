@@ -14,6 +14,13 @@
  *  - do pliku trafiają TYLKO wiersze z nazwą i „Aktywny = Tak", posortowane
  *    po LP; „Nie" = podmiot znika z sekcji bez kasowania danych — wraca
  *    po przestawieniu na „Tak" (wiersz 7 arkusza to świadomy szablon);
+ *  - 1.23.1 (decyzja właściciela 02.11): WSZYSCY nieaktywni po udanym
+ *    odczycie arkusza = świadomy stan → zapisujemy PUSTĄ listę, a
+ *    js/sponsorzy.js ukrywa wtedy całą sekcję na stronie (pusta sekcja
+ *    z samym nagłówkiem byłaby nieaktualna). Błąd komunikacji z Google
+ *    (sieć, HTTP, brak nagłówka „Nazwa") to co innego: plik ZOSTAJE
+ *    nietknięty aż do następnego udanego połączenia — ostatni znany
+ *    stan jest lepszy niż pustka z przypadku;
  *  - kolumna „Kategoria" (np. „Sponsorzy Sprzętowi") trafia do JSON-a,
  *    choć układ jest płaski — gotowe pod ewentualne grupowanie później;
  *  - loga ładuje HOTLINKIEM przeglądarka gościa (decyzja właściciela).
@@ -22,8 +29,7 @@
  *    na w=480 (POLTING: ~28 KB → ~8 KB; ten sam serwer, ta sama treść,
  *    a przy odmowie kafelka i tak degraduje się do nazwy tekstowej);
  *  - plik zapisujemy TYLKO przy realnej zmianie listy (bez szumu commitów
- *    co 2 h); lista pusta NIE nadpisuje pliku — ochrona przed pomyłkowym
- *    opróżnieniem arkusza (świadomie, wzorem licznika galerii);
+ *    co 2 h) — w tym przy przejściu w stan „0 aktywnych" i z powrotem;
  *  - awaria (sieć, arkusz, parsowanie) = ::warning i exit 0: sponsorzy
  *    nie mogą blokować synchronizacji ligowej ani czerwonić runu.
  *
@@ -31,8 +37,11 @@
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
-const PLIK_WYJSCIOWY = "sponsorzy.json";
+// env = wyłącznie do testów lokalnych (scenariusze na własnym serwerze);
+// w Actions działają wartości domyślne
+const PLIK_WYJSCIOWY = process.env.KTS_SPONSORZY_PLIK ?? "sponsorzy.json";
 const ARKUSZ_CSV =
+  process.env.KTS_SPONSORZY_URL ??
   "https://docs.google.com/spreadsheets/d/1i6MSD8EJzc5MRMsnm6Ur07Biunjxulcd_KXEaeU0LNQ/export?format=csv&gid=0";
 const PROBY = 3;
 
@@ -127,20 +136,31 @@ function mapujWiersze(wiersze: string[][]): Sponsor[] {
 }
 
 async function main(): Promise<void> {
+  // błąd W TYM WIERSZU = wyłącznie komunikacja (sieć / HTTP / arkusz bez
+  // nagłówka „Nazwa") — main().catch() zostawia plik nietknięty aż do
+  // następnego udanego połączenia (decyzja właściciela 02.11)
   const sponsorzy = mapujWiersze(parsujCsv(await pobierzCsv()));
-  if (sponsorzy.length === 0) throw new Error("0 aktywnych sponsorów — nie nadpisuję pliku");
 
+  // 1.23.1: 0 aktywnych po UDANYM odczycie to NIE błąd, tylko świadome
+  // wyłączenie wszystkich sponsorów w arkuszu — zapisujemy pustą listę,
+  // a js/sponsorzy.js ukrywa wtedy całą sekcję na stronie. Ochrona przed
+  // pomyłkowym opróżnieniem arkusza zostaje poziom wyżej: odpowiedź bez
+  // nagłówka „Nazwa" nie przechodzi przez pobierzCsv() i listy nie czyści.
   const stary: Plik | null = existsSync(PLIK_WYJSCIOWY)
     ? (JSON.parse(readFileSync(PLIK_WYJSCIOWY, "utf-8")) as Plik)
     : null;
   if (stary && JSON.stringify(stary.sponsorzy) === JSON.stringify(sponsorzy)) {
-    console.log(`Sponsorzy bez zmian: ${sponsorzy.length} aktywnych — nie zapisuję (brak commita).`);
+    console.log(sponsorzy.length === 0
+      ? "Sponsorzy: 0 aktywnych (stan niezmienny) — nie zapisuję (brak commita)."
+      : `Sponsorzy bez zmian: ${sponsorzy.length} aktywnych — nie zapisuję (brak commita).`);
     return;
   }
   writeFileSync(PLIK_WYJSCIOWY, JSON.stringify({ wygenerowano: new Date().toISOString(), sponsorzy }, null, 2) + "\n", "utf-8");
   console.log(
-    `Sponsorzy: ${sponsorzy.length} aktywnych (${sponsorzy.map((s) => s.nazwa).join(", ")})` +
-      (stary ? ` (było: ${stary.sponsorzy.length}) — zapisuję ${PLIK_WYJSCIOWY}` : ` — tworzę ${PLIK_WYJSCIOWY}`),
+    sponsorzy.length === 0
+      ? `Sponsorzy: 0 aktywnych — czyszczę listę, sekcja zniknie ze strony (było: ${stary?.sponsorzy.length ?? 0})`
+      : `Sponsorzy: ${sponsorzy.length} aktywnych (${sponsorzy.map((s) => s.nazwa).join(", ")})` +
+          (stary ? ` (było: ${stary.sponsorzy.length}) — zapisuję ${PLIK_WYJSCIOWY}` : ` — tworzę ${PLIK_WYJSCIOWY}`),
   );
 }
 
