@@ -296,6 +296,77 @@ function renderPasekMeczu(mecze) {
   }
 }
 
+/* ===== 1.22.0: FORMA SEZONU NA KARCIE DRUŻYNY (pomysł właściciela 02.11)
+   Każda karta dostaje pasek piłeczek — po jednej za KAŻDY mecz drużyny
+   w terminarzu (liczba płynie z danych syncu, zero hardcodowania):
+   nierozegrany = pusty obrys, wygrany = zielona, przegrany = czerwona,
+   remis = żółto-pomarańczowa (remisy realnie występują — np. 5:5 w
+   1. lidze PZTS). Kolejność chronologiczna wg kolejek; najechanie
+   na piłeczkę podpowiada wynik. */
+
+/** Status meczu z perspektywy JEDNEJ drużyny (karta): W | P | R | null.
+ *  Dopasowanie strony meczu po nazwie karty ALBO dokładnej nazwie u źródła
+ *  (z.wiersz — PZTS: „KTS Gliwice I” na karcie to „KTS Gliwice” w meczu);
+ *  odporna na „KTS II” ⊂ „KTS II Gliwice”, ale NIE „KTS III…”. */
+function statusMeczuKarty(m, z) {
+  if (!m.wynik) return null;
+  const [a, b] = String(m.wynik).split(":").map((x) => parseInt(x, 10));
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  const kandydaci = [z.wiersz, z.nazwa].filter(Boolean).map(normNazwa);
+  const pasuje = (strona) => kandydaci.some((n) =>
+    strona === n || strona.startsWith(n + " ") || strona.startsWith(n + "·"));
+  const gospodarzNasz = pasuje(m.gospodarz || "");
+  const goscNasz = pasuje(m.gosc || "");
+  let my, rywal;
+  if (gospodarzNasz && !goscNasz) { my = a; rywal = b; }
+  else if (goscNasz && !gospodarzNasz) { my = b; rywal = a; }
+  else return null; // niejednoznaczne (np. obie strony „KTS Gliwice…”) — neutralnie
+  return my > rywal ? "W" : my < rywal ? "P" : "R";
+}
+
+/** Polska odmiana liczebnika: 1 zwycięstwo / 2 zwycięstwa / 5 zwycięstw. */
+function odmiana(n, [j, mm, w]) {
+  n = Number(n) || 0;
+  if (n === 1) return `1 ${j}`;
+  const r10 = n % 10, r100 = n % 100;
+  return `${n} ${r10 >= 2 && r10 <= 4 && (r100 < 12 || r100 > 14) ? mm : w}`;
+}
+
+/** Pasek formy (HTML) dla karty drużyny z; mecze = pełny terminarz
+ *  i wyniki (ŚZTS + PZTS) z dane.json. */
+function htmlFormy(mecze, z) {
+  const moje = (mecze ?? [])
+    .filter((m) => druzynyMeczu(m).includes(z.nazwa))
+    .sort((x, y) => ((x.kolejka ?? 999) - (y.kolejka ?? 999))
+      || String(x.dataMeczu ?? "").localeCompare(String(y.dataMeczu ?? "")));
+  if (moje.length === 0) return ""; // brak terminarza — bez paska
+  const bilans = { W: 0, P: 0, R: 0 };
+  const pilki = moje.map((m) => {
+    const st = m.rozegrany ? statusMeczuKarty(m, z) : null;
+    if (st) bilans[st]++;
+    const klasa = st === "W" ? "forma-pilka--wygrana"
+      : st === "P" ? "forma-pilka--przegrana"
+      : st === "R" ? "forma-pilka--remis"
+      : "forma-pilka--przyszla";   // nierozegrany albo wynik niedostępny
+    const slowo = st === "W" ? "zwycięstwo" : st === "P" ? "porażka" : st === "R" ? "remis" : null;
+    const opis = m.rozegrany && slowo
+      ? `kolejka ${m.kolejka ?? "—"}: ${m.gospodarz} ${m.wynik} ${m.gosc} — ${slowo}`
+      : `kolejka ${m.kolejka ?? "—"}: ${m.gospodarz} — ${m.gosc} · ${m.rozegrany ? "wynik niedostępny" : "do rozegrania"}`;
+    return `<span class="forma-pilka ${klasa}" title="${esc(opis)}"></span>`;
+  }).join("");
+  const rozegrane = bilans.W + bilans.P + bilans.R;
+  const czesci = [];
+  if (bilans.W) czesci.push(odmiana(bilans.W, ["zwycięstwo", "zwycięstwa", "zwycięstw"]));
+  if (bilans.R) czesci.push(odmiana(bilans.R, ["remis", "remisy", "remisów"]));
+  if (bilans.P) czesci.push(odmiana(bilans.P, ["porażka", "porażki", "porażek"]));
+  return `
+      <div class="team-forma" role="img"
+           aria-label="Sezon w piłeczkach: ${rozegrane} z ${moje.length} meczów rozegranych${czesci.length ? " — " + czesci.join(", ") : ""}">
+        ${pilki}
+        <span class="team-forma-licznik t-nums">${rozegrane}/${moje.length}</span>
+      </div>`;
+}
+
 function renderKartyDruzyn(dane, mecze) {
   const wrap = $("#karty-druzyn");
   wrap.innerHTML = dane.zespoly.map((z) => `
@@ -308,6 +379,7 @@ function renderKartyDruzyn(dane, mecze) {
         <div class="row"><dt>Stan</dt><dd class="t-nums">${esc(z.stan ?? "—")}</dd></div>
         <div class="row"><dt>Najbliższy</dt><dd class="t-nums">${esc(nastepnyDla(mecze, z.nazwa))}</dd></div>
       </dl>
+      ${htmlFormy(mecze, z)}
       <span class="team-wiecej t-small">Szczegóły, tabela i terminarz&nbsp;↗</span>
       ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło: tabela ligowa ↗</a>` : ""}
     </article>`).join("");
