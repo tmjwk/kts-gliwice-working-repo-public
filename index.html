@@ -135,11 +135,6 @@
           <span class="badge badge-outline-primary" id="badge-sezon">Sezon —</span>
           <span class="badge badge-live" id="badge-live">łączę z danymi…</span>
         </div>
-        <p class="t-small muted section-desc">
-          Widok zbliżony do docelowego. Skład drużyn, ligi i źródła to dane
-          konfigurowalne — nowy sezon, awanse czy nowe drużyny (np. kobiece)
-          obsługiwane są edycją danych, bez zmian w kodzie strony.
-        </p>
 
         <!-- Karty drużyn -->
         <div class="grid grid-4" id="karty-druzyn"></div>
@@ -197,7 +192,10 @@
       <div class="container">
         <h2 class="t-h2">O klubie</h2>
         <div id="oklubie-tresc" class="oklubie-tresc">
+          <!-- 1.22.0: statyczny fallback = CAŁY wstęp dokumentu (akapity
+               przed pierwszym nagłówkiem) — zgodny z o-klubie.json -->
           <p class="oklubie-prowadzenie">Klub Tenisa Stołowego Gliwice, funkcjonujący również jako KTS Gliwice / Akademia Tenisa Stołowego, to gliwicki klub tenisa stołowego, którego siedziba znajduje się przy ul. Partyzantów 25, 44-113 Gliwice, w Centrum Sportowo-Kulturalnym „Łabędź” Gliwickiego Ośrodka Sportu.</p>
+          <p class="oklubie-akapit">Klub prowadzi szkolenie dzieci, młodzieży oraz dorosłych, a także rywalizuje w rozgrywkach ligowych i turniejowych. KTS Gliwice jest silnie związany z dzielnicą Łabędy i stanowi ważny punkt na sportowej mapie Gliwic.</p>
         </div>
       </div>
     </section>
