@@ -257,7 +257,8 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .section-neutral { background: var(--kts-neutral); border-block: 1px solid var(--kts-line); }
 .section-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.5rem; }
 .section-head-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
-.section-desc { max-width: 42rem; }
+/* 1.21.0: tekst sekcji na szerokość strony (właściciel 02.11) — bez
+   limitu 42rem; opis steruje się szerokością kontenera 72rem */
 
 /* ===== karty ===== */
 .grid { display: grid; gap: 1rem; }
@@ -426,7 +427,9 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 
 /* ===== O klubie — lustro dokumentu Google (1.19.0: pierwszy akapit + trójkącik) ===== */
-.oklubie-tresc { max-width: 46rem; }
+/* 1.21.0: treść na szerokość strony (właściciel 02.11) — bez limitu 46rem;
+   akapity i listy sterają się szerokością kontenera, strefa przycisku
+   „Rozwiń/Zwiń” trzyma się prawej krawędzi kontenera */
 .oklubie-prowadzenie { font-size: 1.02rem; line-height: 1.75; color: var(--kts-text); }
 .oklubie-przelacz {
   display: inline-flex; align-items: center; gap: 0.55rem;
