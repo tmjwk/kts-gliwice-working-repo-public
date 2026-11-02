@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-02T16:19:18.511Z",
+  "wygenerowano": "2026-11-02T23:37:00.858Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -33,7 +33,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "4. miejsce · 9 pkt",
+      "stan": "5. miejsce · 9 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/",
       "tabela": "18/138",
       "wiersz": "KTS IV Gliwice"
@@ -69,7 +69,7 @@
       "nazwa": "KTS Gliwice · amatorzy",
       "liga": "2. Śląska Liga Amatorów",
       "tryb": "ŚZTS · automat",
-      "stan": "4. miejsce · 4 pkt",
+      "stan": "2. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/144/",
       "tabela": "18/144",
       "wiersz": "KTS Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-02T16:19:18.511Z"
+      "zaktualizowano": "2026-11-02T23:37:00.858Z"
     },
     {
       "klucz": "18/138",
@@ -202,44 +202,44 @@
         {
           "pozycja": 1,
           "nazwa": "UKS Huragan Sosnowiec",
-          "mecze": 6,
-          "punkty": 11,
-          "stosunek": "41:19"
+          "mecze": 7,
+          "punkty": 12,
+          "stosunek": "46:24"
         },
         {
           "pozycja": 2,
+          "nazwa": "LKS Strażak Mikołów",
+          "mecze": 7,
+          "punkty": 10,
+          "stosunek": "49:21"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "UKS Feniks Pyskowice",
           "mecze": 6,
           "punkty": 9,
           "stosunek": "43:17"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "MKS Skarbek III Tarnowskie Góry",
           "mecze": 6,
           "punkty": 9,
           "stosunek": "40:20"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "KTS IV Gliwice",
           "mecze": 6,
           "punkty": 9,
           "stosunek": "38:22"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "KU AZS UJD Częstochowa",
           "mecze": 6,
           "punkty": 9,
           "stosunek": "37:23"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "LKS Strażak Mikołów",
-          "mecze": 6,
-          "punkty": 8,
-          "stosunek": "39:21"
         },
         {
           "pozycja": 7,
@@ -265,9 +265,9 @@
         {
           "pozycja": 10,
           "nazwa": "UKS Wolej Solver Ruda Śląska",
-          "mecze": 6,
-          "punkty": 5,
-          "stosunek": "28:32"
+          "mecze": 7,
+          "punkty": 6,
+          "stosunek": "33:37"
         },
         {
           "pozycja": 11,
@@ -293,9 +293,9 @@
         {
           "pozycja": 14,
           "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 2,
-          "stosunek": "23:37"
+          "stosunek": "23:47"
         },
         {
           "pozycja": 15,
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-11-02T16:19:18.511Z"
+      "zaktualizowano": "2026-11-02T23:37:00.858Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-11-02T16:19:18.511Z"
+      "zaktualizowano": "2026-11-02T23:37:00.858Z"
     },
     {
       "klucz": "18/144",
@@ -432,38 +432,38 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "KTS Gliwice",
+          "mecze": 4,
+          "punkty": 6,
+          "stosunek": "21:19"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "Bartek II Siemianowice",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "21:9"
         },
         {
-          "pozycja": 3,
+          "pozycja": 4,
           "nazwa": "TKKF Aut Łagisza Będzin",
           "mecze": 3,
           "punkty": 4,
           "stosunek": "17:13"
         },
         {
-          "pozycja": 4,
-          "nazwa": "KTS Gliwice",
-          "mecze": 3,
-          "punkty": 4,
-          "stosunek": "15:15"
-        },
-        {
           "pozycja": 5,
-          "nazwa": "UKS Ikar Mierzęcice",
-          "mecze": 3,
-          "punkty": 3,
-          "stosunek": "16:14"
-        },
-        {
-          "pozycja": 6,
           "nazwa": "UKS Wolej Solver III Ruda Śląska",
           "mecze": 3,
           "punkty": 3,
           "stosunek": "15:15"
+        },
+        {
+          "pozycja": 6,
+          "nazwa": "UKS Ikar Mierzęcice",
+          "mecze": 4,
+          "punkty": 3,
+          "stosunek": "20:20"
         },
         {
           "pozycja": 7,
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-11-02T16:19:18.511Z"
+      "zaktualizowano": "2026-11-02T23:37:00.858Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-02T16:19:18.511Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1665,8 +1665,8 @@
       "kolejka": null,
       "gospodarz": "KTS Gliwice",
       "gosc": "UKS Ikar Mierzęcice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "6:4",
+      "rozegrany": true,
       "liga": "2. Śląska Liga Amatorów",
       "zespoly": [
         "KTS Gliwice · amatorzy"
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-02T16:19:18.511Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -1930,7 +1930,7 @@
     {
       "zespol": "KTS II",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1480/kts-ii-gliwice/",
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "zawodnicy": [
         {
           "nazwisko": "Bartosz Kwodawski",
@@ -2037,7 +2037,7 @@
     {
       "zespol": "KTS III",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "zawodnicy": [
         {
           "nazwisko": "Michał Rosiek",
@@ -2104,7 +2104,7 @@
     {
       "zespol": "KTS IV",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "zawodnicy": [
         {
           "nazwisko": "Piotr Zemła",
@@ -2191,7 +2191,7 @@
     {
       "zespol": "KTS V",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1557/kts-v-gliwice/",
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "zawodnicy": [
         {
           "nazwisko": "Grzegorz Machał",
@@ -2268,7 +2268,7 @@
     {
       "zespol": "KTS VI",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "zawodnicy": [
         {
           "nazwisko": "Wojciech Wieczorek",
@@ -2345,7 +2345,7 @@
     {
       "zespol": "KA Krokus VII",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1558/kts-ka-krokus-vii-gliwice/",
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "zawodnicy": [
         {
           "nazwisko": "Łukasz Francka",
@@ -2422,7 +2422,7 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T23:37:00.858Z",
       "zawodnicy": [
         {
           "nazwisko": "Paweł Stefanów",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-02T16:19:18.511Z",
-    "pzts": "2026-11-02T16:19:18.511Z"
+    "szts": "2026-11-02T23:37:00.858Z",
+    "pzts": "2026-11-02T23:37:00.858Z"
   },
   "zrodla": {
     "szts": "ok",
