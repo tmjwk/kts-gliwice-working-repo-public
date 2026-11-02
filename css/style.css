@@ -599,6 +599,10 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
 .footer-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.875rem; }
 .footer-links a:hover { color: #fff; }
+/* v1.23.2: „Znajdź nas” — Facebook jako link (block, jak akapit,
+   który zastępuje); kolor spójny z .footer-links a */
+.footer-fb { display: block; color: rgba(255,255,255,0.8); text-decoration: none; }
+.footer-fb:hover { color: #fff; text-decoration: underline; }
 .footer-fade { color: rgba(255,255,255,0.5); margin-top: 0.75rem; }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem; padding-top: 1rem; color: rgba(255,255,255,0.4); }
 
