@@ -332,13 +332,25 @@ function odmiana(n, [j, mm, w]) {
   return `${n} ${r10 >= 2 && r10 <= 4 && (r100 < 12 || r100 > 14) ? mm : w}`;
 }
 
+/** Klucz chronologiczny meczu dla paska formy: prawdziwa data →
+ *  timestamp; daty zastępcze źródeł („2026-00-00” bez terminu) → na
+ *  koniec paska. 1.22.1: pasek czyta się CHRONOLOGICZNIE (wg dat),
+ *  nie wg numerów kolejek — mecz przełożony przez ligę (np. kolejka 4
+ *  rozgrywana dopiero 04.11, choć 5–7 już rozegrane) nie zostawia
+ *  „dziury” pośród rozegranych piłeczek; tooltip nadal podpowiada
+ *  numer kolejki. */
+function kluczCzasuFormy(m) {
+  const t = Date.parse(String(m.dataMeczu ?? ""));
+  return Number.isFinite(t) ? t : Number.POSITIVE_INFINITY;
+}
+
 /** Pasek formy (HTML) dla karty drużyny z; mecze = pełny terminarz
  *  i wyniki (ŚZTS + PZTS) z dane.json. */
 function htmlFormy(mecze, z) {
   const moje = (mecze ?? [])
     .filter((m) => druzynyMeczu(m).includes(z.nazwa))
-    .sort((x, y) => ((x.kolejka ?? 999) - (y.kolejka ?? 999))
-      || String(x.dataMeczu ?? "").localeCompare(String(y.dataMeczu ?? "")));
+    .sort((x, y) => kluczCzasuFormy(x) - kluczCzasuFormy(y)
+      || ((x.kolejka ?? 999) - (y.kolejka ?? 999)));
   if (moje.length === 0) return ""; // brak terminarza — bez paska
   const bilans = { W: 0, P: 0, R: 0 };
   const pilki = moje.map((m) => {
