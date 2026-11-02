@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-10-31T20:57:42.242Z",
+  "wygenerowano": "2026-11-02T16:19:18.511Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-10-31T20:57:42.242Z"
+      "zaktualizowano": "2026-11-02T16:19:18.511Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-10-31T20:57:42.242Z"
+      "zaktualizowano": "2026-11-02T16:19:18.511Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-10-31T20:57:42.242Z"
+      "zaktualizowano": "2026-11-02T16:19:18.511Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-10-31T20:57:42.242Z"
+      "zaktualizowano": "2026-11-02T16:19:18.511Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T16:19:18.511Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -891,7 +891,7 @@
     },
     {
       "dataMeczu": "2026-12-04",
-      "godzina": "18:00",
+      "godzina": "18:30",
       "kolejka": 11,
       "gospodarz": "GUKS Byczyna",
       "gosc": "KTS III Gliwice",
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-10-31T20:57:42.242Z",
+      "zaktualizowano": "2026-11-02T16:19:18.511Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-10-31T20:57:42.242Z",
-    "pzts": "2026-10-31T20:57:42.242Z"
+    "szts": "2026-11-02T16:19:18.511Z",
+    "pzts": "2026-11-02T16:19:18.511Z"
   },
   "zrodla": {
     "szts": "ok",

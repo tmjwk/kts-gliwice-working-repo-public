@@ -1,33 +1,7 @@
 {
-  "wygenerowano": "2026-11-02T06:22:41.403Z",
+  "wygenerowano": "2026-11-02T16:19:37.092Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-10-25T20:57:16.745Z",
-      "czasS": 15,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": false,
-      "zmiany": "bez zmian",
-      "blad": null,
-      "retry": null,
-      "korekty": [
-        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
-        "2026-11-05 KTS II Gliwice–KTS Olimpijczyk Zawiercie: źródło 19:15 → korekta 19:00",
-        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
-        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
-        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
-      ],
-      "most": {
-        "kanal": "most",
-        "sloty": [
-          "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-          "",
-          "",
-          ""
-        ]
-      }
-    },
     {
       "start": "2026-10-25T21:41:26.886Z",
       "czasS": 16,
@@ -1299,6 +1273,33 @@
       "blad": null,
       "retry": null,
       "skladyOdczyt": "2026-11-02T06:22:15.251Z",
+      "korekty": [
+        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
+        "2026-11-05 KTS II Gliwice–KTS Olimpijczyk Zawiercie: źródło 19:15 → korekta 19:00",
+        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
+        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
+        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
+      ],
+      "most": {
+        "kanal": "most",
+        "sloty": [
+          "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    {
+      "start": "2026-11-02T16:19:18.509Z",
+      "czasS": 19,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "godziny (ŚZTS): 2026-12-04 GUKS Byczyna–KTS III Gliwice: 18:00→18:30",
+      "blad": null,
+      "retry": null,
+      "skladyOdczyt": null,
       "korekty": [
         "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
         "2026-11-05 KTS II Gliwice–KTS Olimpijczyk Zawiercie: źródło 19:15 → korekta 19:00",
