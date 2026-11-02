@@ -307,12 +307,83 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    remis = żółto-pomarańczowa; licznik „rozegrane/wszystkie" w prawym.
    Kolory miękkie — czytelne na jasnej karcie i w trybie nocnym. */
 .team-forma { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-top: 0.85rem; }
-.forma-pilka { width: 0.62rem; height: 0.62rem; border-radius: 999px; flex: none; }
+.forma-pilka {
+  width: 0.62rem; height: 0.62rem; border-radius: 999px; flex: none;
+  /* 1.23.0: piłeczka jest TAPOWALNA — patrz dymek .forma-tip niżej */
+  position: relative; cursor: pointer; touch-action: manipulation;
+  transition: transform 0.12s ease;
+}
+/* niewidzialny obszar trafienia: poziomo dokładnie odstęp między
+   piłeczkami (strefy sąsiadów się nie nakładają — tap trafia zawsze
+   we właściwą), pionowo wygodnie szeroko; ::after nie jest celem
+   zdarzeń dla klawiatury, więc nic nie psuje */
+.forma-pilka::after { content: ""; position: absolute; inset: -0.35rem -0.15rem; }
+@media (hover: hover) {
+  .forma-pilka:hover { transform: scale(1.35); }
+}
 .forma-pilka--wygrana { background: #4ade80; }
 .forma-pilka--przegrana { background: #f87171; }
 .forma-pilka--remis { background: #fbbf24; }
 .forma-pilka--przyszla { background: transparent; border: 1px solid #aebccd; }
 .team-forma-licznik { margin-left: auto; font-size: 0.8rem; color: var(--kts-text-muted); }
+
+/* 1.23.0 (zgłoszenie właściciela 02.11): piłeczki większe i w szerszych
+   odstępach na ekranach dotykowych — łatwiej trafić palcem; obszar
+   trafienia rośnie razem z odstępem (nadal bez nakładania). */
+@media (pointer: coarse) {
+  .team-forma { gap: 0.45rem 0.6rem; }
+  .forma-pilka { width: 0.72rem; height: 0.72rem; }
+  .forma-pilka::after { inset: -0.45rem -0.3rem; }
+}
+
+/* 1.23.0: DYMEK PIŁECZKI FORMY — data + mecze + status meczu.
+   Jeden wspólny element (position: fixed, doklejany przez js/app.js):
+   desktop pokazuje go hover (pointerover „mouse”), telefon TAPnięciem
+   (stan .forma-tip--dotyk łapie kliki — tap w dymek go zamyka, zamiast
+   „przebijać” do karty i otwierać dialog drużyny). Tło stałe w dzień
+   i w nocy (--kts-ink-fixed), strzałka wskazuje piłeczkę (--strzalka). */
+.forma-tip {
+  position: fixed; z-index: 55;
+  max-width: min(17rem, calc(100vw - 1rem));
+  display: flex; flex-direction: column; gap: 0.12rem;
+  padding: 0.5rem 0.7rem 0.45rem;
+  background: #0f1b2d;
+  color: #e9eff9;
+  border: 1px solid #2b3d5c;
+  border-radius: 0.6rem;
+  box-shadow: 0 10px 24px rgba(6, 12, 24, 0.35);
+  font-size: 0.8rem; line-height: 1.35;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateY(3px);
+  transition: opacity 0.14s ease-out, transform 0.14s ease-out, visibility 0.14s;
+}
+.forma-tip.widoczny { opacity: 1; visibility: visible; transform: none; }
+.forma-tip--dotyk.widoczny { pointer-events: auto; }
+/* strzałka: nad piłeczką (domyślnie, ogonem w dół) albo pod nią
+   (.forma-tip--pod, ogonem w górę) */
+.forma-tip::after {
+  content: ""; position: absolute; left: var(--strzalka, 50%); bottom: -7px;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border: 6px solid transparent; border-top-color: #0f1b2d; border-bottom: 0;
+}
+.forma-tip--pod::after {
+  bottom: auto; top: -7px;
+  border-top: 0; border-bottom: 6px solid #0f1b2d;
+}
+.forma-tip-data {
+  font-size: 0.72rem; color: #8fb0d8; font-variant-numeric: tabular-nums;
+}
+.forma-tip-mecz { font-size: 0.85rem; font-weight: 500; }
+.forma-tip-mecz b { font-weight: 700; }
+.forma-tip-status { font-size: 0.72rem; color: #8fb0d8; }
+.forma-tip-status--W { color: #4ade80; }
+.forma-tip-status--P { color: #f87171; }
+.forma-tip-status--R { color: #fbbf24; }
+@media (prefers-reduced-motion: reduce) {
+  .forma-tip { transition: none; }
+  .forma-pilka { transition: none; }
+}
 .team-card .source-link {
   margin-top: auto; padding-top: 0.75rem; font-size: 0.85rem; font-weight: 600;
   color: var(--kts-link); text-decoration: none;
