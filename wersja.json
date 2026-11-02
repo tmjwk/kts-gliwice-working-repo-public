@@ -1,5 +1,5 @@
 {
- "wersja": "1.22.0",
+ "wersja": "1.22.1",
  "data": "2026-11-02T00:00:00Z",
- "opis": "Piłeczki sezonu na kartach drużyn (wygrana/remis/porażka/do rozegrania), piłeczka przy latach już wczytanych w galerii, „O klubie” pokazuje cały wstęp dokumentu, bez opisu podziału sekcji drużyn"
+ "opis": "Pasek piłeczek formy czyta się chronologicznie (wg dat meczów) — mecz przełożony przez ligę nie robi „dziury” pośród rozegranych"
 }
