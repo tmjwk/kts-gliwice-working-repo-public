@@ -1,5 +1,5 @@
 {
- "wersja": "1.21.0",
+ "wersja": "1.22.0",
  "data": "2026-11-02T00:00:00Z",
- "opis": "Stopka z danymi klubu (ul. Partyzantów 25, telefon, e-mail), treść sekcji na szerokość strony, bez opisu pod teaserem galerii"
+ "opis": "Piłeczki sezonu na kartach drużyn (wygrana/remis/porażka/do rozegrania), piłeczka przy latach już wczytanych w galerii, „O klubie” pokazuje cały wstęp dokumentu, bez opisu podziału sekcji drużyn"
 }
