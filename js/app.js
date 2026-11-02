@@ -133,6 +133,22 @@ function etykietaDnia(iso) {
   return formatujDate(iso);
 }
 
+/** 1.23.0: data+godzina do podpowiedzi piłeczki formy (zgłoszenie
+ *  właściciela 02.11: „na szybko wiadomo kiedy był/będzie mecz”):
+ *  „dziś” / „jutro” / „pt 09.10.2026” (+ „· g. 18:00” gdy znana).
+ *  Daty zastępcze źródeł („2026-00-00”) → „termin nieznany” — obronnie,
+ *  bo meczeZDanych() i tak je odsiewa. */
+const DNI_TYGODNIA = ["nd", "pn", "wt", "śr", "cz", "pt", "sb"];
+function opisDatyFormy(m) {
+  const iso = String(m.dataMeczu ?? "");
+  if (!/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(iso)) return "termin nieznany";
+  const etykieta = etykietaDnia(iso);   // „dziś” / „jutro” / „dd.mm.rrrr”
+  const czesc = etykieta === "dziś" || etykieta === "jutro"
+    ? etykieta
+    : `${DNI_TYGODNIA[new Date(iso + "T12:00:00").getDay()]} ${etykieta}`;
+  return m.godzina ? `${czesc} · g. ${m.godzina}` : czesc;
+}
+
 /** Czy mecz już się zaczął, a wyniku wciąż brak w źródle?
  *  Godziny ligowe są warszawskie; u gościa z innej strefy granica
  *  przesunie się o kilka godzin — akceptowalne dla komunikatu na żywo. */
@@ -361,10 +377,19 @@ function htmlFormy(mecze, z) {
       : st === "R" ? "forma-pilka--remis"
       : "forma-pilka--przyszla";   // nierozegrany albo wynik niedostępny
     const slowo = st === "W" ? "zwycięstwo" : st === "P" ? "porażka" : st === "R" ? "remis" : null;
-    const opis = m.rozegrany && slowo
-      ? `kolejka ${m.kolejka ?? "—"}: ${m.gospodarz} ${m.wynik} ${m.gosc} — ${slowo}`
-      : `kolejka ${m.kolejka ?? "—"}: ${m.gospodarz} — ${m.gosc} · ${m.rozegrany ? "wynik niedostępny" : "do rozegrania"}`;
-    return `<span class="forma-pilka ${klasa}" title="${esc(opis)}"></span>`;
+    // 1.23.0: podpowiedź z DATĄ meczu (zgłoszenie właściciela 02.11).
+    // Natywny title= nie działa na dotyku — treść dymka jedzie w data-tip
+    // (esc() przy zapisie; odczyt przez dataset zwraca oryginalny HTML),
+    // a rysuje go silnik podpiezForme(): hover na desktopie, tap na telefonie.
+    const status = m.rozegrany && slowo
+      ? `kolejka ${m.kolejka ?? "—"} · ${slowo}`
+      : `kolejka ${m.kolejka ?? "—"} · ${m.rozegrany ? "wynik niedostępny" : "do rozegrania"}`;
+    const wynikTip = m.rozegrany && m.wynik && m.wynik !== "-:-"
+      ? `<b class="t-nums">${esc(m.wynik)}</b>` : "—";
+    const tip = `<span class="forma-tip-data">${esc(opisDatyFormy(m))}</span>`
+      + `<span class="forma-tip-mecz">${esc(m.gospodarz)} ${wynikTip} ${esc(m.gosc)}</span>`
+      + `<span class="forma-tip-status${st ? ` forma-tip-status--${st}` : ""}">${esc(status)}</span>`;
+    return `<span class="forma-pilka ${klasa}" data-tip="${esc(tip)}" aria-hidden="true"></span>`;
   }).join("");
   const rozegrane = bilans.W + bilans.P + bilans.R;
   const czesci = [];
@@ -380,6 +405,7 @@ function htmlFormy(mecze, z) {
 }
 
 function renderKartyDruzyn(dane, mecze) {
+  ukryjFormTip();   // 1.23.0: piłeczki lecą do przerysowania — dymek nie może wisieć w powietrzu
   const wrap = $("#karty-druzyn");
   wrap.innerHTML = dane.zespoly.map((z) => `
     <article class="card team-card team-klik" data-slug="${esc(slugZespolu(z.nazwa))}" tabindex="0" role="button"
@@ -395,6 +421,120 @@ function renderKartyDruzyn(dane, mecze) {
       <span class="team-wiecej t-small">Szczegóły, tabela i terminarz&nbsp;↗</span>
       ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło: tabela ligowa ↗</a>` : ""}
     </article>`).join("");
+}
+
+/* ===== 1.23.0: PODPOWIEDZI PIŁECZEK — DOTYK I DATA (właściciel 02.11)
+   „nie wiem jak używać tooltipów na telefonie — chyba się nie da?”
+   Miało rację: natywny title= NIE ISTNIEJE na urządzeniach dotykowych.
+   Teraz jeden wspólny dymek (position: fixed, doklejany do body):
+   - desktop: najechanie myszą pokazuje, opuszczenie chowa
+     (zdarzenia pointerowe z pointerType „mouse” — syntetyczne
+     „mouseover” po tapnięciu na telefonie są ignorowane);
+   - dotyk: tapnięcie piłeczki PRZYPINA dymek (klik w piłeczkę jest
+     wyłączony z otwierania dialogu drużyny), tap gdziekolwiek — także
+     w sam dymek — scroll albo Escape odpina.
+   Piłeczki mają powiększony NIEWIDOCZALNY obszar trafienia (::after w
+   CSS, rozmiar równy odstęwowi między piłeczkami — strefy się nie
+   nakładają), ale celowo NIE wchodzą do tabulatora: pełne dane
+   meczów (z datami) są w dialogu drużyny, więc klawiatura/ czytnik
+   ekranu nic nie traci — pasek pozostaje ozdobnym „role=img”. */
+
+const FORMTIP = { el: null, pilka: null, przypiete: false };
+
+function formaTipEl() {
+  if (!FORMTIP.el) {
+    FORMTIP.el = document.createElement("div");
+    FORMTIP.el.className = "forma-tip";
+    FORMTIP.el.setAttribute("aria-hidden", "true");
+    // tap w PRZYPIĘTY dymek = zamknij (zdarzenie nie może „przebić się”
+    // do karty i otworzyć dialogu)
+    FORMTIP.el.addEventListener("click", (e) => {
+      e.stopPropagation();
+      ukryjFormTip();
+    });
+    document.body.appendChild(FORMTIP.el);
+  }
+  return FORMTIP.el;
+}
+
+/** Pozycja dymka przy piłeczce: fixed, z doczepieniem do krawędzi
+ *  ekranu (min. 8 px marginesu) i strzałką wskazującą piłeczkę;
+ *  brak miejsca nad piłeczką → dymek pod spodem (.forma-tip--pod). */
+function polozFormTip(tip, pilka) {
+  const r = pilka.getBoundingClientRect();
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  const x = Math.min(Math.max(8, r.left + r.width / 2 - tw / 2),
+    window.innerWidth - tw - 8);
+  const nad = r.top - th - 12 >= 8;
+  tip.classList.toggle("forma-tip--pod", !nad);
+  tip.style.left = `${Math.round(x)}px`;
+  tip.style.top = `${Math.round(nad ? r.top - th - 12 : r.bottom + 12)}px`;
+  // strzałka nad środkiem piłeczki (klamra do szerokości dymka)
+  const sx = Math.min(Math.max(14, r.left + r.width / 2 - x), tw - 14);
+  tip.style.setProperty("--strzalka", `${Math.round(sx)}px`);
+}
+
+function pokazFormTip(pilka) {
+  const tip = formaTipEl();
+  FORMTIP.pilka = pilka;
+  tip.innerHTML = pilka.dataset.tip ?? "";
+  // pomiar działa zawsze: dymek jest w layout (visibility:hidden), więc
+  // offsetWidth/Height są dostępne jeszcze zanim .widoczny zacznie fade
+  polozFormTip(tip, pilka);
+  tip.classList.add("widoczny");
+}
+
+function ukryjFormTip() {
+  if (!FORMTIP.el) return;
+  FORMTIP.el.classList.remove("widoczny", "forma-tip--dotyk");
+  FORMTIP.pilka = null;
+  FORMTIP.przypiete = false;
+}
+
+/** Podpięcie RAZ (kontener #karty-druzyn żyje mimo przerysowań kart). */
+function podpiezForme() {
+  const wrap = $("#karty-druzyn");
+  if (!wrap) return;
+
+  // desktop: hover myszą pokazuje/chowa (chyba że dymek przypiął tap)
+  wrap.addEventListener("pointerover", (e) => {
+    if (e.pointerType !== "mouse" || FORMTIP.przypiete) return;
+    const pilka = e.target.closest(".forma-pilka");
+    if (pilka && pilka !== FORMTIP.pilka) pokazFormTip(pilka);
+  });
+  wrap.addEventListener("pointerout", (e) => {
+    if (e.pointerType !== "mouse" || FORMTIP.przypiete) return;
+    const pilka = e.target.closest(".forma-pilka");
+    if (pilka && pilka === FORMTIP.pilka && !pilka.contains(e.relatedTarget)) {
+      ukryjFormTip();
+    }
+  });
+
+  // dotyk (i mysz): klik/tap w piłeczkę → dymek przypięty / odepnięty
+  wrap.addEventListener("click", (e) => {
+    const pilka = e.target.closest(".forma-pilka");
+    if (!pilka) return;
+    e.stopPropagation();   // nie otwieraj dialogu drużyny (patrz podpiezKartyDruzyn)
+    if (FORMTIP.przypiete && pilka === FORMTIP.pilka) {
+      ukryjFormTip();
+      return;
+    }
+    pokazFormTip(pilka);
+    FORMTIP.przypiete = true;
+    FORMTIP.el.classList.add("forma-tip--dotyk");   // pointer-events: auto
+  });
+
+  // odepnięcie: klik gdziekolwiek indziej, Escape, scroll/zmiana okna
+  document.addEventListener("click", (e) => {
+    if (!FORMTIP.el?.classList.contains("widoczny")) return;
+    if (e.target.closest(".forma-pilka, .forma-tip")) return;
+    ukryjFormTip();
+  }, true);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") ukryjFormTip();
+  });
+  window.addEventListener("scroll", ukryjFormTip, { passive: true });
+  window.addEventListener("resize", ukryjFormTip, { passive: true });
 }
 
 /* ===== 1.12.0: szczegóły drużyny — dialog z zakładkami + podstrona =====
@@ -618,6 +758,8 @@ function podpiezKartyDruzyn() {
   };
   wrap.addEventListener("click", (e) => {
     if (e.target.closest("a")) return;   // „Źródło” działa normalnie
+    // 1.23.0: piłeczka formy = podpowiedź meczu (podpiezForme), nie dialog
+    if (e.target.closest(".forma-pilka")) return;
     const kartaEl = e.target.closest(".team-klik");
     if (kartaEl) otworz(kartaEl);
   });
@@ -1208,6 +1350,7 @@ async function start() {
   renderTeaserGalerii();
   wypelnijLicznikGalerii();   // 1.16.0: badge sekcji = licznik CAŁEJ galerii (bot)
   podpiezKartyDruzyn();   // 1.12.0: dialog szczegółów (kontener żyje mimo przerysowań)
+  podpiezForme();         // 1.23.0: dymki piłeczek formy — hover + dotyk (jw.)
   podpinKafelkiMeczy();   // 1.20.0: trójkąciki kafelków meczów (jw. — podpięte raz)
   const hamburger = $("#hamburger");
   const nav = $("#nav");
