@@ -1,6 +1,13 @@
 {
-  "wygenerowano": "2026-11-02T01:01:24.701Z",
+  "wygenerowano": "2026-11-02T06:23:27.589Z",
   "sponsorzy": [
+    {
+      "lp": 1,
+      "nazwa": "Miasto Gliwice",
+      "url": "https://gliwice.eu/urzad-miejski",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/3/3a/POL_Gliwice_COA.svg",
+      "kategoria": null
+    },
     {
       "lp": 2,
       "nazwa": "POLTING",
