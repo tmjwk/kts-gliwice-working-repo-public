@@ -99,8 +99,11 @@
           <span class="brand-mark brand-mark-sm">KTS</span>
           <span class="footer-brand-name">KTS Gliwice</span>
         </div>
-        <p class="t-small">ul. Partyzantów 25 · Gliwice</p>
-        <p class="t-small">607 442 978 · ktsgliwice@gmail.com</p>
+        <!-- 1.26.3: klikalny kontakt — adres otwiera apkę nawigacji (routing
+             wg platformy: js/kontakt-stopki.js), tel: dzwoni, mailto: otwiera
+             pocztę; href adresu = zawsze działający fallback webowy -->
+        <p class="t-small"><a class="footer-kontakt footer-adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice" data-geo="geo:0,0?q=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice" data-maps-apple="https://maps.apple.com/?q=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice">ul. Partyzantów 25 · Gliwice</a></p>
+        <p class="t-small"><a class="footer-kontakt" href="tel:+48607442978">607 442 978</a> · <a class="footer-kontakt" href="mailto:ktsgliwice@gmail.com">ktsgliwice@gmail.com</a></p>
       </div>
       <nav aria-label="Stopka">
         <p class="footer-col-title">Sekcje</p>
@@ -169,6 +172,7 @@
   <!-- Lustro zdjęć FB — zastępuje archiwum statyczne danymi na żywo (1.15.0) -->
   <script src="js/galeria-fb.js"></script>
   <script src="js/powrot-gora.js" defer></script>
+  <script src="js/kontakt-stopki.js" defer></script>
 
   <!-- ===== PASEK ANKIETY (etap projektowy — z wersją finalną usunąć; patrz index.html #opinia) ===== -->
   <aside class="pasek-ankiety" aria-label="Ankieta dotycząca wersji testowej strony">
