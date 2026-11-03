@@ -343,14 +343,16 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .team-forma-licznik { margin-left: auto; font-size: 0.8rem; color: var(--kts-text-muted); }
 
 /* 1.24.0: LEGENDA PIŁECZEK — jeden wiersz nad kartami (CO WIDZĘ);
-   wstawiana przez js (legendaFormy), muted, zawija się na wąskim ekranie. */
+   wstawiana przez js (legendaFormy), muted, zawija się na wąskim ekranie.
+   1.26.5 (właściciel 04.11: „w sekcji drużyny i wyniki usuń ten tekst
+   «Piłeczki formy:»”): nagłówek usunięty — kolory piłeczek mówią same
+   za siebie, legenda zaczyna się od wyjaśnień (wygrana/porażka/…). */
 .forma-legenda {
   display: flex; flex-wrap: wrap; align-items: center;
   gap: 0.25rem 1rem; margin: 0 0 0.9rem;
   font-size: 0.75rem; color: var(--kts-text-muted);
 }
 .forma-legenda[hidden] { display: none; }
-.forma-legenda-naglowek { font-weight: 600; }
 .forma-legenda i {
   display: inline-block; width: 0.55rem; height: 0.55rem;
   border-radius: 999px; margin-right: 0.32rem; vertical-align: 0.05rem;
@@ -541,6 +543,13 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   color: var(--kts-link); text-decoration: none;
 }
 .team-card .source-link:hover { opacity: 0.8; }
+/* 1.26.5 (właściciel 04.11: „linki «Źródło ↗» i «Szczegóły ↗» w jednym
+   kolorze”): dotąd „Szczegóły” żyło w --kts-primary — w trybie DZIENNYM
+   to ten sam błękit co --kts-link, ale NOCĄ primary (#0057b8) ginęło
+   na ciemnej karcie, podczas gdy źródło świeciło #5aa9ff. Teraz oba
+   w --kts-link (zmienia się poprawnie z trybem) i w tej samej wielkości
+   (0.85rem — wcześniej „Szczegóły” przez .t-small było o 0.4 px większe). */
+.team-stopka .team-wiecej, .team-stopka .source-link { white-space: nowrap; }
 
 /* ===== tabela ligowa ===== */
 .table-caption { font-size: 0.875rem; font-weight: 600; color: var(--kts-ink); margin-bottom: 0.5rem; }
@@ -567,7 +576,32 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .divide-list { list-style: none; }
 .divide-list li { padding-block: 0.6rem; border-bottom: 1px solid var(--kts-line); }
 .divide-list li:last-child { border-bottom: none; }
-.match-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; }
+/* 1.26.5 (właściciel 04.11: „kafelki «Najbliższe» i «Ostatnie mecze»
+   w wersji mobilnej mają inną strukturę — czy to prawda? jeśli tak,
+   niech mają taką samą strukturę jak na komputer”): kod JS renderuje
+   oba kafelki IDENTYCZNIE na obu szerokościach (zero gałęzi mobilnych
+   — zweryfikowane testem 390px vs 1280px: ta sama kolejność wierszy),
+   ale dowolne zawijanie .match-row na wąskim ekranie dawało nieregularne
+   3–4-linijkowe bloki. Teraz wiersz ma dwie grupy: .match-glowne
+   (drużyny + wynik + plakietka) i .match-info (data · godzina · kolejka)
+   — na desktopie JEDEN wiersz (info dopchnięte do prawej), na telefonie
+   info schodzi do drugiej linii. Te same elementy, ta sama logika,
+   świadomy układ zamiast losowego zawijania. (Zmiana dotyczy kafelków
+   index.html; podstrona drużyny ma własny układ — bez zmian.) */
+.match-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.75rem; }
+.match-glowne {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: 0.25rem 0.6rem; flex: 1 1 auto; min-width: 0;
+}
+/* drużyny baza 0 + wzrost: przy długich nazwach TEKST zawija się w środku
+   (zamiast wypychać wyniku na osobną linię) — wynik i plakietka zawsze
+   przy prawej krawędzi pierwszego wiersza */
+.match-glowne .match-teams { flex: 1 1 0; min-width: 0; }
+.match-glowne .match-score { margin-left: auto; }
+.match-info { display: flex; flex-wrap: wrap; gap: 0.25rem 0.4rem; }
+@media (max-width: 40rem) {
+  .match-info { flex-basis: 100%; }
+}
 .match-date { font-size: 0.8rem; color: var(--kts-text-muted); font-variant-numeric: tabular-nums; }
 .match-teams { font-size: 0.9rem; font-weight: 600; color: var(--kts-text); }
 .match-score { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--kts-ink); }
@@ -582,7 +616,15 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    szerokości. Zwinięte = sam pasek tytułu z licznikiem i trójkącikiem,
    rozwinięte = pełna lista. Trójkącik i mechanika = wzór „O klubie”. */
 .mecze-kafelki { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-.mecz-kafel { padding: 0; }
+.mecz-kafel { padding: 0; scroll-margin-top: 4.5rem; }
+/* 1.26.5: kafelek meczowy musi puszczać PRZYCISK „Zwiń listę” poza swoje
+   pudło (position:sticky wewnątrz panelu) — dlatego świadomie
+   overflow:visible (karta .card domyślnie przycina). Promień nagłówka
+   przycina sam .mecz-przelacz, żeby tło hover nie wychodziło za rogi. */
+.mecz-kafel { overflow: visible; }
+.mecz-przelacz {
+  border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
+}
 .mecz-przelacz {
   display: flex; align-items: center; justify-content: space-between;
   gap: 1rem; width: 100%; padding: 0.95rem 1.25rem;
@@ -600,6 +642,30 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .mecz-licznik { font-size: 0.85rem; }
 .mecz-panel { padding: 0.1rem 1.25rem 1.1rem; }
+/* 1.26.5 (właściciel 04.11: „brak wygodnego sposobu do zwinięcia listy
+   w trakcie czytania — lista jest długa, więc możliwość zwijania nie
+   może być po prostu na samym dole”): przycisk na końcu panelu
+   z position:sticky;bottom — póki czytasz długą listę, PRZYPIJA się
+   do dolnej krawędzi ekranu (w zasięgu kciuka), a na krótkiej liście
+   po prostu leży na końcu. Klik = zwinięcie + powrót do nagłówka
+   kafelka (js/app.js: podpinKafelkiMeczy). */
+.mecz-zwin {
+  display: block; width: fit-content;
+  margin: 0.9rem auto 0.25rem;
+  position: sticky; bottom: 0.9rem; z-index: 5;
+  padding: 0.55rem 1.15rem;
+  border: 1px solid var(--kts-line); border-radius: 999px;
+  background: var(--bg-card); color: var(--kts-ink);
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(15, 27, 45, 0.16);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.mecz-zwin:hover, .mecz-zwin:focus-visible {
+  border-color: var(--kts-primary); color: var(--kts-primary);
+  outline: none;
+}
+.mecz-zwin[hidden] { display: none; }
 /* grupy drużyn w „Ostatnich meczach”: nagłówek = nazwa + liga,
    mecze w grupie od najnowszego (decyzja właściciela 02.11) */
 .mecz-grupa + .mecz-grupa { margin-top: 1rem; }
@@ -1220,7 +1286,10 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   transform: translateY(-2px);
 }
 .team-klik:focus-visible { outline: 2px solid var(--kts-primary); outline-offset: 2px; }
-.team-wiecej { color: var(--kts-primary); font-weight: 600; }
+/* 1.26.5: jeden kolor obu linków kafelka — var(--kts-link) (nocą #5aa9ff,
+   dawniej „Szczegóły” w --kts-primary #0057b8 ginęło na ciemnej karcie);
+   wielkość jak „Źródło” (0.85rem). */
+.team-wiecej { color: var(--kts-link); font-weight: 600; font-size: 0.85rem; }
 .team-klik:hover .team-wiecej { text-decoration: underline; }
 /* 1.26.4 (właściciel 04.11: „niech to będzie w jednym wierszu —
    zaoszczędzimy trochę miejsca”): stopka kafelka = JEDEN wiersz —
