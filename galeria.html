@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
   <title>Galeria zdjęć — KTS Gliwice</title>
-  <meta name="description" content="Galeria KTS Gliwice — pełna historia klubu od 2012 roku: turnieje, obozy, mecze i życie klubu. Wszystkie lata z zakładki „Zdjęcia” na Facebooku klubu, dociągane na żywo — od najnowszych, a starsze dobiegają same wraz z przewijaniem.">
+  <meta name="description" content="Galeria KTS Gliwice — pełna historia klubu od 2012 roku: turnieje, obozy, mecze i życie klubu. Wszystkie lata z zakładki „Zdjęcia” na Facebooku klubu, dociągane na żywo — na start bieżący rok, wcześniejsze wczytasz przyciskiem pod listą.">
   <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -66,9 +66,9 @@
         <div class="gal-notatka" role="note" id="gal-notatka">
           <strong>Zakres galerii: 2012–2026.</strong>
           Wszystkie lata pochodzą z zakładki „Zdjęcia” na Facebooku klubu
-          i dociągają się na żywo — start od najnowszego roku, a starsze
-          dobiegają same wraz z przewijaniem lub jednym kliknięciem
-          w filtrach. Pliki nie są kopiowane do serwisu.
+          i dociągają się na żywo. Na start wczytuje się bieżący rok —
+          wcześniejsze doładujesz przyciskiem pod listą albo kliknięciem
+          roku w filtrach. Pliki nie są kopiowane do serwisu.
         </div>
 
         <!-- Filtry roku (renderuje js/galeria.js) -->
@@ -77,10 +77,13 @@
         <!-- Albumy (renderuje js/galeria.js) -->
         <div id="gal-albumy"></div>
 
-        <!-- 1.17.0: piłka pod listą — „kolejny rok w drodze” (pokazuje i chowa
-             js/galeria-fb.js; widoczna tylko, gdy gość przy dnie i pobór leci) -->
-        <div class="gal-dol" id="gal-dol" role="status" aria-label="Dociągam kolejne zdjęcia" hidden>
-          <svg class="gal-pilka gal-pilka--dol" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
+        <!-- 1.26.8 (właściciel 04.11: „załadujesz tylko bieżący rok a potem
+             czekamy czy użytkownik kliknie w przycisk”): wcześniejsze lata
+             ładuje TEN przycisk — jeden klik = kolejny rok w dół (puste lata
+             pomijane sama). Zastępuje automatyczną kolejkę pod przewijanie
+             (1.17.0) i piłkę #gal-dol; etykietę i stan trzyma js/galeria-fb.js -->
+        <div class="gal-wiecej-wrap" id="gal-starsze-wrap" hidden>
+          <button class="gal-wiecej" id="gal-starsze" type="button">Pokaż rok 2025 ↓</button>
         </div>
       </div>
     </section>
