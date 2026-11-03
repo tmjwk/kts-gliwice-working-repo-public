@@ -758,7 +758,22 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    WEWNĄTRZ rozwijanej treści — znika razem z nią, a jego trójkącik
    wskazuje w górę (jest w stanie aria-expanded=true). */
 .oklubie-przelacz-strefa { display: flex; justify-content: flex-end; }
-.oklubie-przelacz--dol { margin-top: 1.25rem; }
+/* 1.26.9 (właściciel 04.11: „niech zwiń w O klubie pojawia się tak
+   samo jak w tabeli np. «najbliższe mecze» — co pozwoli na zwinięcie
+   tekstu bez scrollowania do samego końca”): dolny „Zwiń” to PRZYKLEJONA
+   pigułka — wzór .mecz-zwin z kafelków meczowych (position:sticky;
+   bottom). Póki czytasz rozwinięty tekst, wisi przy dolnej krawędzi
+   ekranu; na krótkiej treści po prostu leży na końcu. Pigułka jest
+   wstawiana BEZPOŚREDNIO do .oklubie-rozwijane (js/o-klubie.js) —
+   sticky porusza się w pionie rodzica. */
+.oklubie-przelacz--dol {
+  display: flex; width: fit-content;
+  margin: 1.25rem auto 0.25rem;
+  position: sticky; bottom: 0.9rem; z-index: 5;
+  border-radius: 999px;
+  background: var(--bg-card);
+  box-shadow: 0 4px 14px rgba(15, 27, 45, 0.16);
+}
 /* po zwinięciu dolnym przyciskiem JS przewija do początku sekcji —
    scroll-margin chroni nagłówek sekcji przed przyklejonym headerem */
 #oklubie { scroll-margin-top: 4.75rem; }
@@ -938,7 +953,12 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 @media (min-width: 64rem) { .gal-teaser { grid-template-columns: repeat(6, 1fr); } }
 .gal-teaser a { position: relative; border-radius: 0.5rem; overflow: hidden; aspect-ratio: 1; text-decoration: none; display: block; }
 .gal-teaser a:focus-visible { outline: 2px solid var(--kts-link); outline-offset: 2px; }
-.gal-teaser img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gal-teaser img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s ease; }
+/* 1.26.9 (właściciel 04.11: „najechanie na miniaturkę nie daje żadnej
+   animacji/efektu wizualnego, a w innych miejscach stosujesz efekt
+   «wyróżnienia»”): ten sam efekt co .gal-foto w pełnej galerii —
+   delikatne powiększenie zdjęcia w ramce (overflow:hidden obcina). */
+.gal-teaser a:hover img, .gal-teaser a:focus-visible img { transform: scale(1.04); }
 .gal-teaser-label {
   position: absolute; inset: auto 0 0 0; padding: 1.6rem 0.5rem 0.4rem;
   background: linear-gradient(transparent, rgba(9,16,29,0.88)); color: #fff;
