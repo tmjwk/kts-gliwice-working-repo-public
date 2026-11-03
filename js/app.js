@@ -689,7 +689,9 @@ function przewinForme(pilka) {
        toru jak mini-demonstracja gestu i zasłania wyłącznie identyczne
        szare duchy („termin nieznany” — zero utraconej informacji; linki
        i wyniki nietknięte). Pojawia się RAZ NA WIZYTĘ (sessionStorage),
-       znika po pierwszym dotknięciu paska albo po 7 s
+       znika po pierwszym dotknięciu paska albo po 9 s
+       (1.26.1: +2 s — właściciel 03.11: „dodaj mu 2s życia”; kolor
+       pomarańczowy w CSS — patrz .forma-scrub-hint)
        (pointer-events: none — nie blokuje gestu). Na desktopie (hover)
        nie występuje wcale. */
 const SCRUBHINT = { el: null, timer: 0, klucz: "kts-scrub-hint-v1" };
@@ -724,7 +726,7 @@ function wskazScrubber() {
   const wiersze = forma.querySelectorAll(":scope > .team-forma-wiersz");
   (wiersze[wiersze.length - 1] ?? forma).appendChild(SCRUBHINT.el);
   clearTimeout(SCRUBHINT.timer);
-  SCRUBHINT.timer = setTimeout(zamknijScrubHint, 7000);
+  SCRUBHINT.timer = setTimeout(zamknijScrubHint, 9000);   // 1.26.1: 7 s → 9 s (+2 s, właściciel)
 }
 
 /* 1.24.0: stan gestu scrubu. id = pointerId aktywnego palca (multitouch:
