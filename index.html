@@ -156,6 +156,12 @@
             </button>
             <div class="mecz-panel" id="najblizsze-mecze-panel" hidden>
               <ul class="divide-list" id="najblizsze-mecze"></ul>
+              <!-- 1.26.5 (właściciel 04.11: „brak wygodnego sposobu do zwinięcia
+                   listy w trakcie czytania; lista jest długa, więc możliwość
+                   zwijania nie może być po prostu na samym dole”): Zwiń listę
+                   PRZYKLEJA SIĘ do dolnej krawędzi ekranu, póki czytasz
+                   (position:sticky) — zawsze w zasięgu kciuka. -->
+              <button type="button" class="mecz-zwin" id="zwin-najblizsze">Zwiń listę ▲</button>
             </div>
           </div>
 
@@ -170,6 +176,8 @@
             </button>
             <div class="mecz-panel" id="ostatnie-mecze-panel" hidden>
               <div id="ostatnie-mecze-grupy"></div>
+              <!-- 1.26.5: jak wyżej — zwijanie w trakcie czytania -->
+              <button type="button" class="mecz-zwin" id="zwin-ostatnie">Zwiń listę ▲</button>
             </div>
           </div>
 
@@ -289,8 +297,11 @@
         </div>
         <!-- 1.26.3: klikalny kontakt — adres otwiera apkę nawigacji (routing
              wg platformy: js/kontakt-stopki.js), tel: dzwoni, mailto: otwiera
-             pocztę; href adresu = zawsze działający fallback webowy -->
-        <p class="t-small"><a class="footer-kontakt footer-adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice" data-maps-apple="https://maps.apple.com/?q=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice">ul. Partyzantów 25 · Gliwice</a></p>
+             pocztę; href adresu = zawsze działający fallback webowy.
+             1.26.5 (właściciel 04.11): na DESKTOP mapa w NOWEJ ZAKŁADCE
+             (target=_blank; na telefonach App Link/apka i tak obsługuje
+             klik sam, target jest tam nieistotny). -->
+        <p class="t-small"><a class="footer-kontakt footer-adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice" data-maps-apple="https://maps.apple.com/?q=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice" target="_blank" rel="noopener">ul. Partyzantów 25 · Gliwice</a></p>
         <p class="t-small"><a class="footer-kontakt" href="tel:+48607442978">607 442 978</a> · <a class="footer-kontakt" href="mailto:ktsgliwice@gmail.com">ktsgliwice@gmail.com</a></p>
       </div>
       <nav aria-label="Stopka">
