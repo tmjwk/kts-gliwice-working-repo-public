@@ -325,7 +325,35 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .forma-pilka--przegrana { background: #f87171; }
 .forma-pilka--remis { background: #fbbf24; }
 .forma-pilka--przyszla { background: transparent; border: 1px solid #aebccd; }
+/* 1.24.0: DUCH REWANŻU — mecz, którego jeszcze nie ma w kalendarzu ligi
+   (2. runda nieopublikowana; para znana z metody lustra — js/app.js).
+   Szare wypełnienie: czwarty stan wizualny, wyraźnie inny niż kolory
+   wyników i niż pusty obrys „zaplanowany”. Gdy źródło opublikuje
+   kalendarz, duch sam zamienia się w zwykłą piłeczkę z datą. */
+.forma-pilka--duch { background: #b9c6d6; }
+/* 1.24.0: AKTYWNA piłeczka (scrubber / tapnięty) — pierścień klubowym
+   niebieskim: GDZIE JESTEM (zasada jasności, Task 177). */
+.forma-pilka--aktywna { box-shadow: 0 0 0 3px rgba(0, 87, 184, 0.35); }
 .team-forma-licznik { margin-left: auto; font-size: 0.8rem; color: var(--kts-text-muted); }
+
+/* 1.24.0: LEGENDA PIŁECZEK — jeden wiersz nad kartami (CO WIDZĘ);
+   wstawiana przez js (legendaFormy), muted, zawija się na wąskim ekranie. */
+.forma-legenda {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.25rem 1rem; margin: 0 0 0.9rem;
+  font-size: 0.75rem; color: var(--kts-text-muted);
+}
+.forma-legenda[hidden] { display: none; }
+.forma-legenda-naglowek { font-weight: 600; }
+.forma-legenda i {
+  display: inline-block; width: 0.55rem; height: 0.55rem;
+  border-radius: 999px; margin-right: 0.32rem; vertical-align: 0.05rem;
+}
+.fl--w { background: #4ade80; }
+.fl--p { background: #f87171; }
+.fl--r { background: #fbbf24; }
+.fl--plan { background: transparent; border: 1px solid #aebccd; }
+.fl--duch { background: #b9c6d6; }
 
 /* 1.23.1 (zgłoszenie właściciela 02.11: „nie umiem trafić w te piłeczki
    na telefonie — palcem”): na ekranach dotykowych piłeczka staje się
@@ -335,7 +363,14 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    się w rzędzie bez odstępu — strefy się nie nakładają i między celami
    nie ma „martwych pasów”; pasek nadal wygląda jak drobne piłeczki. */
 @media (pointer: coarse) {
-  .team-forma { gap: 0.2rem 0; }
+  /* 1.24.0: pasek = SCRUBBER (§9.4): gesty PIONOWE przewijają stronę,
+     POZIOME trafiają do scrubbera (pan-y); bez zaznaczania tekstu
+     przy przytrzymaniu palca. */
+  .team-forma {
+    gap: 0.2rem 0;
+    touch-action: pan-y;
+    user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  }
   .team-forma .forma-pilka {
     width: 2rem; height: 2.5rem;
     background: transparent; border: 0; border-radius: 0;
@@ -351,6 +386,13 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .team-forma .forma-pilka--remis::before { background: #fbbf24; }
   .team-forma .forma-pilka--przyszla::before {
     background: transparent; border: 1px solid #aebccd;
+  }
+  .team-forma .forma-pilka--duch::before { background: #b9c6d6; }
+  /* pierścień aktywnej rysuje widoczna kulka (::before), nie cela 2rem */
+  .team-forma .forma-pilka--aktywna { box-shadow: none; }
+  .team-forma .forma-pilka--aktywna::before {
+    box-shadow: 0 0 0 3px rgba(0, 87, 184, 0.35);
+    transform: translate(-50%, -50%) scale(1.15);
   }
 }
 
@@ -398,6 +440,7 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .forma-tip-status--W { color: #4ade80; }
 .forma-tip-status--P { color: #f87171; }
 .forma-tip-status--R { color: #fbbf24; }
+.forma-tip-status--duch { color: #b9c6d6; }   /* 1.24.0: rewanż bez terminu */
 @media (prefers-reduced-motion: reduce) {
   .forma-tip { transition: none; }
   .forma-pilka { transition: none; }
