@@ -522,8 +522,7 @@ function legendaFormy(mecze, zespoly) {
     el.className = "forma-legenda";
     $("#karty-druzyn").insertAdjacentElement("beforebegin", el);
   }
-  el.innerHTML = `<span class="forma-legenda-naglowek">Piłeczki formy:</span>`
-    + `<span><i class="fl fl--w"></i>wygrana</span>`
+  el.innerHTML = `<span><i class="fl fl--w"></i>wygrana</span>`
     + `<span><i class="fl fl--p"></i>porażka</span>`
     + `<span><i class="fl fl--r"></i>remis</span>`
     + `<span><i class="fl fl--plan"></i>zaplanowany mecz</span>`
@@ -554,7 +553,7 @@ function renderKartyDruzyn(dane, mecze) {
       ${htmlFormy(mecze, z)}
       <div class="team-stopka">
         ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło&nbsp;↗</a>` : ""}
-        <span class="team-wiecej t-small">Szczegóły&nbsp;↗</span>
+        <span class="team-wiecej">Szczegóły&nbsp;↗</span>
       </div>
     </article>`).join("");
   legendaFormy(mecze, dane.zespoly);   // 1.24.0: klucz kolorów nad kartami (CO WIDZĘ)
@@ -1096,15 +1095,26 @@ function wierszMeczu(m, oczekuje = false, wGrupie = false) {
   const etykieta = nasze.length > 0 && !derby ? ` · ${nasze[0]}` : "";
   const zrodlo = m.liga.startsWith("1. Liga") ? "pzts.pl" : "ligi.slzts.pl";
   // wGrupie = wiersz wewnątrz grupy drużyny („Ostatnie mecze”):
-  // liga i źródło są w nagłówku grupy, meta zduplikowana by schodziła
+  // liga i źródło są w nagłówku grupy, meta zduplikowana by schodziła.
+  // 1.26.5 (właściciel 04.11: „w wersji mobilnej inną strukturę — niech
+  // będzie jak na komputerze”): wiersz = dwie GRUPY — .match-glowne
+  // (drużyny + wynik + plakietka) i .match-info (data · godzina ·
+  // kolejka). Na desktopie stoją w JEDNYM wierszu (główna lewa,
+  // info dopchnięte do prawej), na telefonie info schodzi do drugiej
+  // linii (flex-basis:100%) — ŚWIADOMY, stały układ zamiast dowolnego
+  // zawijania; identyczna struktura DOM na obu szerokościach.
   return `
     <li>
       <div class="match-row">
-        <span class="match-date">${formatujDate(m.dataMeczu)}${m.godzina ? ` · g. ${m.godzina}` : ""}</span>
-        <span class="match-teams">${esc(m.gospodarz)} — ${esc(m.gosc)}</span>
-        <span class="match-score t-nums ${wynikKolor}">${esc(m.wynik)}</span>
-        ${badge}
-        ${m.kolejka ? `<span class="match-date">kolejka ${m.kolejka}</span>` : ""}
+        <span class="match-glowne">
+          <span class="match-teams">${esc(m.gospodarz)} — ${esc(m.gosc)}</span>
+          <span class="match-score t-nums ${wynikKolor}">${esc(m.wynik)}</span>
+          ${badge}
+        </span>
+        <span class="match-info">
+          <span class="match-date">${formatujDate(m.dataMeczu)}${m.godzina ? ` · g. ${m.godzina}` : ""}</span>
+          ${m.kolejka ? `<span class="match-date match-kolejka">· kolejka ${m.kolejka}</span>` : ""}
+        </span>
       </div>
       ${wGrupie ? "" : `<p class="match-meta">${esc(m.liga)} · ${zrodlo}${etykieta}</p>`}
     </li>`;
@@ -1121,7 +1131,13 @@ function liczbaMeczy(n) {
 /* 1.20.0: kafelki meczów — trójkąciki rozwijają treść (wzór „O klubie”).
    Podpinane RAZ przy starcie: kontener i przyciski żyją mimo przerysowań
    w pętli świeżości (render zamienia tylko wnętrza paneli), więc stan
-   rozwinięcia przetrwa odświeżenie danych bez zamykania gościa. */
+   rozwinięcia przetrwa odświeżenie danych bez zamykania gościa.
+   1.26.5 (właściciel 04.11: „brak wygodnego sposobu do zwinięcia listy
+   w trakcie czytania; możliwość zwijania nie może być po prostu
+   na samym dole”): w każdym panelu siedzi przycisk .mecz-zwin
+   („Zwiń listę ▲”) — na długiej liście PRZYKLEJA się do dołu ekranu
+   (CSS position:sticky), a klik zwija panel i WRACA do nagłówka
+   kafelka (żeby nie zgubić miejsca po zniknięciu długiej listy). */
 function podpinKafelkiMeczy() {
   [["#przelacz-najblizsze", "#najblizsze-mecze-panel"],
    ["#przelacz-ostatnie", "#ostatnie-mecze-panel"]].forEach(([selPrzycisku, selPanelu]) => {
@@ -1133,6 +1149,17 @@ function podpinKafelkiMeczy() {
       const otwarte = przycisk.getAttribute("aria-expanded") === "true";
       przycisk.setAttribute("aria-expanded", String(!otwarte));
       panel.hidden = otwarte;
+    });
+    const zwin = panel.querySelector(".mecz-zwin");
+    if (zwin) zwin.addEventListener("click", () => {
+      przycisk.setAttribute("aria-expanded", "false");
+      panel.hidden = true;
+      // powrót do nagłówka kafelka; .mecz-kafel ma scroll-margin-top
+      // (miejsce na przyklejony nagłówek strony); reduced-motion = instant
+      przycisk.scrollIntoView({
+        block: "start",
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+      });
     });
   });
 }
@@ -1161,6 +1188,9 @@ function renderMecze(dane, mecze) {
   }
   const licznikNajblizsze = $("#najblizsze-mecze-licznik");
   if (licznikNajblizsze) licznikNajblizsze.textContent = liczbaMeczy(najblizsze.length);
+  // 1.26.5: pusta lista (przerwa w rozgrywkach) → przycisk „Zwiń” zbędny
+  const zwinN = $("#zwin-najblizsze");
+  if (zwinN) zwinN.hidden = najblizsze.length === 0;
 
   /* „Ostatnie” (1.20.0): pogrupowane wg DRUŻYN w kolejności sezonu
      (dane.zespoly = 1. liga → … → amatorzy — decyzja właściciela 02.11:
@@ -1199,6 +1229,8 @@ function renderMecze(dane, mecze) {
   }
   const licznikOstatnie = $("#ostatnie-mecze-licznik");
   if (licznikOstatnie) licznikOstatnie.textContent = liczbaMeczy(rozegrane.length);
+  const zwinO = $("#zwin-ostatnie");
+  if (zwinO) zwinO.hidden = klucze.length === 0;
 }
 
 function renderBadges(dane, ok) {
