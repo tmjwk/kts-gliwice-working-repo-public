@@ -443,8 +443,15 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .team-forma .forma-pilka::after { content: none; }   /* cela = cały element */
   .team-forma .forma-pilka::before {
     content: ""; position: absolute; left: 50%; top: 50%;
-    /* kulka = 65% celi (≈9–13,6 px) — jak drobne piłeczki desktopu */
-    width: min(0.85rem, 65%); height: min(0.85rem, 65%);
+    /* 1.26.3: JEDNA WIELKOŚĆ W KAŻDYM KAFELKU (właściciel 03.11 wieczór:
+       „piłeczki formy w kafelkach drużyn niech będą tej samej
+       wielkości”) — dotąd kulka = min(0.85rem, 65% celi), a cela zależy
+       od liczby piłek w wierszu danej karty (15/13/9) → 11–13,6 px
+       zależnie od kafelka. Teraz STAŁA 0.7rem (≈11,2 px): najgęstszy
+       rząd (15 piłek, cela ~14,9–17 px na telefonach 320–390 px)
+       wciąż mieści kulkę z światłem między sąsiadami; skala bliska
+       desktopowym piłeczkom (0.62rem). */
+    width: 0.7rem; height: 0.7rem;
     border-radius: 999px;
     transform: translate(-50%, -50%);
   }
@@ -730,6 +737,21 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    który zastępuje); kolor spójny z .footer-links a */
 .footer-fb { display: block; color: rgba(255,255,255,0.8); text-decoration: none; }
 .footer-fb:hover { color: #fff; text-decoration: underline; }
+/* 1.26.3: KLIKALNY KONTAKT W STOPCE (właściciel 03.11 wieczór: adres →
+   domyślna apka do nawigacji, telefon → apka do dzwonienia, e-mail →
+   poczta). Wygląd jak dotychczasowy tekst stopki (kolor jak
+   .footer-links a) + delikatne kropkowane podkreślenie = sygnał
+   „dotykalne”; niewidoczna obwódka ::after powiększa cel dotykowy
+   o ~13 px w pionie BEZ zmiany układu (ten sam wzorzec co
+   .forma-pilka). Kierowanie adresu wg platformy: js/kontakt-stopki.js. */
+.footer-kontakt {
+  position: relative; display: inline-block;
+  color: rgba(255,255,255,0.8); text-decoration: none;
+  border-bottom: 1px dotted rgba(255,255,255,0.35);
+}
+.footer-kontakt::after { content: ""; position: absolute; inset: -0.4rem 0; }
+.footer-kontakt:hover, .footer-kontakt:active { color: #fff; }
+.footer-kontakt:hover { border-bottom-color: rgba(255,255,255,0.6); }
 .footer-fade { color: rgba(255,255,255,0.5); margin-top: 0.75rem; }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem; padding-top: 1rem; color: rgba(255,255,255,0.4); }
 
