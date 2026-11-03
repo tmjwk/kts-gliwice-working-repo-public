@@ -440,7 +440,7 @@ function htmlFormy(mecze, z) {
       + `<span class="forma-tip-mecz">${esc(m.gospodarz)} ${wynikTip} ${esc(m.gosc)}</span>`
       + `<span class="forma-tip-status${st ? ` forma-tip-status--${st}` : m.duch ? " forma-tip-status--duch" : ""}">${esc(status)}</span>`;
     return `<span class="forma-pilka ${klasa}" data-tip="${esc(tip)}" aria-hidden="true"></span>`;
-  }).join("");
+  });   // 1.25.0: tablica bez join — cięcie na wiersze (rundy) niżej
   const rozegrane = bilans.W + bilans.P + bilans.R;
   const czesci = [];
   if (bilans.W) czesci.push(odmiana(bilans.W, ["zwycięstwo", "zwycięstwa", "zwycięstw"]));
@@ -452,11 +452,29 @@ function htmlFormy(mecze, z) {
   const duchyAria = ileDuchow
     ? `; ${odmiana(ileDuchow, ["rewanż", "rewanże", "rewanży"])} bez terminu — kalendarz 2. rundy nieopublikowany`
     : "";
+  // 1.25.0: KAŻDA POŁOWA SEZONU W SWOIM WIERSZU (właściciel 03.11: „mówiąc
+  // dwa wiersze miałem na myśli każda połowa sezonu / runda jest wyświetlana
+  // w swoim wierszu"). Cięcie po połowie CHRONOLOGICZNEJ paska (pasek czyta
+  // się wg dat od 1.22.1): wiersz 1 = runda 1, wiersz 2 = rewanże/runda 2
+  // (dziś głównie duchy — po publikacji kalendarza zwykłe piłeczki z datą).
+  // Cięcie liczone jest wyłącznie chronologią, więc mecz przełożony przez ligę na
+  // termin 2. połowy trafia do wiersza 2 razem z rewanżami — wiersze są
+  // PÓŁOWAMI SEZONU wg dat, nie sztywną etykietą rundy (ta nie może skłamać).
+  // n ≤ 10 (karty PZTS) = jeden wiersz. Rozmiar celu płynie per karta:
+  // --na-wiersz + CSS gwarantują równe 2 wiersze na telefonie 360–430 px
+  // (pomiar Task 179: pasek 292/262 px).
+  const n = moje.length;
+  const dwaWiersze = n > 10;
+  const ciecie = dwaWiersze ? Math.ceil(n / 2) : n;
+  const licznikHtml = `<span class="team-forma-licznik t-nums">${rozegrane}/${n}</span>`;
+  const wierszeHtml = dwaWiersze
+    ? `<span class="team-forma-wiersz">${pilki.slice(0, ciecie).join("")}</span>`
+      + `<span class="team-forma-wiersz team-forma-wiersz--ostatni">${pilki.slice(ciecie).join("")}${licznikHtml}</span>`
+    : `<span class="team-forma-wiersz team-forma-wiersz--ostatni">${pilki.join("")}${licznikHtml}</span>`;
   return `
-      <div class="team-forma" role="img"
-           aria-label="Sezon w piłeczkach: ${rozegrane} z ${moje.length} meczów sezonu rozegranych${czesci.length ? " — " + czesci.join(", ") : ""}${duchyAria}">
-        ${pilki}
-        <span class="team-forma-licznik t-nums">${rozegrane}/${moje.length}</span>
+      <div class="team-forma" role="img" style="--na-wiersz:${ciecie}"
+           aria-label="Sezon w piłeczkach: ${rozegrane} z ${n} meczów sezonu rozegranych${czesci.length ? " — " + czesci.join(", ") : ""}${duchyAria}">
+        ${wierszeHtml}
       </div>`;
 }
 
@@ -482,7 +500,9 @@ function legendaFormy(mecze, zespoly) {
     + `<span><i class="fl fl--plan"></i>zaplanowany mecz</span>`
     + (duchy > 0
       ? `<span><i class="fl fl--duch"></i>rewanż — termin nieznany (kalendarz 2. rundy nieopublikowany)</span>`
-      : "");
+      : "")
+    // 1.25.0: odkrywalność scrubbera — widoczne tylko na dotyku (CSS)
+    + `<span class="forma-legenda-scrub">‹ przesuń palcem po pasku — przejrzysz sezon mecz po meczu ›</span>`;
   el.hidden = false;
 }
 
@@ -504,6 +524,7 @@ function renderKartyDruzyn(dane, mecze) {
       ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło: tabela ligowa ↗</a>` : ""}
     </article>`).join("");
   legendaFormy(mecze, dane.zespoly);   // 1.24.0: klucz kolorów nad kartami (CO WIDZĘ)
+  wskazScrubber();   // 1.25.0: chip „przesuń palcem” pod pierwszym paskiem (raz na wizytę)
 }
 
 /* ===== 1.23.0: PODPOWIEDZI PIŁECZEK — DOTYK I DATA (właściciel 02.11)
@@ -523,11 +544,18 @@ function renderKartyDruzyn(dane, mecze) {
    ekranu nic nie traci — pasek pozostaje ozdobnym „role=img”.
    ===== 1.24.0: SCRUBBER (§9.4, właściciel 03.11 — „celowanie palcem
    jest trudne na tak małym ekranie”): przesuwanie palca po pasku
-   wskazuje piłeczkę najbliższą palcowi, dymek podmienia treść na żywo
-   i STOI w miejscu (kotwica = pasek), aktywna piłeczka z pierścieniem.
+   wskazuje piłeczkę najbliższą palcowi, dymek podmieniał treść na żywo
+   i stał w miejscu (kotwica = pasek), aktywna piłeczka z pierścieniem.
    Tap i desktop (hover + klik) bez zmian. Zasada jasności (Task 177):
-   GDZIE JESTEM = pierścień, CO WIDZĘ = stojący dymek, CO TO ZNACZY =
-   legenda kolorów nad kartami, KONTEKST = scroll strony żyje (pan-y). */
+   GDZIE JESTEM = pierścień, CO WIDZĘ = dymek, CO TO ZNACZY =
+   legenda kolorów nad kartami, KONTEKST = scroll strony żyje (pan-y).
+   ===== 1.25.0 (właściciel 03.11): dymek ZAKOTWICZONY W PIŁECZCE
+   („strzałeczka nad piłeczką, a nad tym tooltip — aby użytkownik
+   wiedział, który mecz wyświetla”) — ramka podąża za aktywną piłeczką
+   (płynnie), ogon-strzałeczka dotyka piłeczki; piłeczka 1. wiersza
+   → dymek nad paskiem, 2. wiersza → pod (nigdy nie zasłania piłeczek).
+   Odkrywalność gestu: tor pod piłeczkami + podpowiedź w legendzie +
+   jednorazowy chip „przesuń palcem” (SCRUBHINT) + wibracja zmiany. */
 
 const FORMTIP = { el: null, pilka: null, przypiete: false };
 
@@ -547,20 +575,32 @@ function formaTipEl() {
   return FORMTIP.el;
 }
 
-/** Pozycja dymka przy piłeczce: fixed, z doczepieniem do krawędzi
- *  ekranu (min. 8 px marginesu) i strzałką wskazującą piłeczkę;
- *  brak miejsca nad piłeczką → dymek pod spodem (.forma-tip--pod). */
+/** 1.25.0: pozycja dymka — kotwica = AKTYWNA PIŁECZKA (właściciel 03.11:
+ *  „chodzi mi o to, aby strzałeczka była nad piłeczką, a nad tym tooltip —
+ *  aby użytkownik wiedział, który mecz wyświetla”). Ogon-strzałeczka
+ *  dotyka piłeczki, dymek stoi tuż nad nią. Strona zależna od WIERSZA
+ *  paska (każda połowa sezonu w swoim wierszu — htmlFormy): piłeczka
+ *  1. wiersza → dymek NAD paskiem, piłeczka 2. wiersza → POD paskiem
+ *  (lustrzanie) — dymek nigdy nie zasłania pozostałych piłeczek (zasada
+ *  jasności Task 177). Fallback, gdy w viewporcie brak miejsca po
+ *  preferowanej stronie. Doczepienie do krawędzi ekranu (min. 8 px). */
 function polozFormTip(tip, pilka) {
   const r = pilka.getBoundingClientRect();
   const tw = tip.offsetWidth, th = tip.offsetHeight;
+  const wiersz = pilka.closest(".team-forma-wiersz");
+  const forma = pilka.closest(".team-forma");
+  const wiersze = forma
+    ? [...forma.querySelectorAll(":scope > .team-forma-wiersz")] : [];
+  let nad = wiersze.indexOf(wiersz) <= 0;      // 1. wiersz (brak struktury też)
+  if (nad && r.top - th - 9 < 8) nad = false;               // brak miejsca nad
+  if (!nad && r.bottom + th + 9 > window.innerHeight - 8) nad = true;  // ani pod
+  tip.classList.toggle("forma-tip--pod", !nad);
   const x = Math.min(Math.max(8, r.left + r.width / 2 - tw / 2),
     window.innerWidth - tw - 8);
-  const nad = r.top - th - 12 >= 8;
-  tip.classList.toggle("forma-tip--pod", !nad);
   tip.style.left = `${Math.round(x)}px`;
-  tip.style.top = `${Math.round(nad ? r.top - th - 12 : r.bottom + 12)}px`;
-  // strzałka nad środkiem piłeczki (klamra do szerokości dymka)
-  const sx = Math.min(Math.max(14, r.left + r.width / 2 - x), tw - 14);
+  tip.style.top = `${Math.round(nad ? r.top - th - 9 : r.bottom + 9)}px`;
+  // strzałeczka dokładnie nad środkiem piłeczki (klamra do szerokości dymka)
+  const sx = Math.min(Math.max(12, r.left + r.width / 2 - x), tw - 12);
   tip.style.setProperty("--strzalka", `${Math.round(sx)}px`);
 }
 
@@ -587,34 +627,72 @@ function ukryjFormTip() {
   FORMTIP.przypiete = false;
 }
 
-/** 1.24.0: SCRUBBER — treść dymka podąża za aktywną piłeczką, ale ramka
- *  STOI w miejscu (zasada jasności — CO WIDZĘ: dymek nie skacze przy
- *  każdym ruchu palca). Kotwica = CAŁY pasek formy: pozycja liczona od
- *  prostokąta paska (nie piłeczki), tylko domykana do krawędzi ekranu,
- *  gdy zmiana treści zmieni szerokość dymka; strzałka (--strzalka)
- *  natomiast podąża za aktywną piłeczką. Używane wyłącznie przez gest
- *  scrubu; tap i hover pozostają przy polozFormTip (kotwica = piłeczka). */
-function przewinForme(pilka, pasek) {
+/** 1.24.0→1.25.0: SCRUBBER — treść dymka podmieniana na żywo, a ramka
+ *  PODĄŻA za aktywną piłeczką (płynnie — transition left/top w CSS).
+ *  Zmiana właściciela 03.11: strzałeczka NA piłeczce zastępuje stojącą
+ *  ramkę zakotwiczoną w pasku — „aby użytkownik wiedział, który mecz
+ *  wyświetla” (patrz polozFormTip, kotwica = piłeczka, wspólna z tapem
+ *  i hoverem). Wibracja przy zmianie piłeczki wzmacnia „przesuwam po
+ *  szynie” (Android; iOS nie wspiera navigator.vibrate — cisza). */
+function przewinForme(pilka) {
   const tip = formaTipEl();
   if (FORMTIP.pilka !== pilka) {
     if (FORMTIP.pilka) FORMTIP.pilka.classList.remove("forma-pilka--aktywna");
     FORMTIP.pilka = pilka;
     pilka.classList.add("forma-pilka--aktywna");   // GDZIE JESTEM
     tip.innerHTML = pilka.dataset.tip ?? "";
+    if (navigator.vibrate) navigator.vibrate(8);   // „tik” szyny pod palcem
   }
-  const r = pasek.getBoundingClientRect();
-  const tw = tip.offsetWidth, th = tip.offsetHeight;
-  const x = Math.min(Math.max(8, r.left + r.width / 2 - tw / 2),
-    window.innerWidth - tw - 8);
-  const nad = r.top - th - 12 >= 8;
-  tip.classList.toggle("forma-tip--pod", !nad);
-  tip.style.left = `${Math.round(x)}px`;
-  tip.style.top = `${Math.round(nad ? r.top - th - 12 : r.bottom + 12)}px`;
-  // strzałka nad środkiem aktywnej piłeczki (klamra do szerokości dymka)
-  const pr = pilka.getBoundingClientRect();
-  const sx = Math.min(Math.max(14, pr.left + pr.width / 2 - x), tw - 14);
-  tip.style.setProperty("--strzalka", `${Math.round(sx)}px`);
+  polozFormTip(tip, pilka);
   tip.classList.add("widoczny");
+}
+
+/* 1.25.0: ODKRYWALNOŚĆ SCRUBBERA (właściciel 03.11: „rzeczywiście w wersji
+   mobilnej nie ma żadnej info wizualnej, że można scrube po tym polu.
+   jak byś to uwidocznił?”). Trzy sygnały, od subtelnego do jawnego:
+   (1) TOR — linia za piłeczkami każdego wiersza (CSS): rząd piłeczek
+       wygląda jak suwak/oś czasu, a nie statyczne kropki;
+   (2) PODPOWIEDŹ w legendzie piłeczek (tylko ekran dotykowy — CSS);
+   (3) CHIP „‹ przesuń palcem ›” NA SZYNIE — na rzędzie duchów (ostatnim
+       wierszu) paska PIERWSZEJ KARTY ŚZTS: kołysze się wzdłuż toru jak
+       mini-demonstracja gestu i zasłania wyłącznie identyczne szare
+       duchy („termin nieznany” — zero utraconej informacji; linki i
+       wyniki nietknięte). Pojawia się RAZ NA WIZYTĘ (sessionStorage),
+       znika po pierwszym dotknięciu paska albo po 7 s
+       (pointer-events: none — nie blokuje gestu). Na desktopie (hover)
+       nie występuje wcale. */
+const SCRUBHINT = { el: null, timer: 0, klucz: "kts-scrub-hint-v1" };
+
+function zamknijScrubHint() {
+  clearTimeout(SCRUBHINT.timer);
+  try { sessionStorage.setItem(SCRUBHINT.klucz, "1"); } catch { /* tryb prywatny */ }
+  SCRUBHINT.el?.remove();
+}
+
+/** Doklej chip NA SZYNĘ paska pierwszej karty ŚZTS z duchami (rząd duchów
+ *  = ostatni wiersz) — po każdym przerysowaniu: elementy .team-forma są
+ *  odtwarzane, chip wsiada z powrotem, dopóki użytkownik dotykowego
+ *  ekranu nie „zdrapie” go pierwszym gestem. Fallback: pierwszy pasek. */
+function wskazScrubber() {
+  if (!SCRUBHINT.el) {
+    SCRUBHINT.el = document.createElement("span");
+    SCRUBHINT.el.className = "forma-scrub-hint";
+    SCRUBHINT.el.setAttribute("aria-hidden", "true");
+    SCRUBHINT.el.textContent = "‹ przesuń palcem ›";
+  }
+  let widziane = false;
+  try { widziane = sessionStorage.getItem(SCRUBHINT.klucz) === "1"; } catch { }
+  const duch = document.querySelector(".team-forma .forma-pilka--duch");
+  const forma = duch?.closest(".team-forma") ?? document.querySelector(".team-forma");
+  if (widziane || !forma || !matchMedia("(pointer: coarse)").matches) {
+    SCRUBHINT.el.remove();
+    return;
+  }
+  // ostatni wiersz paska: runda 2 / rewanże (dziś: duchy) — chip na torze
+  const wiersze = forma.querySelectorAll(":scope > .team-forma-wiersz");
+  (wiersze[wiersze.length - 1] ?? forma).appendChild(SCRUBHINT.el);
+  clearTimeout(SCRUBHINT.timer);
+  SCRUBHINT.timer = setTimeout(zamknijScrubHint, 7000);
 }
 
 /* 1.24.0: stan gestu scrubu. id = pointerId aktywnego palca (multitouch:
@@ -651,6 +729,7 @@ function podpiezForme() {
     if (e.pointerType === "mouse" || SCRUB.id !== null) return;
     const pasek = e.target.closest(".team-forma");
     if (!pasek) return;
+    zamknijScrubHint();   // 1.25.0: pierwszy dotyk paska = gest odkryty
     SCRUB.id = e.pointerId;
     SCRUB.pasek = pasek;
     SCRUB.pilki = [...pasek.querySelectorAll(".forma-pilka")];
@@ -679,7 +758,7 @@ function podpiezForme() {
       const d = px * px + py * py;
       if (d < bestD) { bestD = d; best = SCRUB.pilki[i]; }
     }
-    if (best) przewinForme(best, SCRUB.pasek);
+    if (best) przewinForme(best);
   });
   const koniecScrubu = (e) => {
     if (e.pointerId !== SCRUB.id) return;
