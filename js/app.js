@@ -1266,7 +1266,16 @@ function sledzSystemowyTryb() {
   else if (typeof mq.addListener === "function") mq.addListener(reakcja); // starsze Safari
 }
 
-/* ===== wersja strony (wersja.json przy deployu) ===== */
+/* ===== wersja strony (wersja.json przy deployu) =====
+   1.26.2: KONWENCJA OPISU WERSJI (właściciel 03.11: „W stopce nie używaj
+   formy właściciel. Pisanie w stopce kto generalnie nie ma sensu bo to
+   nieistotne. Więc jeśli to dopisujesz skrócisz stopkę i będzie super”):
+   opis z wersja.json ląduje W STOPCE strony — jedno krótkie zdanie
+   (do ~60 znaków), zero atrybucji (kto zamówił/co powiedział), zero
+   szczegółów technicznych. Te żyją w komentarzach kodu, WORKLOG.md
+   i release'ach na GitHubie. Przykład dobrej formy: „Drobne porządki —
+   krótsza stopka”; zła: „Chip wyraźniejszy (właściciel: «dodaj mu 2s
+   życia i może lepiej niech będzie pomarańczowy»): żyje 9 s zamiast 7…” */
 async function pokazWersje() {
   try {
     const res = await fetch("wersja.json", { cache: "no-cache" });
