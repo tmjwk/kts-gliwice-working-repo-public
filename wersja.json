@@ -1,5 +1,5 @@
 {
- "wersja": "1.25.0",
+ "wersja": "1.25.1",
  "data": "2026-11-03T00:00:00Z",
- "opis": "Piłeczki formy: każda połowa sezonu (runda) w osobnym wierszu — mniejsze piłeczki na telefonie (rozmiar płynny per karta: 15+15, 13+13, 9+9); dymek zakotwiczony w aktywnej piłeczce ze strzałeczką (nad piłeczką 1. wiersza, pod paskiem dla 2. wiersza — nigdy nie zasłania piłeczek); odkrywalność scrubbera: tor pod piłeczkami, podpowiedź w legendzie i jednorazowy chip „przesuń palcem”; wibracja przy zmianie piłeczki (Android); desktop: interakcja bez zmian"
+ "opis": "Piłeczki formy — korekty po weryfikacji v1.25.0: dymek ZAWSZE nad piłeczką (także w 2. wierszu paska — „tak jak dla górnego wiersza piłeczek”; pod piłeczką tylko gdy brak miejsca u góry ekranu); końcówka strzałeczki pomarańczowa z uzgodnionej palety (--kts-accent #ff6b35, obrys #c2410c) dla lepszej widoczności"
 }
