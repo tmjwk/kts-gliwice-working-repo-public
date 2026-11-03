@@ -482,19 +482,27 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    nad piłeczką, a nad tym tooltip — aby użytkownik wiedział, który mecz
    wyświetla”): wyraźny wcięty grot ~15×8 px z obrysem (obrót kwadratu
    o 45°) zamiast cienkiego trójkąta 12×6. Domyślnie ogonem w dół (dymek
-   NAD piłeczką 1. wiersza); .forma-tip--pod — ogonem w górę (dymek pod
-   paskiem, piłeczka 2. wiersza). */
+   NAD piłeczką — od 1.25.1 dla OBU wierszy paska: właściciel po
+   weryfikacji v1.25.0 — „wyświetlaj go u góry tak jak dla górnego
+   wiersza piłeczek”); .forma-tip--pod — ogonem w górę, TYLKO fallback
+   gdy nad piłeczką brak miejsca w viewporcie.
+   1.25.1: KOŃCÓWKA POMARAŃCZOWA (właściciel 03.11: „końcówkę strzałeczki
+   uczyń pomarańczową z uzgodnionej palety barw dla lepszej widoczności”):
+   wypełnienie --kts-accent (#ff6b35 — pomarańcz z palety klubowej),
+   obrys --kts-accent-dark (#c2410c) — grot odcina się zarówno od
+   granatowego dymka, jak i od jasnego tła karty (dzień/noc bez zmiany —
+   zmienna z :root). */
 .forma-tip::after {
   content: ""; position: absolute; left: var(--strzalka, 50%); bottom: -5px;
   width: 11px; height: 11px;
-  background: #0f1b2d;
-  border: 1px solid #2b3d5c;
+  background: var(--kts-accent);
+  border: 1px solid var(--kts-accent-dark);
   border-top: 0; border-left: 0;      /* prawa+dolna zostają → grot w dół */
   transform: translateX(-50%) rotate(45deg);
 }
 .forma-tip--pod::after {
   bottom: auto; top: -5px;
-  border-top: 1px solid #2b3d5c; border-left: 1px solid #2b3d5c;
+  border-top: 1px solid var(--kts-accent-dark); border-left: 1px solid var(--kts-accent-dark);
   border-right: 0; border-bottom: 0;   /* górna+lewa zostają → grot w górę */
 }
 .forma-tip-data {
