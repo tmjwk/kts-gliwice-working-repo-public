@@ -1,5 +1,5 @@
 {
- "wersja": "1.25.1",
+ "wersja": "1.26.0",
  "data": "2026-11-03T00:00:00Z",
- "opis": "Piłeczki formy — korekty po weryfikacji v1.25.0: dymek ZAWSZE nad piłeczką (także w 2. wierszu paska — „tak jak dla górnego wiersza piłeczek”; pod piłeczką tylko gdy brak miejsca u góry ekranu); końcówka strzałeczki pomarańczowa z uzgodnionej palety (--kts-accent #ff6b35, obrys #c2410c) dla lepszej widoczności"
+ "opis": "Piłeczki formy — PIERWSZA LIGA też pokazuje cały sezon (właściciel: „zrób to samo z pierwszą ligą”): duchy rewanży na karcie KTS Gliwice I (1. LM PZTS) — format zweryfikowany u źródła (sezon 2024/25: każdy z każdym 2×, 18 meczów; dziś: pełna runda 1 opublikowana, 45 par bez powtórzeń); 9 piłeczek + 9 duchów = 18 w dwóch wierszach 9+9 (jak amatorzy); dymki duchów PZTS mówią „kalendarz rewanży nieopublikowany”, ŚZTS bez zmian; legenda uogólniona; chip „przesuń palcem” wskazuje teraz pierwszą kartę z duchami (1. LM); wszystkie karty = 2 wiersze"
 }
