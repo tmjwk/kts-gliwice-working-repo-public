@@ -360,35 +360,85 @@ function kluczCzasuFormy(m) {
   return Number.isFinite(t) ? t : Number.POSITIVE_INFINITY;
 }
 
+/** 1.24.0: DUCHY REWANŻY (§9.3/§9.4, decyzja właściciela 03.11: „wdroż,
+ *  z uwzględnieniem, że dane dotyczą tylko pierwszej połowy sezonu”).
+ *  Kalendarz 2. rundy nie istnieje jeszcze w źródłach, ale pary rewanżowe
+ *  są znane — to lustrzane odbicia meczów rundy 1 (wzorzec ŚZTS rok do
+ *  roku, Task 174). Metoda lustra = ZERO założeń o formacie ligi:
+ *  dorysowujemy dokładnie tyle duchów, ile meczów nie ma jeszcze
+ *  odwrotnego odpowiednika w danych — mianownik „rozegrane/sezon”
+ *  płynie z danych (30/30/26/18), nic nie jest zaszyte. Duch znika sam
+ *  (guard), gdy tylko sync przyniesie prawdziwy rewanż — w jego miejscu
+ *  pojawia się zwykła piłeczka z datą.
+ *  Zakres: tylko karty ŚZTS (rewanże udokumentowane komunikatami
+ *  2025/26); 1. LM PZTS czeka na publikację kalendarza — format
+ *  niezweryfikowany (§9.3), więc ta karta liczy terminarz ze źródła. */
+function duchyRewanz(mecze, z) {
+  if (!String(z.tryb || "").startsWith("ŚZTS")) return [];
+  const moje = (mecze ?? []).filter((m) => druzynyMeczu(m).includes(z.nazwa));
+  const pary = new Set(moje.map((m) => `${m.gospodarz}|${m.gosc}`));
+  const duchy = [];
+  for (const m of moje) {
+    // rewanż już w terminarzu źródła → duch zbędny (guard metody lustra)
+    if (pary.has(`${m.gosc}|${m.gospodarz}`)) continue;
+    duchy.push({
+      duch: true,
+      gospodarz: m.gosc,           // rewanż = odwrócone role gospodarza
+      gosc: m.gospodarz,
+      liga: m.liga,
+      kolejka: m.kolejka ?? null,  // wyłącznie do kolejności duchów między sobą (kolejność rundy 1)
+      dataMeczu: null,             // → „termin nieznany”, kluczCzasuFormy = ∞ (koniec paska)
+      godzina: null,
+      wynik: null,
+      rozegrany: false,
+    });
+  }
+  return duchy;
+}
+
 /** Pasek formy (HTML) dla karty drużyny z; mecze = pełny terminarz
- *  i wyniki (ŚZTS + PZTS) z dane.json. */
+ *  i wyniki (ŚZTS + PZTS) z dane.json. 1.24.0: do meczów z kalendarza
+ *  dorysowujemy duchy rewanży (duchyRewanz) — pasek pokazuje KSZTAŁT
+ *  CAŁEGO SEZONU już dziś, a piłeczki „do rozegrania z datą” i duchy
+ *  uzupełniają się same, gdy źródła opublikują kalendarz i wyniki. */
 function htmlFormy(mecze, z) {
-  const moje = (mecze ?? [])
-    .filter((m) => druzynyMeczu(m).includes(z.nazwa))
+  const realne = (mecze ?? [])
+    .filter((m) => druzynyMeczu(m).includes(z.nazwa));
+  const moje = [...realne, ...duchyRewanz(mecze, z)]
     .sort((x, y) => kluczCzasuFormy(x) - kluczCzasuFormy(y)
       || ((x.kolejka ?? 999) - (y.kolejka ?? 999)));
   if (moje.length === 0) return ""; // brak terminarza — bez paska
+  const ileDuchow = moje.length - realne.length;
   const bilans = { W: 0, P: 0, R: 0 };
   const pilki = moje.map((m) => {
     const st = m.rozegrany ? statusMeczuKarty(m, z) : null;
     if (st) bilans[st]++;
-    const klasa = st === "W" ? "forma-pilka--wygrana"
+    const klasa = m.duch ? "forma-pilka--duch"
+      : st === "W" ? "forma-pilka--wygrana"
       : st === "P" ? "forma-pilka--przegrana"
       : st === "R" ? "forma-pilka--remis"
       : "forma-pilka--przyszla";   // nierozegrany albo wynik niedostępny
     const slowo = st === "W" ? "zwycięstwo" : st === "P" ? "porażka" : st === "R" ? "remis" : null;
     // 1.23.0: podpowiedź z DATĄ meczu (zgłoszenie właściciela 02.11).
+    // 1.24.0: duch rewanżu dostaje wiersz „termin nieznany” z wyjaśnieniem
+    // (kalendarz 2. rundy nieopublikowany) — i celowo BEZ numeru kolejki,
+    // bo numer rewanżu w rzeczywistym kalendarzu jest jeszcze nieznany.
     // Natywny title= nie działa na dotyku — treść dymka jedzie w data-tip
     // (esc() przy zapisie; odczyt przez dataset zwraca oryginalny HTML),
-    // a rysuje go silnik podpiezForme(): hover na desktopie, tap na telefonie.
-    const status = m.rozegrany && slowo
-      ? `kolejka ${m.kolejka ?? "—"} · ${slowo}`
-      : `kolejka ${m.kolejka ?? "—"} · ${m.rozegrany ? "wynik niedostępny" : "do rozegrania"}`;
+    // a rysuje go silnik podpiezForme(): hover na desktopie, tap/scrub
+    // na telefonie.
+    const status = m.duch ? "rewanż · termin nieznany"
+      : m.rozegrany && slowo
+        ? `kolejka ${m.kolejka ?? "—"} · ${slowo}`
+        : `kolejka ${m.kolejka ?? "—"} · ${m.rozegrany ? "wynik niedostępny" : "do rozegrania"}`;
+    const dataTxt = m.duch
+      ? "termin nieznany · kalendarz 2. rundy nieopublikowany"
+      : opisDatyFormy(m);
     const wynikTip = m.rozegrany && m.wynik && m.wynik !== "-:-"
       ? `<b class="t-nums">${esc(m.wynik)}</b>` : "—";
-    const tip = `<span class="forma-tip-data">${esc(opisDatyFormy(m))}</span>`
+    const tip = `<span class="forma-tip-data">${esc(dataTxt)}</span>`
       + `<span class="forma-tip-mecz">${esc(m.gospodarz)} ${wynikTip} ${esc(m.gosc)}</span>`
-      + `<span class="forma-tip-status${st ? ` forma-tip-status--${st}` : ""}">${esc(status)}</span>`;
+      + `<span class="forma-tip-status${st ? ` forma-tip-status--${st}` : m.duch ? " forma-tip-status--duch" : ""}">${esc(status)}</span>`;
     return `<span class="forma-pilka ${klasa}" data-tip="${esc(tip)}" aria-hidden="true"></span>`;
   }).join("");
   const rozegrane = bilans.W + bilans.P + bilans.R;
@@ -396,12 +446,44 @@ function htmlFormy(mecze, z) {
   if (bilans.W) czesci.push(odmiana(bilans.W, ["zwycięstwo", "zwycięstwa", "zwycięstw"]));
   if (bilans.R) czesci.push(odmiana(bilans.R, ["remis", "remisy", "remisów"]));
   if (bilans.P) czesci.push(odmiana(bilans.P, ["porażka", "porażki", "porażek"]));
+  // 1.24.0: mianownik = CAŁY sezon (umowa z właścicielem, Task 176):
+  // mecze z kalendarza + duchy rewanży. Różnicę realne/duchy opisuje
+  // aria (czytniki ekranu) + legenda + same szare piłeczki (wzrok).
+  const duchyAria = ileDuchow
+    ? `; ${odmiana(ileDuchow, ["rewanż", "rewanże", "rewanży"])} bez terminu — kalendarz 2. rundy nieopublikowany`
+    : "";
   return `
       <div class="team-forma" role="img"
-           aria-label="Sezon w piłeczkach: ${rozegrane} z ${moje.length} meczów rozegranych${czesci.length ? " — " + czesci.join(", ") : ""}">
+           aria-label="Sezon w piłeczkach: ${rozegrane} z ${moje.length} meczów sezonu rozegranych${czesci.length ? " — " + czesci.join(", ") : ""}${duchyAria}">
         ${pilki}
         <span class="team-forma-licznik t-nums">${rozegrane}/${moje.length}</span>
       </div>`;
+}
+
+/** 1.24.0: LEGENDA PIŁECZEK (zasada jasności z Taska 177 — użytkownik
+ *  musi wiedzieć CO WIDZI): jeden wiersz nad kartami drużyn. Pozycja
+ *  „rewanż — termin nieznany” pojawia się tylko dopóki w danych są
+ *  duchy (kalendarz 2. rundy nieopublikowany); po publikacji zniknie
+ *  sama. Element jest staly (jednorazowo wstawiony przed siatką kart),
+ *  treść odświeżana przy każdym przerysowaniu. */
+function legendaFormy(mecze, zespoly) {
+  const duchy = zespoly.reduce((n, z) => n + duchyRewanz(mecze, z).length, 0);
+  let el = $("#forma-legenda");
+  if (!el) {
+    el = document.createElement("p");
+    el.id = "forma-legenda";
+    el.className = "forma-legenda";
+    $("#karty-druzyn").insertAdjacentElement("beforebegin", el);
+  }
+  el.innerHTML = `<span class="forma-legenda-naglowek">Piłeczki formy:</span>`
+    + `<span><i class="fl fl--w"></i>wygrana</span>`
+    + `<span><i class="fl fl--p"></i>porażka</span>`
+    + `<span><i class="fl fl--r"></i>remis</span>`
+    + `<span><i class="fl fl--plan"></i>zaplanowany mecz</span>`
+    + (duchy > 0
+      ? `<span><i class="fl fl--duch"></i>rewanż — termin nieznany (kalendarz 2. rundy nieopublikowany)</span>`
+      : "");
+  el.hidden = false;
 }
 
 function renderKartyDruzyn(dane, mecze) {
@@ -421,6 +503,7 @@ function renderKartyDruzyn(dane, mecze) {
       <span class="team-wiecej t-small">Szczegóły, tabela i terminarz&nbsp;↗</span>
       ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło: tabela ligowa ↗</a>` : ""}
     </article>`).join("");
+  legendaFormy(mecze, dane.zespoly);   // 1.24.0: klucz kolorów nad kartami (CO WIDZĘ)
 }
 
 /* ===== 1.23.0: PODPOWIEDZI PIŁECZEK — DOTYK I DATA (właściciel 02.11)
@@ -437,7 +520,14 @@ function renderKartyDruzyn(dane, mecze) {
    CSS, rozmiar równy odstęwowi między piłeczkami — strefy się nie
    nakładają), ale celowo NIE wchodzą do tabulatora: pełne dane
    meczów (z datami) są w dialogu drużyny, więc klawiatura/ czytnik
-   ekranu nic nie traci — pasek pozostaje ozdobnym „role=img”. */
+   ekranu nic nie traci — pasek pozostaje ozdobnym „role=img”.
+   ===== 1.24.0: SCRUBBER (§9.4, właściciel 03.11 — „celowanie palcem
+   jest trudne na tak małym ekranie”): przesuwanie palca po pasku
+   wskazuje piłeczkę najbliższą palcowi, dymek podmienia treść na żywo
+   i STOI w miejscu (kotwica = pasek), aktywna piłeczka z pierścieniem.
+   Tap i desktop (hover + klik) bez zmian. Zasada jasności (Task 177):
+   GDZIE JESTEM = pierścień, CO WIDZĘ = stojący dymek, CO TO ZNACZY =
+   legenda kolorów nad kartami, KONTEKST = scroll strony żyje (pan-y). */
 
 const FORMTIP = { el: null, pilka: null, przypiete: false };
 
@@ -476,7 +566,12 @@ function polozFormTip(tip, pilka) {
 
 function pokazFormTip(pilka) {
   const tip = formaTipEl();
+  // 1.24.0: pierścień aktywnej piłeczki (GDZIE JESTEM) — także przy tapnięciu
+  if (FORMTIP.pilka && FORMTIP.pilka !== pilka) {
+    FORMTIP.pilka.classList.remove("forma-pilka--aktywna");
+  }
   FORMTIP.pilka = pilka;
+  pilka.classList.add("forma-pilka--aktywna");
   tip.innerHTML = pilka.dataset.tip ?? "";
   // pomiar działa zawsze: dymek jest w layout (visibility:hidden), więc
   // offsetWidth/Height są dostępne jeszcze zanim .widoczny zacznie fade
@@ -487,9 +582,47 @@ function pokazFormTip(pilka) {
 function ukryjFormTip() {
   if (!FORMTIP.el) return;
   FORMTIP.el.classList.remove("widoczny", "forma-tip--dotyk");
+  if (FORMTIP.pilka) FORMTIP.pilka.classList.remove("forma-pilka--aktywna");
   FORMTIP.pilka = null;
   FORMTIP.przypiete = false;
 }
+
+/** 1.24.0: SCRUBBER — treść dymka podąża za aktywną piłeczką, ale ramka
+ *  STOI w miejscu (zasada jasności — CO WIDZĘ: dymek nie skacze przy
+ *  każdym ruchu palca). Kotwica = CAŁY pasek formy: pozycja liczona od
+ *  prostokąta paska (nie piłeczki), tylko domykana do krawędzi ekranu,
+ *  gdy zmiana treści zmieni szerokość dymka; strzałka (--strzalka)
+ *  natomiast podąża za aktywną piłeczką. Używane wyłącznie przez gest
+ *  scrubu; tap i hover pozostają przy polozFormTip (kotwica = piłeczka). */
+function przewinForme(pilka, pasek) {
+  const tip = formaTipEl();
+  if (FORMTIP.pilka !== pilka) {
+    if (FORMTIP.pilka) FORMTIP.pilka.classList.remove("forma-pilka--aktywna");
+    FORMTIP.pilka = pilka;
+    pilka.classList.add("forma-pilka--aktywna");   // GDZIE JESTEM
+    tip.innerHTML = pilka.dataset.tip ?? "";
+  }
+  const r = pasek.getBoundingClientRect();
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  const x = Math.min(Math.max(8, r.left + r.width / 2 - tw / 2),
+    window.innerWidth - tw - 8);
+  const nad = r.top - th - 12 >= 8;
+  tip.classList.toggle("forma-tip--pod", !nad);
+  tip.style.left = `${Math.round(x)}px`;
+  tip.style.top = `${Math.round(nad ? r.top - th - 12 : r.bottom + 12)}px`;
+  // strzałka nad środkiem aktywnej piłeczki (klamra do szerokości dymka)
+  const pr = pilka.getBoundingClientRect();
+  const sx = Math.min(Math.max(14, pr.left + pr.width / 2 - x), tw - 14);
+  tip.style.setProperty("--strzalka", `${Math.round(sx)}px`);
+  tip.classList.add("widoczny");
+}
+
+/* 1.24.0: stan gestu scrubu. id = pointerId aktywnego palca (multitouch:
+   tylko pierwszy palec na pasku steruje); ruszyl = przekroczony próg
+   ruchu poziomego; wycisz = znacznik czasu końca scrubu — klik, który
+   przeglądarka wyśle po pointerup, trzeba zignorować (to echo gestu,
+   nie zamiar otwarcia/zamknięcia dymka). */
+const SCRUB = { id: null, pasek: null, pilki: [], rects: [], x0: 0, y0: 0, ruszyl: false, wycisz: 0 };
 
 /** Podpięcie RAZ (kontener #karty-druzyn żyje mimo przerysowań kart). */
 function podpiezForme() {
@@ -510,11 +643,65 @@ function podpiezForme() {
     }
   });
 
+  // 1.24.0 SCRUBBER (§9.4): przesuwanie palcem po pasku formy wskazuje
+  // piłeczkę NAJBLIŻSZĄ palcowi — zero celowania. Dotyk/rysika tylko
+  // (mysz działa po staremu). Dotyk ma niejawny pointer capture, więc
+  // zdarzenia płyną do nas nawet, gdy palec zawędruje poza pasek.
+  wrap.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "mouse" || SCRUB.id !== null) return;
+    const pasek = e.target.closest(".team-forma");
+    if (!pasek) return;
+    SCRUB.id = e.pointerId;
+    SCRUB.pasek = pasek;
+    SCRUB.pilki = [...pasek.querySelectorAll(".forma-pilka")];
+    SCRUB.x0 = e.clientX;
+    SCRUB.y0 = e.clientY;
+    SCRUB.ruszyl = false;
+  });
+  wrap.addEventListener("pointermove", (e) => {
+    if (e.pointerId !== SCRUB.id || !SCRUB.pasek) return;
+    const dx = e.clientX - SCRUB.x0, dy = e.clientY - SCRUB.y0;
+    if (!SCRUB.ruszyl) {
+      // scrub zaczyna dopiero WYRAŹNIE poziomym ruchem; pionowy to scroll
+      // strony (touch-action: pan-y w CSS — przeglądarka wtedy przejmuje
+      // palec i przychodzi pointercancel, nie scrub)
+      if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+      SCRUB.ruszyl = true;
+      // pozycje piłeczek zamrożone na czas gestu — pasek się nie rusza
+      SCRUB.rects = SCRUB.pilki.map((p) => p.getBoundingClientRect());
+    }
+    // aktywna = piłeczka najbliższa palcowi (2D — pasek zawija się w wiersze)
+    let best = null, bestD = Infinity;
+    for (let i = 0; i < SCRUB.pilki.length; i++) {
+      const r = SCRUB.rects[i];
+      const px = r.left + r.width / 2 - e.clientX;
+      const py = r.top + r.height / 2 - e.clientY;
+      const d = px * px + py * py;
+      if (d < bestD) { bestD = d; best = SCRUB.pilki[i]; }
+    }
+    if (best) przewinForme(best, SCRUB.pasek);
+  });
+  const koniecScrubu = (e) => {
+    if (e.pointerId !== SCRUB.id) return;
+    if (SCRUB.ruszyl) {
+      // dymek zostaje przypięty po zdjęciu palca (jak po tapnięciu)
+      FORMTIP.przypiete = true;
+      FORMTIP.el?.classList.add("forma-tip--dotyk");
+      SCRUB.wycisz = Date.now();   // ignoruj klik-błąd po pointerup
+    }
+    SCRUB.id = null;
+    SCRUB.pasek = null;
+    SCRUB.ruszyl = false;
+  };
+  wrap.addEventListener("pointerup", koniecScrubu);
+  wrap.addEventListener("pointercancel", koniecScrubu);
+
   // dotyk (i mysz): klik/tap w piłeczkę → dymek przypięty / odepnięty
   wrap.addEventListener("click", (e) => {
     const pilka = e.target.closest(".forma-pilka");
     if (!pilka) return;
     e.stopPropagation();   // nie otwieraj dialogu drużyny (patrz podpiezKartyDruzyn)
+    if (Date.now() - SCRUB.wycisz < 600) return;   // 1.24.0: echo scrubu, nie zamiar
     if (FORMTIP.przypiete && pilka === FORMTIP.pilka) {
       ukryjFormTip();
       return;
