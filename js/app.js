@@ -512,7 +512,12 @@ function htmlFormy(mecze, z) {
  *  legenda jest WSPÓLNA dla kart ŚZTS i PZTS; dla PZTS „2. runda”
  *  kolidowałaby z widocznymi u źródła wierszami „kolejka 10” (patrz
  *  frazaKalendarzaDucha), a rewanże to dokładnie to, czego brakuje
- *  w obu ligach. */
+ *  w obu ligach.
+ *  1.26.9 (właściciel 04.11: „«rewanż — termin nieznany (kalendarz
+ *  rewanży nieopublikowany)» zamień na «rewanż — termin nieznany””):
+ *  NAWIAS ZNIKA z legendy — wyjaśnienie żyje w dymku piłeczki
+ *  (frazaKalendarzaDucha) i w etykiecie aria, więc czytelnik nie
+ *  traci informacji; legenda mówi tylko CO oznacza szara piłeczka. */
 function legendaFormy(mecze, zespoly) {
   const duchy = zespoly.reduce((n, z) => n + duchyRewanz(mecze, z).length, 0);
   let el = $("#forma-legenda");
@@ -527,7 +532,7 @@ function legendaFormy(mecze, zespoly) {
     + `<span><i class="fl fl--r"></i>remis</span>`
     + `<span><i class="fl fl--plan"></i>zaplanowany mecz</span>`
     + (duchy > 0
-      ? `<span><i class="fl fl--duch"></i>rewanż — termin nieznany (kalendarz rewanży nieopublikowany)</span>`
+      ? `<span><i class="fl fl--duch"></i>rewanż — termin nieznany</span>`
       : "")
     // 1.25.0: odkrywalność scrubbera — widoczne tylko na dotyku (CSS)
     + `<span class="forma-legenda-scrub">‹ przesuń palcem po pasku — przejrzysz sezon mecz po meczu ›</span>`;
