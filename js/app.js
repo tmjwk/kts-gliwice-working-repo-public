@@ -537,20 +537,25 @@ function legendaFormy(mecze, zespoly) {
 
 function renderKartyDruzyn(dane, mecze) {
   ukryjFormTip();   // 1.23.0: piłeczki lecą do przerysowania — dymek nie może wisieć w powietrzu
+  /* 1.26.4 (właściciel 04.11): zero plakietki PZTS/ŚZTS (liga mówi
+     sama za siebie) i JEDEN wiersz na dole kafelka — „Źródło ↗”
+     z lewej, „Szczegóły ↗” z prawej (były dwa wiersze: „Szczegóły,
+     tabela i terminarz” + „Źródło: tabela ligowa”). */
   const wrap = $("#karty-druzyn");
   wrap.innerHTML = dane.zespoly.map((z) => `
     <article class="card team-card team-klik" data-slug="${esc(slugZespolu(z.nazwa))}" tabindex="0" role="button"
              aria-label="Otwórz szczegóły drużyny: ${esc(z.nazwa)}">
       <h3 class="t-h4">${esc(z.nazwa)}</h3>
       <p class="t-small">${esc(z.liga)}</p>
-      <span class="badge ${z.tryb.startsWith("PZTS") ? "badge--team-pzts" : "badge--team"}">${esc(z.tryb.replace(/\s*·\s*automat\s*$/i, ""))}</span>
       <dl>
         <div class="row"><dt>Stan</dt><dd class="t-nums">${esc(z.stan ?? "—")}</dd></div>
         <div class="row"><dt>Najbliższy</dt><dd class="t-nums">${esc(nastepnyDla(mecze, z.nazwa))}</dd></div>
       </dl>
       ${htmlFormy(mecze, z)}
-      <span class="team-wiecej t-small">Szczegóły, tabela i terminarz&nbsp;↗</span>
-      ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło: tabela ligowa ↗</a>` : ""}
+      <div class="team-stopka">
+        ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło&nbsp;↗</a>` : ""}
+        <span class="team-wiecej t-small">Szczegóły&nbsp;↗</span>
+      </div>
     </article>`).join("");
   legendaFormy(mecze, dane.zespoly);   // 1.24.0: klucz kolorów nad kartami (CO WIDZĘ)
   wskazScrubber();   // 1.25.0: chip „przesuń palcem” pod pierwszym paskiem (raz na wizytę)
