@@ -17,6 +17,14 @@
      rozwiniętej treści — nie trzeba przewijać do góry, aby zwinąć;
      po zwinięciu dolnym przyciskiem strona wraca do początku sekcji
      (scroll-margin-top chroni nagłówek przed przyklejonym headerem);
+   - 1.26.9 (właściciel 04.11: „niech zwiń w O klubie pojawia się tak
+     samo jak w tabeli np. «najbliższe mecze» — co pozwoli na zwinięcie
+     tekstu bez scrollowania do samego końca”): dolny „Zwiń” to
+     PRZYKLEJONA pigułka (position:sticky;bottom — wzór .mecz-zwin
+     z kafelków meczowych). Pigułka jest BEZPOŚREDNIM dzieckiem
+     .oklubie-rozwijane, bo sticky porusza się w pionie rodzica —
+     opakowanie o wysokości samego przycisku nie dałoby jej drogi.
+     Póki czytasz długi tekst, wisi przy dolnej krawędzi ekranu;
    - dostępność: prawdziwe <button> + aria-expanded + aria-controls
      (oba przyciski współdzielą stan); zwinięta treść ma atrybut hidden
      (wypada z tabulacji i czytników) — dolny przycisk także, bo żyje
@@ -122,10 +130,14 @@
       strefa.className = "oklubie-przelacz-strefa";
       strefa.appendChild(przycisk);
 
-      /* 1.20.1 — dolny „Zwiń”: żyje wewnątrz rozwijanej treści, więc
-         znika razem z nią; trójkącik wskazuje w górę (stan rozwinięcia
-         = aria-expanded true na przycisku), klik zwija i wraca do
-         początku sekcji */
+      /* 1.26.9 — dolny „Zwiń” = PRZYKLEJONA pigułka (wzór .mecz-zwin
+         z „Najbliższych meczów”, patrz nagłówek modułu): żyje
+         wewnątrz rozwijanej treści, więc znika razem z nią; trójkącik
+         wskazuje w górę (stan rozwinięcia = aria-expanded true na
+         przycisku), klik zwija i wraca do początku sekcji.
+         BEZ opakowania-strefy: sticky potrzebuje pionu rodzica
+         (.oklubie-rozwijane), a flex o wysokości przycisku
+         zablokowałby przyklejanie. */
       const etykietaDol = document.createElement("span");
       etykietaDol.className = "oklubie-etykieta";
       etykietaDol.textContent = ETYKIETA_ZWIN;
@@ -137,10 +149,7 @@
       przyciskDol.setAttribute("aria-controls", "oklubie-rozwijane");
       przyciskDol.append(zrobTrojkat(), etykietaDol);
 
-      const strefaDol = document.createElement("div");
-      strefaDol.className = "oklubie-przelacz-strefa";
-      strefaDol.appendChild(przyciskDol);
-      rozwijane.appendChild(strefaDol);
+      rozwijane.appendChild(przyciskDol);
 
       /* wspólny stan — oba przyciski tego samego regionu */
       const ustawStan = (otwarte) => {
