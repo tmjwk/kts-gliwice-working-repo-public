@@ -2,14 +2,24 @@
    KTS Gliwice — LUSTRO FB (1.20.0)
    Aktualności z Facebooka na żywo + archiwum na podstronie.
 
+   1.26.9 (właściciel 04.11: „może 20 to nawet lepszy pomysł — daje
+   sumę 21 kafelków, a to szczęśliwa liczba — ale załaduj je w tle,
+   bo wtedy animacja będzie naprawdę płynna”): pula = 20 KAFELKÓW
+   + hero (21 najnowszych wpisów) = 5 pełnych rzędów po 4; po
+   wyrenderowaniu sekcji obrazy CAŁEJ puli są DOGRZEWANE W TLE
+   (new Image() po requestIdleCallback) — kafelki ukrytych stron
+   mają loading="lazy" i w display:none nie pobierają się same,
+   więc bez dogrzewki obrót strony czekałby na sieć; z dogrzewką
+   HTTP cache jest gotowy i animacja wjazdu jest płynna od razu.
+
    1.26.8 (właściciel 04.11: „mamy teraz miejsce na 12 ostatnich
    wpisów — trzy kliknięcia w stecz. tak to zaprogramowałeś?”):
-   STAŁA PULA sekcji głównej = 12 KAFELKÓW + hero (13 najnowszych
-   wpisów) — dokładnie 3 pełne rzędy po 4 na desktopie (3 kropki,
-   2 kliknięcia od startu do końca osi czasu). ZASTĘPUJE płynne
-   okno 30 dni (Q2) i minimum 10 wpisów (P1/31.10) — pula nie
-   zależy już od aktywności klubu; „Pokaż starsze wpisy” (stopka
-   → archiwum.html) pojawia się na ostatniej stronie jak dotychczas.
+   STAŁA PULA sekcji głównej (wtedy: 12 kafelków + hero) — dokładnie
+   pełne rzędy po 4 na desktopie (kropki, kliknięcia do końca osi
+   czasu). ZASTĄPIŁA płynne okno 30 dni (Q2) i minimum 10 wpisów
+   (P1/31.10) — pula nie zależy od aktywności klubu; „Pokaż starsze
+   wpisy” (stopka → archiwum.html) pojawia się na ostatniej stronie
+   jak dotychczas.
 
    1.26.7 (właściciel 04.11: „wróć do 4 — w drugim wierszu, tym pod
    hero, mają być 4 kafelki a nie 5; dodaj strzałki < i > do
@@ -114,10 +124,12 @@
   const ACCESS_TOKEN = "EAAgzJl0ZC6ZBIBS3EIBlIZCLF0j63uEDSZCZBB8L4GWfXowpf6T8via0Xtzg00hrZCSI12nArcbamySv1Ttj8nCN6IfdE1UkOxxJ5zPCzyh1PrlhU10LfIrZCl9MheWt5YBs52jd65PHV1s5gYzlBFbh3jQLmIi6B6i7iPHMYoRrOKfXqHaYonMLMSGXZBrRYAsu9NcZD";    // page token KTS z SYSTEM USERA (read-only, bez zegara danych — 1.10.5)
   const API = "https://graph.facebook.com/v22.0";
   const FIELDS = "id,message,story,created_time,permalink_url,full_picture,attachments{media_type}";
-  /* 1.26.8: stała pula sekcji głównej (decyzja właściciela 04.11) —
-     hero + 12 kafelków = 13 najnowszych wpisów = 3 pełne rzędy po 4.
-     Zastępuje okno 30 dni (Q2) i minimum 10 (P1/31.10). */
-  const PULA_KAFELKOW = 12;       // kafelki siatki (hero osobno)
+  /* 1.26.9: stała pula sekcji głównej (decyzja właściciela 04.11:
+     „może 20 to nawet lepszy pomysł — daje sumę 21 kafelków, a to
+     szczęśliwa liczba” — hero + 20 = 21) = 5 pełnych rzędów po 4.
+     Zastępuje okno 30 dni (Q2), minimum 10 (P1/31.10) i pulę 12
+     z 1.26.8. */
+  const PULA_KAFELKOW = 20;       // kafelki siatki (hero osobno) — suma 21
   const LIMIT_GLOWNA = 50;        // zapas poboru (pula + marża na awarie)
   const PORCJA_ARCHIWUM = 25;     // porcja „Starsze wpisy” (Q4a)
   const FANPAGE_URL = "https://www.facebook.com/AkademiaTenisaStolowego";
@@ -658,9 +670,9 @@
       const { posty } = await pobierzPosty({ limit: LIMIT_GLOWNA });
       if (!posty.length) throw new Error("brak postów");
 
-      /* 1.26.8: STAŁA PULA — 13 najnowszych wpisów (hero + 12 kafelków),
+      /* 1.26.9: STAŁA PULA — 21 najnowszych wpisów (hero + 20 kafelków),
          niezależnie od wieku postów i aktywności klubu. Przy krótkim
-         zasobie FB (mniej niż 13) bierzemy wszystko, co jest. */
+         zasobie FB (mniej niż 21) bierzemy wszystko, co jest. */
       const ile = Math.min(1 + PULA_KAFELKOW, posty.length);
       const widoczne = posty.slice(0, ile);
 
@@ -679,6 +691,34 @@
         return karta(p, tura);
       }).join("");
       kadrujWideo(kontener);   // 1.11.0: pomiary pasów wideo (hero + siatka)
+
+      /* 1.26.9: DOGRZEWKA OBRAZÓW W TLE (właściciel 04.11: „załaduj je
+         w tle — bo wtedy animacja będzie naprawdę płynna”). Kafelki
+         ukrytych stron noszą loading="lazy" w .lustro-poza-strona
+         (display:none) — przeglądarka NIE pobiera ich, dopóki strona
+         nie stanie się widoczna, więc obrót strony czekałby na sieć
+         i animacja wjazdu odbywałaby się na pustych kafelkach. Dogrzewka
+         (new Image() na URL pełnej puli, po requestIdleCallback)
+         zapełnia HTTP cache poza głównym pasmem ładowania — a lazy
+         <img> przy odsłonięciu strony błyskawicznie zdejmuje obraz
+         z cache. Zero dodatkowych zapytań do FB (te same URL-e co
+         w kartach), dekodowanie async, licznik dla testów. */
+      const dogrzewka = () => {
+        let n = 0;
+        widoczne.forEach((p) => {
+          if (!p.full_picture) return;
+          const img = new Image();
+          img.decoding = "async";
+          img.src = p.full_picture;
+          n += 1;
+        });
+        window.__LUSTRO_DODGRZANE = n;   // widok dla testów (wzór __GALFB)
+      };
+      if (typeof window.requestIdleCallback === "function") {
+        requestIdleCallback(dogrzewka, { timeout: 3000 });
+      } else {
+        setTimeout(dogrzewka, 900);
+      }
 
       ilePostow = widoczne.length;
       /* 1.26.7: kafelki + strony — desktop od razu pokazuje stronę 0
