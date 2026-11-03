@@ -350,38 +350,16 @@ async function start() {
   });
   pokazWersje();
 
-  try {
-    const res = await fetch("galeria.json", { cache: "no-cache" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const dane = await res.json();
-    // 1.15.0: gdyby lustro FB zdążyło już zastąpić archiwum (bardzo wolny
-    // pobór galeria.json), nie nadpisujemy go — wygrywa dane na żywo
-    if (window.__GALFB_ZASTAPIONE === true) {
-      window.__GAL_START_ZAKONCZONY = true;
-      return;
-    }
-    GALERIA = dane;
-  } catch (err) {
-    console.error("Błąd ładowania galeria.json:", err);
-    $("#gal-albumy").innerHTML =
-      `<p class="t-small muted">Galeria chwilowo niedostępna — odśwież stronę.</p>`;
-    window.__GAL_START_ZAKONCZONY = true;   // 1.15.0: lustro FB może zastępować
-    return;
-  }
-
-  // sortowanie: najnowsze albumy na górze; bez daty (serwisowe) — na końcu
-  GALERIA.sort((a, b) => {
-    const da = a.data ?? "", db = b.data ?? "";
-    return da > db ? -1 : da < db ? 1 : 0;
-  });
-  // wejście z linku #album-slug (np. ze strony głównej);
-  // v1.14.0: album może być poza pierwszą paczką paginacji — rozszerzamy
+  /* 1.26.8 (właściciel 04.11: „zaraz po wejściu w pełną galerię
+     załadujesz tylko bieżący rok a potem czekamy czy użytkownik
+     kliknie w przycisk”): podstrona NIE pobiera już galeria.json
+     na starcie — wypełniacz 2023–24 znika. Danymi rządzi wyłącznie
+     lustro FB (js/galeria-fb.js): wejście = piłka + bieżący rok,
+     wcześniejsze lata = przycisk pod listą albo chip roku w filtrach.
+     Archiwum statyczne (galeria.json) zostaje trybem awaryjnym —
+     pobiera je galeria-fb.js dopiero po awarii startu FB. */
   renderFiltry();
-  renderAlbumy();
-  przewinDoAlbumu();
-  // 1.15.0: sygnał dla js/galeria-fb.js — statyczne archiwum wyrenderowane
-  // (także po błędzie ładowania), lustro FB może bezpiecznie zastępować
-  window.__GAL_START_ZAKONCZONY = true;
+  window.__GAL_START_ZAKONCZONY = true;   // sygnał dla galeria-fb.js: renderer gotowy
 }
 
 document.addEventListener("DOMContentLoaded", start);
