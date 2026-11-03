@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-03T16:20:55.381Z",
+  "wygenerowano": "2026-11-03T19:58:14.471Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-03T16:20:55.381Z"
+      "zaktualizowano": "2026-11-03T19:58:14.471Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-11-03T16:20:55.381Z"
+      "zaktualizowano": "2026-11-03T19:58:14.471Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-11-03T16:20:55.381Z"
+      "zaktualizowano": "2026-11-03T19:58:14.471Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-11-03T16:20:55.381Z"
+      "zaktualizowano": "2026-11-03T19:58:14.471Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-03T16:20:55.381Z",
+      "zaktualizowano": "2026-11-03T19:58:14.471Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -669,8 +669,8 @@
       ]
     },
     {
-      "dataMeczu": "2026-11-05",
-      "godzina": "19:00",
+      "dataMeczu": "2026-12-17",
+      "godzina": "19:15",
       "kolejka": 8,
       "gospodarz": "KTS II Gliwice",
       "gosc": "KTS Olimpijczyk Zawiercie",
@@ -1623,7 +1623,7 @@
     {
       "dataMeczu": "2026-09-23",
       "godzina": "17:00",
-      "kolejka": null,
+      "kolejka": 1,
       "gospodarz": "Bartek II Siemianowice",
       "gosc": "KTS Gliwice",
       "wynik": "4:6",
@@ -1636,7 +1636,7 @@
     {
       "dataMeczu": "2026-10-06",
       "godzina": "19:00",
-      "kolejka": null,
+      "kolejka": 2,
       "gospodarz": "UKS Wolej Solver II Ruda Śląska",
       "gosc": "KTS Gliwice",
       "wynik": "4:6",
@@ -1649,7 +1649,7 @@
     {
       "dataMeczu": "2026-10-19",
       "godzina": "17:00",
-      "kolejka": null,
+      "kolejka": 3,
       "gospodarz": "KTS Gliwice",
       "gosc": "LKS Strażak II Mikołów",
       "wynik": "3:7",
@@ -1662,7 +1662,7 @@
     {
       "dataMeczu": "2026-11-02",
       "godzina": "17:00",
-      "kolejka": null,
+      "kolejka": 4,
       "gospodarz": "KTS Gliwice",
       "gosc": "UKS Ikar Mierzęcice",
       "wynik": "6:4",
@@ -1675,7 +1675,7 @@
     {
       "dataMeczu": "2026-11-09",
       "godzina": "17:00",
-      "kolejka": null,
+      "kolejka": 5,
       "gospodarz": "KTS Gliwice",
       "gosc": "Speed Team 43 Stolarzowice",
       "wynik": "-:-",
@@ -1688,7 +1688,7 @@
     {
       "dataMeczu": "2026-11-20",
       "godzina": "18:30",
-      "kolejka": null,
+      "kolejka": 6,
       "gospodarz": "UKS Huragan I Sosnowiec",
       "gosc": "KTS Gliwice",
       "wynik": "-:-",
@@ -1701,7 +1701,7 @@
     {
       "dataMeczu": "2026-11-25",
       "godzina": "18:30",
-      "kolejka": null,
+      "kolejka": 7,
       "gospodarz": "AKS Mikołów",
       "gosc": "KTS Gliwice",
       "wynik": "-:-",
@@ -1714,7 +1714,7 @@
     {
       "dataMeczu": "2026-12-07",
       "godzina": "17:00",
-      "kolejka": null,
+      "kolejka": 8,
       "gospodarz": "KTS Gliwice",
       "gosc": "UKS Wolej Solver III Ruda Śląska",
       "wynik": "-:-",
@@ -1727,7 +1727,7 @@
     {
       "dataMeczu": "2026-12-14",
       "godzina": "17:00",
-      "kolejka": null,
+      "kolejka": 9,
       "gospodarz": "KTS Gliwice",
       "gosc": "TKKF Aut Łagisza Będzin",
       "wynik": "-:-",
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-03T16:20:55.381Z",
+      "zaktualizowano": "2026-11-03T19:58:14.471Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-03T16:20:55.381Z",
-    "pzts": "2026-11-03T16:20:55.381Z"
+    "szts": "2026-11-03T19:58:14.471Z",
+    "pzts": "2026-11-03T19:58:14.471Z"
   },
   "zrodla": {
     "szts": "ok",
