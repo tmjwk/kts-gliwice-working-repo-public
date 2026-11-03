@@ -300,7 +300,8 @@ $("#gal-lightbox").addEventListener("click", (e) => {
   if (e.target.id === "gal-lightbox") zamknijLightbox();
 });
 
-/* ===== wersja strony ===== */
+/* ===== wersja strony =====
+   1.26.2: opis wersji trafia do STOPKI — jedno krótkie zdanie, bez atrybucji (konwencja, szczegóły: app.js pokazWersje) */
 async function pokazWersje() {
   try {
     const res = await fetch("wersja.json", { cache: "no-cache" });
