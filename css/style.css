@@ -1131,37 +1131,136 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    reguluje CSS: .lustro-tura-2 = mobile dopiero po „Rozwiń”
    (desktop od razu), .lustro-tura-3 = desktop dopiero po „Rozwiń”
    (mobile nigdy). Kontener .rozwinieta zdejmuje blokady.
-   1.26.6 (właściciel 04.11: „5 kafelków w wierszu zamiast 3 — będą
-   bardziej kwadratowe, łatwiejsze do wypełnienia zdjęciem bez ramek”):
-   DESKTOP (≥64rem) 5 KOLUMN — start = hero + 5 (pełny wiersz),
-   „Rozwiń” dokłada 4 (5+4); TABLET (40–64rem) 3 kolumny — start
-   = hero + 3 (pełny wiersz, wcześniej 2 kolumny i sierota 2+1),
-   „Rozwiń” dokłada 6 (3×3); MOBILE bez zmian (1 kolumna). Nowa tura:
-   .lustro-tura-4 = kafelki 4–5 — desktop OD RAZU (wiersz startowy),
-   tablet po „Rozwiń”, mobile nigdy. Kontener 72rem → kafelek
-   ≈ 211×160 px ≈ 4:3 — proporcje typowych zdjęć FB, okładka
-   wypełnia kafelek praktycznie w całości (przy 3 kolumnach było
-   363×160 px = 2,3:1 i ~40% szerokości zostawało pustymi pasami). */
-.lustro-fb:not(.rozwinieta) .lustro-tura-3 { display: none; }
-@media (max-width: 64rem) {
-  .lustro-fb:not(.rozwinieta) .lustro-tura-4 { display: none; }  /* tablet: po „Rozwiń” (desktop ≥64rem: wiersz startowy) */
+   1.26.6 (właściciel 04.11): 5 kolumn na desktopie, tablet 3 kolumny.
+   1.26.7 (właściciel 04.11: „wróć do 4 — w drugim wierszu, tym pod
+   hero, mają być 4 kafelki a nie 5; dodaj strzałki < i > do
+   przewijania w czasie”): DESKTOP (≥64rem) = 4 KOLUMNY + STRZAŁKI
+   CZASU po bokach sekcji — „>” po prawej cofa o cały rząd (4),
+   „<” po lewej wraca do nowszych; znacznik pozycji (kropki + zakres
+   dat) pod rzędem; „Rozwiń” na desktopie ZNIKA (strzałki go
+   zastępują). Tury .lustro-tura-2/-3/-4 zostają, ale TYLKO
+   poniżej desktopu — na ≥64rem widocznością rządzi wyłącznie
+   stronicowanie (.lustro-poza-strona). Tablet 40–64rem = 3 kolumny
+   (start hero+3, „Rozwiń” → 3×3), mobile bez zmian — jak w 1.26.6. */
+@media (max-width: 63.99rem) {
+  .lustro-fb:not(.rozwinieta) .lustro-tura-3 { display: none; }   /* tablet: po „Rozwiń” */
+  .lustro-fb:not(.rozwinieta) .lustro-tura-4 { display: none; }   /* tablet: po „Rozwiń” */
 }
 @media (max-width: 40rem) {
   .lustro-tura-3, .lustro-tura-4 { display: none; }               /* mobile: tylko archiwum */
   .lustro-fb:not(.rozwinieta) .lustro-tura-2 { display: none; }   /* mobile: po „Rozwiń” */
 }
 
-/* 1.26.6 — SIATKA AKTUALNOŚCI: 5 kolumn na desktopie, 3 na tablecie.
-   Selektor ID (nie .grid-3, który dzielą inne sekcje: „O klubie”,
-   karty drużyn, archiwum). minmax(0,1fr) chroni przed rozpychaniem
-   kolumn przez długie słowa w tytułach. Mobile <40rem: 1 kolumna
-   (dziedziczy z .grid). */
+/* 1.26.7 — SIATKA AKTUALNOŚCI: 4 kolumny na desktopie (→ kafelki
+   szersze, ~244×160 px ≈ 3:2 — świadomy kompromis właściciela:
+   mniejsza liczba kolumn + przewijanie strzałkami zamiast gęstej
+   siatki 5-kolumnowej), 3 na tablecie. Selektor ID (nie .grid-3,
+   który dzielą inne sekcje: „O klubie”, karty drużyn, archiwum).
+   minmax(0,1fr) chroni przed rozpychaniem kolumn przez długie
+   słowa w tytułach. Mobile <40rem: 1 kolumna (dziedziczy z .grid). */
 @media (min-width: 40rem) {
   #lustro-fb-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (min-width: 64rem) {
-  #lustro-fb-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  #lustro-fb-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* 1.26.7 — SCENA STRZAŁEK CZASU (desktop ≥64rem): strzałka „<”
+   (powrót do nowszych) po LEWEJ, strzałka „>” (wstecz w czasie)
+   po PRAWEJ — obie pionowo wyśrodkowane na wysokości rzędu
+   kafelków, węższe od siatki (flex), więc układ się nie rusza.
+   Kierunek celowo „odwrotny” niż w klasycznym karuzelu —
+   czas wstecz = w prawo (decyzja właściciela 04.11). Poniżej 64rem
+   scena = zwykły blok, strzałki znikają, siatka pełna szerokość
+   (tablet/mobile: „Rozwiń” jak dotąd). */
+.lustro-scena { display: block; }
+.lustro-strzalka { display: none; }
+@media (min-width: 64rem) {
+  .lustro-scena { display: flex; align-items: center; gap: 0.9rem; }
+  .lustro-scena #lustro-fb-grid { flex: 1 1 auto; min-width: 0; }
+  .lustro-strzalka {
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.9rem; height: 2.9rem; border-radius: 50%;
+    background: var(--bg-card); color: var(--kts-primary);
+    border: 1px solid var(--kts-line);
+    cursor: pointer; padding: 0;
+    transition: border-color 0.15s ease, background-color 0.15s ease,
+                opacity 0.15s ease, transform 0.15s ease;
+  }
+  .lustro-strzalka svg { width: 1.35rem; height: 1.35rem; display: block; }
+  .lustro-strzalka:hover:not(:disabled),
+  .lustro-strzalka:focus-visible {
+    border-color: var(--kts-primary); background: var(--kts-primary-light);
+  }
+  .lustro-strzalka:focus-visible { outline: 2px solid var(--kts-primary); outline-offset: 2px; }
+  .lustro-strzalka:active:not(:disabled) { transform: scale(0.92); }
+  /* krańce osi czasu (decyzja właściciela): strzałka nieaktywna =
+     półprzezroczysta, bez klikania */
+  .lustro-strzalka:disabled { opacity: 0.35; cursor: not-allowed; }
+  /* stronicowanie: kafelki poza bieżącą stroną ukryte (tylko
+     desktop — poniżej 64rem rządzą turami, klasa czyszczona w JS) */
+  .lustro-fb .lustro-karta.lustro-poza-strona { display: none; }
+  /* „Rozwiń” nie występuje na desktopie — zastępują go strzałki */
+  .lustro-rozwin-strefa { display: none; }
+}
+
+/* 1.26.7 — ZNACZNIK POZYCJI pod rzędem: kropki stron (klikalne,
+   bieżąca w kolorze primary) + zakres dat widocznych kafelków
+   (np. „30 paź – 2 lis”). Dyskretnie, wyśrodkowane. */
+.lustro-pager {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0.7rem; flex-wrap: wrap; margin-top: 0.9rem;
+}
+/* znacznik pozycji to sprawa desktopu — poniżej 64rem schowany
+   na pewno (pasywne zabezpieczenie obok JS: pager.hidden = true) */
+@media (max-width: 63.99rem) {
+  .lustro-pager { display: none; }
+}
+.lustro-kropki { display: inline-flex; align-items: center; gap: 0.4rem; }
+.lustro-kropka {
+  width: 1rem; height: 1rem; border-radius: 50%;
+  background: transparent; border: none; padding: 0; cursor: pointer;
+  position: relative;
+}
+.lustro-kropka::after {
+  content: ""; position: absolute; inset: 0.24rem; border-radius: 50%;
+  background: rgba(127, 127, 127, 0.4);
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.lustro-kropka:hover::after { background: rgba(127, 127, 127, 0.7); }
+.lustro-kropka[aria-current="page"]::after {
+  background: var(--kts-primary); transform: scale(1.2);
+}
+.lustro-kropka:focus-visible { outline: 2px solid var(--kts-primary); outline-offset: 1px; }
+.lustro-kropki-sep { color: var(--kts-text-muted); }
+.lustro-zakres { font-variant-numeric: tabular-nums; }
+
+/* 1.26.7 — WEJŚCIE STRONY: kafelki wjeżdżają z kierunku podróży
+   (starsze → z prawej, nowsze → z lewej), delikatny stagger
+   40 ms na kolumnę. reduced-motion = bez animacji. */
+@media (min-width: 64rem) {
+  .lustro-fb[data-kierunek="starsze"] .lustro-karta.lustro-anim {
+    animation: lustro-wjazd-starsze 0.3s ease both;
+  }
+  .lustro-fb[data-kierunek="nowsze"] .lustro-karta.lustro-anim {
+    animation: lustro-wjazd-nowsze 0.3s ease both;
+  }
+  /* stagger (40 ms na kolumnę) ustawia JS inline — kafelki stron
+     2+ leżą na pozycjach 5+, :nth-child(2..4) by ich nie łapał */
+}
+@keyframes lustro-wjazd-starsze {
+  from { opacity: 0; transform: translateX(1.6rem); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes lustro-wjazd-nowsze {
+  from { opacity: 0; transform: translateX(-1.6rem); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lustro-karta.lustro-anim { animation: none !important; }
+}
+
 
 /* przycisk „Rozwiń” pod kafelkami — ten sam charakter co „O klubie”
    (obrys, trójkącik z obrotu, etykieta Rozwiń/Zwiń).
