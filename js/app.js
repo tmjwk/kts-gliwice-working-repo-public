@@ -552,10 +552,15 @@ function renderKartyDruzyn(dane, mecze) {
    ===== 1.25.0 (właściciel 03.11): dymek ZAKOTWICZONY W PIŁECZCE
    („strzałeczka nad piłeczką, a nad tym tooltip — aby użytkownik
    wiedział, który mecz wyświetla”) — ramka podąża za aktywną piłeczką
-   (płynnie), ogon-strzałeczka dotyka piłeczki; piłeczka 1. wiersza
-   → dymek nad paskiem, 2. wiersza → pod (nigdy nie zasłania piłeczek).
+   (płynnie), ogon-strzałeczka dotyka piłeczki.
    Odkrywalność gestu: tor pod piłeczkami + podpowiedź w legendzie +
-   jednorazowy chip „przesuń palcem” (SCRUBHINT) + wibracja zmiany. */
+   jednorazowy chip „przesuń palcem” (SCRUBHINT) + wibracja zmiany.
+   ===== 1.25.1 (właściciel 03.11, po obejrzeniu v1.25.0): dymek ZAWSZE
+   NAD piłeczką — także w 2. wierszu („wyświetlaj go u góry tak jak dla
+   górnego wiersza piłeczek formy”), a końcówka strzałeczki POMARAŃCZOWA
+   z uzgodnionej palety (--kts-accent) dla lepszej widoczności. Fallback
+   „pod” zostaje tylko na wypadek braku miejsca nad (pasek przy samej
+   górnej krawędzi ekranu). */
 
 const FORMTIP = { el: null, pilka: null, przypiete: false };
 
@@ -575,25 +580,21 @@ function formaTipEl() {
   return FORMTIP.el;
 }
 
-/** 1.25.0: pozycja dymka — kotwica = AKTYWNA PIŁECZKA (właściciel 03.11:
- *  „chodzi mi o to, aby strzałeczka była nad piłeczką, a nad tym tooltip —
- *  aby użytkownik wiedział, który mecz wyświetla”). Ogon-strzałeczka
- *  dotyka piłeczki, dymek stoi tuż nad nią. Strona zależna od WIERSZA
- *  paska (każda połowa sezonu w swoim wierszu — htmlFormy): piłeczka
- *  1. wiersza → dymek NAD paskiem, piłeczka 2. wiersza → POD paskiem
- *  (lustrzanie) — dymek nigdy nie zasłania pozostałych piłeczek (zasada
- *  jasności Task 177). Fallback, gdy w viewporcie brak miejsca po
- *  preferowanej stronie. Doczepienie do krawędzi ekranu (min. 8 px). */
+/** 1.25.0→1.25.1: pozycja dymka — kotwica = AKTYWNA PIŁECZKA (właściciel
+ *  03.11: „chodzi mi o to, aby strzałeczka była nad piłeczką, a nad tym
+ *  tooltip — aby użytkownik wiedział, który mecz wyświetla”; po obejrzeniu
+ *  v1.25.0: „tooltip dla dolnego rzędu piłeczek wyświetlasz z dołu —
+ *  wyświetlaj go u góry tak jak dla górnego wiersza piłeczek formy”).
+ *  Ogon-strzałeczka dotyka piłeczki, dymek stoi tuż nad nią — dla OBU
+ *  wierszy paska (1.25.0 stawiał dymek 2. wiersza pod paskiem, lustrzanie;
+ *  decyzja właściciela po weryfikacji wizualnej ją zdjęła). Fallback „pod”
+ *  tylko gdy w viewporcie brak miejsca nad (pasek przy samej górnej
+ *  krawędzi ekranu). Doczepienie do krawędzi ekranu (min. 8 px). */
 function polozFormTip(tip, pilka) {
   const r = pilka.getBoundingClientRect();
   const tw = tip.offsetWidth, th = tip.offsetHeight;
-  const wiersz = pilka.closest(".team-forma-wiersz");
-  const forma = pilka.closest(".team-forma");
-  const wiersze = forma
-    ? [...forma.querySelectorAll(":scope > .team-forma-wiersz")] : [];
-  let nad = wiersze.indexOf(wiersz) <= 0;      // 1. wiersz (brak struktury też)
-  if (nad && r.top - th - 9 < 8) nad = false;               // brak miejsca nad
-  if (!nad && r.bottom + th + 9 > window.innerHeight - 8) nad = true;  // ani pod
+  let nad = true;                              // 1.25.1: ZAWSZE nad piłeczką
+  if (r.top - th - 9 < 8) nad = false;         // brak miejsca nad → pod
   tip.classList.toggle("forma-tip--pod", !nad);
   const x = Math.min(Math.max(8, r.left + r.width / 2 - tw / 2),
     window.innerWidth - tw - 8);
