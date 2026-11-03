@@ -2,15 +2,29 @@
    KTS Gliwice — LUSTRO FB (1.20.0)
    Aktualności z Facebooka na żywo + archiwum na podstronie.
 
+   1.26.7 (właściciel 04.11: „wróć do 4 — w drugim wierszu, tym pod
+   hero, mają być 4 kafelki a nie 5; dodaj strzałki < i > do
+   przewijania w czasie wstecz i z powrotem”): DESKTOP (≥64rem)
+   = 4 KOLUMNY + STRZAŁKI CZASU po bokach sekcji — „>” po PRAWEJ
+   cofa WSTECZ W CZASIE o cały rząd (4 kafelki), „<” po LEWEJ
+   wraca do nowszych (kierunek celowo „odwrotny” niż w klasycznej
+   karuzeli — decyzja właściciela); na krańcach osi czasu strzałka
+   NIEAKTYWNA (półprzezroczysta, cursor: not-allowed); pod rzędem
+   ZNACZNIK POZYCJI = klikalne kropki stron + zakres dat widocznych
+   kafelków („25–29 paź”); klawiatura: → wstecz, ← powrót (gdy fokus
+   w scenie). „Rozwiń” na desktopie znika — zastępują go strzałki;
+   TABLET (40–64rem) i MOBILE bez zmian (tury + „Rozwiń” jak 1.26.6).
+   Mechanika: wszystkie kafelki są w DOM, widocznością strony rządzi
+   klasa .lustro-poza-strona (tylko ≥64rem), wejście strony = animacja
+   z kierunku podróży (data-kierunek). Kadrowanie wideo: pomiary
+   nieudane (obraz jeszcze ukryty) nie trafiają do cache — ponawiane
+   po przewinięciu.
+
    1.26.6 (właściciel 04.11: „5 kafelków w wierszu zamiast 3 — będą
    bardziej kwadratowe, łatwiejsze do wypełnienia zdjęciem bez
-   ramek”): DESKTOP (≥64rem) = 5 KOLUMN — start hero + 5 (pełny
-   wiersz), „Rozwiń” dokłada 4 (razem 5+4=9 kafelków, dokładnie
-   drugi wiersz = 4); TABLET (40–64rem) = 3 kolumny — start hero + 3,
-   „Rozwiń” dokłada 6 (3×3); MOBILE bez zmian (hero + 1, +2 po
-   „Rozwiń”). Nowa tura .lustro-tura-4 (kafelki 4–5): desktop od razu
-   (wiersz startowy), tablet po „Rozwiń”, mobile nigdy. Progi
-   „Rozwiń/Zwiń” liczone dla trzech portów (MOBILE_MQ + SZEROKI_MQ).
+   ramek”): 5 kolumn na desktopie (zastąpione w 1.26.7), tablet
+   3 kolumny (koniec sieroty 2+1), nowa tura .lustro-tura-4
+   (kafelki 4–5): tablet po „Rozwiń”, mobile nigdy.
 
    1.20.0 (02.11, decyzja właściciela: „kafelki zajmują za dużo
    miejsca”): STRONA GŁÓWNA w PORCJACH ROZWIJANYCH — desktop (≥40 rem)
@@ -247,6 +261,10 @@
       img.onerror = () => { clearTimeout(stop); resolve(null); };
       img.src = url;
     });
+    /* 1.26.7: porażki NIE trafiają do cache — kafelek mógł być ukryty
+       (strona 2+ na desktopie, obraz „lazy” się nie załadował);
+       po przewinięciu pomiar zostanie ponowiony */
+    pomiar.then((w) => { if (!w) POMIARY_KADRU.delete(url); });
     POMIARY_KADRU.set(url, pomiar);
     return pomiar;
   }
@@ -271,7 +289,7 @@
   }
 
   const karta = (p, dodatkowaKlasa = "") => `
-    <article class="card news-card news-klik lustro-karta${dodatkowaKlasa ? " " + dodatkowaKlasa : ""}" data-post-id="${esc(p.id)}"${jestVideo(p) ? ' data-video="1"' : ""}
+    <article class="card news-card news-klik lustro-karta${dodatkowaKlasa ? " " + dodatkowaKlasa : ""}" data-post-id="${esc(p.id)}" data-czas="${esc(p.created_time)}"${jestVideo(p) ? ' data-video="1"' : ""}
              tabindex="0" role="button" aria-label="Powiększ wpis: ${esc(tytulZPostu(p))}">
       <div class="news-media${p.full_picture ? " news-media-img" : " news-media-brak"}">${mediaHTML(p)}</div>
       <div class="card-body">
@@ -377,18 +395,45 @@
   }
 
   /* ===== STRONA GŁÓWNA ===== */
-  /* 1.26.6: progi porcji = pełny wiersz siatki w każdym porcie —
-     MOBILE 2 (hero + 1, 1 kolumna), TABLET 4 (hero + 3, 3 kolumny),
-     DESKTOP 6 (hero + 5, 5 kolumnów). Granice 40/64 rem — te same
-     co w CSS (#lustro-fb-grid i .lustro-tura-*). */
+  /* 1.26.7: dwa tryby sekcji — DESKTOP (≥64rem) = STRZAŁKI CZASU
+     (stronicowanie po NA_STRONIE=4 kafelkach, „>” prawa = wstecz,
+     „<” lewa = powrót), TABLET/MOBILE = porcje „Rozwiń/Zwiń” jak
+     w 1.26.6 (MOBILE 2 = hero+1, TABLET 4 = hero+3). Granice
+     40/64 rem — te same co w CSS (#lustro-fb-grid, .lustro-tura-*,
+     .lustro-scena). */
   const MOBILE_MQ = window.matchMedia("(max-width: 40rem)");
-  /* 1.26.6: trzy porty = trzy porcje startowe — mobile 1 kolumna
-     (hero+1), tablet 40–64rem 3 kolumny (hero+3), desktop ≥64rem
-     5 kolumnów (hero+5, pełny wiersz). Progi przeliczane na żywo. */
   const SZEROKI_MQ = window.matchMedia("(min-width: 64rem)");
-  const START_MOBILE = 2;    // hero + 1 kafelek
+  const START_MOBILE = 2;    // hero + 1 kafelek (porcje mobilne)
   const START_TABLET = 4;    // hero + 3 (3 kolumny, 40–64rem)
-  const START_DESKTOP = 6;   // hero + 5 (5 kolumnów, ≥64rem)
+  const NA_STRONIE = 4;      // 1.26.7: rząd desktopu = 4 kafelki
+
+  /* 1.26.7: skrócone miesiące zakresu dat pod rzędem */
+  const MIESIACE_KROTKIE = ["sty", "lut", "mar", "kwi", "maj", "cze",
+    "lip", "sie", "wrz", "paź", "lis", "gru"];
+
+  /** Zakres dat strony: „30 paź – 2 lis”; ten sam miesiąc =
+   *  „25–29 paź”; rok dopisywany tylko gdy inny niż bieżący. */
+  const formatujZakres = (isoOd, isoDo) => {
+    const f = (iso) => {
+      const d = new Date(iso);
+      return Number.isNaN(d.getTime()) ? null
+        : { dzien: d.getDate(), miesiac: d.getMonth(), rok: d.getFullYear() };
+    };
+    const a = f(isoOd), b = f(isoDo);          // a = starsza, b = nowsza
+    if (!a || !b) return "";
+    const rok = (r) => (r !== new Date().getFullYear() ? ` ${r}` : "");
+    if (a.rok === b.rok && a.miesiac === b.miesiac) {
+      return a.dzien === b.dzien
+        ? `${a.dzien} ${MIESIACE_KROTKIE[a.miesiac]}${rok(a.rok)}`
+        : `${a.dzien}–${b.dzien} ${MIESIACE_KROTKIE[a.miesiac]}${rok(a.rok)}`;
+    }
+    if (a.rok === b.rok) {
+      return `${a.dzien} ${MIESIACE_KROTKIE[a.miesiac]} – `
+        + `${b.dzien} ${MIESIACE_KROTKIE[b.miesiac]}${rok(a.rok)}`;
+    }
+    return `${a.dzien} ${MIESIACE_KROTKIE[a.miesiac]}${rok(a.rok)} – `
+      + `${b.dzien} ${MIESIACE_KROTKIE[b.miesiac]}${rok(b.rok)}`;
+  };
 
   async function initGlowna() {
     const kontener = $("#lustro-fb");
@@ -398,54 +443,204 @@
     const przycisk = $("#lustro-rozwin");
     const etykieta = przycisk ? przycisk.querySelector(".etykieta") : null;
     const stopka = $("#lustro-starsze");   // 1.20.1: „Pokaż starsze wpisy” po rozwinięciu
+    /* 1.26.7: scena strzałek + znacznik pozycji (desktop); ID celowo
+       z przedrostkiem „strzalka-” — goły #lustro-starsze to stopka
+       „Pokaż starsze wpisy” (kolizja ID = ukryta strzałka, wykryta
+       testami v1.26.7) */
+    const scena = $("#lustro-scena");
+    const strzalkaNowsze = $("#lustro-strzalka-nowsze");     // „<” lewa — powrót
+    const strzalkaStarsze = $("#lustro-strzalka-starsze");  // „>” prawa — wstecz w czasie
+    const pager = $("#lustro-pager");
+    const kropki = $("#lustro-kropki");
+    const zakres = $("#lustro-zakres");
     if (!kontener || !hero || !grid) return;
     podpiezKarty(kontener);
 
-    /* stan rozwinięcia + widoczność przycisków zależna od viewportu */
+    /* stan: rozwinięcie (tablet/mobile) + stronicowanie (desktop) */
     let rozwinieta = false;
     let ilePostow = 0;
+    let daneGotowe = false;                 // dane albo kafel awaryjny
+    let kafelkiEl = [];                     // kafelki siatki (bez hero)
+    let strona = 0;                         // bieżąca strona (0 = najnowsze)
+    let liczbaStron = 1;
+    let trybStrzalek = SZEROKI_MQ.matches;  // desktop ≥64rem
 
-    const stanPrzycisku = () => {
-      if (!strefaPrzycisku || !przycisk || !etykieta) return;
-      const start = MOBILE_MQ.matches ? START_MOBILE
-        : SZEROKI_MQ.matches ? START_DESKTOP : START_TABLET;
-      const maRozwijac = ilePostow > start;
-      // „Zwiń” wisi po rozwinięciu (nawet gdy w nowym porcie nie ma
-      // czego dokładać — da się wrócić do porcji startowej)
-      strefaPrzycisku.hidden = !maRozwijac && !rozwinieta;
-      etykieta.textContent = rozwinieta ? "Zwiń" : "Rozwiń";
-      // 1.20.1 (właściciel 02.11): „Pokaż starsze wpisy” dopiero PO
-      // ROZWINIĘCIU; wyjątek: gdy rozwijać nie ma czego (przycisk
-      // „Rozwiń” ukryty) — stopka od razu, bo to jedyna droga do archiwum
-      if (stopka) stopka.hidden = maRozwijac && !rozwinieta;
+    /* kropki stron znacznika pozycji (klikalne = skok do strony) */
+    const renderKropki = () => {
+      if (!kropki) return;
+      kropki.innerHTML = "";
+      for (let i = 0; i < liczbaStron; i++) {
+        const k = document.createElement("button");
+        k.type = "button";
+        k.className = "lustro-kropka";
+        k.setAttribute("aria-label", `Strona ${i + 1} z ${liczbaStron}`);
+        if (i === strona) k.setAttribute("aria-current", "page");
+        k.addEventListener("click", () =>
+          idzNaStrone(i, i > strona ? "starsze" : "nowsze"));
+        kropki.appendChild(k);
+      }
     };
+
+    /* zakres dat widocznej strony (kafelki = newest→oldest) */
+    const pokazZakres = () => {
+      if (!zakres) return;
+      const daty = kafelkiEl
+        .slice(strona * NA_STRONIE, (strona + 1) * NA_STRONIE)
+        .map((el) => el.dataset.czas).filter(Boolean);
+      zakres.textContent = daty.length
+        ? formatujZakres(daty[daty.length - 1], daty[0]) : "";
+    };
+
+    /* widoczność strony startowej (bez animacji) — też po zmianie
+       trybu (desktop ↔ tablet) i po dojechaniu danych */
+    const zastosujStartowaStrone = () => {
+      strona = 0;
+      kafelkiEl.forEach((el, i) => {
+        el.classList.toggle("lustro-poza-strona",
+          trybStrzalek && Math.floor(i / NA_STRONIE) !== 0);
+        el.classList.remove("lustro-anim");
+        el.style.animationDelay = "";
+      });
+      renderKropki();
+      pokazZakres();
+    };
+
+    /* STRZAŁKI CZASU: przestawienie strony o cały rząd (4 kafelki).
+       Kierunek podróży trafia w data-kierunek → CSS animuje wejście
+       kafelków z właściwej strony (starsze = z prawej). */
+    function idzNaStrone(n, kierunek) {
+      if (!trybStrzalek) return;
+      const cel = Math.max(0, Math.min(liczbaStron - 1, n));
+      if (cel === strona) return;
+      strona = cel;
+      kontener.dataset.kierunek = kierunek === "nowsze" ? "nowsze" : "starsze";
+      kafelkiEl.forEach((el, i) => {
+        const nr = i - strona * NA_STRONIE;      // 0–3 = bieżący rząd
+        const naStronie = nr >= 0 && nr < NA_STRONIE;
+        el.classList.toggle("lustro-poza-strona", !naStronie);
+        el.classList.remove("lustro-anim");
+        el.style.animationDelay = "";
+        if (naStronie) {
+          /* restart animacji wejścia + stagger 40 ms na kolumnę */
+          void el.offsetWidth;
+          el.style.animationDelay = `${nr * 0.04}s`;
+          el.classList.add("lustro-anim");
+        }
+      });
+      renderKropki();
+      pokazZakres();
+      kadrujWideo(grid);   // 1.26.7: pomiary wideo ukrytych dotąd kafelków
+      /* fokus nie może zginąć: kafelek, w którym stał, właśnie zniknął
+         (display:none przerzuca fokus na <body> i klawiatura by zdechła)
+         — prowadź go na pierwszy kafelek nowej strony */
+      const aktywny = document.activeElement;
+      if (aktywny && grid.contains(aktywny)
+          && aktywny.classList.contains("lustro-poza-strona")) {
+        const pierwszy = kafelkiEl[strona * NA_STRONIE];
+        if (pierwszy) pierwszy.focus();
+      }
+      stanSterowania();
+    }
+
+    /* jeden wspólny licznik stanu przycisków obu trybów */
+    const stanSterowania = () => {
+      if (SZEROKI_MQ.matches) {
+        /* DESKTOP — strzałki czasu: krańce osi czasu = nieaktywna
+           strzałka (półprzezroczysta, cursor: not-allowed w CSS) */
+        if (strzalkaNowsze) strzalkaNowsze.disabled = strona <= 0;
+        if (strzalkaStarsze) strzalkaStarsze.disabled = strona >= liczbaStron - 1;
+        if (pager) pager.hidden = liczbaStron <= 1;
+        /* „Pokaż starsze wpisy” na OSTATNIEJ stronie (wyczerpany zasób
+           sekcji) albo gdy stronicować nie ma czego — duch decyzji
+           1.20.1; przed dojazdem danych nie świeci (skeleton) */
+        if (stopka) {
+          stopka.hidden = !daneGotowe
+            || (liczbaStron > 1 && strona < liczbaStron - 1);
+        }
+        if (strefaPrzycisku) strefaPrzycisku.hidden = true;  // „Rozwiń” nie na desktopie
+      } else {
+        /* TABLET/MOBILE — porcje jak w 1.26.6 */
+        const start = MOBILE_MQ.matches ? START_MOBILE : START_TABLET;
+        const maRozwijac = ilePostow > start;
+        // „Zwiń” wisi po rozwinięciu (nawet gdy w nowym porcie nie ma
+        // czego dokładać — da się wrócić do porcji startowej)
+        if (strefaPrzycisku) strefaPrzycisku.hidden = !maRozwijac && !rozwinieta;
+        // 1.20.1: „Pokaż starsze wpisy” dopiero PO ROZWINIĘCIU;
+        // wyjątek: gdy rozwijać nie ma czego — od razu
+        if (stopka) stopka.hidden = maRozwijac && !rozwinieta;
+        if (pager) pager.hidden = true;
+      }
+      if (etykieta) etykieta.textContent = rozwinieta ? "Zwiń" : "Rozwiń";
+    };
+
+    if (strzalkaStarsze) {
+      strzalkaStarsze.addEventListener("click", () =>
+        idzNaStrone(strona + 1, "starsze"));
+    }
+    if (strzalkaNowsze) {
+      strzalkaNowsze.addEventListener("click", () =>
+        idzNaStrone(strona - 1, "nowsze"));
+    }
+    /* klawiatura (gdy fokus w scenie aktualności): → = wstecz w
+       czasie, ← = powrót — jak strzałki na ekranie */
+    if (scena) {
+      scena.addEventListener("keydown", (e) => {
+        if (!trybStrzalek) return;
+        if (e.key === "ArrowRight") {
+          e.preventDefault();
+          idzNaStrone(strona + 1, "starsze");
+        } else if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          idzNaStrone(strona - 1, "nowsze");
+        }
+      });
+    }
 
     if (przycisk) {
       przycisk.addEventListener("click", () => {
         rozwinieta = !rozwinieta;
         kontener.classList.toggle("rozwinieta", rozwinieta);
         przycisk.setAttribute("aria-expanded", String(rozwinieta));
-        stanPrzycisku();
-      });
-      // obrót telefonu / zmiana okna: policz progi od nowa
-      // (1.26.6: dwa progi — 40rem mobile/tablet i 64rem tablet/desktop)
-      [MOBILE_MQ, SZEROKI_MQ].forEach((mq) => {
-        if (typeof mq.addEventListener === "function") {
-          mq.addEventListener("change", stanPrzycisku);
-        } else if (typeof mq.addListener === "function") {
-          mq.addListener(stanPrzycisku);   // starsze Safari
-        }
+        stanSterowania();
       });
     }
+    /* obrót telefonu / zmiana okna: przelicz progi, a przy zmianie
+       trybu (desktop ↔ tablet) wróć do porcji startowej —
+       strzałki i „Rozwiń” nigdy nie walczą o te same kafelki */
+    const zmianaPortu = () => {
+      const terazDesktop = SZEROKI_MQ.matches;
+      if (terazDesktop !== trybStrzalek) {
+        trybStrzalek = terazDesktop;
+        rozwinieta = false;
+        kontener.classList.remove("rozwinieta");
+        if (przycisk) przycisk.setAttribute("aria-expanded", "false");
+        if (trybStrzalek) {
+          zastosujStartowaStrone();
+        } else {
+          kafelkiEl.forEach((el) => {
+            el.classList.remove("lustro-poza-strona", "lustro-anim");
+            el.style.animationDelay = "";
+          });
+          strona = 0;
+          renderKropki();
+        }
+      }
+      stanSterowania();
+    };
+    [MOBILE_MQ, SZEROKI_MQ].forEach((mq) => {
+      if (typeof mq.addEventListener === "function") {
+        mq.addEventListener("change", zmianaPortu);
+      } else if (typeof mq.addListener === "function") {
+        mq.addListener(zmianaPortu);   // starsze Safari
+      }
+    });
 
     // skeleton od razu (P2) — sekcja żyje, zanim dojadą dane
     // (1.10.1: hero-pasek płaski, 10rem jak zwykłe kafelki;
-    //  1.20.0: 3 kostki z turami — mobile od razu widzi hero + 1;
-    //  1.26.6: 5 kostek — desktop hero + 5 (wiersz startowy), tablet
-    //  hero + 3, mobile hero + 1 — tury te same co dla danych)
+    //  1.26.7: 4 kostki — wiersz startowy desktopu = 4 kafelki,
+    //  tablet pokazuje 3 z nich, mobile 1 — tury te same co dla danych)
     hero.innerHTML = skeleton("lustro-skeleton--hero", "10rem");
-    grid.innerHTML = ["", "lustro-tura-2", "lustro-tura-2",
-      "lustro-tura-4", "lustro-tura-4"]
+    grid.innerHTML = ["", "lustro-tura-2", "lustro-tura-2", "lustro-tura-4"]
       .map((tura) => skeleton(tura, "10rem")).join("");
 
     try {
@@ -461,11 +656,11 @@
 
       widoczne.forEach((p) => cache.set(p.id, p));
       hero.innerHTML = kartaHero(widoczne[0]);
-      // 1.20.0: tury porcji — pozycja wśród wszystkich postów (hero = 0):
-      // 1 = zawsze widoczna, 2–3 = tablet/desktop od razu / mobile po
-      // „Rozwiń”, 4–5 = desktop od razu (wiersz startowy 5 kolumn,
-      // 1.26.6) / tablet po „Rozwiń" / mobile nigdy, 6+ = desktop
-      // i tablet po „Rozwiń” / mobile tylko archiwum (CSS .lustro-tura-*)
+      // tury porcji (tablet/mobile, jak 1.26.6) — pozycja wśród
+      // postów (hero = 0): 1 = zawsze widoczna, 2–3 = tablet od razu /
+      // mobile po „Rozwiń”, 4–5 = tablet po „Rozwiń” / mobile nigdy,
+      // 6+ = tablet po „Rozwiń” / mobile tylko archiwum.
+      // Na desktopie tury są martwe (CSS ≥64rem) — rządzi stronicowanie.
       grid.innerHTML = widoczne.slice(1).map((p, i) => {
         const nr = i + 1;
         const tura = nr >= 6 ? "lustro-tura-3"
@@ -476,7 +671,13 @@
       kadrujWideo(kontener);   // 1.11.0: pomiary pasów wideo (hero + siatka)
 
       ilePostow = widoczne.length;
-      stanPrzycisku();
+      /* 1.26.7: kafelki + strony — desktop od razu pokazuje stronę 0
+         (najnowsze), kropki i zakres dat gotowe */
+      kafelkiEl = [...grid.querySelectorAll(".lustro-karta")];
+      liczbaStron = Math.max(1, Math.ceil(kafelkiEl.length / NA_STRONIE));
+      daneGotowe = true;
+      zastosujStartowaStrone();
+      stanSterowania();
     } catch (e) {
       console.warn("[lustro-fb] pominięto:", e.message);
       rozwinieta = false;
@@ -486,6 +687,12 @@
       if (stopka) stopka.hidden = false;   // kafel awaryjny — zostaw drogę do archiwum
       hero.innerHTML = "";
       grid.innerHTML = kartaFallback();      // P3: kafel awaryjny
+      /* 1.26.7: stan końcowy awaryjny — strzałki zgaszone, pager schowany */
+      kafelkiEl = [];
+      strona = 0;
+      liczbaStron = 1;
+      daneGotowe = true;
+      stanSterowania();
     }
   }
 
