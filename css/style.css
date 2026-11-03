@@ -368,17 +368,26 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    na ostatnim wierszu (rzędzie duchów) paska pierwszej karty ŚZTS:
    kołysze się WZDŁUŻ TORU (mini-demonstracja gestu), zasłania wyłącznie
    identyczne szare duchy (zero utraconej informacji), nie dotyka linków
-   ani wyników; znika po pierwszym dotknięciu paska albo po 7 s
+   ani wyników; znika po pierwszym dotknięciu paska albo po 9 s
+   (1.26.1: +2 s — właściciel 03.11: „dodaj mu 2s życia”)
    (raz na wizytę — sessionStorage, js/app.js: SCRUBHINT). */
 .forma-legenda-scrub { display: none; }
 @media (pointer: coarse) {
   .forma-legenda-scrub { display: inline; }
 }
+/* 1.26.1: CHIP POMARAŃCZOWY Z PALETY (właściciel 03.11: „może lepiej
+   niech będzie pomarańczowy (z palety) dla lepszej widoczności”) —
+   granatowy pipette (#0f1b2d) ginął na tle szarych duchów i toru;
+   teraz tło --kts-accent (#ff6b35 — pomarańcz z palety klubowej,
+   jak przyciski CTA i końcówka strzałeczki z 1.25.1), napis #fff
+   (wzorzec .btn-accent), obrys --kts-accent-dark (#c2410c) i cień
+   w tym samym tonie — chip odcina się zarówno od jasnej karty, jak
+   i od granatowych dymków. Dzień/noc bez zmiany (zmienne z :root). */
 .forma-scrub-hint {
   position: absolute; left: 50%; top: 50%; z-index: 3;
   padding: 0.16rem 0.6rem; border-radius: 999px;
-  background: #0f1b2d; color: #e9eff9;
-  border: 1px solid #2b3d5c; box-shadow: 0 6px 16px rgba(6, 12, 24, 0.3);
+  background: var(--kts-accent); color: #fff;
+  border: 1px solid var(--kts-accent-dark); box-shadow: 0 6px 16px rgba(194, 65, 12, 0.35);
   font-size: 0.68rem; font-weight: 600; white-space: nowrap;
   pointer-events: none;
   animation: forma-scrub-hint 1.1s ease-in-out infinite alternate;
