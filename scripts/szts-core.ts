@@ -232,8 +232,20 @@ export function parsujTerminarz(html: string): MeczLigi[] {
     if (/-00-00$/.test(data)) continue;
 
     const godzina = w.match(/g\.\s*(\d{1,2}:\d{2})/)?.[1] ?? null;
-    // kolejka: liczba tuż przed <br /> w kolumnie „nr | liga | kolejka"
-    const kol = w.match(/<strong>\d+<\/strong>\s*<br>[^<]*?(\d+)\s*<br\s*\/?\s*>/);
+    // kolejka: liczba przed <br /> w kolumnie „nr | liga | kolejka".
+    // Dwa formaty u źródła (1.26.5 — zgłoszenie właściciela 04.11: „przy
+    // niektórych pozycjach listy brak numeru kolejki”; dotyczyło 2. Śląskiej
+    // Ligi Amatorów, 18/144 — jedynej ligi z kolejka=null):
+    //   2LM:  <strong>1</strong><br> 2LM … 1<br />          (sama liczba)
+    //   2SLA: <strong>46</strong><br> 2SLA … 1/?LA<br />    (liczba + sufiks)
+    // Stary wzorzec wymagał cyfr TUŻ PRZED <br/>, więc „1/?LA" nie łapało
+    // się wcale (kolejka=null). Teraz po numerze dozwolone są znaki
+    // NIEbędące cyfrą ani „<” ([^<\d]* — „/?LA” itp.), a cyfra przed
+    // sufiksem pozostaje ostatnim „słowem liczbowym” przed <br/> —
+    // w „2SLA … 1/?LA” to 1, nie 2 (ta dwójka jest zbyt daleko: między
+    // nią a <br/> stoi cyfra 1). Ligi 2LM/3LM/4LM bez zmian (zweryfikowane
+    // na zapisanych stronach: 120/120 i 45/45 trafień).
+    const kol = w.match(/<strong>\d+<\/strong>\s*<br>[^<]*?(\d+)\s*[^<\d]*<br\s*\/?\s*>/);
     const kolejka = kol ? parseInt(kol[1], 10) : null;
 
     const komorki = [...w.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)]
