@@ -2,6 +2,16 @@
    KTS Gliwice — LUSTRO FB (1.20.0)
    Aktualności z Facebooka na żywo + archiwum na podstronie.
 
+   1.26.6 (właściciel 04.11: „5 kafelków w wierszu zamiast 3 — będą
+   bardziej kwadratowe, łatwiejsze do wypełnienia zdjęciem bez
+   ramek”): DESKTOP (≥64rem) = 5 KOLUMN — start hero + 5 (pełny
+   wiersz), „Rozwiń” dokłada 4 (razem 5+4=9 kafelków, dokładnie
+   drugi wiersz = 4); TABLET (40–64rem) = 3 kolumny — start hero + 3,
+   „Rozwiń” dokłada 6 (3×3); MOBILE bez zmian (hero + 1, +2 po
+   „Rozwiń”). Nowa tura .lustro-tura-4 (kafelki 4–5): desktop od razu
+   (wiersz startowy), tablet po „Rozwiń”, mobile nigdy. Progi
+   „Rozwiń/Zwiń” liczone dla trzech portów (MOBILE_MQ + SZEROKI_MQ).
+
    1.20.0 (02.11, decyzja właściciela: „kafelki zajmują za dużo
    miejsca”): STRONA GŁÓWNA w PORCJACH ROZWIJANYCH — desktop (≥40 rem)
    start = hero + 3 kafelki, „Rozwiń” dokłada 6 (do 10); mobile
@@ -367,12 +377,18 @@
   }
 
   /* ===== STRONA GŁÓWNA ===== */
-  /* 1.20.0: progi porcji — DESKTOP 4 (hero + 3) / MOBILE 2 (hero + 1);
-     granica 40 rem = moment, w którym kafelki układają się w 1 kolumnę
-     (ta sama co w CSS .lustro-tura-*). */
+  /* 1.26.6: progi porcji = pełny wiersz siatki w każdym porcie —
+     MOBILE 2 (hero + 1, 1 kolumna), TABLET 4 (hero + 3, 3 kolumny),
+     DESKTOP 6 (hero + 5, 5 kolumnów). Granice 40/64 rem — te same
+     co w CSS (#lustro-fb-grid i .lustro-tura-*). */
   const MOBILE_MQ = window.matchMedia("(max-width: 40rem)");
-  const START_DESKTOP = 4;
-  const START_MOBILE = 2;
+  /* 1.26.6: trzy porty = trzy porcje startowe — mobile 1 kolumna
+     (hero+1), tablet 40–64rem 3 kolumny (hero+3), desktop ≥64rem
+     5 kolumnów (hero+5, pełny wiersz). Progi przeliczane na żywo. */
+  const SZEROKI_MQ = window.matchMedia("(min-width: 64rem)");
+  const START_MOBILE = 2;    // hero + 1 kafelek
+  const START_TABLET = 4;    // hero + 3 (3 kolumny, 40–64rem)
+  const START_DESKTOP = 6;   // hero + 5 (5 kolumnów, ≥64rem)
 
   async function initGlowna() {
     const kontener = $("#lustro-fb");
@@ -391,7 +407,8 @@
 
     const stanPrzycisku = () => {
       if (!strefaPrzycisku || !przycisk || !etykieta) return;
-      const start = MOBILE_MQ.matches ? START_MOBILE : START_DESKTOP;
+      const start = MOBILE_MQ.matches ? START_MOBILE
+        : SZEROKI_MQ.matches ? START_DESKTOP : START_TABLET;
       const maRozwijac = ilePostow > start;
       // „Zwiń” wisi po rozwinięciu (nawet gdy w nowym porcie nie ma
       // czego dokładać — da się wrócić do porcji startowej)
@@ -411,18 +428,24 @@
         stanPrzycisku();
       });
       // obrót telefonu / zmiana okna: policz progi od nowa
-      if (typeof MOBILE_MQ.addEventListener === "function") {
-        MOBILE_MQ.addEventListener("change", stanPrzycisku);
-      } else if (typeof MOBILE_MQ.addListener === "function") {
-        MOBILE_MQ.addListener(stanPrzycisku);   // starsze Safari
-      }
+      // (1.26.6: dwa progi — 40rem mobile/tablet i 64rem tablet/desktop)
+      [MOBILE_MQ, SZEROKI_MQ].forEach((mq) => {
+        if (typeof mq.addEventListener === "function") {
+          mq.addEventListener("change", stanPrzycisku);
+        } else if (typeof mq.addListener === "function") {
+          mq.addListener(stanPrzycisku);   // starsze Safari
+        }
+      });
     }
 
     // skeleton od razu (P2) — sekcja żyje, zanim dojadą dane
     // (1.10.1: hero-pasek płaski, 10rem jak zwykłe kafelki;
-    //  1.20.0: 3 kostki z turami — mobile od razu widzi hero + 1)
+    //  1.20.0: 3 kostki z turami — mobile od razu widzi hero + 1;
+    //  1.26.6: 5 kostek — desktop hero + 5 (wiersz startowy), tablet
+    //  hero + 3, mobile hero + 1 — tury te same co dla danych)
     hero.innerHTML = skeleton("lustro-skeleton--hero", "10rem");
-    grid.innerHTML = ["", "lustro-tura-2", "lustro-tura-2"]
+    grid.innerHTML = ["", "lustro-tura-2", "lustro-tura-2",
+      "lustro-tura-4", "lustro-tura-4"]
       .map((tura) => skeleton(tura, "10rem")).join("");
 
     try {
@@ -439,11 +462,15 @@
       widoczne.forEach((p) => cache.set(p.id, p));
       hero.innerHTML = kartaHero(widoczne[0]);
       // 1.20.0: tury porcji — pozycja wśród wszystkich postów (hero = 0):
-      // 1 = zawsze widoczna, 2–3 = desktop od razu / mobile po „Rozwiń”,
-      // 4+ = desktop po „Rozwiń” / mobile tylko archiwum (CSS .lustro-tura-*)
+      // 1 = zawsze widoczna, 2–3 = tablet/desktop od razu / mobile po
+      // „Rozwiń”, 4–5 = desktop od razu (wiersz startowy 5 kolumn,
+      // 1.26.6) / tablet po „Rozwiń" / mobile nigdy, 6+ = desktop
+      // i tablet po „Rozwiń” / mobile tylko archiwum (CSS .lustro-tura-*)
       grid.innerHTML = widoczne.slice(1).map((p, i) => {
         const nr = i + 1;
-        const tura = nr >= 4 ? "lustro-tura-3" : nr >= 2 ? "lustro-tura-2" : "";
+        const tura = nr >= 6 ? "lustro-tura-3"
+          : nr >= 4 ? "lustro-tura-4"
+          : nr >= 2 ? "lustro-tura-2" : "";
         return karta(p, tura);
       }).join("");
       kadrujWideo(kontener);   // 1.11.0: pomiary pasów wideo (hero + siatka)
