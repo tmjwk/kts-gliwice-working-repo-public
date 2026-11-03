@@ -305,8 +305,14 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 /* 1.22.0: FORMA SEZONU — pasek piłeczek (po jednej na mecz z terminarza):
    nierozegrany = pusty obrys, wygrana = zielona, przegrana = czerwona,
    remis = żółto-pomarańczowa; licznik „rozegrane/wszystkie" w prawym.
-   Kolory miękkie — czytelne na jasnej karcie i w trybie nocnym. */
-.team-forma { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-top: 0.85rem; }
+   Kolory miękkie — czytelne na jasnej karcie i w trybie nocnym.
+   1.25.0: KAŻDA POŁOWA SEZONU (RUNDA) W SWOIM WIERSZU (właściciel 03.11)
+   — pasek to kolumna wierszy .team-forma-wiersz (wiersz 1 = runda 1,
+   wiersz 2 = rewanże/runda 2; cięcie w js/app.js); licznik na końcu
+   ostatniego wiersza. Desktop: piłeczki 0.62rem jak dotąd, flex-wrap
+   tylko jako bezpiecznik bardzo wąskich kolumn. */
+.team-forma { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.85rem; }
+.team-forma-wiersz { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
 .forma-pilka {
   width: 0.62rem; height: 0.62rem; border-radius: 999px; flex: none;
   /* 1.23.0: piłeczka jest TAPOWALNA — patrz dymek .forma-tip niżej */
@@ -355,30 +361,82 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .fl--plan { background: transparent; border: 1px solid #aebccd; }
 .fl--duch { background: #b9c6d6; }
 
+/* 1.25.0: ODKRYWALNOŚĆ SCRUBBERA (właściciel 03.11: „w wersji mobilnej
+   nie ma żadnej info wizualnej, że można scrube po tym polu"):
+   (2) PODPOWIEDŹ w legendzie — widoczna tylko na ekranach dotykowych
+   (desktop ma naturalny hover); (3) CHIP „‹ przesuń palcem ›” NA SZYNIE —
+   na ostatnim wierszu (rzędzie duchów) paska pierwszej karty ŚZTS:
+   kołysze się WZDŁUŻ TORU (mini-demonstracja gestu), zasłania wyłącznie
+   identyczne szare duchy (zero utraconej informacji), nie dotyka linków
+   ani wyników; znika po pierwszym dotknięciu paska albo po 7 s
+   (raz na wizytę — sessionStorage, js/app.js: SCRUBHINT). */
+.forma-legenda-scrub { display: none; }
+@media (pointer: coarse) {
+  .forma-legenda-scrub { display: inline; }
+}
+.forma-scrub-hint {
+  position: absolute; left: 50%; top: 50%; z-index: 3;
+  padding: 0.16rem 0.6rem; border-radius: 999px;
+  background: #0f1b2d; color: #e9eff9;
+  border: 1px solid #2b3d5c; box-shadow: 0 6px 16px rgba(6, 12, 24, 0.3);
+  font-size: 0.68rem; font-weight: 600; white-space: nowrap;
+  pointer-events: none;
+  animation: forma-scrub-hint 1.1s ease-in-out infinite alternate;
+}
+@keyframes forma-scrub-hint {
+  from { transform: translate(-80%, -50%); }
+  to   { transform: translate(-20%, -50%); }
+}
+@media (hover: hover) { .forma-scrub-hint { display: none; } }
+
 /* 1.23.1 (zgłoszenie właściciela 02.11: „nie umiem trafić w te piłeczki
-   na telefonie — palcem”): na ekranach dotykowych piłeczka staje się
-   DUŻĄ celą dotykową (~32×40 px — tyle, co zwykły przycisk listy),
-   a widoczna kulka jest wycentrowana w środku (::before). Celami są
-   same elementy (nie pseudoelement ::after jak na desktopie), stykają
-   się w rzędzie bez odstępu — strefy się nie nakładają i między celami
-   nie ma „martwych pasów”; pasek nadal wygląda jak drobne piłeczki. */
+   na telefonie — palcem”): na ekranach dotykowych piłeczka stała się
+   DUŻĄ celą dotykową (~32×40 px). 1.25.0: SCRUBBER zniósł potrzebę
+   celowania (aktywna = piłeczka NAJBLIŻSZA palcowi, patrz js/app.js),
+   więc cele są płynnie mniejsze (patrz komentarz w bloku poniżej) —
+   tap nadal działa (cele stykają się bez odstępu, tap zawsze trafia
+   w piłeczkę pod palcem), a pasek mieści POŁOWĘ SEZONU w jednym wierszu. */
 @media (pointer: coarse) {
   /* 1.24.0: pasek = SCRUBBER (§9.4): gesty PIONOWE przewijają stronę,
      POZIOME trafiają do scrubbera (pan-y); bez zaznaczania tekstu
-     przy przytrzymaniu palca. */
+     przy przytrzymaniu palca.
+     1.25.0: CELE PŁYNNE PER KARTA (--na-wiersz ustawia js/app.js liczbą
+     piłeczek wiersza): 30 piłek → 15+15 (~17 px), 26 → 13+13 (~20 px),
+     18 → 9+9 (~28 px), 9 (PZTS) → 1 wiersz — równe 2 wiersze na
+     telefonach 360–430 px (pasek 292/262 px, pomiar Task 179); rezerwa
+     2.4rem w każdym wierszu trzyma licznik w ostatnim i jednolity
+     rozmiar piłeczek w obu. Kompakcja: pasek 30-piłkowy ~170 → ~62 px.
+     TOR (::before wiersza) — linia za piłeczkami od środka pierwszej
+     do środka ostatniej: rząd kulek wygląda jak suwak/oś czasu,
+     widać, że po nim można przesuwać (odkrywalność gestu). */
   .team-forma {
-    gap: 0.2rem 0;
+    gap: 0.4rem;
     touch-action: pan-y;
     user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+    position: relative;   /* kotwica chipu „przesuń palcem” */
+  }
+  .team-forma-wiersz {
+    gap: 0;
+    --cel: min(2rem, calc((100% - 2.4rem) / var(--na-wiersz, 15)));
+    position: relative;
+  }
+  .team-forma-wiersz::before {
+    content: ""; position: absolute;
+    left: calc(var(--cel) / 2);
+    right: calc(100% - (var(--na-wiersz, 15) - 0.5) * var(--cel));
+    top: calc(50% - 1px); height: 2px; border-radius: 2px;
+    background: rgba(127, 145, 166, 0.4);
   }
   .team-forma .forma-pilka {
-    width: 2rem; height: 2.5rem;
+    width: var(--cel); height: 1.75rem;
     background: transparent; border: 0; border-radius: 0;
   }
   .team-forma .forma-pilka::after { content: none; }   /* cela = cały element */
   .team-forma .forma-pilka::before {
     content: ""; position: absolute; left: 50%; top: 50%;
-    width: 0.85rem; height: 0.85rem; border-radius: 999px;
+    /* kulka = 65% celi (≈9–13,6 px) — jak drobne piłeczki desktopu */
+    width: min(0.85rem, 65%); height: min(0.85rem, 65%);
+    border-radius: 999px;
     transform: translate(-50%, -50%);
   }
   .team-forma .forma-pilka--wygrana::before { background: #4ade80; }
@@ -388,7 +446,7 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
     background: transparent; border: 1px solid #aebccd;
   }
   .team-forma .forma-pilka--duch::before { background: #b9c6d6; }
-  /* pierścień aktywnej rysuje widoczna kulka (::before), nie cela 2rem */
+  /* pierścień aktywnej rysuje widoczna kulka (::before), nie cela */
   .team-forma .forma-pilka--aktywna { box-shadow: none; }
   .team-forma .forma-pilka--aktywna::before {
     box-shadow: 0 0 0 3px rgba(0, 87, 184, 0.35);
@@ -415,21 +473,29 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   font-size: 0.8rem; line-height: 1.35;
   opacity: 0; visibility: hidden; pointer-events: none;
   transform: translateY(3px);
-  transition: opacity 0.14s ease-out, transform 0.14s ease-out, visibility 0.14s;
+  transition: opacity 0.14s ease-out, transform 0.14s ease-out, visibility 0.14s,
+    left 0.12s ease-out, top 0.12s ease-out;   /* 1.25.0: płynne podążanie za piłeczką */
 }
 .forma-tip.widoczny { opacity: 1; visibility: visible; transform: none; }
 .forma-tip--dotyk.widoczny { pointer-events: auto; }
-/* strzałka: nad piłeczką (domyślnie, ogonem w dół) albo pod nią
-   (.forma-tip--pod, ogonem w górę) */
+/* 1.25.0: STRZAŁECZKA WSKAZUJE PIŁECZKĘ (właściciel 03.11: „strzałeczka
+   nad piłeczką, a nad tym tooltip — aby użytkownik wiedział, który mecz
+   wyświetla”): wyraźny wcięty grot ~15×8 px z obrysem (obrót kwadratu
+   o 45°) zamiast cienkiego trójkąta 12×6. Domyślnie ogonem w dół (dymek
+   NAD piłeczką 1. wiersza); .forma-tip--pod — ogonem w górę (dymek pod
+   paskiem, piłeczka 2. wiersza). */
 .forma-tip::after {
-  content: ""; position: absolute; left: var(--strzalka, 50%); bottom: -7px;
-  transform: translateX(-50%);
-  width: 0; height: 0;
-  border: 6px solid transparent; border-top-color: #0f1b2d; border-bottom: 0;
+  content: ""; position: absolute; left: var(--strzalka, 50%); bottom: -5px;
+  width: 11px; height: 11px;
+  background: #0f1b2d;
+  border: 1px solid #2b3d5c;
+  border-top: 0; border-left: 0;      /* prawa+dolna zostają → grot w dół */
+  transform: translateX(-50%) rotate(45deg);
 }
 .forma-tip--pod::after {
-  bottom: auto; top: -7px;
-  border-top: 0; border-bottom: 6px solid #0f1b2d;
+  bottom: auto; top: -5px;
+  border-top: 1px solid #2b3d5c; border-left: 1px solid #2b3d5c;
+  border-right: 0; border-bottom: 0;   /* górna+lewa zostają → grot w górę */
 }
 .forma-tip-data {
   font-size: 0.72rem; color: #8fb0d8; font-variant-numeric: tabular-nums;
@@ -444,6 +510,7 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 @media (prefers-reduced-motion: reduce) {
   .forma-tip { transition: none; }
   .forma-pilka { transition: none; }
+  .forma-scrub-hint { animation: none; }
 }
 .team-card .source-link {
   margin-top: auto; padding-top: 0.75rem; font-size: 0.85rem; font-weight: 600;
