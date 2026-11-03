@@ -113,10 +113,45 @@
              kwadratowe, łatwiejsze do wypełnienia zdjęciem bez ramek”):
              DESKTOP ≥64rem = 5 KOLUMN, start = hero + 5 (pełny wiersz),
              „Rozwiń” dokłada 4 (drugi wiersz = 4 kafelki); tablet
-             40–64rem = 3 kolumny (start hero + 3); mobile bez zmian. -->
+             40–64rem = 3 kolumny (start hero + 3); mobile bez zmian.
+             1.26.7 (właściciel 04.11: „wróć do 4 — w drugim wierszu,
+             tym pod hero, mają być 4 kafelki a nie 5; dodaj strzałki
+             < i > do przewijania w czasie”): DESKTOP ≥64rem = 4 KOLUMNY
+             i STRZAŁKI CZASU po bokach sekcji — „>” po prawej przesuwa
+             WSTECZ W CZASIE o cały rząd (4 kafelki), „<” po lewej
+             wraca do nowszych; na krańcach osi czasu strzałki NIEAKTYWNE
+             (półprzezroczyste); pod rzędem znacznik pozycji = kropki
+             stron + zakres dat widocznych kafelków. Tablet/mobile bez
+             zmian („Rozwiń” jak w 1.26.6). -->
         <div id="lustro-fb" class="lustro-fb">
           <div id="lustro-fb-hero"></div>
-          <div class="grid grid-3" id="lustro-fb-grid"></div>
+          <!-- 1.26.7: scena = strzałka „<” (powrót do nowszych) + siatka
+               + strzałka „>” (wstecz w czasie) — strzałki wyśrodkowane
+               pionowo na wysokości rzędu, tylko desktop ≥64rem. -->
+          <div class="lustro-scena" id="lustro-scena">
+            <button type="button" class="lustro-strzalka" id="lustro-strzalka-nowsze"
+                    aria-label="Wróć do nowszych aktualności" aria-controls="lustro-fb-grid" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor"
+                      stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <div class="grid grid-3" id="lustro-fb-grid"></div>
+            <button type="button" class="lustro-strzalka" id="lustro-strzalka-starsze"
+                    aria-label="Przewiń do starszych aktualności" aria-controls="lustro-fb-grid" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor"
+                      stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <!-- 1.26.7: znacznik pozycji — kropki stron (klikalne) + zakres
+               dat widocznych kafelków, np. „30 paź – 2 lis”. -->
+          <div class="lustro-pager" id="lustro-pager" hidden>
+            <div class="lustro-kropki" id="lustro-kropki" aria-label="Strony aktualności"></div>
+            <span class="lustro-kropki-sep" aria-hidden="true">·</span>
+            <span class="lustro-zakres t-small muted" id="lustro-zakres" aria-live="polite"></span>
+          </div>
           <div class="lustro-rozwin-strefa" id="lustro-rozwin-strefa" hidden>
             <button type="button" class="przelacz-rozwin" id="lustro-rozwin"
                     aria-expanded="false" aria-controls="lustro-fb-grid">
