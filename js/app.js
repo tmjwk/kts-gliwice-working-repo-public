@@ -370,11 +370,18 @@ function kluczCzasuFormy(m) {
  *  płynie z danych (30/30/26/18), nic nie jest zaszyte. Duch znika sam
  *  (guard), gdy tylko sync przyniesie prawdziwy rewanż — w jego miejscu
  *  pojawia się zwykła piłeczka z datą.
- *  Zakres: tylko karty ŚZTS (rewanże udokumentowane komunikatami
- *  2025/26); 1. LM PZTS czeka na publikację kalendarza — format
- *  niezweryfikowany (§9.3), więc ta karta liczy terminarz ze źródła. */
+ *  Zakres 1.24.0: tylko karty ŚZTS (rewanże udokumentowane komunikatami
+ *  2025/26); 1. LM PZTS czekała na publikację kalendarza — format
+ *  niezweryfikowany (§9.3), więc ta karta liczyła terminarz ze źródła.
+ *  Zakres 1.26.0 (właściciel 03.11: „zrób to samo z pierwszą ligą"):
+ *  format PZTS zweryfikowany u źródła — sezon 2024/25 gr. południowa
+ *  = każdy z każdym 2× (18 meczów, np. k1 ↔ k18), a w 2026/27 opublikowane
+ *  dokładnie 45 meczów = PEŁNA runda 1 (każda para raz, każda drużyna
+ *  9 meczów, zero powtórzeń — analiza par, etykiety „kolejka” u źródła
+ *  bywają przesunięte). Duchy działają więc dla ŚZTS i PZTS tak samo. */
 function duchyRewanz(mecze, z) {
-  if (!String(z.tryb || "").startsWith("ŚZTS")) return [];
+  const tryb = String(z.tryb || "");
+  if (!tryb.startsWith("ŚZTS") && !tryb.startsWith("PZTS")) return [];
   const moje = (mecze ?? []).filter((m) => druzynyMeczu(m).includes(z.nazwa));
   const pary = new Set(moje.map((m) => `${m.gospodarz}|${m.gosc}`));
   const duchy = [];
@@ -401,6 +408,19 @@ function duchyRewanz(mecze, z) {
  *  dorysowujemy duchy rewanży (duchyRewanz) — pasek pokazuje KSZTAŁT
  *  CAŁEGO SEZONU już dziś, a piłeczki „do rozegrania z datą” i duchy
  *  uzupełniają się same, gdy źródła opublikują kalendarz i wyniki. */
+
+/** 1.26.0: fraza o nieopublikowanym kalendarzu w dymku/aria ducha —
+ *  per źródło. ŚZTS: „kalendarz 2. rundy nieopublikowany” (ustalenie
+ *  z v1.24.0 — bez zmian). PZTS: „kalendarz rewanży nieopublikowany”
+ *  — pzts.pl numeruje kolejki 1–18 i pokazuje już wiersze „kolejka 10”
+ *  (dalekie końcówki rundy 1 — analiza par §9.10), więc mówimy
+ *  o REWANŻACH, nie o numerze rundy: zero sprzeczności z tym, co
+ *  użytkownik widzi u źródła. */
+const frazaKalendarzaDucha = (z) =>
+  String(z.tryb || "").startsWith("PZTS")
+    ? "kalendarz rewanży nieopublikowany"
+    : "kalendarz 2. rundy nieopublikowany";
+
 function htmlFormy(mecze, z) {
   const realne = (mecze ?? [])
     .filter((m) => druzynyMeczu(m).includes(z.nazwa));
@@ -421,8 +441,10 @@ function htmlFormy(mecze, z) {
     const slowo = st === "W" ? "zwycięstwo" : st === "P" ? "porażka" : st === "R" ? "remis" : null;
     // 1.23.0: podpowiedź z DATĄ meczu (zgłoszenie właściciela 02.11).
     // 1.24.0: duch rewanżu dostaje wiersz „termin nieznany” z wyjaśnieniem
-    // (kalendarz 2. rundy nieopublikowany) — i celowo BEZ numeru kolejki,
-    // bo numer rewanżu w rzeczywistym kalendarzu jest jeszcze nieznany.
+    // (kalendarz 2. rundy nieopublikowany; 1.26.0: PZTS — kalendarz
+    // rewanży nieopublikowany, patrz frazaKalendarzaDucha) — i celowo
+    // BEZ numeru kolejki, bo numer rewanżu w rzeczywistym kalendarzu
+    // jest jeszcze nieznany.
     // Natywny title= nie działa na dotyku — treść dymka jedzie w data-tip
     // (esc() przy zapisie; odczyt przez dataset zwraca oryginalny HTML),
     // a rysuje go silnik podpiezForme(): hover na desktopie, tap/scrub
@@ -432,7 +454,7 @@ function htmlFormy(mecze, z) {
         ? `kolejka ${m.kolejka ?? "—"} · ${slowo}`
         : `kolejka ${m.kolejka ?? "—"} · ${m.rozegrany ? "wynik niedostępny" : "do rozegrania"}`;
     const dataTxt = m.duch
-      ? "termin nieznany · kalendarz 2. rundy nieopublikowany"
+      ? `termin nieznany · ${frazaKalendarzaDucha(z)}`
       : opisDatyFormy(m);
     const wynikTip = m.rozegrany && m.wynik && m.wynik !== "-:-"
       ? `<b class="t-nums">${esc(m.wynik)}</b>` : "—";
@@ -450,7 +472,7 @@ function htmlFormy(mecze, z) {
   // mecze z kalendarza + duchy rewanży. Różnicę realne/duchy opisuje
   // aria (czytniki ekranu) + legenda + same szare piłeczki (wzrok).
   const duchyAria = ileDuchow
-    ? `; ${odmiana(ileDuchow, ["rewanż", "rewanże", "rewanży"])} bez terminu — kalendarz 2. rundy nieopublikowany`
+    ? `; ${odmiana(ileDuchow, ["rewanż", "rewanże", "rewanży"])} bez terminu — ${frazaKalendarzaDucha(z)}`
     : "";
   // 1.25.0: KAŻDA POŁOWA SEZONU W SWOIM WIERSZU (właściciel 03.11: „mówiąc
   // dwa wiersze miałem na myśli każda połowa sezonu / runda jest wyświetlana
@@ -460,7 +482,9 @@ function htmlFormy(mecze, z) {
   // Cięcie liczone jest wyłącznie chronologią, więc mecz przełożony przez ligę na
   // termin 2. połowy trafia do wiersza 2 razem z rewanżami — wiersze są
   // PÓŁOWAMI SEZONU wg dat, nie sztywną etykietą rundy (ta nie może skłamać).
-  // n ≤ 10 (karty PZTS) = jeden wiersz. Rozmiar celu płynie per karta:
+  // n ≤ 10 = jeden wiersz (hipotetyczne karty z krótkim terminarzem;
+  // 1.26.0: wszystkie 8 kart ma ≥ 18 meczów sezonu = 2 wiersze).
+  // Rozmiar celu płynie per karta:
   // --na-wiersz + CSS gwarantują równe 2 wiersze na telefonie 360–430 px
   // (pomiar Task 179: pasek 292/262 px).
   const n = moje.length;
@@ -481,9 +505,14 @@ function htmlFormy(mecze, z) {
 /** 1.24.0: LEGENDA PIŁECZEK (zasada jasności z Taska 177 — użytkownik
  *  musi wiedzieć CO WIDZI): jeden wiersz nad kartami drużyn. Pozycja
  *  „rewanż — termin nieznany” pojawia się tylko dopóki w danych są
- *  duchy (kalendarz 2. rundy nieopublikowany); po publikacji zniknie
+ *  duchy (kalendarz rewanży nieopublikowany); po publikacji zniknie
  *  sama. Element jest staly (jednorazowo wstawiony przed siatką kart),
- *  treść odświeżana przy każdym przerysowaniu. */
+ *  treść odświeżana przy każdym przerysowaniu.
+ *  1.26.0: nawias uogólniony „kalendarz rewanży…” (było „2. rundy”) —
+ *  legenda jest WSPÓLNA dla kart ŚZTS i PZTS; dla PZTS „2. runda”
+ *  kolidowałaby z widocznymi u źródła wierszami „kolejka 10” (patrz
+ *  frazaKalendarzaDucha), a rewanże to dokładnie to, czego brakuje
+ *  w obu ligach. */
 function legendaFormy(mecze, zespoly) {
   const duchy = zespoly.reduce((n, z) => n + duchyRewanz(mecze, z).length, 0);
   let el = $("#forma-legenda");
@@ -499,7 +528,7 @@ function legendaFormy(mecze, zespoly) {
     + `<span><i class="fl fl--r"></i>remis</span>`
     + `<span><i class="fl fl--plan"></i>zaplanowany mecz</span>`
     + (duchy > 0
-      ? `<span><i class="fl fl--duch"></i>rewanż — termin nieznany (kalendarz 2. rundy nieopublikowany)</span>`
+      ? `<span><i class="fl fl--duch"></i>rewanż — termin nieznany (kalendarz rewanży nieopublikowany)</span>`
       : "")
     // 1.25.0: odkrywalność scrubbera — widoczne tylko na dotyku (CSS)
     + `<span class="forma-legenda-scrub">‹ przesuń palcem po pasku — przejrzysz sezon mecz po meczu ›</span>`;
@@ -655,10 +684,11 @@ function przewinForme(pilka) {
        wygląda jak suwak/oś czasu, a nie statyczne kropki;
    (2) PODPOWIEDŹ w legendzie piłeczek (tylko ekran dotykowy — CSS);
    (3) CHIP „‹ przesuń palcem ›” NA SZYNIE — na rzędzie duchów (ostatnim
-       wierszu) paska PIERWSZEJ KARTY ŚZTS: kołysze się wzdłuż toru jak
-       mini-demonstracja gestu i zasłania wyłącznie identyczne szare
-       duchy („termin nieznany” — zero utraconej informacji; linki i
-       wyniki nietknięte). Pojawia się RAZ NA WIZYTĘ (sessionStorage),
+       wierszu) paska PIERWSZEJ KARTY Z DUCHAMI (1.26.0: KTS Gliwice I —
+       1. LM PZTS; do v1.25.x była to 1. karta ŚZTS): kołysze się wzdłuż
+       toru jak mini-demonstracja gestu i zasłania wyłącznie identyczne
+       szare duchy („termin nieznany” — zero utraconej informacji; linki
+       i wyniki nietknięte). Pojawia się RAZ NA WIZYTĘ (sessionStorage),
        znika po pierwszym dotknięciu paska albo po 7 s
        (pointer-events: none — nie blokuje gestu). Na desktopie (hover)
        nie występuje wcale. */
@@ -670,8 +700,9 @@ function zamknijScrubHint() {
   SCRUBHINT.el?.remove();
 }
 
-/** Doklej chip NA SZYNĘ paska pierwszej karty ŚZTS z duchami (rząd duchów
- *  = ostatni wiersz) — po każdym przerysowaniu: elementy .team-forma są
+/** Doklej chip NA SZYNĘ paska pierwszej karty z duchami (rząd duchów
+ *  = ostatni wiersz; 1.26.0: pierwszą kartą z duchami jest KTS Gliwice I
+ *  — 1. LM PZTS) — po każdym przerysowaniu: elementy .team-forma są
  *  odtwarzane, chip wsiada z powrotem, dopóki użytkownik dotykowego
  *  ekranu nie „zdrapie” go pierwszym gestem. Fallback: pierwszy pasek. */
 function wskazScrubber() {
