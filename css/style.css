@@ -537,7 +537,7 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   .forma-scrub-hint { animation: none; }
 }
 .team-card .source-link {
-  margin-top: auto; padding-top: 0.75rem; font-size: 0.85rem; font-weight: 600;
+  font-size: 0.85rem; font-weight: 600;
   color: var(--kts-link); text-decoration: none;
 }
 .team-card .source-link:hover { opacity: 0.8; }
@@ -1220,10 +1220,17 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   transform: translateY(-2px);
 }
 .team-klik:focus-visible { outline: 2px solid var(--kts-primary); outline-offset: 2px; }
-.team-wiecej { color: var(--kts-primary); font-weight: 600; margin-top: auto; }
+.team-wiecej { color: var(--kts-primary); font-weight: 600; }
 .team-klik:hover .team-wiecej { text-decoration: underline; }
-/* „Źródło” zostaje pod wskazówką (auto przejął .team-wiecej) */
-.team-card .source-link { margin-top: 0.35rem; }
+/* 1.26.4 (właściciel 04.11: „niech to będzie w jednym wierszu —
+   zaoszczędzimy trochę miejsca”): stopka kafelka = JEDEN wiersz —
+   „Źródło ↗” z lewej, „Szczegóły ↗” z prawej (wcześniej dwa wiersze:
+   wskazówka + źródło pod nią). margin-top:auto na .team-stopka dociska
+   wiersz do dna kafelka (dziedziczy rolę po .team-wiecej), a
+   margin-left:auto na „Szczegółach” trzyma je po prawej także wtedy,
+   gdyby drużyna nie miała źródła. */
+.team-stopka { margin-top: auto; display: flex; align-items: baseline; gap: 0.5rem; }
+.team-stopka .team-wiecej { margin-left: auto; }
 
 /* zakładki dialogu (wzorzec chipów galerii: neutral → błękit primary) */
 .zakladki { display: flex; flex-wrap: wrap; gap: 0.15rem; border-bottom: 1px solid var(--kts-line); }
