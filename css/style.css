@@ -903,6 +903,17 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .gal-wiecej:hover, .gal-wiecej:focus-visible { border-color: var(--kts-link); color: var(--kts-link); }
 
+/* 1.26.8: przycisk „Pokaż rok …” (#gal-starsze) — od teraz GŁÓWNA droga
+   do starszych lat galerii (właściciel 04.11: nic nie doładowuje się samo),
+   więc wyrazistszy niż wtórne „Pokaż więcej”: pełna ramka i pełny kolor
+   tekstu zamiast przygaszonych — VLM dwukrotnie czytał stary styl jako
+   „wyłączony”. Te same tokeny, zero nowych kolorów. */
+#gal-starsze {
+  border-style: solid;
+  border-color: var(--kts-line);
+  color: var(--kts-text);
+}
+
 /* 1.17.0: piłka pod listą albumów — „kolejny rok w drodze” (kolejka lat
    schodzi wraz z przewijaniem gościa; pokazuje/chowa js/galeria-fb.js) */
 .gal-dol { display: flex; justify-content: center; padding: 0.5rem 0 2.5rem; }
