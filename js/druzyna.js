@@ -236,6 +236,7 @@ function ustawIkoneTrybu() {
   // wersja w stopce
   try {
     const rw = await fetch("wersja.json", { cache: "no-cache" });
+    /* 1.26.2: opis wersji trafia do STOPKI — jedno krótkie zdanie, bez atrybucji (konwencja, szczegóły: app.js pokazWersje) */
     if (rw.ok) {
       const w = await rw.json();
       if (w?.wersja) $("#wersja-strony").textContent =
