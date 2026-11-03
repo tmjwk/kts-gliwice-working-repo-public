@@ -1130,11 +1130,37 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    liczbę postów, nie viewport — tury przydziela klasa, widoczność
    reguluje CSS: .lustro-tura-2 = mobile dopiero po „Rozwiń”
    (desktop od razu), .lustro-tura-3 = desktop dopiero po „Rozwiń”
-   (mobile nigdy). Kontener .rozwinieta zdejmuje blokady. */
+   (mobile nigdy). Kontener .rozwinieta zdejmuje blokady.
+   1.26.6 (właściciel 04.11: „5 kafelków w wierszu zamiast 3 — będą
+   bardziej kwadratowe, łatwiejsze do wypełnienia zdjęciem bez ramek”):
+   DESKTOP (≥64rem) 5 KOLUMN — start = hero + 5 (pełny wiersz),
+   „Rozwiń” dokłada 4 (5+4); TABLET (40–64rem) 3 kolumny — start
+   = hero + 3 (pełny wiersz, wcześniej 2 kolumny i sierota 2+1),
+   „Rozwiń” dokłada 6 (3×3); MOBILE bez zmian (1 kolumna). Nowa tura:
+   .lustro-tura-4 = kafelki 4–5 — desktop OD RAZU (wiersz startowy),
+   tablet po „Rozwiń”, mobile nigdy. Kontener 72rem → kafelek
+   ≈ 211×160 px ≈ 4:3 — proporcje typowych zdjęć FB, okładka
+   wypełnia kafelek praktycznie w całości (przy 3 kolumnach było
+   363×160 px = 2,3:1 i ~40% szerokości zostawało pustymi pasami). */
 .lustro-fb:not(.rozwinieta) .lustro-tura-3 { display: none; }
+@media (max-width: 64rem) {
+  .lustro-fb:not(.rozwinieta) .lustro-tura-4 { display: none; }  /* tablet: po „Rozwiń” (desktop ≥64rem: wiersz startowy) */
+}
 @media (max-width: 40rem) {
-  .lustro-tura-3 { display: none; }                              /* mobile: tylko archiwum */
-  .lustro-fb:not(.rozwinieta) .lustro-tura-2 { display: none; }  /* mobile: po „Rozwiń” */
+  .lustro-tura-3, .lustro-tura-4 { display: none; }               /* mobile: tylko archiwum */
+  .lustro-fb:not(.rozwinieta) .lustro-tura-2 { display: none; }   /* mobile: po „Rozwiń” */
+}
+
+/* 1.26.6 — SIATKA AKTUALNOŚCI: 5 kolumn na desktopie, 3 na tablecie.
+   Selektor ID (nie .grid-3, który dzielą inne sekcje: „O klubie”,
+   karty drużyn, archiwum). minmax(0,1fr) chroni przed rozpychaniem
+   kolumn przez długie słowa w tytułach. Mobile <40rem: 1 kolumna
+   (dziedziczy z .grid). */
+@media (min-width: 40rem) {
+  #lustro-fb-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 64rem) {
+  #lustro-fb-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 
 /* przycisk „Rozwiń” pod kafelkami — ten sam charakter co „O klubie”
