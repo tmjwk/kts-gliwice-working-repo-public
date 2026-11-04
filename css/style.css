@@ -202,7 +202,13 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .hero-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; }
 
 /* ===== pasek meczu ===== */
-.matchbar { background: var(--kts-primary); color: #fff; border-bottom: 1px solid var(--kts-line); }
+/* 1.27.1 (właściciel 04.11: „pasek z ostatni wynik — ticker daj na tym
+   ciemniejszym niebieskim z palety pls”): tło = granat --kts-ink-fixed
+   (#0f1b2d — ten sam co hero i stopka) zamiast błękitu --kts-primary.
+   Świadomie *-fixed: --kts-ink w trybie nocnym zamienia się na jasny,
+   a pasek ma pozostać ciemny w obu trybach. Bez border-bottom —
+   granica z jasną sekcją poniżej i tak jest wyraźna (jak w hero). */
+.matchbar { background: var(--kts-ink-fixed); color: #fff; }
 .matchbar-inner {
   display: flex; flex-direction: column; justify-content: center;
   padding-block: 0.5rem; text-align: center; font-size: 0.875rem;
@@ -256,6 +262,14 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .section { padding: 3.5rem 1rem; }
 .section-neutral { background: var(--kts-neutral); border-block: 1px solid var(--kts-line); }
 .section-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.5rem; }
+/* 1.27.1 (właściciel 04.11: „zdejmij z tego ramkę, bo to nie przycisk”):
+   informacja przy nagłówku sekcji (licznik galerii, sezon) BEZ pigułki —
+   spokojny tekst w kolorze muted. Pigułki .badge zostają tam, gdzie
+   niosą stan (W/P/R przy meczach, „wynik w drodze”, tryb danych). */
+.section-info {
+  font-size: 0.85rem; font-weight: 500; color: var(--kts-text-muted);
+  line-height: 1.2;
+}
 .section-head-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
 /* 1.21.0: tekst sekcji na szerokość strony (właściciel 02.11) — bez
    limitu 42rem; opis steruje się szerokością kontenera 72rem */
@@ -705,22 +719,23 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   background: #ffffff; border: 1px solid var(--kts-line); border-radius: 0.75rem;
   transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
+/* 1.27.1 (właściciel 04.11: „logo w sponsorzy jest chyba czymś nakryte,
+   bo nie ma pełnych kolorów / kontrastu”): koniec domyślnego
+   przygaszania logotypów — pełne kolory od razu, bez czekania na
+   najechanie. Wyróżnienie po hover zostaje przy KAFELCE (obramienie,
+   cień, uniesienie), nie przy samym logo. */
 .sponsor-tile img {
   height: 2.7rem; width: auto; max-width: 9.5rem; object-fit: contain;
-  opacity: 0.62; transition: opacity 0.18s ease;
 }
 .sponsor-tile:hover, .sponsor-tile:focus-visible {
   border-color: var(--kts-primary); box-shadow: 0 4px 14px rgba(15, 27, 45, 0.12);
   transform: translateY(-2px);
 }
-.sponsor-tile:hover img, .sponsor-tile:focus-visible img { opacity: 1; }
 /* degradacja hotlinku (cudzy serwer odmówił) → kafelka z samą nazwą */
 .sponsor-tile--tekst .sponsor-nazwa {
   font-family: var(--font-display); font-weight: 600; font-size: 1.02rem;
-  color: #0f1b2d; letter-spacing: 0.03em; opacity: 0.62; transition: opacity 0.18s ease;
+  color: #0f1b2d; letter-spacing: 0.03em;
 }
-.sponsor-tile--tekst:hover .sponsor-nazwa,
-.sponsor-tile--tekst:focus-visible .sponsor-nazwa { opacity: 1; }
 @media (max-width: 40rem) {
   .sponsor-tile { min-height: 3.9rem; padding: 0.55rem 0.9rem; }
   .sponsor-tile img { height: 2.1rem; }
