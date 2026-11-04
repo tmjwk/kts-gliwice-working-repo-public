@@ -235,25 +235,32 @@
      zostawał niekadrowany na zawsze, mimo że obraz dawno się załadował.
      Naprawa trwista, trzy warstwy:
      1) zmierzPasy próbuje do 3 razy: próba 1 = <img crossOrigin> jak
-        dotąd (szybka ścieżka, korzysta z cache); próby 2–3 = fetch
+        dotąd (szybka ścieżka, korzysta z cache), próba 2 = fetch
         {mode:'cors', cache:'reload'} → blob → bitmapa — wymusza świeży
         pobór z CORS, omijając ewentualny ZEPSUTY wpis w cache bez
         nagłówka ACAO (klasa błędów: proxy/rozszerzenie ściąga nagłówki,
         Safari podaje z cache wersji bez CORS → canvas tintowny);
+        próba 3 = ZNÓW <img crossOrigin> — po to, by TRZEFIĆ W CACHE
+        HTTP: DOM-owy <img> (bez limitu czasu) zdążył już pobrać
+        miniaturę, a próba 1 i 2 padały na limicie 8 s — trzecia próba
+        z cache jest natychmiastowa (v1.27.7; w v1.27.6 próba 3 była
+        fetch-reload i przy sieci ~9–15 s/obrazek przegrywały wszystkie
+        trzy próby, bo żadna nie korzystała z cache);
         przerwy między próbami 1,5 s / 4 s (łagodne dla sieci),
      2) kadrujWideo pomija obrazki z klasą .news-crop (re-skan nie
         mierzy drugi raz wygranych),
-     3) samonaprawa: po starcie sekcji planowane re-skany (12 s i 30 s)
-        doganiają wszystko, co się nie udało za pierwszym razem — także
-        hero. Porażki NADAL nie trafiają do cache (1.26.7), więc każdy
-        re-skan to świeże pomiary tylko braków.
+     3) samonaprawa: po starcie sekcji planowane re-skany (12 s, 30 s
+        i 60 s — v1.27.7 dołożyła trzeci) doganiają wszystko, co się
+        nie udało za pierwszym razem — także hero. Porażki NADAL nie
+        trafiają do cache (1.26.7), więc każdy re-skan to świeże
+        pomiary tylko braków.
      Diagnostyka: window.__KADRY — mapa url → {proby, stan} (testy). */
   const POMIARY_KADRU = new Map();   // url → Promise<{x, y, ar} | null>
   const KADRY_TIMEOUT = 8000;        // limit jednej próby (ms)
   const KADRY_PROBY = [
-    { przerwa: 0,    tryb: "image" },   // <img crossOrigin> — jak dotąd
+    { przerwa: 0,    tryb: "image" },   // <img crossOrigin> — szybka ścieżka
     { przerwa: 1500, tryb: "reload" },  // fetch cache:'reload' → blob
-    { przerwa: 4000, tryb: "reload" },
+    { przerwa: 4000, tryb: "image" },   // v1.27.7: znowu <img> — trafia w cache HTTP
   ];
 
   /** Stan pomiarów dla testów/diagnostyki (window.__KADRY). */
@@ -397,17 +404,21 @@
       });
   }
 
-  /** 1.27.6: samonaprawa — planowane re-skany doganiają pomiary, którym
-   *  nie wyszła żadna z trzech prób (np. bardzo wolna sieć: 3×8 s +
-   *  przerwy > 30 s od renderu). Porażki nie siedzą w cache, więc re-skan
-   *  to świeże pomiary tylko braków. Raz na kontener (WeakSet) — archiwum
-   *  dokłada porcje wielokrotnie, a harmonogram ma być jeden. */
+  /** 1.27.6/1.27.7: samonaprawa — planowane re-skany doganiają pomiary,
+   *  którym nie wyszła żadna z trzech prób. 12 s i 30 s łapią typowe
+   *  chwilowe zacięcia; 60 s (v1.27.7) — sieci tak wolne, że nawet DOM-
+   * owy <img> potrzebował > 30 s (jego pobór nie ma limitu, więc do tego
+   *  czasu obraz siedzi w cache HTTP i pierwsza próba re-skanu jest
+   *  natychmiastowa). Porażki nie siedzą w cache, więc re-skan to świeże
+   *  pomiary tylko braków. Raz na kontener (WeakSet) — archiwum dokłada
+   *  porcje wielokrotnie, a harmonogram ma być jeden. */
   const RESKANY_JUZ = new WeakSet();
   function zaplanujReskany(kontener) {
     if (!kontener || RESKANY_JUZ.has(kontener)) return;
     RESKANY_JUZ.add(kontener);
     setTimeout(() => kadrujWideo(kontener), 12000);
     setTimeout(() => kadrujWideo(kontener), 30000);
+    setTimeout(() => kadrujWideo(kontener), 60000);
   }
 
   const karta = (p, dodatkowaKlasa = "") => `
