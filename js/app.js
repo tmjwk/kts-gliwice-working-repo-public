@@ -1240,17 +1240,22 @@ function renderMecze(dane, mecze) {
 
 function renderBadges(dane, ok) {
   $("#badge-sezon").textContent = `Sezon ${dane.sezon}`;
+  // 1.27.1 (właściciel 04.11): #badge-live („dane live · auto-sync”) ZDJĘTY
+  // ze strony — sekcja ma nie opowiadać o automatyce. Guard jak przy
+  // #ostatni-sync (1.10.2), by brak elementu nie wywalał renderu.
   const live = $("#badge-live");
-  // klasy wymieniane SYMETRYCZNIE — od 1.7.5 renderBadges woła też tło
-  // (odzysk po błędzie ładowania), więc „warn" nie może zostać przyklejony
-  if (ok) {
-    live.textContent = "dane live · auto-sync";
-    live.classList.remove("badge-live--warn");
-    live.classList.add("badge-live");
-  } else {
-    live.textContent = "błąd ładowania danych";
-    live.classList.remove("badge-live");
-    live.classList.add("badge-live--warn");
+  if (live) {
+    // klasy wymieniane SYMETRYCZNIE — od 1.7.5 renderBadges woła też tło
+    // (odzysk po błędzie ładowania), więc „warn" nie może zostać przyklejony
+    if (ok) {
+      live.textContent = "dane live · auto-sync";
+      live.classList.remove("badge-live--warn");
+      live.classList.add("badge-live");
+    } else {
+      live.textContent = "błąd ładowania danych";
+      live.classList.remove("badge-live");
+      live.classList.add("badge-live--warn");
+    }
   }
   const elSync = $("#ostatni-sync");
   // 1.10.2: element zdjęty ze strony (sekcja bez info o automacie) —
@@ -1610,8 +1615,8 @@ async function wypelnijLicznikGalerii() {
     badge.title = "Wszystkie zdjęcia w galerii (zakładka „Zdjęcia” na FB klubu). "
       + "Licznik odświeża się automatycznie razem z danymi ligowymi.";
   } catch (err) {
-    console.warn("Licznik galerii niedostępny — ukrywam badge:", err);
-    badge.style.display = "none";   // .badge ma display:inline-flex — hidden nie wystarczy
+    console.warn("Licznik galerii niedostępny — ukrywam:", err);
+    badge.style.display = "none";   // display:none działa niezależnie od klasy
   }
 }
 
