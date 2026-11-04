@@ -18,7 +18,12 @@
   --kts-white: #ffffff;
   --kts-win: #16a34a;
   --kts-loss: #dc2626;
-  --kts-draw: #64748b;
+  /* 1.28.0: remis = AMBER (właściciel 05.11: „remis amber, bo szare są
+     dla meczów bez day w kafelkach drużyn”) — jednolity system z piłeczkami
+     formy (#fbbf24); szary zostaje ZASTRZEŻONY dla meczów bez terminu
+     (duchy) i stanów neutralnych. Tekstowy wariant jasny: #b45309 (amber-700,
+     5,0:1 na białej karcie — AA; #fbbf24 na bieli = 1,9:1, nieczytelne). */
+  --kts-draw: #b45309;
 
   /* kolory semantyczne (dzień) */
   --kts-ink: #0f1b2d;            /* nagłówki */
@@ -65,7 +70,9 @@ html[data-theme="night"] {
 
   --kts-win: #34d399;
   --kts-loss: #f87171;
-  --kts-draw: #94a3b8;
+  /* 1.28.0: remis amber także w nocy — pełny #fbbf24 jak piłeczka formy
+     (10,3:1 na karcie nocnej #121b2e — AA z zapasem) */
+  --kts-draw: #fbbf24;
 
   --bg-page: #0b1220;
   --bg-card: #121b2e;
@@ -148,7 +155,11 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .badge--derby { border-color: rgba(90,149,255,0.45); color: var(--kts-link); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
 .badge--W { border-color: rgba(22,163,74,0.4); color: var(--kts-win); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
 .badge--P { border-color: var(--badge-loss-border); color: var(--kts-loss); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
-.badge--R { border-color: var(--kts-line); color: var(--kts-text-muted); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
+/* 1.28.0: remis w badge = amber (dotąd szary/stłumiony — mylił się z
+   „bez daty” i „wynik w drodze”). Jednolity system: W zielony · R amber ·
+   P czerwony · szary = tylko stany neutralne (pending/duchy). */
+.badge--R { border-color: rgba(180,83,9,0.4); color: var(--kts-draw); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
+html[data-theme="night"] .badge--R { border-color: rgba(251,191,36,0.4); }
 
 /* ===== header ===== */
 .header {
@@ -251,6 +262,22 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   font-weight: 700; border-radius: 0.35rem; padding: 0 0.5rem;
   background: rgba(255,255,255,0.16);
 }
+/* 1.28.0: JEDNOLITY SYSTEM OZNACZEŃ na pasek wyników — pigułka wyniku
+   kolorowana wg statusu z perspektywy naszych drużyn (rekomendacja
+   zaakceptowana przez właściciela 05.11: „co do paska wyników zgadzam
+   z rekomendacją”; żartobliwie: „w razie W się poprawi” — zielona
+   pigułka pojawi się z pierwszą wygraną w strefie ostatniego wyniku).
+   Odcienie rozjaśnione pod ciemny granat (--kts-navy #0a3a75, pasek
+   ciemny w OBU trybach) + tekst GRANATOWY: #4ade80 · #fbbf24 · #fca5a5
+   = 6,4 · 6,7 · 5,9:1 — AA z zapasem (wariant „kolorowa pigułka
+   + biały tekst” odpada: biel na #f87171 = 2,8:1; wariant „jasna
+   pigmentacja bielą + kolorowy tekst” też: 3,7–4,2:1). Kolory semantyki
+   te same co na listach i piłeczkach formy (W zielony · R amber ·
+   P czerwony) — różni się tylko nośnik pod ciemnym tłem. Derby i mecze
+   bez statusu zostają przy neutralnej pigułce (biel 16% + biały tekst). */
+.matchbar-score--W { background: #4ade80; color: var(--kts-navy); }
+.matchbar-score--R { background: #fbbf24; color: var(--kts-navy); }
+.matchbar-score--P { background: #fca5a5; color: var(--kts-navy); }
 .matchbar-sep { color: rgba(255,255,255,0.55); }
 .matchbar-hour { font-weight: 700; }
 /* Skrót ligi na POCZĄTKU wiersza (v1.9.3): mała, wyszarzona etykieta —
@@ -648,6 +675,9 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .match-score { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--kts-ink); }
 .match-score--W { color: var(--kts-win); }
 .match-score--P { color: var(--kts-loss); }
+/* 1.28.0: wynik remisowy na listach dostaje swój kolor (dotąd domyślny
+   ink — remis był jedynym bez oznaczenia); derby bez zmian niebieskie */
+.match-score--R { color: var(--kts-draw); }
 .match-score--derby { color: var(--kts-link); }
 .match-meta { font-size: 0.78rem; color: var(--kts-text-muted); margin-top: 0.15rem; }
 
