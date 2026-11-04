@@ -280,9 +280,22 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    informacja przy nagłówku sekcji (licznik galerii, sezon) BEZ pigułki —
    spokojny tekst w kolorze muted. Pigułki .badge zostają tam, gdzie
    niosą stan (W/P/R przy meczach, „wynik w drodze”, tryb danych). */
+/* 1.27.5 (właściciel 05.11: „Sezon 2026/27” przy drużynach i „13 898 zdjęć
+   · 2012–2026” przy galerii siedzą ZA WYSOKO — dopasuj do nazwy sekcji):
+   wiersz .section-head-row centruje się pionowo (align-items: center)
+   do piłki 64 px, więc mały tekst 13,6 px trafia ŚRODKIEM na środek
+   wielkiego nagłówka 30 px — a jego linia podstawy wisi 7 px NAD linią
+   podstawy nazwy sekcji (pomiar Playwright: Δbaseline −7,0 px, desktop
+   i mobile). Poprawka: sam .section-info zjeżdża o 0,5 em (≈ 6,8 px),
+   aż linia podstawy pokrywa się z linią podstawy nazwy (Δbaseline
+   → −0,2 px). Czyste wyrównanie optyczne: piłka, wysokość wiersza i
+   łamanie na mobile bez zmian (position:relative nie rusza layoutu).
+   Zamiast align-items: baseline w całym wierszu — bo wtedy piłka
+   spadałaby o ~15 px względem nazwy (wariant odrzucony po pomiarze). */
 .section-info {
   font-size: 0.85rem; font-weight: 500; color: var(--kts-text-muted);
   line-height: 1.2;
+  position: relative; top: 0.5em;
 }
 .section-head-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
 /* 1.21.0: tekst sekcji na szerokość strony (właściciel 02.11) — bez
