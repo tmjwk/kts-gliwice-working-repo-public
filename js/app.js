@@ -702,13 +702,40 @@ function przewinForme(pilka) {
        (1.26.1: +2 s — właściciel 03.11: „dodaj mu 2s życia”; kolor
        pomarańczowy w CSS — patrz .forma-scrub-hint)
        (pointer-events: none — nie blokuje gestu). Na desktopie (hover)
-       nie występuje wcale. */
-const SCRUBHINT = { el: null, timer: 0, klucz: "kts-scrub-hint-v1" };
+       nie występuje wcale.
+   1.27.0 (wdrożone w 1.27.3): ŻYCIE OD ZOBACZENIA, NIE OD
+       ZAŁADOWANIA (właściciel 05.11: „aktywuje się zaraz po załadowaniu
+       strony, a ma tylko 9 s życia — użytkownik doskrolowuje do sekcji
+       drużyn, kiedy chip już zniknął; powinien pojawiać się dopiero,
+       gdy użytkownik zobaczy kafelek”). IntersectionObserver pilnuje
+       PASKA (≥25% w widoku, z 10% zapasem od dołu ekranu): dopóki pasek
+       jest poza ekranem, chip czeka ukryty (visibility:hidden + pauza
+       kołysania), zegar 9 s STOI. Pierwsze wejście paska w ekran =
+       start zegara i odsłonięcie. Przerysowania sekcji (dane na żywo)
+       odtwarzają paski — chip wraca na tor, obserwator wsiada na świeży
+       element; raz wystartowany deadline się NIE cofa. Przeglądarka
+       bez IO (muzeum) dostaje zachowanie stare (start od razu). */
+const SCRUBHINT = { el: null, timer: 0, klucz: "kts-scrub-hint-v1",
+                    io: null, wystartowal: false };
 
 function zamknijScrubHint() {
   clearTimeout(SCRUBHINT.timer);
+  if (SCRUBHINT.io) { SCRUBHINT.io.disconnect(); SCRUBHINT.io = null; }
   try { sessionStorage.setItem(SCRUBHINT.klucz, "1"); } catch { /* tryb prywatny */ }
   SCRUBHINT.el?.remove();
+}
+
+/** Odsłoń chip i odpal jego 9 s życia — dokładnie RAZ (kolejne
+ *  przerysowania nie cofają deadline'u, patrz 1.27.0 wyżej). */
+function odpalScrubHint() {
+  if (SCRUBHINT.wystartowal) return;
+  SCRUBHINT.wystartowal = true;
+  if (SCRUBHINT.el) {
+    SCRUBHINT.el.style.visibility = "";
+    SCRUBHINT.el.style.animationPlayState = "";   // kołysanie od zera
+  }
+  clearTimeout(SCRUBHINT.timer);
+  SCRUBHINT.timer = setTimeout(zamknijScrubHint, 9000);   // 1.26.1: 7 s → 9 s (+2 s, właściciel)
 }
 
 /** Doklej chip NA SZYNĘ paska pierwszej karty z duchami (rząd duchów
@@ -729,13 +756,31 @@ function wskazScrubber() {
   const forma = duch?.closest(".team-forma") ?? document.querySelector(".team-forma");
   if (widziane || !forma || !matchMedia("(pointer: coarse)").matches) {
     SCRUBHINT.el.remove();
+    if (SCRUBHINT.io) { SCRUBHINT.io.disconnect(); SCRUBHINT.io = null; }
     return;
   }
   // ostatni wiersz paska: runda 2 / rewanże (dziś: duchy) — chip na torze
   const wiersze = forma.querySelectorAll(":scope > .team-forma-wiersz");
   (wiersze[wiersze.length - 1] ?? forma).appendChild(SCRUBHINT.el);
-  clearTimeout(SCRUBHINT.timer);
-  SCRUBHINT.timer = setTimeout(zamknijScrubHint, 9000);   // 1.26.1: 7 s → 9 s (+2 s, właściciel)
+  // 1.27.0: zegar już tyka (przerysowanie w trakcie życia) — tylko
+  // powrót na tor świeżego paska, deadline bez zmian
+  if (SCRUBHINT.wystartowal) return;
+  // dopóki pasek nie wszedł w ekran — chip ukryty, kołysanie wstrzymane
+  SCRUBHINT.el.style.visibility = "hidden";
+  SCRUBHINT.el.style.animationPlayState = "paused";
+  if (SCRUBHINT.io) SCRUBHINT.io.disconnect();   // stary pasek przerysowany
+  if (typeof IntersectionObserver === "function") {
+    SCRUBHINT.io = new IntersectionObserver((wpisy) => {
+      if (wpisy.some((w) => w.isIntersecting)) {
+        SCRUBHINT.io.disconnect();
+        SCRUBHINT.io = null;
+        odpalScrubHint();
+      }
+    }, { threshold: 0.25, rootMargin: "0px 0px -10% 0px" });
+    SCRUBHINT.io.observe(forma);
+  } else {
+    odpalScrubHint();   // bez IO (muzeum) — jak dotychczas: start od razu
+  }
 }
 
 /* 1.24.0: stan gestu scrubu. id = pointerId aktywnego palca (multitouch:
