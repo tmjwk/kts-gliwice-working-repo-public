@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-03T19:58:14.471Z",
+  "wygenerowano": "2026-11-04T19:51:52.889Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -42,7 +42,7 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "7. miejsce · 6 pkt",
+      "stan": "9. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS V Gliwice"
@@ -69,7 +69,7 @@
       "nazwa": "KTS Gliwice · amatorzy",
       "liga": "2. Śląska Liga Amatorów",
       "tryb": "ŚZTS · automat",
-      "stan": "2. miejsce · 6 pkt",
+      "stan": "3. miejsce · 6 pkt",
       "url": "https://ligi.slzts.pl/liga/18/144/",
       "tabela": "18/144",
       "wiersz": "KTS Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-03T19:58:14.471Z"
+      "zaktualizowano": "2026-11-04T19:51:52.889Z"
     },
     {
       "klucz": "18/138",
@@ -244,23 +244,23 @@
         {
           "pozycja": 7,
           "nazwa": "KS Mysław II Mysłowice",
-          "mecze": 6,
-          "punkty": 7,
-          "stosunek": "33:27"
+          "mecze": 7,
+          "punkty": 9,
+          "stosunek": "42:28"
         },
         {
           "pozycja": 8,
-          "nazwa": "TTS Polonia II Bytom",
+          "nazwa": "AKS Mikołów",
           "mecze": 6,
           "punkty": 7,
           "stosunek": "31:29"
         },
         {
           "pozycja": 9,
-          "nazwa": "AKS Mikołów",
-          "mecze": 6,
+          "nazwa": "TTS Polonia II Bytom",
+          "mecze": 7,
           "punkty": 7,
-          "stosunek": "31:29"
+          "stosunek": "32:38"
         },
         {
           "pozycja": 10,
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-11-03T19:58:14.471Z"
+      "zaktualizowano": "2026-11-04T19:51:52.889Z"
     },
     {
       "klucz": "18/142",
@@ -320,24 +320,24 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "ATS Ligota Łabędzka",
-          "mecze": 5,
-          "punkty": 10,
-          "stosunek": "42:8"
+          "nazwa": "STS I Żernica",
+          "mecze": 6,
+          "punkty": 11,
+          "stosunek": "45:15"
         },
         {
           "pozycja": 2,
-          "nazwa": "STS I Żernica",
-          "mecze": 5,
-          "punkty": 9,
-          "stosunek": "39:11"
+          "nazwa": "ATS Ligota Łabędzka",
+          "mecze": 6,
+          "punkty": 10,
+          "stosunek": "46:14"
         },
         {
           "pozycja": 3,
           "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 4,
+          "mecze": 5,
           "punkty": 8,
-          "stosunek": "32:8"
+          "stosunek": "36:14"
         },
         {
           "pozycja": 4,
@@ -355,31 +355,31 @@
         },
         {
           "pozycja": 6,
+          "nazwa": "ULKS Tajfun Ligota Łabędzka",
+          "mecze": 6,
+          "punkty": 7,
+          "stosunek": "32:28"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "LKS Młodość Rudno",
+          "mecze": 6,
+          "punkty": 7,
+          "stosunek": "30:30"
+        },
+        {
+          "pozycja": 8,
           "nazwa": "ULKS Ruch Pniów",
           "mecze": 5,
           "punkty": 6,
           "stosunek": "33:17"
         },
         {
-          "pozycja": 7,
+          "pozycja": 9,
           "nazwa": "KTS V Gliwice",
           "mecze": 5,
           "punkty": 6,
           "stosunek": "30:20"
-        },
-        {
-          "pozycja": 8,
-          "nazwa": "ULKS Tajfun Ligota Łabędzka",
-          "mecze": 5,
-          "punkty": 5,
-          "stosunek": "25:25"
-        },
-        {
-          "pozycja": 9,
-          "nazwa": "LKS Młodość Rudno",
-          "mecze": 5,
-          "punkty": 5,
-          "stosunek": "24:26"
         },
         {
           "pozycja": 10,
@@ -398,9 +398,9 @@
         {
           "pozycja": 12,
           "nazwa": "STS II Żernica",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 1,
-          "stosunek": "9:41"
+          "stosunek": "12:48"
         },
         {
           "pozycja": 13,
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-11-03T19:58:14.471Z"
+      "zaktualizowano": "2026-11-04T19:51:52.889Z"
     },
     {
       "klucz": "18/144",
@@ -425,24 +425,24 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 3,
+          "nazwa": "Bartek II Siemianowice",
+          "mecze": 4,
           "punkty": 6,
-          "stosunek": "20:10"
+          "stosunek": "28:12"
         },
         {
           "pozycja": 2,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 4,
+          "punkty": 6,
+          "stosunek": "23:17"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "KTS Gliwice",
           "mecze": 4,
           "punkty": 6,
           "stosunek": "21:19"
-        },
-        {
-          "pozycja": 3,
-          "nazwa": "Bartek II Siemianowice",
-          "mecze": 3,
-          "punkty": 4,
-          "stosunek": "21:9"
         },
         {
           "pozycja": 4,
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-11-03T19:58:14.471Z"
+      "zaktualizowano": "2026-11-04T19:51:52.889Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-03T19:58:14.471Z",
+      "zaktualizowano": "2026-11-04T19:51:52.889Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-03T19:58:14.471Z",
+      "zaktualizowano": "2026-11-04T19:51:52.889Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-03T19:58:14.471Z",
-    "pzts": "2026-11-03T19:58:14.471Z"
+    "szts": "2026-11-04T19:51:52.889Z",
+    "pzts": "2026-11-04T19:51:52.889Z"
   },
   "zrodla": {
     "szts": "ok",
