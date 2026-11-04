@@ -87,17 +87,25 @@ function druzynyMeczu(m) {
   return m.zespoly ? m.zespoly : m.zespol ? [m.zespol] : [];
 }
 
-/** Status meczu z perspektywy naszych drużyn: "W" | "P" | "R" | null (derby). */
+/** Status meczu z perspektywy naszych drużyn: "W" | "P" | "R" | null (derby).
+ *  1.28.0: dopasowanie strony meczu po nazwie karty ALBO jej nazwie u źródła
+ *  (z.wiersz — PZTS: karta „KTS Gliwice I” gra w meczu jako „KTS Gliwice”),
+ *  tym samym mechanizmem co piłeczki formy (statusMeczuKarty, v1.22.0).
+ *  Naprawia lukę: mecze 1. ligi PZTS nie dostawały W/P/R na listach
+ *  ani (od v1.28.0) na pasku wyników — spójny system WSZĘDZE. */
 function statusMeczu(m) {
   const nasze = druzynyMeczu(m);
   if (nasze.length !== 1) return null; // derby lub brak — neutralnie
-  const z = nasze[0];
+  const kandydaci = [...nasze];
+  const karta = (SWIEZOSC.dane?.zespoly ?? []).find((x) => x.nazwa === nasze[0]);
+  if (karta?.wiersz) kandydaci.push(karta.wiersz);
   const [a, b] = m.wynik.split(":").map((x) => parseInt(x, 10));
   if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  const pasuje = (strona) => kandydaci.some((n) => stronaNasza(strona, n));
   let my, rywal;
-  if (stronaNasza(m.gospodarz, z) && !stronaNasza(m.gosc, z)) {
+  if (pasuje(m.gospodarz) && !pasuje(m.gosc)) {
     my = a; rywal = b;
-  } else if (stronaNasza(m.gosc, z) && !stronaNasza(m.gospodarz, z)) {
+  } else if (pasuje(m.gosc) && !pasuje(m.gospodarz)) {
     my = b; rywal = a;
   } else {
     return null; // niejednoznaczne — neutralnie
@@ -243,6 +251,12 @@ const etykietaLigi = (liga) => {
 };
 
 function renderPasekMeczu(mecze) {
+  /* 1.28.0: JEDNOLITY SYSTEM OZNACZEŃ WYNIKÓW (właściciel 05.11:
+     „co do paska wyników zgadzam z rekomendacją… generalnie wszędzie
+     chciałbym widzieć jednolity spójny system”) — pigułka ostatniego
+     wyniku kolorowana wg statusu z perspektywy naszych drużyn:
+     W zielona · R amber · P czerwona (odcienie pod granat, patrz CSS);
+     derby (obie nasze drużyny) i mecz bez statusu zostają neutralne. */
   const rozegrane = mecze.filter((m) => m.rozegrany)
     .sort((a, b) => (a.dataMeczu < b.dataMeczu ? 1 : -1));
   const wDrodze = mecze.filter(meczRozpoczety)
@@ -264,12 +278,15 @@ function renderPasekMeczu(mecze) {
       etykietaO.textContent = (zDnia.length > 1 ? "Ostatnie wyniki" : "Ostatni wynik")
         + ` · ${formatujDate(o.dataMeczu)}`;
     }
-    elO.innerHTML = zDnia.map((m) => wierszMeczuPaska(
-      etykietaLigi(m.liga)
-      + `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
-      + `<span class="matchbar-score t-nums">${esc(m.wynik)}</span>`
-      + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
-    )).join("");
+    elO.innerHTML = zDnia.map((m) => {
+      const st = statusMeczu(m);
+      return wierszMeczuPaska(
+        etykietaLigi(m.liga)
+        + `<span class="matchbar-team">${esc(m.gospodarz)}</span>`
+        + `<span class="matchbar-score t-nums${st ? ` matchbar-score--${st}` : ""}">${esc(m.wynik)}</span>`
+        + `<span class="matchbar-team">${esc(m.gosc)}</span>`,
+      );
+    }).join("");
   } else {
     elO.textContent = "Wyniki pojawią się po pierwszej synchronizacji";
   }
@@ -1136,7 +1153,7 @@ function wierszMeczu(m, oczekuje = false, wGrupie = false) {
   const nasze = druzynyMeczu(m);
   const derby = nasze.length > 1;
   const st = statusMeczu(m);
-  const wynikKolor = derby ? "match-score--derby" : st === "W" ? "match-score--W" : st === "P" ? "match-score--P" : "";
+  const wynikKolor = derby ? "match-score--derby" : st === "W" ? "match-score--W" : st === "P" ? "match-score--P" : st === "R" ? "match-score--R" : ""; /* 1.28.0: remis = amber (dotąd bez koloru) */
   const badge = oczekuje
     ? `<span class="badge badge--pending">wynik w drodze</span>`
     : derby
@@ -1833,6 +1850,12 @@ async function start() {
   }
 
   if (ok) {
+    // 1.28.0: dane lądują w SWIEZOSC PRZED renderami — statusMeczu
+    // (W/P/R na listach i pasku) dopasowuje stronę meczu także po
+    // zespoly[].wiersz (PZTS: „KTS Gliwice I” gra jako „KTS Gliwice”);
+    // przy ustawianiu dopiero po renderach pierwszy rysunek straciłby
+    // kolorowe oznaczenia 1. ligi.
+    SWIEZOSC.dane = dane;
     // Mecze z odsianiem dat zastępczych źródeł (ŚZTS wstawia „2026-00-00"
     // dla meczów bez terminu) — wiersz z niepoprawną datą nie może trafić
     // na pasek meczowy (wisi tam jako „Wynik w drodze · 00.00.2026"),
