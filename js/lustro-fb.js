@@ -224,66 +224,148 @@
     !!(p.attachments && p.attachments.data && p.attachments.data[0]
        && p.attachments.data[0].media_type === "video");
 
-  /* ---- 1.11.0: pomiar czarnych pasów miniatury (patrz nagłówek) ---- */
+  /* ---- 1.11.0: pomiar czarnych pasów miniatury (patrz nagłówek) ----
+     1.27.6 (właściciel 05.11: „funkcja nie zawsze się uruchamia — kafelek
+     pozostaje bez zmiany, nie jest zastępowany powiększeniem”): POMIAR
+     MA POWTÓRKI. Diagnoza (reprodukcja na żywej z symulacją wolnej sieci):
+     próba pomiaru ma timeout 8 s — gdy obrazek dojedzie wolniej (słaby
+     zasięg, zimny cache, chwilowe zacięcie CDN), pomiar zwraca null,
+     a hero NIE MIAŁ ŻADNEJ drogi powtórki (kadrujWideo wołane raz
+     przy renderze; zmiana strony siatki nie obejmuje hero) — kafelek
+     zostawał niekadrowany na zawsze, mimo że obraz dawno się załadował.
+     Naprawa trwista, trzy warstwy:
+     1) zmierzPasy próbuje do 3 razy: próba 1 = <img crossOrigin> jak
+        dotąd (szybka ścieżka, korzysta z cache); próby 2–3 = fetch
+        {mode:'cors', cache:'reload'} → blob → bitmapa — wymusza świeży
+        pobór z CORS, omijając ewentualny ZEPSUTY wpis w cache bez
+        nagłówka ACAO (klasa błędów: proxy/rozszerzenie ściąga nagłówki,
+        Safari podaje z cache wersji bez CORS → canvas tintowny);
+        przerwy między próbami 1,5 s / 4 s (łagodne dla sieci),
+     2) kadrujWideo pomija obrazki z klasą .news-crop (re-skan nie
+        mierzy drugi raz wygranych),
+     3) samonaprawa: po starcie sekcji planowane re-skany (12 s i 30 s)
+        doganiają wszystko, co się nie udało za pierwszym razem — także
+        hero. Porażki NADAL nie trafiają do cache (1.26.7), więc każdy
+        re-skan to świeże pomiary tylko braków.
+     Diagnostyka: window.__KADRY — mapa url → {proby, stan} (testy). */
   const POMIARY_KADRU = new Map();   // url → Promise<{x, y, ar} | null>
+  const KADRY_TIMEOUT = 8000;        // limit jednej próby (ms)
+  const KADRY_PROBY = [
+    { przerwa: 0,    tryb: "image" },   // <img crossOrigin> — jak dotąd
+    { przerwa: 1500, tryb: "reload" },  // fetch cache:'reload' → blob
+    { przerwa: 4000, tryb: "reload" },
+  ];
+
+  /** Stan pomiarów dla testów/diagnostyki (window.__KADRY). */
+  const KADRY_DIAG = (typeof window !== "undefined")
+    ? (window.__KADRY || (window.__KADRY = new Map()))
+    : null;
+
+  /** Pomiar bitmapy przez fetch (próby „reload”): świeży pobór z CORS,
+   *  blob → Image przez objectURL (bitmapa czysta, bez tintu canvasu). */
+  function pomiarPrzezFetch(url) {
+    const kontrola = new AbortController();
+    const zegar = setTimeout(() => kontrola.abort(), KADRY_TIMEOUT);
+    return fetch(url, { mode: "cors", cache: "reload",
+                        signal: kontrola.signal })
+      .then((r) => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.blob();
+      })
+      .then((blob) => new Promise((resolve, reject) => {
+        const url2 = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => { URL.revokeObjectURL(url2); resolve(img); };
+        img.onerror = () => { URL.revokeObjectURL(url2); reject(new Error("bitmapa")); };
+        img.src = url2;
+      }))
+      .finally(() => clearTimeout(zegar));
+  }
+
+  /** Pomiar bitmapy przez <img crossOrigin> (próba 1 — szybka ścieżka). */
+  function pomiarPrzezObraz(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const stop = setTimeout(() => reject(new Error("timeout")), KADRY_TIMEOUT);
+      img.crossOrigin = "anonymous";          // wymagane do odczytu pikseli
+      img.onload = () => { clearTimeout(stop); resolve(img); };
+      img.onerror = () => { clearTimeout(stop); reject(new Error("obraz")); };
+      img.src = url;
+    });
+  }
+
+  /** Zmierz pasy na załadowanej bitmapie — algorytm bez zmian (1.11.0). */
+  function zmierzNaBitmapie(img) {
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    if (!iw || !ih) return null;
+    // pomiar w miniaturze ~160 px — dokładność wystarcza,
+    // koszt dekodowania pomijalny
+    const skala = Math.min(1, 160 / Math.max(iw, ih));
+    const w = Math.max(2, Math.round(iw * skala));
+    const h = Math.max(2, Math.round(ih * skala));
+    const cv = document.createElement("canvas");
+    cv.width = w; cv.height = h;
+    const cx = cv.getContext("2d", { willReadFrequently: true });
+    cx.drawImage(img, 0, 0, w, h);
+    const px = cx.getImageData(0, 0, w, h).data;
+    const czarny = (i) => px[i] <= 20 && px[i + 1] <= 20 && px[i + 2] <= 20;
+    const rzad = (y) => {
+      for (let x = 0; x < w; x++) if (!czarny((y * w + x) * 4)) return false;
+      return true;
+    };
+    const kolumna = (x) => {
+      for (let y = 0; y < h; y++) if (!czarny((y * w + x) * 4)) return false;
+      return true;
+    };
+    let gora = 0; while (gora < h && rzad(gora)) gora++;
+    let dol = 0; while (dol < h && rzad(h - 1 - dol)) dol++;
+    let lewa = 0; while (lewa < w && kolumna(lewa)) lewa++;
+    let prawa = 0; while (prawa < w && kolumna(w - 1 - prawa)) prawa++;
+    // bezpieczniki: pas dłuższy niż 45% wymiaru albo treść
+    // węższa/niższa niż 15% wymiaru to nie letterbox, tylko
+    // ciemny kadr — kadrowanie odstaje (wygląd bazowy)
+    if (gora > h * 0.45 || dol > h * 0.45) return null;
+    if (lewa > w * 0.45 || prawa > w * 0.45) return null;
+    const trescW = w - lewa - prawa, trescH = h - gora - dol;
+    if (trescW < w * 0.15 || trescH < h * 0.15) return null;
+    return {
+      x: +(((lewa + trescW / 2) / w) * 100).toFixed(2),
+      y: +(((gora + trescH / 2) / h) * 100).toFixed(2),
+      ar: +(trescW / trescH).toFixed(4),
+    };
+  }
 
   /** Procentowa pozycja środka treści + proporcje treści bez pasów.
-   *  Zwraca null, gdy pomiar się nie uda albo pasy wyglądają na
-   *  fałszywe (ciemny kadr zamiast letterboxu) — wtedy kafelek
+   *  Zwraca null, gdy wszystkie próby się nie udały albo pasy wyglądają
+   *  na fałszywe (ciemny kadr zamiast letterboxu) — wtedy kafelek
    *  zostaje w wyglądzie bazowym (contain). */
   function zmierzPasy(url) {
     if (POMIARY_KADRU.has(url)) return POMIARY_KADRU.get(url);
-    const pomiar = new Promise((resolve) => {
-      const img = new Image();
-      const stop = setTimeout(() => resolve(null), 8000);
-      img.crossOrigin = "anonymous";          // wymagane do odczytu pikseli
-      img.onload = () => {
-        clearTimeout(stop);
-        try {
-          const iw = img.naturalWidth, ih = img.naturalHeight;
-          if (!iw || !ih) return resolve(null);
-          // pomiar w miniaturze ~160 px — dokładność wystarcza,
-          // koszt dekodowania pomijalny
-          const skala = Math.min(1, 160 / Math.max(iw, ih));
-          const w = Math.max(2, Math.round(iw * skala));
-          const h = Math.max(2, Math.round(ih * skala));
-          const cv = document.createElement("canvas");
-          cv.width = w; cv.height = h;
-          const cx = cv.getContext("2d", { willReadFrequently: true });
-          cx.drawImage(img, 0, 0, w, h);
-          const px = cx.getImageData(0, 0, w, h).data;
-          const czarny = (i) => px[i] <= 20 && px[i + 1] <= 20 && px[i + 2] <= 20;
-          const rzad = (y) => {
-            for (let x = 0; x < w; x++) if (!czarny((y * w + x) * 4)) return false;
-            return true;
-          };
-          const kolumna = (x) => {
-            for (let y = 0; y < h; y++) if (!czarny((y * w + x) * 4)) return false;
-            return true;
-          };
-          let gora = 0; while (gora < h && rzad(gora)) gora++;
-          let dol = 0; while (dol < h && rzad(h - 1 - dol)) dol++;
-          let lewa = 0; while (lewa < w && kolumna(lewa)) lewa++;
-          let prawa = 0; while (prawa < w && kolumna(w - 1 - prawa)) prawa++;
-          // bezpieczniki: pas dłuższy niż 45% wymiaru albo treść
-          // węższa/niższa niż 15% wymiaru to nie letterbox, tylko
-          // ciemny kadr — kadrowanie odstaje (wygląd bazowy)
-          if (gora > h * 0.45 || dol > h * 0.45) return resolve(null);
-          if (lewa > w * 0.45 || prawa > w * 0.45) return resolve(null);
-          const trescW = w - lewa - prawa, trescH = h - gora - dol;
-          if (trescW < w * 0.15 || trescH < h * 0.15) return resolve(null);
-          resolve({
-            x: +(((lewa + trescW / 2) / w) * 100).toFixed(2),
-            y: +(((gora + trescH / 2) / h) * 100).toFixed(2),
-            ar: +(trescW / trescH).toFixed(4),
-          });
-        } catch (e) {
-          resolve(null);   // canvas tainted (brak CORS) — wygląd bazowy
+    const diag = { proby: 0, stan: "w toku", ostatniBlad: "" };
+    if (KADRY_DIAG) KADRY_DIAG.set(url, diag);
+    const pomiar = (async () => {
+      for (const proba of KADRY_PROBY) {
+        if (proba.przerwa) {
+          await new Promise((r) => setTimeout(r, proba.przerwa));
         }
-      };
-      img.onerror = () => { clearTimeout(stop); resolve(null); };
-      img.src = url;
-    });
+        diag.proby += 1;
+        try {
+          const bmp = proba.tryb === "reload"
+            ? await pomiarPrzezFetch(url)
+            : await pomiarPrzezObraz(url);
+          const kadr = zmierzNaBitmapie(bmp);
+          if (kadr) { diag.stan = "ok"; return kadr; }
+          // pomiar się udał, ale pasy wyglądają na fałszywe —
+          // powtórka nic nie zmieni (ten sam plik), wychodzimy
+          diag.stan = "pasy fałszywe"; return null;
+        } catch (e) {
+          diag.ostatniBlad = String(e && e.message || e).slice(0, 60);
+          // sieć/CORS/timeout — próbujemy dalej
+        }
+      }
+      diag.stan = "null";
+      return null;
+    })();
     /* 1.26.7: porażki NIE trafiają do cache — kafelek mógł być ukryty
        (strona 2+ na desktopie, obraz „lazy” się nie załadował);
        po przewinięciu pomiar zostanie ponowiony */
@@ -301,14 +383,31 @@
     img.classList.add("news-crop");
   }
 
-  /** Kadruje wszystkie wideo w kontenerze (hero/siatka/archiwum). */
+  /** Kadruje wszystkie wideo w kontenerze (hero/siatka/archiwum).
+   *  1.27.6: pomija obrazki z klasą .news-crop — re-skan nie mierzy
+   *  drugi raz wygranych (pomiary w toku też mają swój Promise
+   *  w cache, więc podwójne wywołanie niczego nie psuje). */
   function kadrujWideo(kontener) {
     if (!kontener) return;
-    kontener.querySelectorAll('article[data-video="1"] img').forEach((img) => {
-      const url = img.getAttribute("src");
-      if (!url) return;
-      zmierzPasy(url).then((kadr) => zastosujKadry(img, kadr));
-    });
+    kontener.querySelectorAll('article[data-video="1"] img:not(.news-crop)')
+      .forEach((img) => {
+        const url = img.getAttribute("src");
+        if (!url) return;
+        zmierzPasy(url).then((kadr) => zastosujKadry(img, kadr));
+      });
+  }
+
+  /** 1.27.6: samonaprawa — planowane re-skany doganiają pomiary, którym
+   *  nie wyszła żadna z trzech prób (np. bardzo wolna sieć: 3×8 s +
+   *  przerwy > 30 s od renderu). Porażki nie siedzą w cache, więc re-skan
+   *  to świeże pomiary tylko braków. Raz na kontener (WeakSet) — archiwum
+   *  dokłada porcje wielokrotnie, a harmonogram ma być jeden. */
+  const RESKANY_JUZ = new WeakSet();
+  function zaplanujReskany(kontener) {
+    if (!kontener || RESKANY_JUZ.has(kontener)) return;
+    RESKANY_JUZ.add(kontener);
+    setTimeout(() => kadrujWideo(kontener), 12000);
+    setTimeout(() => kadrujWideo(kontener), 30000);
   }
 
   const karta = (p, dodatkowaKlasa = "") => `
@@ -691,6 +790,7 @@
         return karta(p, tura);
       }).join("");
       kadrujWideo(kontener);   // 1.11.0: pomiary pasów wideo (hero + siatka)
+      zaplanujReskany(kontener);   // 1.27.6: samonaprawa opóźnionych pomiarów
 
       /* 1.26.9: DOGRZEWKA OBRAZÓW W TLE (właściciel 04.11: „załaduj je
          w tle — bo wtedy animacja będzie naprawdę płynna”). Kafelki
@@ -785,8 +885,9 @@
         wczytane += 1;
       }
       kadrujWideo(lista);   // 1.11.0: pomiary pasów wideo — CAŁA lista
-                             // (pomiar cache'owany per URL, więc dosypywanie
-                             // „Starszych wpisów” nic nie kosztuje podwójnie)
+                            // (pomiar cache'owany per URL, więc dosypywanie
+                            // „Starszych wpisów” nic nie kosztuje podwójnie)
+      zaplanujReskany(lista);   // 1.27.6: samonaprawa opóźnionych pomiarów
       if (licznik) {
         licznik.textContent = `Wczytano ${wczytane} ${wczytane === 1 ? "wpis" : "wpisów"} — od najnowszych`;
       }
