@@ -120,13 +120,21 @@ function skladDlaZespolu(dane, z) {
   return (dane?.sklady ?? []).find((s) => slugZespolu(s.zespol) === cel) ?? null;
 }
 
-/** Status meczu z perspektywy TEJ drużyny: W/P/R lub null (derby). */
-function statusMeczuDla(m, nazwa) {
+/** Status meczu z perspektywy TEJ drużyny: W/P/R lub null (derby).
+ *  1.28.0: dopasowanie strony meczu po nazwie karty ALBO jej nazwie
+ *  u źródła (zespol.wiersz — PZTS: karta „KTS Gliwice I” gra w meczu
+ *  jako „KTS Gliwice”), jak statusMeczuKarty piłeczek formy w app.js;
+ *  wcześniej mecze 1. ligi PZTS nie dostawały tu W/P/R. */
+function statusMeczuDla(m, zespol) {
   const [a, b] = m.wynik.split(":").map((x) => parseInt(x, 10));
   if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
-  const n = normNazwa(nazwa);
-  const myIsHost = m.gospodarz === n || m.gospodarz.startsWith(n + " ");
-  const myIsGuest = m.gosc === n || m.gosc.startsWith(n + " ");
+  const kandydaci = [zespol.nazwa, zespol.wiersz].filter(Boolean);
+  const pasuje = (strona) => kandydaci.some((n) => {
+    const nn = normNazwa(n);
+    return strona === nn || strona.startsWith(nn + " ") || strona.startsWith(nn + "·");
+  });
+  const myIsHost = pasuje(m.gospodarz);
+  const myIsGuest = pasuje(m.gosc);
   let my, rywal;
   if (myIsHost && !myIsGuest) { my = a; rywal = b; }
   else if (myIsGuest && !myIsHost) { my = b; rywal = a; }
@@ -137,10 +145,10 @@ function statusMeczuDla(m, nazwa) {
 }
 
 /** Wiersz meczu dla widoku drużyny (bez powtarzania ligi w meta). */
-function wierszMeczuDruzyny(m, nazwa) {
+function wierszMeczuDruzyny(m, zespol) {
   const derby = druzynyMeczu(m).length > 1;
-  const st = statusMeczuDla(m, nazwa);
-  const wynikKolor = derby ? "match-score--derby" : st === "W" ? "match-score--W" : st === "P" ? "match-score--P" : "";
+  const st = statusMeczuDla(m, zespol);
+  const wynikKolor = derby ? "match-score--derby" : st === "W" ? "match-score--W" : st === "P" ? "match-score--P" : st === "R" ? "match-score--R" : ""; /* 1.28.0: remis = amber (dotąd bez koloru) — jednolity system z app.js */
   const badge = derby
     ? `<span class="badge badge--derby">derby</span>`
     : st ? `<span class="badge badge--${st}">${st}</span>` : "";
@@ -322,11 +330,11 @@ function ustawIkoneTrybu() {
       <div class="card card-pad">
         <p class="list-title">📅 Najbliższe mecze</p>
         <ul class="divide-list">${(wDrodze.length + przyszle.length)
-          ? [...wDrodze, ...przyszle].map((m) => wierszMeczuDruzyny(m, zespol.nazwa)).join("")
+          ? [...wDrodze, ...przyszle].map((m) => wierszMeczuDruzyny(m, zespol)).join("")
           : `<li class="t-small muted">Brak zaplanowanych meczów — przerwa w rozgrywkach.</li>`}</ul>
         <p class="list-title list-title-gap">🏆 Rozegrane mecze</p>
         <ul class="divide-list">${rozegrane.length
-          ? rozegrane.map((m) => wierszMeczuDruzyny(m, zespol.nazwa)).join("")
+          ? rozegrane.map((m) => wierszMeczuDruzyny(m, zespol)).join("")
           : `<li class="t-small muted">Brak rozegranych meczów w danych.</li>`}</ul>
       </div>
     </div>
