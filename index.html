@@ -172,8 +172,10 @@
         <div class="section-head-row">
           <svg class="pilka-bohater" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
           <h2 class="t-h2">Drużyny i wyniki</h2>
-          <span class="badge badge-outline-primary" id="badge-sezon">Sezon —</span>
-          <span class="badge badge-live" id="badge-live">łączę z danymi…</span>
+          <span class="section-info t-nums" id="badge-sezon">Sezon —</span>
+          <!-- 1.27.1 (właściciel 04.11): badge „dane live · auto-sync” ZDJĘTY —
+               sekcja ma opowiadać o drużynach, nie o technice synchronizacji;
+               sezon bez pigułki („to nie przycisk”), patrz .section-info w CSS -->
         </div>
 
         <!-- Karty drużyn -->
@@ -283,7 +285,8 @@
       <div class="container">
         <div class="section-head-row">
           <h2 class="t-h2">Galeria</h2>
-          <span class="badge badge-outline-primary t-nums" id="gal-count">—</span>
+          <!-- 1.27.1 (właściciel 04.11): licznik bez ramki — „to nie przycisk” -->
+          <span class="section-info t-nums" id="gal-count">—</span>
         </div>
         <div class="gal-teaser" id="gal-teaser"></div>
         <div class="gal-cta">
