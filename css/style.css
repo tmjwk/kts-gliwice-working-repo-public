@@ -23,6 +23,17 @@
   /* kolory semantyczne (dzień) */
   --kts-ink: #0f1b2d;            /* nagłówki */
   --kts-ink-fixed: #0f1b2d;      /* hero + stopka — tło stałe w obu trybach */
+  --kts-navy: #0a3a75;           /* 1.27.2: granat pośredni — pasek wyników.
+                                    Właściciel 04.11 popołudnie: „granat
+                                    pomiędzy — nie ten jasny”. Pomiar: napis
+                                    „Powiększ wpis ↗” = --kts-primary (#0057b8)
+                                    = kolor paska przed v1.27.1 (mały napis na
+                                    białej karcie WYGLĄDA ciemniej — złudzenie
+                                    kontrastu, hex ten sam). #0a3a75 = średnia
+                                    --kts-primary i --kts-ink-fixed: wyraźnie
+                                    granat, ale nieprzygaszony do czerni.
+                                    STAŁY w obu trybach (jak *-fixed) — pasek
+                                    ma białe treści, nie może jaśnieć w nocy. */
   --kts-text: #2a3646;
   --kts-text-muted: #5a6a7e;
   --kts-neutral: #f5f7fa;        /* 60% — neutralne tła sekcji */
@@ -202,13 +213,16 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .hero-cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.5rem; }
 
 /* ===== pasek meczu ===== */
-/* 1.27.1 (właściciel 04.11: „pasek z ostatni wynik — ticker daj na tym
-   ciemniejszym niebieskim z palety pls”): tło = granat --kts-ink-fixed
-   (#0f1b2d — ten sam co hero i stopka) zamiast błękitu --kts-primary.
-   Świadomie *-fixed: --kts-ink w trybie nocnym zamienia się na jasny,
-   a pasek ma pozostać ciemny w obu trybach. Bez border-bottom —
-   granica z jasną sekcją poniżej i tak jest wyraźna (jak w hero). */
-.matchbar { background: var(--kts-ink-fixed); color: #fff; }
+/* 1.27.2 (właściciel 04.11 popołudnie: „pasek był w jasno niebieskim, teraz
+   dałeś w granacie — chodziło mi o granat pomiędzy, ten ciemnoniebieski
+   jak napis «Powiększ wpis ↗»”): #0f1b2d z 1.27.1 było ZA CIEMNE (prawie
+   czarny granat jak hero), a „Powiększ wpis ↗” to --kts-primary — ten sam
+   kolor, który pasek miał przed 1.27.1 (jako duże pole odbierany jako
+   „jasny”). Stąd trzeci, pośredni kolor palety --kts-navy (#0a3a75):
+   granat, ale wyraźnie niebieski. Gdyby właściciel jednak chciał DOKŁADNIE
+   odcień napisu — wystarczy podmienić na var(--kts-primary).
+   Bez border-bottom — granica z jasną sekcją poniżej pozostaje wyraźna. */
+.matchbar { background: var(--kts-navy); color: #fff; }
 .matchbar-inner {
   display: flex; flex-direction: column; justify-content: center;
   padding-block: 0.5rem; text-align: center; font-size: 0.875rem;
