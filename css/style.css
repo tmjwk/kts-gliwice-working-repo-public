@@ -1009,6 +1009,23 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 @media (prefers-reduced-motion: reduce) { .gal-teaser-skel::after { animation: none; } }
 
+/* 1.27.4: notka degradacji teasera — przeglądarka gościa nie odczytała
+   zdjęć z FB (adblock / filtry prywatności), okładki żyją z migawki bota.
+   Wzór .gal-notatka z pełnej galerii, ale lżejsza (0.8rem) z ramką
+   przerywaną w kolorze chipów lat FB (.gal-chip-fb) — ta sama sygnatura
+   wizualna „sprawa dotyczy Facebooka”. Nocą kolory z var() same się
+   dostosowują (--kts-link łagodzi na #5aa9ff od 1.26.5). */
+.gal-teaser-notka {
+  margin: 0.75rem 0 0; padding: 0.6rem 0.9rem; border-radius: 0.5rem;
+  background: var(--bg-card); border: 1px dashed rgba(90, 149, 255, 0.55);
+  font-size: 0.8rem; line-height: 1.5; color: var(--kts-text-muted);
+}
+.gal-teaser-notka a {
+  color: var(--kts-link); text-decoration: none; white-space: nowrap;
+  font-weight: 600;
+}
+.gal-teaser-notka a:hover, .gal-teaser-notka a:focus-visible { text-decoration: underline; }
+
 /* lightbox */
 .gal-lightbox {
   position: fixed; inset: 0; z-index: 60; display: none;
