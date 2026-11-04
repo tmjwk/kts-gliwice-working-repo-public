@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-04T19:51:52.889Z",
+  "wygenerowano": "2026-11-04T22:10:39.034Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -24,7 +24,7 @@
       "nazwa": "KTS III",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "15. miejsce · 0 pkt",
+      "stan": "16. miejsce · 0 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/",
       "tabela": "18/136",
       "wiersz": "KTS III Gliwice"
@@ -103,24 +103,24 @@
         },
         {
           "pozycja": 4,
+          "nazwa": "KS Mysław Mysłowice",
+          "mecze": 8,
+          "punkty": 12,
+          "stosunek": "49:31"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "MUKS Jedynka Pszów",
           "mecze": 7,
           "punkty": 11,
           "stosunek": "52:18"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "KS Naprzód II Borucin",
           "mecze": 7,
           "punkty": 10,
           "stosunek": "43:27"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "KS Mysław Mysłowice",
-          "mecze": 7,
-          "punkty": 10,
-          "stosunek": "41:29"
         },
         {
           "pozycja": 7,
@@ -131,31 +131,31 @@
         },
         {
           "pozycja": 8,
+          "nazwa": "LZS Chespa Żywocice",
+          "mecze": 7,
+          "punkty": 8,
+          "stosunek": "35:35"
+        },
+        {
+          "pozycja": 9,
           "nazwa": "KTS Olimpijczyk Zawiercie",
           "mecze": 7,
           "punkty": 6,
           "stosunek": "36:34"
         },
         {
-          "pozycja": 9,
+          "pozycja": 10,
           "nazwa": "MKS Skarbek II Tarnowskie Góry",
           "mecze": 7,
           "punkty": 6,
           "stosunek": "35:35"
         },
         {
-          "pozycja": 10,
+          "pozycja": 11,
           "nazwa": "MKS Tajfun Kuźnia Raciborska",
           "mecze": 7,
           "punkty": 6,
           "stosunek": "35:35"
-        },
-        {
-          "pozycja": 11,
-          "nazwa": "LZS Chespa Żywocice",
-          "mecze": 6,
-          "punkty": 6,
-          "stosunek": "29:31"
         },
         {
           "pozycja": 12,
@@ -167,9 +167,9 @@
         {
           "pozycja": 13,
           "nazwa": "LUKS Węgierska Górka",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 4,
-          "stosunek": "21:49"
+          "stosunek": "23:57"
         },
         {
           "pozycja": 14,
@@ -180,20 +180,20 @@
         },
         {
           "pozycja": 15,
-          "nazwa": "KTS III Gliwice",
-          "mecze": 6,
+          "nazwa": "LUKS GK Logistics Bodzanów",
+          "mecze": 7,
           "punkty": 0,
-          "stosunek": "5:55"
+          "stosunek": "9:61"
         },
         {
           "pozycja": 16,
-          "nazwa": "LUKS GK Logistics Bodzanów",
+          "nazwa": "KTS III Gliwice",
           "mecze": 7,
           "punkty": 0,
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-04T19:51:52.889Z"
+      "zaktualizowano": "2026-11-04T22:10:39.034Z"
     },
     {
       "klucz": "18/138",
@@ -208,24 +208,24 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "UKS Feniks Pyskowice",
+          "mecze": 7,
+          "punkty": 11,
+          "stosunek": "50:20"
+        },
+        {
+          "pozycja": 3,
+          "nazwa": "MKS Skarbek III Tarnowskie Góry",
+          "mecze": 7,
+          "punkty": 11,
+          "stosunek": "47:23"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "LKS Strażak Mikołów",
           "mecze": 7,
           "punkty": 10,
           "stosunek": "49:21"
-        },
-        {
-          "pozycja": 3,
-          "nazwa": "UKS Feniks Pyskowice",
-          "mecze": 6,
-          "punkty": 9,
-          "stosunek": "43:17"
-        },
-        {
-          "pozycja": 4,
-          "nazwa": "MKS Skarbek III Tarnowskie Góry",
-          "mecze": 6,
-          "punkty": 9,
-          "stosunek": "40:20"
         },
         {
           "pozycja": 5,
@@ -251,9 +251,9 @@
         {
           "pozycja": 8,
           "nazwa": "AKS Mikołów",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 7,
-          "stosunek": "31:29"
+          "stosunek": "34:36"
         },
         {
           "pozycja": 9,
@@ -272,37 +272,37 @@
         {
           "pozycja": 11,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 4,
-          "stosunek": "30:30"
+          "stosunek": "34:36"
         },
         {
           "pozycja": 12,
-          "nazwa": "GLKS Lot Konopiska",
-          "mecze": 6,
+          "nazwa": "KS Unia Kalety",
+          "mecze": 7,
           "punkty": 4,
-          "stosunek": "17:43"
+          "stosunek": "23:47"
         },
         {
           "pozycja": 13,
+          "nazwa": "GLKS Lot Konopiska",
+          "mecze": 7,
+          "punkty": 4,
+          "stosunek": "20:50"
+        },
+        {
+          "pozycja": 14,
           "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
           "mecze": 6,
           "punkty": 3,
           "stosunek": "22:38"
         },
         {
-          "pozycja": 14,
+          "pozycja": 15,
           "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
           "mecze": 7,
           "punkty": 2,
           "stosunek": "23:47"
-        },
-        {
-          "pozycja": 15,
-          "nazwa": "KS Unia Kalety",
-          "mecze": 6,
-          "punkty": 2,
-          "stosunek": "17:43"
         },
         {
           "pozycja": 16,
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-11-04T19:51:52.889Z"
+      "zaktualizowano": "2026-11-04T22:10:39.034Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-11-04T19:51:52.889Z"
+      "zaktualizowano": "2026-11-04T22:10:39.034Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-11-04T19:51:52.889Z"
+      "zaktualizowano": "2026-11-04T22:10:39.034Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-04T19:51:52.889Z",
+      "zaktualizowano": "2026-11-04T22:10:39.034Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -804,8 +804,8 @@
       "kolejka": 4,
       "gospodarz": "LZS Chespa Żywocice",
       "gosc": "KTS III Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "6:4",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS III"
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-04T19:51:52.889Z",
+      "zaktualizowano": "2026-11-04T22:10:39.034Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-04T19:51:52.889Z",
-    "pzts": "2026-11-04T19:51:52.889Z"
+    "szts": "2026-11-04T22:10:39.034Z",
+    "pzts": "2026-11-04T22:10:39.034Z"
   },
   "zrodla": {
     "szts": "ok",
