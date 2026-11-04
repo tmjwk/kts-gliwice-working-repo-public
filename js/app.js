@@ -1619,7 +1619,13 @@ async function wypelnijLicznikGalerii() {
    1.15.0: teaser NA ŻYWO z zakładki „Zdjęcia” na FB (silnik
    js/galeria-fb-core.js) — najnowsze albumy klubu zamiast zamarzniętego
    archiwum 2023–24. Awaria FB → archiwum lokalne (bez etykiety liczb —
-   badge sekcji to od 1.16.0 osobny licznik CAŁEJ galerii, patrz wyżej). */
+   badge sekcji to od 1.16.0 osobny licznik CAŁEJ galerii, patrz wyżej).
+   1.27.0: między lustrem a archiwum wchodzi MIGAWKA BOTA
+   (galeria-teaser.json, zapisywana co 2 h przez sync-bot w Actions) —
+   u gościa, któremu przeglądarka BLOKUJE graph.facebook.com (adblock /
+   filtry prywatności) albo gdy FB świeci czasem, teaser pokazuje
+   najnowsze albumy z migawki (bieżący rok!) zamiast udawać, że
+   „najnowsze” = zamrożone 2023–24 z archiwum. */
 async function renderTeaserGalerii() {
   const wrap = $("#gal-teaser");
   if (!wrap) return;
@@ -1675,11 +1681,32 @@ async function renderTeaserGalerii() {
       okladki(albumy);
       return;
     } catch (err) {
-      console.warn("Teaser galerii: lustro FB niedostępne — archiwum lokalne:", err);
+      console.warn("Teaser galerii: lustro FB niedostępne — próbuję migawki bota:", err);
     }
   }
 
-  /* 2) fallback: archiwum lokalne (2023–24) */
+  /* 2) ratunek: MIGAWKA BOTA (galeria-teaser.json) — najnowsze albumy
+     (bieżący rok) zapisane przez sync-bot co 2 h. Plik żyje w naszym
+     repo, więc działa dokładnie tam, gdzie lustru FB nie damy rady:
+     adblock/filtry prywatności blokujące graph.facebook.com, sieci
+     firmowe, chwilowe awarie FB. Wiek migawki ≤ 2 h (a po cichych
+     tygodniach bot odświeża podpisy URL-i CDN najpóźniej po 14 dniach).
+     Format albumów = ten sam co lustro (galeria-fb-core.js), więc
+     linki „galeria.html#album-…” trafiają w te same miejsca. */
+  try {
+    const res = await fetch("galeria-teaser.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const snap = await res.json();
+    const albumy = (snap && snap.albumy) || [];
+    if (!albumy.length) throw new Error("migawka bez albumów");
+    okladki(albumy);
+    return;
+  } catch (err) {
+    console.warn("Teaser galerii: migawka bota niedostępna — archiwum lokalne:", err);
+  }
+
+  /* 3) ostateczność: archiwum lokalne (2023–24) — tylko gdy padło i FB,
+     i migawka bota (awaria obu naraz jest już czarna ławica) */
   try {
     const res = await fetch("galeria.json", { cache: "no-cache" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
