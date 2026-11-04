@@ -1675,10 +1675,32 @@ async function wypelnijLicznikGalerii() {
    u gościa, któremu przeglądarka BLOKUJE graph.facebook.com (adblock /
    filtry prywatności) albo gdy FB świeci czasem, teaser pokazuje
    najnowsze albumy z migawki (bieżący rok!) zamiast udawać, że
-   „najnowsze” = zamrożone 2023–24 z archiwum. */
+   „najnowsze” = zamrożone 2023–24 z archiwum.
+   1.27.4: gdy przeglądarka gościa NIE ODCZYTAŁA zdjęć z FB (adblock /
+   filtry prywatności blokują graph.facebook.com, rzadziej chwilowa
+   awaria FB), pod okładkami pojawia się notka o tym — żeby gość
+   wiedział, czemu okładki żyją z migawki, i jak zobaczyć zdjęcia
+   bezpośrednio. Przy udanym poborze notki nie ma (nigdy). */
 async function renderTeaserGalerii() {
   const wrap = $("#gal-teaser");
   if (!wrap) return;
+
+  /* 1.27.4: notka degradacji — TAK, pokazuje się wyłącznie, gdy prawdziwy
+     pobór zdjęć z graph.facebook.com w TEJ przeglądarce się nie udał
+     (właściciel 05.11: „pojawi się tylko przy nieudanym odczycie fotek
+     z galerii na FB?”). Zdjęcia dalej się pokazują — z migawki bota
+     (albo, czarną ławicą, z archiwum). Raz na stronę (guard), link
+     wyprowadza na zakładkę „Zdjęcia” fanpage’a klubu. */
+  let fbNieodczytane = false;
+  const notkaBloku = () => {
+    if (document.querySelector(".gal-teaser-notka")) return;   // raz
+    wrap.insertAdjacentHTML("afterend",
+      '<p class="gal-teaser-notka">Wygląda na to, że Twoja przeglądarka '
+      + 'blokuje zapytania do Facebooka (np. AdBlock). Odznacz stronę '
+      + 'w blokerze albo <a href="https://www.facebook.com/'
+      + 'AkademiaTenisaStolowego/photos" target="_blank" rel="noopener">'
+      + 'zobacz zdjęcia bezpośrednio na Facebooku&nbsp;→</a></p>');
+  };
 
   const okladki = (albumy) => {
     wrap.innerHTML = albumy.slice(0, 6).map((a) => {
@@ -1731,6 +1753,7 @@ async function renderTeaserGalerii() {
       okladki(albumy);
       return;
     } catch (err) {
+      fbNieodczytane = true;   // pobór z FB nie udał się W TEJ przeglądarce
       console.warn("Teaser galerii: lustro FB niedostępne — próbuję migawki bota:", err);
     }
   }
@@ -1750,6 +1773,7 @@ async function renderTeaserGalerii() {
     const albumy = (snap && snap.albumy) || [];
     if (!albumy.length) throw new Error("migawka bez albumów");
     okladki(albumy);
+    if (fbNieodczytane) notkaBloku();   // 1.27.4: migawka + wyjaśnienie
     return;
   } catch (err) {
     console.warn("Teaser galerii: migawka bota niedostępna — archiwum lokalne:", err);
@@ -1763,6 +1787,7 @@ async function renderTeaserGalerii() {
     const albumy = await res.json();
     albumy.sort(wgDaty);
     okladki(albumy);
+    if (fbNieodczytane) notkaBloku();   // 1.27.4: i tu FB było nieodczytane
   } catch (err) {
     console.error("Błąd ładowania galeria.json:", err);
     wrap.innerHTML = "";
