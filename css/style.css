@@ -25,6 +25,29 @@
      5,0:1 na białej karcie — AA; #fbbf24 na bieli = 1,9:1, nieczytelne). */
   --kts-draw: #b45309;
 
+  /* 1.28.1: NOŚNIKI STATUSÓW — JEDNO ŹRÓDŁO PRAWDY dla wypełnień
+     (właściciel 05.11: „czy rzeczywiście są to teraz zmienne obowiązujące
+     site wide?” — audyt: teksty chodziły na var(--kts-win/-loss/-draw),
+     ale piłeczki/legenda/pigułki/dymki miały hexy zahardkodowane w 22
+     miejscach). Zmienne poniżej = wypełnienia i kolory na CIEMNYCH
+     nośnikach (karta noc, granat paska, dymek #0f1b2d) oraz wypełnienia
+     graficzne na jasnych kartach — działa w obu trybach bez nadpisania.
+     Warianty tekstowe (dla tekstu na jasnej karcie) = --kts-win/-loss/
+     -draw wyżej. Pigułka porażki jaśniejsza (--kts-loss-pill), bo tekst
+     granatowy na #f87171 ma tylko 4,05:1 (AA wymaga 4,5:1). */
+  --kts-win-fill: #4ade80;       /* piłeczka/legenda/pigułka/dymek — W */
+  --kts-loss-fill: #f87171;      /* jw. — P */
+  --kts-draw-fill: #fbbf24;      /* jw. — R (jak piłeczka formy v1.22.0) */
+  --kts-plan-fill: #aebccd;      /* obrys „zaplanowany mecz” */
+  --kts-duch-fill: #b9c6d6;      /* „rewanż — termin nieznany” */
+  --kts-loss-pill: #fca5a5;      /* porażka na pigułce paska (tekst
+                                    granatowy 5,9:1 — AA) */
+
+  /* 1.28.1: obwódki plakietek W/R — tinty koloru statusu (P używa
+     --badge-loss-border niżej); nocą jaśniejsze, spójnie z tekstem */
+  --kts-win-tint: rgba(22, 163, 74, 0.4);
+  --kts-draw-tint: rgba(180, 83, 9, 0.4);
+
   /* kolory semantyczne (dzień) */
   --kts-ink: #0f1b2d;            /* nagłówki */
   --kts-ink-fixed: #0f1b2d;      /* hero + stopka — tło stałe w obu trybach */
@@ -73,6 +96,11 @@ html[data-theme="night"] {
   /* 1.28.0: remis amber także w nocy — pełny #fbbf24 jak piłeczka formy
      (10,3:1 na karcie nocnej #121b2e — AA z zapasem) */
   --kts-draw: #fbbf24;
+
+  /* 1.28.1: tinty plakietek nocą — jaśniejsze (jak --badge-loss-border);
+     wypełnienia (--kts-*-fill) BEZ zmian: działają na obu tłach */
+  --kts-win-tint: rgba(52, 211, 153, 0.4);
+  --kts-draw-tint: rgba(251, 191, 36, 0.4);
 
   --bg-page: #0b1220;
   --bg-card: #121b2e;
@@ -153,13 +181,14 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .badge--team-pzts { border-color: rgba(90,149,255,0.45); background: var(--kts-primary-light); color: var(--kts-link); }
 .badge--match { border-color: rgba(90,149,255,0.35); color: var(--kts-link); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
 .badge--derby { border-color: rgba(90,149,255,0.45); color: var(--kts-link); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
-.badge--W { border-color: rgba(22,163,74,0.4); color: var(--kts-win); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
+.badge--W { border-color: var(--kts-win-tint); color: var(--kts-win); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
 .badge--P { border-color: var(--badge-loss-border); color: var(--kts-loss); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
 /* 1.28.0: remis w badge = amber (dotąd szary/stłumiony — mylił się z
    „bez daty” i „wynik w drodze”). Jednolity system: W zielony · R amber ·
-   P czerwony · szary = tylko stany neutralne (pending/duchy). */
-.badge--R { border-color: rgba(180,83,9,0.4); color: var(--kts-draw); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
-html[data-theme="night"] .badge--R { border-color: rgba(251,191,36,0.4); }
+   P czerwony · szary = tylko stany neutralne (pending/duchy).
+   1.28.1: obwódki z tintów zmiennych (nocą jaśniejsze — bez reguły
+   nadpisującej). */
+.badge--R { border-color: var(--kts-draw-tint); color: var(--kts-draw); padding: 0.1rem 0.55rem; font-size: 0.72rem; }
 
 /* ===== header ===== */
 .header {
@@ -275,9 +304,9 @@ html[data-theme="night"] .badge--R { border-color: rgba(251,191,36,0.4); }
    te same co na listach i piłeczkach formy (W zielony · R amber ·
    P czerwony) — różni się tylko nośnik pod ciemnym tłem. Derby i mecze
    bez statusu zostają przy neutralnej pigułce (biel 16% + biały tekst). */
-.matchbar-score--W { background: #4ade80; color: var(--kts-navy); }
-.matchbar-score--R { background: #fbbf24; color: var(--kts-navy); }
-.matchbar-score--P { background: #fca5a5; color: var(--kts-navy); }
+.matchbar-score--W { background: var(--kts-win-fill); color: var(--kts-navy); }
+.matchbar-score--R { background: var(--kts-draw-fill); color: var(--kts-navy); }
+.matchbar-score--P { background: var(--kts-loss-pill); color: var(--kts-navy); }
 .matchbar-sep { color: rgba(255,255,255,0.55); }
 .matchbar-hour { font-weight: 700; }
 /* Skrót ligi na POCZĄTKU wiersza (v1.9.3): mała, wyszarzona etykieta —
@@ -395,16 +424,16 @@ html[data-theme="night"] .badge--R { border-color: rgba(251,191,36,0.4); }
 @media (hover: hover) {
   .forma-pilka:hover { transform: scale(1.35); }
 }
-.forma-pilka--wygrana { background: #4ade80; }
-.forma-pilka--przegrana { background: #f87171; }
-.forma-pilka--remis { background: #fbbf24; }
-.forma-pilka--przyszla { background: transparent; border: 1px solid #aebccd; }
+.forma-pilka--wygrana { background: var(--kts-win-fill); }
+.forma-pilka--przegrana { background: var(--kts-loss-fill); }
+.forma-pilka--remis { background: var(--kts-draw-fill); }
+.forma-pilka--przyszla { background: transparent; border: 1px solid var(--kts-plan-fill); }
 /* 1.24.0: DUCH REWANŻU — mecz, którego jeszcze nie ma w kalendarzu ligi
    (2. runda nieopublikowana; para znana z metody lustra — js/app.js).
    Szare wypełnienie: czwarty stan wizualny, wyraźnie inny niż kolory
    wyników i niż pusty obrys „zaplanowany”. Gdy źródło opublikuje
    kalendarz, duch sam zamienia się w zwykłą piłeczkę z datą. */
-.forma-pilka--duch { background: #b9c6d6; }
+.forma-pilka--duch { background: var(--kts-duch-fill); }
 /* 1.24.0: AKTYWNA piłeczka (scrubber / tapnięty) — pierścień klubowym
    niebieskim: GDZIE JESTEM (zasada jasności, Task 177). */
 .forma-pilka--aktywna { box-shadow: 0 0 0 3px rgba(0, 87, 184, 0.35); }
@@ -425,11 +454,11 @@ html[data-theme="night"] .badge--R { border-color: rgba(251,191,36,0.4); }
   display: inline-block; width: 0.55rem; height: 0.55rem;
   border-radius: 999px; margin-right: 0.32rem; vertical-align: 0.05rem;
 }
-.fl--w { background: #4ade80; }
-.fl--p { background: #f87171; }
-.fl--r { background: #fbbf24; }
-.fl--plan { background: transparent; border: 1px solid #aebccd; }
-.fl--duch { background: #b9c6d6; }
+.fl--w { background: var(--kts-win-fill); }
+.fl--p { background: var(--kts-loss-fill); }
+.fl--r { background: var(--kts-draw-fill); }
+.fl--plan { background: transparent; border: 1px solid var(--kts-plan-fill); }
+.fl--duch { background: var(--kts-duch-fill); }
 
 /* 1.25.0: ODKRYWALNOŚĆ SCRUBBERA (właściciel 03.11: „w wersji mobilnej
    nie ma żadnej info wizualnej, że można scrube po tym polu"):
@@ -525,13 +554,13 @@ html[data-theme="night"] .badge--R { border-color: rgba(251,191,36,0.4); }
     border-radius: 999px;
     transform: translate(-50%, -50%);
   }
-  .team-forma .forma-pilka--wygrana::before { background: #4ade80; }
-  .team-forma .forma-pilka--przegrana::before { background: #f87171; }
-  .team-forma .forma-pilka--remis::before { background: #fbbf24; }
+  .team-forma .forma-pilka--wygrana::before { background: var(--kts-win-fill); }
+  .team-forma .forma-pilka--przegrana::before { background: var(--kts-loss-fill); }
+  .team-forma .forma-pilka--remis::before { background: var(--kts-draw-fill); }
   .team-forma .forma-pilka--przyszla::before {
-    background: transparent; border: 1px solid #aebccd;
+    background: transparent; border: 1px solid var(--kts-plan-fill);
   }
-  .team-forma .forma-pilka--duch::before { background: #b9c6d6; }
+  .team-forma .forma-pilka--duch::before { background: var(--kts-duch-fill); }
   /* pierścień aktywnej rysuje widoczna kulka (::before), nie cela */
   .team-forma .forma-pilka--aktywna { box-shadow: none; }
   .team-forma .forma-pilka--aktywna::before {
@@ -597,10 +626,18 @@ html[data-theme="night"] .badge--R { border-color: rgba(251,191,36,0.4); }
 .forma-tip-mecz { font-size: 0.85rem; font-weight: 500; }
 .forma-tip-mecz b { font-weight: 700; }
 .forma-tip-status { font-size: 0.72rem; color: #8fb0d8; }
-.forma-tip-status--W { color: #4ade80; }
-.forma-tip-status--P { color: #f87171; }
-.forma-tip-status--R { color: #fbbf24; }
-.forma-tip-status--duch { color: #b9c6d6; }   /* 1.24.0: rewanż bez terminu */
+.forma-tip-status--W { color: var(--kts-win-fill); }
+.forma-tip-status--P { color: var(--kts-loss-fill); }
+.forma-tip-status--R { color: var(--kts-draw-fill); }
+.forma-tip-status--duch { color: var(--kts-duch-fill); }   /* 1.24.0: rewanż bez terminu */
+/* 1.28.1: WYNIK meczu w dymku w kolorze statusu — spójnie z listami
+   (.match-score--W/R/P; właściciel 05.11: „chyba nie wdrożyłeś
+   konsystentnego systemu oznaczania wyników do tooltips” — wynik był
+   jedynym białym elementem opisu meczu). Wariant „fill”, bo dymek jest
+   ciemny (#0f1b2d): #4ade80 8,9:1 · #fbbf24 10,3:1 · #f87171 6,2:1. */
+.forma-tip-wynik--W { color: var(--kts-win-fill); }
+.forma-tip-wynik--R { color: var(--kts-draw-fill); }
+.forma-tip-wynik--P { color: var(--kts-loss-fill); }
 @media (prefers-reduced-motion: reduce) {
   .forma-tip { transition: none; }
   .forma-pilka { transition: none; }
