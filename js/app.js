@@ -473,8 +473,12 @@ function htmlFormy(mecze, z) {
     const dataTxt = m.duch
       ? `termin nieznany · ${frazaKalendarzaDucha(z)}`
       : opisDatyFormy(m);
+    // 1.28.1: WYNIK w dymku w kolorze statusu (jak .match-score--W/R/P
+    // na listach — właściciel: „chyba nie wdrożyłeś konsystentnego
+    // systemu oznaczania wyników do tooltips”); duch i mecz bez
+    // statusu zostają neutralne (białe).
     const wynikTip = m.rozegrany && m.wynik && m.wynik !== "-:-"
-      ? `<b class="t-nums">${esc(m.wynik)}</b>` : "—";
+      ? `<b class="t-nums forma-tip-wynik${st ? ` forma-tip-wynik--${st}` : ""}">${esc(m.wynik)}</b>` : "—";
     const tip = `<span class="forma-tip-data">${esc(dataTxt)}</span>`
       + `<span class="forma-tip-mecz">${esc(m.gospodarz)} ${wynikTip} ${esc(m.gosc)}</span>`
       + `<span class="forma-tip-status${st ? ` forma-tip-status--${st}` : m.duch ? " forma-tip-status--duch" : ""}">${esc(status)}</span>`;
