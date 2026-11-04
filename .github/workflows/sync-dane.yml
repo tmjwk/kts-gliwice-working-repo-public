@@ -77,6 +77,21 @@ jobs:
         continue-on-error: true
         run: bun scripts/licznik_galerii.ts
 
+      # 1.27.0: MIGAWKA najnowszych albumów dla teasera galerii na stronie
+      # głównej (decyzja właściciela 04.11: „użytkownik powinien widzieć
+      # najnowsze wpisy do galerii” — a nie zamrożone archiwum 2023–24,
+      # które dotąd włączało się u gości z adblockiem blokującym
+      # graph.facebook.com). Bot zapisuje galeria-teaser.json (8 najnowszych
+      # albumów bieżącego roku — TYLKO metadane i URL-e CDN, ani bajta
+      # zdjęć z FB, zasada projektu z 1.11) TYLKO przy zmianie treści
+      # albo gdy migawka ma >14 dni (odświeżenie podpisów URL-i CDN,
+      # które wygasają po miesiącach). Awaria = ostrzeżenie ::warning,
+      # run NIE czerwienieje (liga ważniejsza); strona trzyma ostatni
+      # zapisany stan w repo.
+      - name: Teaser galerii FB (migawka najnowszych albumów)
+        continue-on-error: true
+        run: bun scripts/galeria_teaser.ts
+
       # 1.18.0: sponsorzy i partnerzy z arkusza Google właściciela (Q11).
       # Właściciel edytuje wyłącznie ARKUSZ (LP · Nazwa · URL · Logo URL ·
       # Aktywny Tak/Nie · Kategoria) — skrypt zapisuje sponsorzy.json
@@ -108,6 +123,7 @@ jobs:
           git add dane.json
           if [ -f runs.json ]; then git add runs.json; fi
           if [ -f galeria-licznik.json ]; then git add galeria-licznik.json; fi
+          if [ -f galeria-teaser.json ]; then git add galeria-teaser.json; fi
           if [ -f sponsorzy.json ]; then git add sponsorzy.json; fi
           if [ -f o-klubie.json ]; then git add o-klubie.json; fi
           if git diff --cached --quiet; then
