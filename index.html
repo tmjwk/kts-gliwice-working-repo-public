@@ -223,9 +223,10 @@
             </div>
           </div>
 
-          <p class="t-small muted mecze-zrodla">
-            Źródła: pzts.pl (1. liga) + ligi.slzts.pl (ligi 2–4 i amatorzy)
-          </p>
+          <!-- 1.28.3 (właściciel 05.11): notka „Źródła: pzts.pl (1. liga)
+               + ligi.slzts.pl (ligi 2–4 i amatorzy)” PRZENIESIONA do stopki
+               strony (+ znacznik ostatniej synchronizacji) — treść główna
+               nie wymienia źródeł. -->
         </div>
 
       </div>
@@ -366,7 +367,12 @@
       </div>
     </div>
     <div class="container">
+      <!-- 1.28.3 (właściciel 05.11): źródła danych wymienione WYŁĄCZNIE
+           w stopce (z treści strony zdjęte — mety meczów i kafelki
+           drużyn); znacznik ostatniej synchronizacji dokleja js/app.js
+           z dane.json (ostatniSync — nowszy z odczytów PZTS/ŚZTS). -->
       <p class="footer-bottom t-small">
+        <span class="footer-zrodla">Źródła danych: pzts.pl (1. liga) + ligi.slzts.pl (ligi 2–4 i amatorzy) — ostatnia synchronizacja: <span class="t-nums" id="zrodla-stopki">—</span></span>
         SZKIELET projektowy · wdrożenie testowe (hosting statyczny, auto-sync wyników) · KTS Gliwice 2026
         · <span class="t-nums" id="wersja-strony">wersja —</span>
       </p>
