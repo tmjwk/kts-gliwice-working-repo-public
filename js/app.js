@@ -1444,9 +1444,17 @@ function sledzSystemowyTryb() {
    wchodzą do każdego deploy_v*.py; spójność pilnuje test v1.28.4).
    Komunikat wstaje, gdy na serwerze jest STRICT NOWSZA wersja: przy
    wejściu (pokazWersje) i przy każdym sprawdzeniu świeżości
-   (sprawdzDane). „Odśwież stronę” omija cache — patrz pobierzNowaWersje. */
+   (sprawdzDane). „Odśwież stronę” omija cache — patrz pobierzNowaWersje.
 
-const WERSJA_KODU = "1.28.4";
+   1.28.5 (właściciel 05.11: „usuń SZKIELET”): koniec etykiety
+   „szkieletu projektowego” — strona jest już wdrożona i oceniana
+   przez zarząd, więc znika obramowanie SZKIELET — podział sekcji
+   nad hero, dopisek „/ SZKIELET” przy logo (strona główna + archiwum)
+   i „SZKIELET projektowy ·” w stopkach wszystkich 4 stron; zdanie
+   w sekcji „Podziel się opinią” przeformułowane bez słowa „szkielet”
+   (sama sekcja zostaje — etap projektowy). */
+
+const WERSJA_KODU = "1.28.5";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
