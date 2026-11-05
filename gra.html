@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>Pong — gra — KTS Gliwice</title>
+  <meta name="description" content="Pong — klubowa gra przeglądarkowa KTS Gliwice. Pobierana świeża z repozytorium projektu przy każdym wejściu: poprawki widać od razu, bez czekania na aktualizację strony.">
+  <!-- WERSJA TESTOWA (ocena dla zarządu) — nie indeksować; przy premierze usunąć -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Tryb dzień/noc — PRZED renderowaniem (bez mignięcia jasnym tłem):
+    // wybór z localStorage, domyślnie preferencja systemu.
+    (function () {
+      try {
+        var z = localStorage.getItem("kts-theme");
+        if (!z) z = window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "day";
+        document.documentElement.setAttribute("data-theme", z);
+      } catch (e) { /* prywatny tryb przeglądarki — zostaje dzienny */ }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ===== HEADER (kompaktowy — gra ma mieć miejsce) ===== -->
+  <header class="header">
+    <div class="container header-inner header-inner--gra">
+      <a class="brand" href="index.html" aria-label="KTS Gliwice — strona główna">
+        <span class="brand-mark">KTS</span>
+        <span class="brand-name">KTS GLIWICE <span class="brand-sub">/ GRA</span></span>
+      </a>
+      <div class="gra-header-akcje">
+        <a class="gra-powrot" href="index.html">← Strona główna</a>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Przełącz tryb nocny" title="Przełącz tryb dzień/noc">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="gra-main">
+    <!-- ===== PASEK NAD PLANSZĄ ===== -->
+    <div class="gra-pasek container">
+      <p class="gra-tytul">
+        🏓 Pong
+        <span class="gra-nota">— w trakcie rozwoju: pobierane świeże z repozytorium klubu
+        przy każdym wejściu, poprawki widać od razu</span>
+      </p>
+      <div class="gra-kontrolki">
+        <button class="btn btn-sm btn-gra" id="gra-odswiez" type="button" title="Pobierz aktualną wersję gry z repozytorium (bez przeładowania karty)">↻ Odśwież grę</button>
+        <button class="btn btn-sm btn-gra" id="gra-fullscreen" type="button" title="Rozszerz planszę na cały ekran (Esc = powrót)">⛶ Pełny ekran</button>
+      </div>
+    </div>
+
+    <!-- ===== PLANSZA: status → scena → fallback ===== -->
+    <div class="gra-planszownik">
+      <div class="gra-status" id="gra-status" role="status">
+        <svg class="gal-pilka" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
+        <p class="gra-status-tekst">Pobieram grę z <span class="t-nums">github.com/tmjwk/pong</span>…</p>
+        <p class="gra-status-nota t-small">chwilę moment — najnowsza wersja prosto z repozytorium</p>
+      </div>
+
+      <div class="gra-scena" id="gra-scena" hidden>
+        <iframe id="gra-ramka" title="Pong — gra KTS Gliwice" allow="fullscreen; pointer-lock; gamepad"></iframe>
+      </div>
+
+      <div class="gra-blad" id="gra-blad" hidden>
+        <h2 class="t-h4">Gra jest chwilowo niedostępna</h2>
+        <p class="gra-blad-opis">
+          Nie udało się pobrać gry z repozytorium. Najczęstsze przyczyny:
+          repozytorium gry jest jeszcze prywatne albo doszło do chwilowej
+          awarii sieci. Spróbuj za chwilę!
+        </p>
+        <p class="gra-blad-szczegol t-small">szczegóły: <span id="gra-blad-szczegol">—</span></p>
+        <div class="gra-blad-cta">
+          <button class="btn btn-accent" id="gra-probij" type="button">Spróbuj ponownie</button>
+          <a class="gra-powrot" href="index.html">← Wróć na stronę główną</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== STOPKA (kompaktowa) ===== -->
+  <footer class="gra-stopka">
+    <div class="container">
+      <p class="footer-bottom t-small">
+        Gra: github.com/tmjwk/pong — pobierana przy każdym wejściu, nie jest częścią kodu strony · KTS Gliwice 2026
+        · <span class="t-nums" id="wersja-strony">wersja —</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ===== SPRITE PIŁKI KTS (jak na pozostałych stronach) — wskaźnik
+       ładowania gry (kręcąca się piłka zamiast nudnego spinnera). ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="kula-gradient" cx="32%" cy="28%" r="75%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="45%" stop-color="#fdfcf8"/>
+        <stop offset="75%" stop-color="#ece8dd"/>
+        <stop offset="100%" stop-color="#d9d4c5"/>
+      </radialGradient>
+      <path id="gwiazdka" d="M0,-9 L2.02,-2.78 L8.56,-2.78 L3.27,1.07 L5.29,7.29 L0,3.44 L-5.29,7.29 L-3.27,1.07 L-8.56,-2.78 L-2.02,-2.78 Z"/>
+      <symbol id="pilka-kts" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="57" fill="url(#kula-gradient)"/>
+        <use href="#gwiazdka" transform="translate(60 30)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(77.6 35.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(42.4 35.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(88.6 50.7)" fill="#0057b8"/>
+        <use href="#gwiazdka" transform="translate(31.4 50.7)" fill="#0057b8"/>
+        <text x="60" y="84" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="30" font-weight="700" fill="#0057b8" text-anchor="middle" letter-spacing="1.5" stroke="#0057b8" stroke-width="0.7" paint-order="stroke fill">KTS</text>
+        <text x="60" y="106" font-family="Barlow Condensed, Arial Narrow, Arial, sans-serif" font-size="21" font-weight="700" fill="#0057b8" text-anchor="middle" letter-spacing="0.5" stroke="#0057b8" stroke-width="0.5" paint-order="stroke fill">40+</text>
+      </symbol>
+    </defs>
+  </svg>
+
+  <script src="js/gra.js"></script>
+</body>
+</html>
