@@ -99,7 +99,9 @@ function statusMeczu(m) {
   const kandydaci = [...nasze];
   const karta = (SWIEZOSC.dane?.zespoly ?? []).find((x) => x.nazwa === nasze[0]);
   if (karta?.wiersz) kandydaci.push(karta.wiersz);
-  const [a, b] = m.wynik.split(":").map((x) => parseInt(x, 10));
+  // 1.28.2: obrona przed wynikiem null (nowy terminarz z mostu może
+  // przynieść wiersze bez wyniku, zanim zagramy) — wzorzec z statusMeczuKarty
+  const [a, b] = String(m.wynik ?? "").split(":").map((x) => parseInt(x, 10));
   if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
   const pasuje = (strona) => kandydaci.some((n) => stronaNasza(strona, n));
   let my, rywal;
@@ -457,21 +459,29 @@ function htmlFormy(mecze, z) {
       : "forma-pilka--przyszla";   // nierozegrany albo wynik niedostępny
     const slowo = st === "W" ? "zwycięstwo" : st === "P" ? "porażka" : st === "R" ? "remis" : null;
     // 1.23.0: podpowiedź z DATĄ meczu (zgłoszenie właściciela 02.11).
-    // 1.24.0: duch rewanżu dostaje wiersz „termin nieznany” z wyjaśnieniem
-    // (kalendarz 2. rundy nieopublikowany; 1.26.0: PZTS — kalendarz
-    // rewanży nieopublikowany, patrz frazaKalendarzaDucha) — i celowo
-    // BEZ numeru kolejki, bo numer rewanżu w rzeczywistym kalendarzu
-    // jest jeszcze nieznany.
+    // 1.28.2: DUCH = PLACEHOLDER, nie projekcja pary (właściciel 05.11:
+    // „pamiętaj, że nie znamy par, więc pisanie kto z kim kiedy nie ma
+    // jeszcze terminarza (tabeli) jest bez sensu. może lepiej niech te
+    // piłeczki formy będą po prostu jako placeholder który będzie
+    // uaktualniony gdy tylko pojawi się tabela — coś jak tooltip =
+    // ‹Runda rewanżowa, kolejka x, oczekiwanie na terminarz›”). Dymek
+    // zachowuje 3 wiersze jak mecze, ale BEZ nazw drużyn: (1) „runda
+    // rewanżowa”, (2) „rewanż meczu z X. kolejki” — X = kolejka meczu
+    // rundy 1, którego to rewanż (płynie z danych; to NIE numer
+    // w przyszłym terminarzu, którego nie znamy i nie zgadujemy —
+    // stąd 1.24.0 celowo nie numerował), (3) „oczekiwanie na terminarz”.
+    // Pełne zdanie o nieopublikowanym kalendarzu zostaje w aria paska
+    // (czytniki ekranu) i legendzie — dymek ma być krótki.
     // Natywny title= nie działa na dotyku — treść dymka jedzie w data-tip
     // (esc() przy zapisie; odczyt przez dataset zwraca oryginalny HTML),
     // a rysuje go silnik podpiezForme(): hover na desktopie, tap/scrub
     // na telefonie.
-    const status = m.duch ? "rewanż · termin nieznany"
+    const status = m.duch ? "oczekiwanie na terminarz"
       : m.rozegrany && slowo
         ? `kolejka ${m.kolejka ?? "—"} · ${slowo}`
         : `kolejka ${m.kolejka ?? "—"} · ${m.rozegrany ? "wynik niedostępny" : "do rozegrania"}`;
     const dataTxt = m.duch
-      ? `termin nieznany · ${frazaKalendarzaDucha(z)}`
+      ? "runda rewanżowa"
       : opisDatyFormy(m);
     // 1.28.1: WYNIK w dymku w kolorze statusu (jak .match-score--W/R/P
     // na listach — właściciel: „chyba nie wdrożyłeś konsystentnego
@@ -479,8 +489,14 @@ function htmlFormy(mecze, z) {
     // statusu zostają neutralne (białe).
     const wynikTip = m.rozegrany && m.wynik && m.wynik !== "-:-"
       ? `<b class="t-nums forma-tip-wynik${st ? ` forma-tip-wynik--${st}` : ""}">${esc(m.wynik)}</b>` : "—";
+    // 1.28.2: duch — wiersz meczu bez PAR (projekcja lustra w dymku
+    // myliła się z oficjalnym terminarzem); zostaje kotwica „którego
+    // meczu rundy 1 to rewanż” (patrz komentarz wyżej).
+    const meczHtml = m.duch
+      ? esc(m.kolejka != null ? `rewanż meczu z ${m.kolejka}. kolejki` : "rewanż meczu rundy 1")
+      : `${esc(m.gospodarz)} ${wynikTip} ${esc(m.gosc)}`;
     const tip = `<span class="forma-tip-data">${esc(dataTxt)}</span>`
-      + `<span class="forma-tip-mecz">${esc(m.gospodarz)} ${wynikTip} ${esc(m.gosc)}</span>`
+      + `<span class="forma-tip-mecz">${meczHtml}</span>`
       + `<span class="forma-tip-status${st ? ` forma-tip-status--${st}` : m.duch ? " forma-tip-status--duch" : ""}">${esc(status)}</span>`;
     return `<span class="forma-pilka ${klasa}" data-tip="${esc(tip)}" aria-hidden="true"></span>`;
   });   // 1.25.0: tablica bez join — cięcie na wiersze (rundy) niżej
