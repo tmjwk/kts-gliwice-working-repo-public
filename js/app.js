@@ -1468,9 +1468,21 @@ function sledzSystemowyTryb() {
    mirror game/ do katalogu gra/ repo strony przy każdym pushu (sekret
    TOKEN_STRONY); fallback: gałąź main mirroru. Gra nadal pobierana
    przy każdym wejściu i nie jest częścią kodu strony.
+
+   1.29.3 (06.11): domknięcie luki bfcache w komunikacie o nowej wersji
+   (właściciel 06.11: „komunikat o nowej wersji… wydaje mi się, że
+   nie ma tego w wersji na telefon”). Weryfikacja mobile (viewport
+   telefonu): obie dotychczasowe ścieżki działają — (1) wejście
+   ze starym kodem w cache (v1.28.4) i (2) powrót do karty po
+   deploju (visibilitychange). LUKA: powrót „wstecz” przez bfcache
+   (galeria/archiwum → strona główna) NIE odpala visibilitychange
+   (karta cały czas widoczna), więc sprawdzenie wersji czekało do
+   10 min na timerze. Naprawa: pilnujSwiezosci słucha też pageshow
+   z persisted=true — jak przy powrocie do karty: pokaż czekający
+   komunikat i sprawdź natychmiast (nie częściej niż co 45 s).
 */
 
-const WERSJA_KODU = "1.29.2";
+const WERSJA_KODU = "1.29.3";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
@@ -1716,6 +1728,17 @@ function pilnujSwiezosci() {
     // komunikat czekający w ukrytej karcie pokazujemy po powrocie…
     if (TOAST.oczekujacy) pokazToastTeraz();
     // …i od razu sprawdzamy dane (chyba że niedawno sprawdzone)
+    if (Date.now() - SWIEZOSC.ostatnio > 45_000) sprawdzDane();
+  });
+  // 1.29.3: powrót przez bfcache („wstecz” z galerii/archiwum) — karta
+  // przez cały czas była widoczna, więc visibilitychange milczy, a kod
+  // w karcie może być starszy niż na serwerze. pageshow z persisted=true
+  // łapie dokładnie ten przypadek: pokaż czekający komunikat (gdyby się
+  // zgromadził w tle) i sprawdź wersję natychmiast — jak przy powrocie
+  // do karty (nie częściej niż co 45 s).
+  window.addEventListener("pageshow", (e) => {
+    if (!e.persisted) return;
+    if (TOAST.oczekujacy) pokazToastTeraz();
     if (Date.now() - SWIEZOSC.ostatnio > 45_000) sprawdzDane();
   });
   window.addEventListener("online", () => sprawdzDane());
