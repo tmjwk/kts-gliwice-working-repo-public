@@ -1364,6 +1364,11 @@ function renderBadges(dane, ok) {
   // w index.html; tu doklejamy znacznik czasu z danych — NOWSZY z dwóch
   // odczytów (PZTS/ŚZTS), bo tyle mówi, kiedy dane strony były ostatnio
   // świeże; oba znaczniki szczegółowo w title (hover).
+  // 1.29.1 (właściciel 05.11: „to jest zbyt długie — zastąp tak: «Źródła:
+  // PZTS, ŚlZTS — synchronizacja {timestamp}»”): statyczna treść w stopce
+  // SKRÓCONA do nazw organizacji (bez domen i przypisania lig — pełne
+  // informacje zostają w title po hover i w dialogach „Pełna tabela”);
+  // logika znacznika bez zmian.
   const elZrodlaStopki = $("#zrodla-stopki");
   if (elZrodlaStopki) {
     const ts = [dane.ostatniSync?.szts, dane.ostatniSync?.pzts]
@@ -1454,7 +1459,7 @@ function sledzSystemowyTryb() {
    w sekcji „Podziel się opinią” przeformułowane bez słowa „szkielet”
    (sama sekcja zostaje — etap projektowy). */
 
-const WERSJA_KODU = "1.29.0";
+const WERSJA_KODU = "1.29.1";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
