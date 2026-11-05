@@ -779,7 +779,7 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .mecz-grupa + .mecz-grupa { margin-top: 1rem; }
 .mecz-grupa-naglowek { margin-bottom: 0.15rem; }
 .mecz-grupa-naglowek .muted { font-weight: 500; }
-.mecze-zrodla { padding: 0 0.25rem; }
+/* 1.28.3: .mecze-zrodla usunięta — notka źródeł przeniesiona do stopki */
 
 /* ===== mechanizm ===== */
 .mechanism {
@@ -944,6 +944,10 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .footer-kontakt:hover { border-bottom-color: rgba(255,255,255,0.6); }
 .footer-fade { color: rgba(255,255,255,0.5); margin-top: 0.75rem; }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem; padding-top: 1rem; color: rgba(255,255,255,0.4); }
+/* 1.28.3: ŹRÓDŁA DANYCH — jedyne miejsce na stronie z listą źródeł
+   (właściciel 05.11: „niech będą wymienione tylko w stopce”); jaśniejszy
+   od szkieletowego meta (to informacje o danych, nie o stronie). */
+.footer-zrodla { display: block; margin-bottom: 0.35rem; color: rgba(255,255,255,0.55); }
 
 /* ===== galeria (v1.2.0 — prototyp) ===== */
 .gal-powrot { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--kts-link); text-decoration: none; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; }
