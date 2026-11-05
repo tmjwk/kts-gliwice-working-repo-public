@@ -41,7 +41,7 @@ const GRA_RAW = "https://raw.githubusercontent.com/" + GRA_REPO;
 const GRA_BRANCHE = ["main", "master"]; /* próba po kolei (404 → następna) */
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.29.0";
+const WERSJA_KODU = "1.29.1";
 
 const $ = (sel) => document.querySelector(sel);
 
