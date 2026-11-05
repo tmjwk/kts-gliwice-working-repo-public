@@ -301,13 +301,71 @@ $("#gal-lightbox").addEventListener("click", (e) => {
 });
 
 /* ===== wersja strony =====
-   1.26.2: opis wersji trafia do STOPKI — jedno krótkie zdanie, bez atrybucji (konwencja, szczegóły: app.js pokazWersje) */
+   1.26.2: opis wersji trafia do STOPKI — jedno krótkie zdanie, bez atrybucji (konwencja, szczegóły: app.js pokazWersje)
+   1.28.4: + komunikat, gdy na serwerze czeka nowsza wersja (WERSJA_KODU —
+   konwencja i pełna historia w js/app.js; sprawdzamy PRZY WEJŚCIU, bo
+   nawigacja po stronie to pełne przeładowania, a długo otwarte karty to
+   wzorzec strony głównej z wynikami; „Odśwież stronę” omija cache
+   przeglądarki — dociąga HTML, skrypty i styl, dopiero potem przeładowuje). */
+const WERSJA_KODU = "1.28.4";
+
+/** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie)? Jak app.js. */
+function nowszaWersja(a, b) {
+  if (!a || !b || a === b) return false;
+  const pa = String(a).split(".").map(Number);
+  const pb = String(b).split(".").map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const x = pa[i] ?? 0, y = pb[i] ?? 0;
+    if (x !== y) return x > y;
+  }
+  return false;
+}
+
+/** Toast na dole ekranu (klasy jak .toast-danych z app.js — styl wspólny
+ *  w css/style.css): znika sam po 20 s, klik w tło zamyka, przycisk
+ *  przeładowuje stronę z ominięciem cache. */
+function zglosNowaWersje(wersja) {
+  const el = document.createElement("div");
+  el.className = "toast-danych toast-danych--wersja";
+  el.setAttribute("role", "status");
+  const tekst = document.createElement("span");
+  tekst.className = "toast-tekst";
+  tekst.textContent = `Dostępna nowa wersja strony (v${wersja})`;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btn btn-accent btn-sm toast-btn";
+  btn.textContent = "Odśwież stronę";
+  el.append(tekst, btn);
+  el.addEventListener("click", (e) => {
+    if (!e.target.closest(".toast-btn")) el.remove();
+  });
+  btn.addEventListener("click", async () => {
+    const adresy = [location.href,
+      ...[...document.scripts].map((s) => s.src),
+      ...[...document.querySelectorAll('link[rel="stylesheet"]')].map((l) => l.href)]
+      .filter(Boolean);
+    await Promise.allSettled(adresy.map((u) => fetch(u, { cache: "reload" })));
+    location.reload();
+  });
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("widoczny"));
+  setTimeout(() => {
+    el.classList.remove("widoczny");
+    setTimeout(() => el.remove(), 400); // czas na fade-out (transition 0.25 s)
+  }, 20_000);
+}
+
 async function pokazWersje() {
   try {
     const res = await fetch("wersja.json", { cache: "no-cache" });
     if (!res.ok) return;
     const w = await res.json();
-    if (w?.wersja) $("#wersja-strony").textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
+    if (w?.wersja) {
+      $("#wersja-strony").textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
+      // ukryta przy otwieraniu karta pomija komunikat — dogoni go przy
+      // kolejnym wejściu (nawigacja = pełne przeładowanie)
+      if (!document.hidden && nowszaWersja(w.wersja, WERSJA_KODU)) zglosNowaWersje(w.wersja);
+    }
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
 }
 
