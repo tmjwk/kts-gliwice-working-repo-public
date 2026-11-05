@@ -1454,7 +1454,7 @@ function sledzSystemowyTryb() {
    w sekcji „Podziel się opinią” przeformułowane bez słowa „szkielet”
    (sama sekcja zostaje — etap projektowy). */
 
-const WERSJA_KODU = "1.28.5";
+const WERSJA_KODU = "1.29.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
