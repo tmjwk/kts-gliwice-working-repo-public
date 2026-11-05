@@ -108,6 +108,9 @@
       <div>
         <p class="footer-col-title">Znajdź nas</p>
         <a class="t-small footer-fb" href="https://www.facebook.com/AkademiaTenisaStolowego" target="_blank" rel="noopener">🤝 Facebook — Akademia Tenisa Stolowego&nbsp;<span aria-hidden="true">↗</span></a>
+        <!-- 1.29.0: link do gry (nowa karta) — gra NIE jest częścią kodu
+             strony, gra.html pobiera ją z repo przy każdym wejściu -->
+        <a class="t-small footer-fb" href="gra.html" target="_blank" rel="noopener">🎮 Pong — gra (beta)&nbsp;<span aria-hidden="true">↗</span></a>
         <p class="t-small footer-fade">[RODO · polityka cookies — do wdrożenia]</p>
       </div>
     </div>
@@ -166,7 +169,7 @@
          nawigacja po stronie to pełne przeładowania; „Odśwież stronę” omija
          cache przeglądarki — dociąga HTML, skrypty i styl, dopiero potem
          przeładowuje; toast w stylu .toast-danych z css/style.css). */
-      var WERSJA_KODU = "1.28.5";
+      var WERSJA_KODU = "1.29.0";
       var nowszaWersja = function (a, b) {
         if (!a || !b || a === b) return false;
         var pa = String(a).split("."), pb = String(b).split(".");
