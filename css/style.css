@@ -1644,3 +1644,90 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 @media (prefers-reduced-motion: reduce) {
   .przycisk-gora, .przycisk-gora.widoczny { transform: none; }
 }
+
+/* ===== GRA „PONG” (1.29.0) ==========================================
+   Właściciel 05.11: gra z repo tmjwk/pong, otwierana w NOWEJ kARCIE,
+   pobierana PRZY KAŻDYM WEJŚCIU (jest w trakcie rozwoju — nie może
+   być częścią stałą kodu strony). gra.html = przekaznik: pasek
+   kontrolny + plansza (iframe srcdoc z dokumentem przepisanym przez
+   js/gra.js) + kompaktowa stopka. Link wstopce „Znajdź nas” wszystkich
+   stron. Szczegóły mechanizmu: js/gra.js. */
+.gra-header-akcje { margin-left: auto; display: flex; align-items: center; gap: 1rem; }
+.gra-powrot {
+  color: var(--kts-link); text-decoration: none; font-size: 0.9rem;
+  font-weight: 500; white-space: nowrap;
+}
+.gra-powrot:hover { text-decoration: underline; }
+
+.gra-main { flex: 1 0 auto; display: flex; flex-direction: column; min-height: 0; }
+.gra-pasek {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.75rem 1.5rem; flex-wrap: wrap; padding-block: 0.8rem; flex: none;
+}
+.gra-tytul {
+  margin: 0; font-family: var(--font-display); font-weight: 600;
+  font-size: 1.1rem; color: var(--kts-ink); line-height: 1.25;
+}
+.gra-nota { font-family: var(--font-body); font-weight: 400; font-size: 0.78rem; color: var(--kts-text-muted); }
+.gra-kontrolki { display: flex; gap: 0.5rem; flex: none; }
+
+/* przyciski neutralne (nie CTA — pomarańczowy zostaje dla „Zapisz dziecko”
+   i analogicznych; tu spokojne, kartowe) */
+.btn-gra {
+  background: var(--bg-card); color: var(--kts-ink);
+  border: 1px solid var(--kts-line); border-radius: 0.375rem;
+  padding: 0.4rem 0.7rem; font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; font-family: var(--font-body); line-height: 1.2;
+}
+.btn-gra:hover { border-color: var(--kts-link); color: var(--kts-link); }
+.btn-gra:focus-visible { outline: 2px solid var(--kts-link); outline-offset: 2px; }
+
+/* plansza + stany (loading / błąd) — jedna geometria, żeby nic nie skakało.
+   Wysokość ELASTYCZNA (flex), nie calc(100dvh - X): body jest kolumną
+   flex, planszownik dostaje całą resztę viewportu pomiędzy nagłówkiem,
+   paskiem i stopką — stopka zawsze mieści się na ekranie (audyt VLM:
+   przy sztywnym calc stopka wystawała poza pierwszy ekran). */
+.gra-planszownik { padding: 0 1rem 1.25rem; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.gra-scena, .gra-status, .gra-blad {
+  width: 100%; max-width: 68.75rem; margin-inline: auto;
+  flex: 1 1 auto; min-height: 20rem; height: auto;
+}
+.gra-scena { display: block; }
+.gra-scena:fullscreen { max-width: none; height: 100dvh; min-height: 0; }
+.gra-scena iframe {
+  width: 100%; height: 100%; border: 0; display: block;
+  background: #0b0f1a; border-radius: 0.75rem;
+  box-shadow: 0 10px 30px rgba(9, 16, 29, 0.18);
+  border: 1px solid var(--kts-line);
+}
+.gra-status, .gra-blad {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.6rem; text-align: center; padding: 1.5rem;
+  background: var(--bg-card); border: 1px dashed var(--kts-line); border-radius: 0.75rem;
+}
+.gra-status-tekst { margin: 0.4rem 0 0; color: var(--kts-ink); font-weight: 500; }
+.gra-status-nota { margin: 0; color: var(--kts-text-muted); }
+.gra-blad h2 { margin: 0; }
+.gra-blad-opis { margin: 0; color: var(--kts-text-muted); max-width: 34rem; }
+.gra-blad-szczegol { margin: 0; opacity: 0.75; word-break: break-word; }
+.gra-blad-cta { display: flex; gap: 0.75rem; align-items: center; margin-top: 0.5rem; flex-wrap: wrap; justify-content: center; }
+
+/* stopka kompaktowa — ten sam granat co .footer, jeden wiersz */
+.gra-stopka {
+  background: var(--kts-ink-fixed); color: rgba(255, 255, 255, 0.8);
+  padding: 0.9rem 0;
+}
+.gra-stopka .footer-bottom { margin: 0; padding-top: 0; border-top: 0; }
+
+@media (max-width: 40rem) {
+  .gra-pasek { padding-block: 0.6rem; }
+  .gra-tytul { font-size: 1rem; }
+  .gra-kontrolki { width: 100%; }
+  .gra-kontrolki .btn-gra { flex: 1; }
+  .gra-scena, .gra-status, .gra-blad { min-height: 16rem; }
+  .gra-header-akcje { gap: 0.5rem; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn-gra { transition: border-color 0.15s ease, color 0.15s ease; }
+}
