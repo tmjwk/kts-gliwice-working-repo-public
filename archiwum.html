@@ -161,11 +161,62 @@
         });
       }
       /* 1.26.2: opis wersji trafia do STOPKI — jedno krótkie zdanie, bez atrybucji (konwencja, szczegóły: app.js pokazWersje) */
+      /* 1.28.4: + komunikat, gdy na serwerze czeka nowsza wersja (WERSJA_KODU —
+         konwencja i pełna historia w js/app.js; sprawdzamy PRZY WEJŚCIU, bo
+         nawigacja po stronie to pełne przeładowania; „Odśwież stronę” omija
+         cache przeglądarki — dociąga HTML, skrypty i styl, dopiero potem
+         przeładowuje; toast w stylu .toast-danych z css/style.css). */
+      var WERSJA_KODU = "1.28.4";
+      var nowszaWersja = function (a, b) {
+        if (!a || !b || a === b) return false;
+        var pa = String(a).split("."), pb = String(b).split(".");
+        for (var i = 0; i < Math.max(pa.length, pb.length); i++) {
+          var x = parseInt(pa[i], 10) || 0, y = parseInt(pb[i], 10) || 0;
+          if (x !== y) return x > y;
+        }
+        return false;
+      };
+      var zglosNowaWersje = function (wersja) {
+        var el = document.createElement("div");
+        el.className = "toast-danych toast-danych--wersja";
+        el.setAttribute("role", "status");
+        var tekst = document.createElement("span");
+        tekst.className = "toast-tekst";
+        tekst.textContent = "Dostępna nowa wersja strony (v" + wersja + ")";
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn btn-accent btn-sm toast-btn";
+        btn.textContent = "Odśwież stronę";
+        el.appendChild(tekst);
+        el.appendChild(btn);
+        el.addEventListener("click", function (e) {
+          if (!e.target.closest(".toast-btn")) el.remove();
+        });
+        btn.addEventListener("click", function () {
+          var adresy = [location.href]
+            .concat([].slice.call(document.scripts).map(function (s) { return s.src; }))
+            .concat([].slice.call(document.querySelectorAll('link[rel="stylesheet"]')).map(function (l) { return l.href; }))
+            .filter(Boolean);
+          Promise.allSettled(adresy.map(function (u) { return fetch(u, { cache: "reload" }); }))
+            .then(function () { location.reload(); });
+        });
+        document.body.appendChild(el);
+        requestAnimationFrame(function () { el.classList.add("widoczny"); });
+        setTimeout(function () {
+          el.classList.remove("widoczny");
+          setTimeout(function () { el.remove(); }, 400); // czas na fade-out
+        }, 20000);
+      };
       fetch("wersja.json", { cache: "no-cache" })
         .then(function (r) { return r.json(); })
         .then(function (w) {
           var el = document.getElementById("wersja-strony");
           if (el) el.textContent = "wersja v" + w.wersja + (w.opis ? " · " + w.opis : "");
+          /* ukryta przy otwieraniu karta pomija komunikat — dogoni go przy
+             kolejnym wejściu (nawigacja = pełne przeładowanie) */
+          if (w.wersja && !document.hidden && nowszaWersja(w.wersja, WERSJA_KODU)) {
+            zglosNowaWersje(w.wersja);
+          }
         })
         .catch(function () { /* wersja niezmierzalnie istotna */ });
     })();
