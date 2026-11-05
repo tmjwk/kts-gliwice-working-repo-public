@@ -1457,9 +1457,20 @@ function sledzSystemowyTryb() {
    nad hero, dopisek „/ SZKIELET” przy logo (strona główna + archiwum)
    i „SZKIELET projektowy ·” w stopkach wszystkich 4 stron; zdanie
    w sekcji „Podziel się opinią” przeformułowane bez słowa „szkielet”
-   (sama sekcja zostaje — etap projektowy). */
+   (sama sekcja zostaje — etap projektowy). 
+   1.29.2 (właściciel 05.11: „go” — gra ma DZIAŁAĆ): naprawa poboru gry
+   Pong. Odkrycie: CDN raw.githubusercontent.com IGNORUJE parametry ?bust=
+   (x-cache HIT przy unikalnych wartościach) — obiecano „najnowszą od
+   razu”, a dawano do 5 min wstecz. Naprawa: js/gra.js pyta API GitHuba
+   o SHA ostatniego commita w gra/ i pobiera grę z adresu z SHA (każda
+   wersja gry = inny, niezmienny adres = cache nieszkodliwy). Repo gry
+   tmjwk/pong ZOSTAJE PRYWATNE — jego workflow (Actions) publikuje
+   mirror game/ do katalogu gra/ repo strony przy każdym pushu (sekret
+   TOKEN_STRONY); fallback: gałąź main mirroru. Gra nadal pobierana
+   przy każdym wejściu i nie jest częścią kodu strony.
+*/
 
-const WERSJA_KODU = "1.29.1";
+const WERSJA_KODU = "1.29.2";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
