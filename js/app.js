@@ -1428,7 +1428,39 @@ function sledzSystemowyTryb() {
    szczegółów technicznych. Te żyją w komentarzach kodu, WORKLOG.md
    i release'ach na GitHubie. Przykład dobrej formy: „Drobne porządki —
    krótsza stopka”; zła: „Chip wyraźniejszy (właściciel: «dodaj mu 2s
-   życia i może lepiej niech będzie pomarańczowy»): żyje 9 s zamiast 7…” */
+   życia i może lepiej niech będzie pomarańczowy»): żyje 9 s zamiast 7…”
+
+   1.28.4: WERSJA KODU vs WERSJA NA SERWERZE (właściciel 05.11: „czasem
+   ale niestety nie zawsze z dołu wyskakuje komunikat, że site ma nową
+   wersję. dlaczego czasem nie wyskakuje […] można to naprawić?”).
+   PRZYCZYNA: do v1.28.3 komunikat porównywał wersję.json z chwili
+   załadowania karty z wersją.json przy kolejnym sprawdzeniu — obie są
+   pobierane bez cache, więc gość wchodzący PO deployu miał „wersję
+   startową” już nową → cisza, choć przeglądarka trzymała w cache STARY
+   app.js (GitHub Pages: ~10 min). Komunikat działał tylko, gdy deploy
+   wypadł w trakcie życia otwartej karty — stąd „czasem”.
+   NAPRAWA: skrypt zna WŁASNĄ wersję — WERSJA_KODU, podnoszoną RAZEM
+   z wersja.json przy KAŻDYM deployu (wszystkie pliki z WERSJA_KODU
+   wchodzą do każdego deploy_v*.py; spójność pilnuje test v1.28.4).
+   Komunikat wstaje, gdy na serwerze jest STRICT NOWSZA wersja: przy
+   wejściu (pokazWersje) i przy każdym sprawdzeniu świeżości
+   (sprawdzDane). „Odśwież stronę” omija cache — patrz pobierzNowaWersje. */
+
+const WERSJA_KODU = "1.28.4";
+
+/** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
+ *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
+function nowszaWersja(a, b) {
+  if (!a || !b || a === b) return false;
+  const pa = String(a).split(".").map(Number);
+  const pb = String(b).split(".").map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const x = pa[i] ?? 0, y = pb[i] ?? 0;
+    if (x !== y) return x > y;
+  }
+  return false;
+}
+
 async function pokazWersje() {
   try {
     const res = await fetch("wersja.json", { cache: "no-cache" });
@@ -1436,7 +1468,13 @@ async function pokazWersje() {
     const w = await res.json();
     if (w?.wersja) {
       $("#wersja-strony").textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
-      return w.wersja; // 1.7.5: punkt odniesienia dla „w międzyczasie wyszła nowa wersja"
+      // 1.28.4: karta z PRZESTARZAŁYM kodem (cache przeglądarki)? Komunikat
+      // od razu przy wejściu — do v1.28.3 ten przypadek był ślepy.
+      if (nowszaWersja(w.wersja, WERSJA_KODU) && !SWIEZOSC.wersjaZgloszona) {
+        SWIEZOSC.wersjaZgloszona = true;
+        pokazToast(`Dostępna nowa wersja strony (v${w.wersja})`, { odswiez: true });
+      }
+      return w.wersja;
     }
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
   return null;
@@ -1468,9 +1506,12 @@ async function pokazWersje() {
      piłka-bohater robi jedno „podanie”, a na dole ekranu pojawia się
      krótki komunikat (znika sam; prefers-reduced-motion: bez animacji,
      dane i tak się odświeżają).
-   • Nowa wersja strony (deploy w międzyczasie) → komunikat z przyciskiem
-     „Odśwież stronę”. NIGDY nie przeładowujemy karty sami — czytanie
-     święte.
+   • Nowa wersja strony → komunikat z przyciskiem „Odśwież stronę”.
+     1.28.4: porównujemy z WERSJĄ URUCHOMIONEGO KODU (patrz WERSJA_KODU),
+     więc komunikat łapie i wejście PO deployu ze starym app.js w cache,
+     i deploy wypadły w trakcie życia karty; przycisk dociąga stronę
+     z pominięciem cache (pobierzNowaWersje). NIGDY nie przeładowujemy
+     karty sami — czytanie święte.
    • Koszt: fetch z cache:"no-cache" to rewalidacja ETag (304 = kilkadziesiąt
      bajtów); przy okazji odświeża się panel „Automat” (runs.json) i
      znacznik „Ostatni odczyt”. Komunikat w ukrytej karcie czeka na
@@ -1482,8 +1523,7 @@ async function pokazWersje() {
 const SWIEZOSC = {
   tekst: null,            // ostatni surowy dane.json (identyczny tekst = cisza)
   dane: null,             // ostatnie sparsowane dane
-  wersjaStartowa: null,    // wersja strony z chwili załadowania karty
-  wersjaZgloszona: false, // czy komunikat o nowej wersji już się pokazał
+  wersjaZgloszona: false, // czy komunikat o nowej wersji już się pokazał (raz na życie karty)
   wToku: false,           // osłona przed równoległymi sprawdzeniami
   ostatnio: 0,            // czas ostatniego wystartowania sprawdzenia (ms)
   timer: null,
@@ -1548,7 +1588,7 @@ function pokazToastTeraz() {
     `<span class="toast-tekst">${esc(z.tresc)}</span>` +
     (z.odswiez ? `<button type="button" class="btn btn-accent btn-sm toast-btn">Odśwież stronę</button>` : "");
   const btn = TOAST.el.querySelector(".toast-btn");
-  if (btn) btn.addEventListener("click", () => location.reload());
+  if (btn) btn.addEventListener("click", pobierzNowaWersje);
   requestAnimationFrame(() => TOAST.el.classList.add("widoczny"));
   clearTimeout(TOAST.timer);
   TOAST.timer = setTimeout(ukryjToast, z.odswiez ? 20_000 : 8_000);
@@ -1558,6 +1598,20 @@ function ukryjToast() {
   if (!TOAST.el) return;
   TOAST.el.classList.remove("widoczny");
   clearTimeout(TOAST.timer);
+}
+
+/** 1.28.4: „Odśwież stronę” OMIJA cache przeglądarki. Zwykłe przeładowanie
+ *  w oknie ~10 min po deployu sięgałoby po starą kopię z cache (GitHub
+ *  Pages) i komunikat wracał jak bumerang. Najpierw dociągamy na nowo
+ *  HTML i zasoby strony (fetch z cache:"reload" podmienia wpis w cache
+ *  HTTP), dopiero potem przeładowujemy — po powrocie działa nowy kod. */
+async function pobierzNowaWersje() {
+  const adresy = [location.href,
+    ...[...document.scripts].map((s) => s.src),
+    ...[...document.querySelectorAll('link[rel="stylesheet"]')].map((l) => l.href)]
+    .filter(Boolean);
+  await Promise.allSettled(adresy.map((u) => fetch(u, { cache: "reload" })));
+  location.reload();
 }
 
 /** Przerysowanie wszystkich sekcji danymi — identyczne funkcje jak przy
@@ -1610,13 +1664,17 @@ async function sprawdzDane() {
       }
     }
     pokazPrzebiegiSyncu(); // panel „Automat” też na bieżąco (runs.json mały)
-    // czy w międzyczasie nie wyszła nowa wersja strony?
-    if (SWIEZOSC.wersjaStartowa && !SWIEZOSC.wersjaZgloszona) {
+    // czy na serwerze nie czeka nowsza wersja strony? (1.28.4: porównanie
+    // z WERSJĄ URUCHOMIONEGO KODU — do v1.28.3 porównywaliśmy z wersją
+    // z chwili załadowania karty, więc gość wchodzący po deployu dostawał
+    // ciszę nawet ze starym app.js w cache; to samo sprawdzenie robi
+    // pokazWersje przy wejściu — tu łapiemy deploy w trakcie życia karty)
+    if (!SWIEZOSC.wersjaZgloszona) {
       try {
         const rw = await fetch("wersja.json", { cache: "no-cache" });
         if (rw.ok) {
           const w = await rw.json();
-          if (w?.wersja && w.wersja !== SWIEZOSC.wersjaStartowa) {
+          if (nowszaWersja(w?.wersja, WERSJA_KODU)) {
             SWIEZOSC.wersjaZgloszona = true;
             pokazToast(`Dostępna nowa wersja strony (v${w.wersja})`, { odswiez: true });
           }
@@ -1859,7 +1917,7 @@ async function renderTeaserGalerii() {
 async function start() {
   // tryb dzień/noc (ikona + klik) i menu mobilne
   obsluzPrzelacznikTrybu();
-  pokazWersje().then((w) => { SWIEZOSC.wersjaStartowa = w; });
+  pokazWersje();   // 1.28.4: stopka + komunikat, gdy na serwerze czeka nowsza wersja
   pokazPrzebiegiSyncu();
   renderTeaserGalerii();
   wypelnijLicznikGalerii();   // 1.16.0: badge sekcji = licznik CAŁEJ galerii (bot)
