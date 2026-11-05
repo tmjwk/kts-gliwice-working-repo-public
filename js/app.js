@@ -579,9 +579,10 @@ function legendaFormy(mecze, zespoly) {
 function renderKartyDruzyn(dane, mecze) {
   ukryjFormTip();   // 1.23.0: piłeczki lecą do przerysowania — dymek nie może wisieć w powietrzu
   /* 1.26.4 (właściciel 04.11): zero plakietki PZTS/ŚZTS (liga mówi
-     sama za siebie) i JEDEN wiersz na dole kafelka — „Źródło ↗”
-     z lewej, „Szczegóły ↗” z prawej (były dwa wiersze: „Szczegóły,
-     tabela i terminarz” + „Źródło: tabela ligowa”). */
+     sama za siebie) i JEDEN wiersz na dole kafelka. 1.28.3 (właściciel
+     05.11: źródła wymienione WYŁĄCZNIE w stopce strony): link do tabeli
+     u źródła zostaje (funkcja), ale bez słowa „Źródło” w treści —
+     „Pełna tabela ↗” z lewej, „Szczegóły ↗” z prawej. */
   const wrap = $("#karty-druzyn");
   wrap.innerHTML = dane.zespoly.map((z) => `
     <article class="card team-card team-klik" data-slug="${esc(slugZespolu(z.nazwa))}" tabindex="0" role="button"
@@ -594,7 +595,7 @@ function renderKartyDruzyn(dane, mecze) {
       </dl>
       ${htmlFormy(mecze, z)}
       <div class="team-stopka">
-        ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Źródło&nbsp;↗</a>` : ""}
+        ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Pełna&nbsp;tabela&nbsp;↗</a>` : ""}
         <span class="team-wiecej">Szczegóły&nbsp;↗</span>
       </div>
     </article>`).join("");
@@ -1148,7 +1149,7 @@ function podpiezKartyDruzyn() {
     otworzDruzyne(z);
   };
   wrap.addEventListener("click", (e) => {
-    if (e.target.closest("a")) return;   // „Źródło” działa normalnie
+    if (e.target.closest("a")) return;   // „Pełna tabela” działa normalnie
     // 1.23.0: piłeczka formy = podpowiedź meczu (podpiezForme), nie dialog
     if (e.target.closest(".forma-pilka")) return;
     const kartaEl = e.target.closest(".team-klik");
@@ -1180,9 +1181,13 @@ function wierszMeczu(m, oczekuje = false, wGrupie = false) {
       ? `<span class="badge badge--derby">derby</span>`
       : st ? `<span class="badge badge--${st}">${st}</span>` : "";
   const etykieta = nasze.length > 0 && !derby ? ` · ${nasze[0]}` : "";
-  const zrodlo = m.liga.startsWith("1. Liga") ? "pzts.pl" : "ligi.slzts.pl";
+  // 1.28.3 (właściciel 05.11: „żródła na stronie głównej niech będą
+  // wymienione tylko w stopce”): domena źródła (pzts.pl/ligi.slzts.pl)
+  // ZDJĘTA z mety meczu — atrybucja mieszka teraz w stopce strony
+  // (+ znacznik ostatniej synchronizacji). Liga zostaje (kontekst
+  // meczu), etykieta drużyny zostaje.
   // wGrupie = wiersz wewnątrz grupy drużyny („Ostatnie mecze”):
-  // liga i źródło są w nagłówku grupy, meta zduplikowana by schodziła.
+  // liga jest w nagłówku grupy, meta zduplikowana by schodziła.
   // 1.26.5 (właściciel 04.11: „w wersji mobilnej inną strukturę — niech
   // będzie jak na komputerze”): wiersz = dwie GRUPY — .match-glowne
   // (drużyny + wynik + plakietka) i .match-info (data · godzina ·
@@ -1203,7 +1208,7 @@ function wierszMeczu(m, oczekuje = false, wGrupie = false) {
           ${m.kolejka ? `<span class="match-date match-kolejka">· kolejka ${m.kolejka}</span>` : ""}
         </span>
       </div>
-      ${wGrupie ? "" : `<p class="match-meta">${esc(m.liga)} · ${zrodlo}${etykieta}</p>`}
+      ${wGrupie ? "" : `<p class="match-meta">${esc(m.liga)}${etykieta}</p>`}
     </li>`;
 }
 
@@ -1351,6 +1356,25 @@ function renderBadges(dane, ok) {
       "Moment ostatniego poprawnego odczytu każdego źródła. Wyniki nie muszą " +
       "się zmieniać między odczytami — strona zawsze pokazuje najświeższe " +
       "odczytane dane.";
+  }
+  // 1.28.3: ŹRÓDŁA TYLKO W STOPCE + ZNACZNIK OSTATNIEJ SYNCHRONIZACJI
+  // (właściciel 05.11: „żródła na stronie głównej (desktop/mobile)
+  // niech będą wymienione tylko w stopce… dodaj timestamp ostatniej
+  // synchronizacji”). Statyczna treść (domeny + przypisanie lig) siedzi
+  // w index.html; tu doklejamy znacznik czasu z danych — NOWSZY z dwóch
+  // odczytów (PZTS/ŚZTS), bo tyle mówi, kiedy dane strony były ostatnio
+  // świeże; oba znaczniki szczegółowo w title (hover).
+  const elZrodlaStopki = $("#zrodla-stopki");
+  if (elZrodlaStopki) {
+    const ts = [dane.ostatniSync?.szts, dane.ostatniSync?.pzts]
+      .filter(Boolean).sort().pop();
+    elZrodlaStopki.textContent = formatujZnacznik(ts) ?? "—";
+    elZrodlaStopki.title =
+      "Moment ostatniego poprawnego odczytu każdego źródła — PZTS: "
+      + `${formatujZnacznik(dane.ostatniSync?.pzts) ?? "—"} · ŚZTS: `
+      + `${formatujZnacznik(dane.ostatniSync?.szts) ?? "—"}. Wyniki nie muszą `
+      + "się zmieniać między odczytami — strona zawsze pokazuje najświeższe "
+      + "odczytane dane.";
   }
 }
 
