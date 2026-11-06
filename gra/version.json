@@ -1,0 +1,34 @@
+{
+  "game": "PONG · 1972 — Atari Replica",
+  "version": "0.3.2",
+  "released": "2026-11-06",
+  "file": "pong.html",
+  "locations": {
+    "repo": "game/pong.html (tmjwk/pong, prywatne — źródło prawdy)",
+    "site": "gra/pong.html (mirror auto: Actions publikuj-gre.yml → repo strony klubu)",
+    "embed": "pong.html obok tego pliku (version.json zawsze towarzyszy grze)"
+  },
+  "embed": "<iframe src=\"/pong.html\" style=\"width:100%;height:100%;border:0\" allow=\"autoplay\" title=\"PONG 1972\"></iframe>",
+  "read_version": [
+    "version.json — ten plik (zawsze obok pong.html): fetch → .version",
+    "pong.html: <meta name=\"game-version\" content=\"0.3.2\">",
+    "pong.html: <html data-version=\"0.3.2\">",
+    "pong.html: const VERSION = \"0.3.2\" (jedno źródło prawdy w kodzie)",
+    "runtime: window.__pong.VERSION albo window.__pong.getVersion()",
+    "iframe postMessage: gra sama ogłasza {type:'pong:version', version:'0.3.2'} po starcie; na żądanie wyślij {type:'pong:get-version'}",
+    "pong.html: <title> kończy się na „v0.3.2”",
+    "GitHub Release: GET /repos/tmjwk/pong/releases/latest → .tag_name (dla agenta z tokenem)"
+  ],
+  "postmessage_protocol": {
+    "pong:version": "gra → strona: {type, game, version, released} — ogłaszane po starcie i na żądanie",
+    "pong:get-version": "strona → gra (do iframe.contentWindow): prośba o ponowne pong:version",
+    "pong:exit": "gra → strona: grę zamknięto (EXIT / Esc) — strona zamyka iframe"
+  },
+  "changelog": {
+    "0.3.2": "maszynowo czytelna wersja: version.json, meta[name=game-version], html[data-version], postMessage pong:version / pong:get-version, komunikat startowy w konsoli, README z protokołem wersji; komplet poprawek v0.3.1",
+    "0.3.1": "klawisze W/S i strzałki przejmują paletkę od myszy (ostatnie wejście wygrywa); mysz opuszczająca kort zwalnia paletkę; AI zawsze po stronie PRZECIWNEJ do gracza; blur zwalnia klawisze; fokus iframe; nr wersji na kort i w nagłówku",
+    "0.3.0": "kap kortu 16:9 na desktopie; telefon w poziomie: ramki 1/6 ekranu; wybór strony gracza (lewa/prawa); EXIT/Esc; cały ekran czuły na dotyk; odliczanie 3-2-1",
+    "0.2.3": "dostawa 16:9 v2 — pełne wypełnienie ekranu, zero martwych stref",
+    "0.2.2": "paletki symetrycznie ~4,5% od krawędzi ekranu w każdej orientacji"
+  }
+}

@@ -1,14 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-version="0.3.2">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>PONG · 1972 — Atari Replica</title>
+<meta name="game-version" content="0.3.2"><!-- v0.3.2: wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.2</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
-  Wersja: 0.2.2 (paletki zawsze przy krawędziach ekranu — także pion/square/
-  telefon w poziomie; naprawa inicjalizacji layoutu + szerzej niż 2,4:1)
+  Wersja: 0.3.2 (2026-11-06: MASZYNOWO CZYTELNA WERSJA — kanały dla strony
+  klubu i agenta AI: version.json obok pliku, meta[name=game-version],
+  html[data-version], tytuł karty, window.__pong.getVersion(), komunikat
+  startowy w konsoli oraz postMessage {type:'pong:version'} (auto po starcie
+  iframe, odświeżenie na żądanie {type:'pong:get-version'}); komplet
+  poprawek v0.3.1 w zestawie)
+  Wersja: 0.3.1 (poprawki po teście desktopowym Ciby, 2026-11-06: klawisze W/S
+  i strzałki przejmują paletkę od myszy — "ostatnie wejście wygrywa"
+  (hover myszy nad kortem przyklejał paletkę do ostatniego Y i nadpisywał
+  klawisze co pole); mysz opuszczająca kort zwalnia paletkę; po zmianie
+  strony/trybu zero starych celów wskaźnika — AI zawsze prowadzi paletkę
+  PRZECIWNIKA; blur okna zwalnia klawisze; iframe przechwytuje fokus pod
+  myszą; nr wersji na kortu przy odliczaniu i w attract + czytelniejsza
+  plakietka w nagłówku)
+  Wersja: 0.3.0 (życzenia Ciby 2026-11-06: kap kortu 16:9 na desktopie;
+  telefon w poziomie — ramki 1/6 ekranu po bokach; natychmiastowy przerys
+  po zmianie orientacji; paletka gracza po prawej + opcja strony; EXIT/Esc;
+  cały ekran czuły na dotyk; odliczanie 3-2-1 przed startem rozgrywki)
   |  Allan, na cześć Allana Alcorna
   ----------------------------------------------------------------------------
   Jeden plik, bez zasobów zewnętrznych. Osadzanie na stronie klubu:
@@ -22,12 +39,17 @@
    - pomiar zdjęcia oryginalnego ekranu (patrz repo: docs/badania.md)
 
   KLUCZOWE STAŁE (jednostki oryginału: 455 cykli/linię, 262 linie/pole):
-   - kort: wysokość 246 linii; szerokość ADAPTACYJNA 374-954 cykli (4:3 - ~3,4:1)
-     wg proporcji okna — pełna szerokość współczesnych ekranów (także telefon
-     w poziomie), paletki symetrycznie ~4,5% od krawędzi (16-44 cykli,
-     proporcjonalnie — v0.2.2, decyzja Ciby); fizyka (cykle/pole) bez zmian →
-     dłuższy dystans = więcej czasu na reakcję;
+   - kort: wysokość 246 linii; szerokość ADAPTACYJNA 374-500 cykli (4:3 — 16:9;
+     v0.3.0: kap 16:9 = koniec „zbyt rozciągniętej” gry), paletki symetrycznie
+     ~4,5% od krawędzi kortu (16-44 cykli); TELEFON W POZIOMIE: ramki o
+     szerokości 1/6 ekranu po lewej i prawej → kort = 2/3 szerokości ekranu
+     (v0.3.0, decyzja Ciby); fizyka (cykle/pole) bez zmian;
      ?classic=1 = geometrycznie dokładny oryginał (4:3, paletki 128H/384H)
+   - osadzenie na stronie: rodzic powinien obsłużyć postMessage
+     {type:'pong:exit'} (przycisk EXIT / klawisz Esc) i zamknąć grę;
+     WERSJĘ gry rodzic dostaje automatycznie: postMessage {type:'pong:version',
+     version, released} (na żądanie: wyślij {type:'pong:get-version'}),
+     a bez uruchamiania JS: version.json / meta[name=game-version]
    - siatka: x=256H (12 cykli LEWO od środka!), kreska 4 linie co 8
    - paletki (oryginał): lewa x=128H, prawa x=384H (ASYMETRIA), 4x15;
      w replice: symetrycznie ~4,5% od krawędzi ekranu (v0.2.2)
@@ -54,6 +76,7 @@
     background:var(--bg);color:var(--ink);font-family:var(--mono);
     display:flex;flex-direction:column;overflow:hidden;
     overscroll-behavior:none;user-select:none;-webkit-user-select:none;
+    touch-action:none;  /* v0.3.0: CAŁY ekran steruje grą — dotyk nie scrolluje */
   }
   /* pasek górny — minimalny, z akcentem klubu */
   header{
@@ -64,7 +87,8 @@
   }
   header b{color:var(--ink);font-size:14px;letter-spacing:.3em}
   header .club{color:var(--club-accent)}
-  /* scena gry — kort dopasowany do proporcji okna (4:3…2,4:1; poza tym letterbox) */
+  header .ver{color:#8d8d94;font-size:10px;letter-spacing:.06em}
+  /* scena gry — kort 4:3…16:9; telefon w poziomie: ramki 1/6 ekranu; poza tym letterbox */
   #stage{
     flex:1 1 auto;min-height:0;position:relative;display:flex;
     align-items:center;justify-content:center;padding:10px;
@@ -112,7 +136,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA</span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.2</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -121,6 +145,7 @@
 
 <footer>
   <div class="grp">
+    <button id="bexit">Exit</button>
     <button id="b1p">1 Player</button>
     <!-- v0.2.1: „2 Players” ukryte do czasu serwera multiplayer (decyzja Ciby).
          Kod trybu 2P (klawisze, dwie paletki dotykowe, sideFor) pozostaje —
@@ -129,6 +154,7 @@
   </div>
   <span class="hint" id="hint">W/S · ↑/↓ · MOUSE · TOUCH</span>
   <div class="grp">
+    <button id="bside">Player: Right</button>
     <button id="bto">Game to 11</button>
     <button id="bsnd">Sound: Off</button>
   </div>
@@ -138,14 +164,15 @@
 "use strict";
 /* ============================================================================
    JEDNOSTKI GRY = jednostki oryginalnego sprzętu.
-   Kort: wysokość 246 linii (jak oryginał), szerokość 374–673 cykli (adaptacyjna).
+   Kort: wysokość 246 linii (jak oryginał), szerokość 374–500 cykli (adaptacyjna).
    x rośnie w prawo, y w dół.
    Krok symulacji = 1 pole (1/60.054 s). Wszystkie ruchy są całkowite
    (dyskretne) — dokładnie jak w sprzęcie TTL („slipping counter").
    ========================================================================== */
-const CY_MIN = 374, CY_MAX = 954;             // zakres szerokości kortu: 4:3 … ~3,4:1 (§12/§14)
+const CY_MIN = 374, CY_MAX = 500;             // zakres szerokości kortu: 4:3 … 16:9 (v0.3.0, §12/§14)
+const CY_PHONE_MAX = 954;                     // telefon w poziomie: cap = sama ramka 1/6 (bez kapu 16:9)
 /* margines paletki od krawędzi kortu: ~4,5% szerokości (16-44 cykli) —
-   paletki zawsze przy SAMEJ krawędzi ekranu, niezależnie od proporcji okna */
+   paletki zawsze przy SAMEJ krawędzi kortu, niezależnie od proporcji okna */
 const padEdge = w => Math.max(16, Math.min(44, Math.round(w * 0.045)));
 let   VIS_W = CY_MIN;                         // szerokość kortu (cykle) — ADAPTACYJNA (§12)
 const VIS_H = 246;                            // wysokość kortu (linie) — jak oryginał
@@ -163,6 +190,7 @@ let   SERVE_X = NET_X + 1;                    // [T2] tuż na prawo od siatki
 let   SC1 = [33, 65], SC2 = [305, 337];       // okna wyniku [dziesiątki, jedności] — przy paletkach
 const SERVE_FIELDS = Math.round(1.708 * FIELD_HZ);  // 1,708 s = 103 pola (555: 330k×4,7uF)
 const GAMEOVER_FIELDS = Math.round(5 * FIELD_HZ);    // „attract" po końcu gry → auto-restart
+const COUNT_FIELDS = Math.round(2.4 * FIELD_HZ);     // v0.3.0: odliczanie 3-2-1 (3 × 0,8 s)
 
 const SPEED_BY_HITS = h => h >= 12 ? 4 : (h >= 4 ? 3 : 2);   // 2/3/4 cykle/pole
 const ZONE_VY = [-3, -2, -1, 0, 0, 1, 2, 3];                // strefy paletki 8×2 linii
@@ -178,9 +206,11 @@ const SND_SCORE = { f: 245.8, d: () => 0.242 };
 
 /* --- stan gry ------------------------------------------------------------ */
 const G = {
-  mode: 1,                 // 1 = gracz vs AI (lewa = człowiek), 2 = dwóch graczy
+  mode: 1,                 // 1 = gracz vs AI, 2 = dwóch graczy
+  side: 2,                 // 1P: strona GRACZA — 2 = prawa (domyślnie, v0.3.0), 1 = lewa
   target: 11,              // „Game Won" — przełącznik operatora 11/15
-  state: "serve",          // serve | play | gameover (attract freeze)
+  state: "count",          // count | serve | play | gameover (attract freeze)
+  countF: COUNT_FIELDS,    // v0.3.0: odliczanie 3-2-1 przed startem (w polach)
   serveTimer: SERVE_FIELDS,
   serveDir: Math.random() < .5 ? -1 : 1,   // pierwsza „moneta" — kierunek dowolny
   serveVy: 0,              // prędkość pionowa zachowana z pudła (serwis oryginału)
@@ -192,6 +222,7 @@ const G = {
   fields: 0,                 // licznik pól (testy/kalibracja T1–T7)
   aiErr: 0, aiComing: false, // błąd celowania AI / czy piłka leci w jego stronę
 };
+const aiIdx = () => (G.mode === 1 ? (G.side === 1 ? 1 : 0) : -1);  // indeks paletki AI (-1 = 2P)
 
 /* --- dźwięk (WebAudio; odblokowanie po 1. interakcji) ----------------------
    v0.1.2 — niezawodność: audio potrafi umrzeć na kilka sposobów i każdy dawał
@@ -305,10 +336,10 @@ const SEG = {
   0: "abcdef", 1: "bc", 2: "abged", 3: "abgcd", 4: "fgbc",
   5: "afgcd", 6: "afgedc", 7: "abc", 8: "abcdefg", 9: "abcdfg"
 };
-function drawDigit(d, x0, y0) {
+function drawDigit(d, x0, y0, k = 1) {          // k = skala (1 = wynik; 2 = odliczanie 3-2-1)
   const s = SEG[d] || "";
   ctx.fillStyle = C_SCORE;
-  const R = (x, y, w, h) => ctx.fillRect(PX(x0 + x), PY(y0 + y), PX(w), PH(h));
+  const R = (x, y, w, h) => ctx.fillRect(PX(x0 + x * k), PY(y0 + y * k), PX(w * k), PH(h * k));
   if (s.includes("a")) R(0, 0, 16, 4);        // górna
   if (s.includes("f")) R(0, 0, 4, 12);        // lewy górny pion (12 linii)
   if (s.includes("b")) R(12, 0, 4, 12);       // prawy górny pion
@@ -323,6 +354,21 @@ function drawScore(side) {                     // okna zakotwiczone przy paletka
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
+const VERSION = "0.3.2";      // v0.3.2: jedno źródło prawdy o wersji — nagłówek,
+const RELEASE = "2026-11-06"; // tytuł karty, kort, meta, version.json, postMessage
+function drawVersion() {      // nr wersji małymi 7-seg. na dole kortu (od v0.3.1, życzenie Ciby)
+  const k = 0.5, y0 = VIS_H - 22;              // skala ½ cyfry wyniku, linia 224..240
+  let wTot = 0;
+  for (const ch of VERSION) wTot += (ch === "." ? 8 : 20) * k;
+  let x = (VIS_W - wTot) / 2;                  // wyśrodkowane (kropka = blok 4×4 przy podstawie)
+  for (const ch of VERSION) {
+    if (ch === ".") {
+      ctx.fillStyle = C_SCORE;
+      ctx.fillRect(PX(x + 4 * k), PY(y0 + 27 * k), PX(4 * k), PH(4 * k));
+      x += 8 * k;
+    } else { drawDigit(+ch, x, y0, k); x += 20 * k; }
+  }
+}
 
 function render() {
   ctx.fillStyle = "#000"; ctx.fillRect(0, 0, cv.width, cv.height);
@@ -335,10 +381,15 @@ function render() {
     ctx.fillRect(PX(PAD_X1), PY(G.pads[0].top), PX(PAD_W), PH(PAD_H));
     ctx.fillRect(PX(PAD_X2), PY(G.pads[1].top), PX(PAD_W), PH(PAD_H));
   }
-  if (G.state !== "serve") {                   // w czasie opóźnienia serwu piłki brak
+  if (G.state !== "serve" && G.state !== "count") {   // przed serwem/w odliczaniu piłki brak
     ctx.fillRect(PX(G.ball.x), PY(G.ball.y), PX(BALL), PH(BALL));
   }
+  if (G.state === "count")                     // v0.3.0: wielka cyfra 3/2/1 na środku kortu
+    drawDigit(Math.max(1, Math.ceil(G.countF / (COUNT_FIELDS / 3))),
+              (VIS_W - 32) / 2, (VIS_H - 64) / 2, 2);
   drawScore(0); drawScore(1);                  // wynik zostaje też po końcu gry
+  if (G.state === "count" || G.state === "gameover")   // v0.3.1: nr wersji na kortu
+    drawVersion();
 }
 
 /* --- kroki symulacji (1 krok = 1 pole 60,054 Hz) --------------------------- */
@@ -346,21 +397,32 @@ const clampPad = v => Math.max(PAD_MIN, Math.min(PAD_MAX, Math.round(v)));
 
 function stepPads() {
   const p1 = G.pads[0], p2 = G.pads[1];
-  /* klawiatura — pozycyjnie jak pokrętło, w krokach 3 linie/pole */
-  if (keys.p1u) p1.top = clampPad(p1.top - KEY_SPEED);
-  if (keys.p1d) p1.top = clampPad(p1.top + KEY_SPEED);
+  /* klawiatura — pozycyjnie jak pokrętło, w krokach 3 linie/pole.
+     v0.3.0: w 1P człowiek gra po WYBRANEJ stronie (domyślnie PRAWA);
+     W/S i strzałki prowadzą paletkę GRACZA, AI gra przeciwną stroną.
+     W 2P bez zmian: W/S = lewa, strzałki = prawa. */
   if (G.mode === 2) {
+    if (keys.p1u) p1.top = clampPad(p1.top - KEY_SPEED);
+    if (keys.p1d) p1.top = clampPad(p1.top + KEY_SPEED);
     if (keys.p2u) p2.top = clampPad(p2.top - KEY_SPEED);
     if (keys.p2d) p2.top = clampPad(p2.top + KEY_SPEED);
-  } else {                                    /* AI (dodatek — w oryginale brak) */
-    /* AI przewiduje punkt przechwytu (z odbiciami od ścian) zamiast gonić
-       piłkę — czysty tracker (2,2 < 3 linie/pole) przegrywał z każdym ostrym
-       serwisem. Celowanie ma „ludzki” błąd, rosnący z długością wymiany,
-       więc w długich wymianach AI da się pokona. */
+  } else {
+    const hp = G.side === 1 ? p1 : p2;        // paletka gracza (1P)
+    if (keys.p1u || keys.p2u) hp.top = clampPad(hp.top - KEY_SPEED);
+    if (keys.p1d || keys.p2d) hp.top = clampPad(hp.top + KEY_SPEED);
+    /* AI (dodatek — w oryginale brak): przewiduje punkt przechwytu (z odbiciami
+       od ścian) zamiast gonić piłkę — czysty tracker (2,2 < 3 linie/pole)
+       przegrywał z każdym ostrym serwisem. Celowanie ma „ludzki” błąd,
+       rosnący z długością wymiany, więc w długich wymianach AI da się
+       pokonać. Strona AI = przeciwna do strony gracza (v0.3.0). */
+    const ai = aiIdx();
+    const ap = G.pads[ai];
+    const ax = ai === 0 ? PAD_X1 : PAD_X2;
     const b = G.ball;
+    const towards = (b.vx > 0) === (ai === 1);          // piłka leci W stronę AI?
     let target;
-    if (G.state === "play" && b.vx > 0) {
-      const t = Math.max(0, (PAD_X2 - BALL + 1 - b.x) / b.vx);  // pola do kontaktu
+    if (G.state === "play" && towards) {
+      const t = Math.max(0, (ax - BALL + 1 - b.x) / b.vx);     // pola do kontaktu
       const H = VIS_H - BALL;                                   // zakres góry piłki
       let y = b.y + b.vy * t;                                   // tor + odbicia od ścian
       y = ((y % (2 * H)) + 2 * H) % (2 * H);
@@ -369,17 +431,17 @@ function stepPads() {
     } else {
       target = (VIS_H - PAD_H) / 2;                             // postawa „gotowa”
     }
-    const dy = target - p2.top;
+    const dy = target - ap.top;
     if (Math.abs(dy) >= 1)
-      p2.top = clampPad(p2.top + Math.max(-AI_SPEED, Math.min(AI_SPEED, dy)));
-    /* v0.2.1: tryb 2P ukryty → strzałki ↑/↓ prowadzą paletkę GRACZA
-       (w trybie 2P wrócą do paletki prawej — kod wyżej bez zmian) */
-    if (keys.p2u) p1.top = clampPad(p1.top - KEY_SPEED);
-    if (keys.p2d) p1.top = clampPad(p1.top + KEY_SPEED);
+      ap.top = clampPad(ap.top + Math.max(-AI_SPEED, Math.min(AI_SPEED, dy)));
   }
-  /* palec/mysz ustawiają pozycję bezpośrednio (jak potencjometr) */
+  /* palec/mysz ustawiają pozycję bezpośrednio (jak potencjometr) — v0.3.0:
+     dotyk CAŁEGO EKRANU prowadzi paletkę gracza (w 2P: połowa ekranu/gracza).
+     v0.3.1: w 1P slot AI NIGDY nie ma celu wskaźnika — po zmianie strony
+     stary cel z byłego slotu gracza „zamrażał" paletkę AI na zawsze. */
+  if (G.mode === 1) pointer[G.side === 1 ? 1 : 0] = null;
   if (pointer[0] != null) p1.top = clampPad(pointer[0]);
-  if (G.mode === 2 && pointer[1] != null) p2.top = clampPad(pointer[1]);
+  if (pointer[1] != null) p2.top = clampPad(pointer[1]);
 }
 
 function bounceWalls() {
@@ -419,7 +481,7 @@ function stepBall() {
     paddleHit(G.pads[0], PAD_X1);
     paddleHit(G.pads[1], PAD_X2);
     b.vx = Math.sign(b.vx) * SPEED_BY_HITS(G.hits);
-    G.aiComing = b.vx > 0;
+    G.aiComing = (b.vx > 0) === (aiIdx() === 1);   // w stronę AI? (v0.3.0)
     if (G.aiComing && !wasComing)              // nowa piłka leci w stronę AI
       G.aiErr = (Math.random() * 2 - 1) * AI_ERR(G.hits);
 
@@ -437,7 +499,6 @@ function stepBall() {
         if (b.x < 0) b.x = -b.x; else if (b.x > VIS_W - BALL) b.x = 2 * (VIS_W - BALL) - b.x;
       } else {
         G.state = "serve"; G.serveTimer = SERVE_FIELDS;
-        applyPendingCourt();                   // odroczona zmiana geometrii kortu
       }
     }
   } else if (G.state === "gameover") {
@@ -447,17 +508,26 @@ function stepBall() {
   }
 }
 
+function startCountdown() {                    // v0.3.0: rozgrywka startuje od 3-2-1
+  G.score = [0, 0]; G.hits = 0; G.serveVy = 0;
+  G.serveDir = Math.random() < .5 ? -1 : 1;
+  G.state = "count"; G.countF = COUNT_FIELDS;
+}
 function step() {
   G.fields++;
   stepPads();
-  if (G.state === "serve") {
+  if (G.state === "count") {                   // odliczanie 3-2-1 (0,8 s na cyfrę)
+    if (--G.countF <= 0) {
+      G.state = "serve"; G.serveTimer = 1;     // po „1” piłka startuje natychmiast
+    }
+  } else if (G.state === "serve") {
     if (--G.serveTimer <= 0) {
       const b = G.ball;
       b.x = SERVE_X;                                   // [T2]
       b.y = Math.max(0, Math.min(VIS_H - BALL, G.pads[0].top + 1));  // sync PAD1 [T2]
       b.vx = G.serveDir * SPEED_BY_HITS(0);            // start = najwolniej
       b.vy = G.serveVy;                                 // prędkość z pudła
-      G.aiComing = b.vx > 0;
+      G.aiComing = (b.vx > 0) === (aiIdx() === 1);
       if (G.aiComing) G.aiErr = (Math.random() * 2 - 1) * AI_ERR(G.hits);
       G.state = "play";
     }
@@ -466,10 +536,7 @@ function step() {
   } else {                                             /* gameover */
     stepBall();
     if (--G.overTimer <= 0) {                          // „moneta": nowa gra
-      G.score = [0, 0]; G.hits = 0; G.serveVy = 0;
-      G.serveDir = Math.random() < .5 ? -1 : 1;
-      G.state = "serve"; G.serveTimer = SERVE_FIELDS;
-      applyPendingCourt();                     // odroczona zmiana geometrii kortu
+      startCountdown();                       // v0.3.0: nowa rozgrywka od odliczania                     // odroczona zmiana geometrii kortu
     }
   }
 }
@@ -493,51 +560,108 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) { Snd.recover(); refreshHint(); }  // audio mogło zasnąć w tle
 });
 
-/* --- wejście: klawiatura --------------------------------------------------- */
+/* --- wejście: klawiatura ---------------------------------------------------
+   v0.3.1: OSTATNIE WEJŚCIE WYGRYWA — naciśnięcie klawisza sterującego
+   przejmuje paletkę od myszy/dotyku (grabKeyboard). W v0.3.0 cel wskaźnika
+   zapisany JEDNYM ruchem myszy nad kortem nadpisywał ruch klawiaturowy co
+   pole — paletka „przyklejała się” do ostatniego Y myszy i W/S oraz
+   strzałki pozornie nie działały. Blur okna (alt-tab) zwalnia klawisze,
+   by po powrocie paletka nie uciekała sama.                              */
 const keys = { p1u: false, p1d: false, p2u: false, p2d: false };
 const KMAP = {
   KeyW: "p1u", KeyS: "p1d",
   ArrowUp: "p2u", ArrowDown: "p2d",
 };
 addEventListener("keydown", e => {
+  if (e.code === "Escape") { exitGame(); return; }      // v0.3.0: Esc = wyjście z gry
   const k = KMAP[e.code];
-  if (k) { keys[k] = true; if (e.code.startsWith("Arrow")) e.preventDefault(); }
+  if (k) {
+    keys[k] = true;
+    if (e.code.startsWith("Arrow")) e.preventDefault();
+    grabKeyboard(k);         // v0.3.1: klawisz zabiera paletkę myszy/dotyku
+  }
   unlock();
 });
 addEventListener("keyup", e => { const k = KMAP[e.code]; if (k) keys[k] = false; });
+addEventListener("blur", () => {          // v0.3.1: alt-tab z wciśniętym W/S/strzałką
+  keys.p1u = keys.p1d = keys.p2u = keys.p2d = false;
+});
 
-/* --- wejście: palec / mysz (pozycyjnie, jak potencjometr pokrętła) --------- */
+/* --- wejście: palec / mysz (pozycyjnie, jak potencjometr pokrętła) ---------
+   v0.3.0: czuły na dotyk jest CAŁY EKRAN — nagłówek, ramki boczne i stopka
+   też prowadzą paletkę (nie tylko pole gry). Pozycja Y gestu mapowana na
+   linię kortu; X rozdziela graczy tylko w trybie 2P (połówki EKRANU, bo
+   kort bywa węższy od ekranu). Gest na przycisku = klik przycisku (paletka
+   nie skacze); mysz w spoczynku steruje tylko nad kortem (desktop).      */
 const pointer = [null, null];                 // celowane pozycje TOP paletki
-const touches = {};                           // pointerId → strona (0/1)
-function fieldY(e) {
+const touches = {};                           // pointerId -> strona (0/1)
+let mouseSlot = -1;                           // v0.3.1: slot prowadzony TERAZ samym hoverem myszy
+function releasePointer(i) { pointer[i] = null; }          // palec odzyska slot przy ruchu
+function releaseAllPointers() {               // v0.3.1: zmiana strony/trybu — zero starych celów
+  pointer[0] = pointer[1] = null;
+  for (const k in touches) delete touches[k]; // trzymane palce odzyskają sterowanie po ponownym dotknięciu
+  mouseSlot = -1;
+}
+function grabKeyboard(k) {                    // v0.3.1: OSTATNIE WEJŚCIE WYGRYWA — klawisz
+  if (G.mode === 2) releasePointer(k[1] === "1" ? 0 : 1);  // 2P: W/S→lewa, ↑/↓→prawa
+  else { releasePointer(0); releasePointer(1); }            // 1P: slot gracza + śmieci na slocie AI
+}
+function grabFocus() {                        // v0.3.1: iframe bez kliknięcia — klawisze szły
+  if (!document.hasFocus()) { try { window.focus(); } catch (_) {} }  // do rodzica; mysz nad grą przechwytuje fokus
+}
+function fieldY(e) {                          // clientY -> linia kortu (clamp w clampPad)
   const r = cv.getBoundingClientRect();
   return (e.clientY - r.top) / r.height * VIS_H;
 }
-function sideFor(e) {
-  const r = cv.getBoundingClientRect();
-  return (e.clientX - r.left) / r.width < .5 ? 0 : 1;
+function sideFor(e) {                         // 2P: połowa EKRANU (nie kanwy)
+  return e.clientX < innerWidth / 2 ? 0 : 1;
 }
-cv.addEventListener("pointerdown", e => {
-  unlock(); e.preventDefault();
-  const s = (G.mode === 2) ? sideFor(e) : 0;   // w 1P każde dotknięcie = paletka gracza
+function onButton(e) {                        // gest na kontrolce = klik przycisku
+  return !!(e.target && e.target.closest && e.target.closest("button"));
+}
+addEventListener("pointerdown", e => {
+  if (onButton(e)) return;
+  unlock(); e.preventDefault(); grabFocus();
+  const s = (G.mode === 2) ? sideFor(e) : G.side - 1;   // 1P: slot wg strony gracza
+  if (e.pointerType === "mouse") {            // v0.3.1: drag myszy — koniec trybu hover
+    if (mouseSlot >= 0 && mouseSlot !== s) pointer[mouseSlot] = null;
+    mouseSlot = -1;
+  }
   touches[e.pointerId] = s;
   pointer[s] = fieldY(e) - PAD_H / 2;
-  try { cv.setPointerCapture && cv.setPointerCapture(e.pointerId); } catch (_) {}
 });
-cv.addEventListener("pointermove", e => {
-  unlockSoft();                                  // mysz bez kliku = też gramy → audio gotowe
-  if (e.pointerType === "mouse" && !(e.pointerId in touches)) {   // mysz bez kliku
-    const s = (G.mode === 2) ? sideFor(e) : 0;
+addEventListener("pointermove", e => {
+  /* mysz w spoczynku nad UI (przyciski/stopka/nagłówek) nie robi NIC —
+     v0.3.0: bez rywania paletki i bez domyślnego dźwięku (decyzja dźwięku
+     należy do gestu/przycisku; regresja B1 test_audio: hover po drodze
+     do „Sound: Off” nie może włączać dźwięku przed kliknięciem) */
+  if (e.pointerType === "mouse" && e.target !== cv && !(e.pointerId in touches)) return;
+  if (e.pointerType === "mouse" && !(e.pointerId in touches))
+    unlockSoft();                               // mysz bez kliku nad KORTEM → audio gotowe
+  if (e.pointerType === "mouse" && !(e.pointerId in touches)) {
+    grabFocus();                               // v0.3.1: fokus okna dla klawiatury (iframe)
+    const s = (G.mode === 2) ? sideFor(e) : G.side - 1;
+    if (mouseSlot >= 0 && mouseSlot !== s) pointer[mouseSlot] = null;  // hover: JEDEN slot
     pointer[s] = fieldY(e) - PAD_H / 2;
-  } else if (e.pointerId in touches) {
+    mouseSlot = s;                            // zwolniony przez pointerleave/klawisz
+  } else if (e.pointerId in touches) {          // palec/rysik lub mysz z przyciskiem
     pointer[touches[e.pointerId]] = fieldY(e) - PAD_H / 2;
   }
+});
+/* v0.3.1: mysz ODESZŁA z kortu → zwolnij slot hovera (paletka zostaje na
+   miejscu). Bez tego JEDEN ruch myszy nad kortem przyklejał paletkę do
+   ostatniego Y na zawsze — „zabijał” W/S (cel wskaźnika nadpisywał ruch
+   klawiaturowy co pole), a po zmianie strony także AI (stary cel na nowym
+   slocie AI). Drag (przycisk wciśnięty) trwa dalej — zwalnia go pointerup. */
+cv.addEventListener("pointerleave", e => {
+  if (e.pointerType !== "mouse" || e.pointerId in touches) return;
+  if (mouseSlot >= 0) { pointer[mouseSlot] = null; mouseSlot = -1; }
 });
 const endPtr = e => {
   if (e.pointerId in touches) { pointer[touches[e.pointerId]] = null; delete touches[e.pointerId]; }
 };
-cv.addEventListener("pointerup", endPtr);
-cv.addEventListener("pointercancel", endPtr);
+addEventListener("pointerup", endPtr);
+addEventListener("pointercancel", endPtr);
 
 /* --- odblokowanie dźwięku po 1. interakcji --------------------------------
    unlock() wołany przy KAŻDYM geście (nie tylko pierwszym): gdy system uśpił
@@ -584,17 +708,15 @@ addEventListener("click", unlock);
 /* --- UI -------------------------------------------------------------------- */
 const $ = id => document.getElementById(id);
 function prefs() { try { return JSON.parse(localStorage.getItem("pong72") || "{}"); } catch { return {}; } }
-function savePrefs() { try { localStorage.setItem("pong72", JSON.stringify({ mode: G.mode, target: G.target, sound: Snd.on })); } catch {} }
+function savePrefs() { try { localStorage.setItem("pong72", JSON.stringify({ mode: G.mode, side: G.side, target: G.target, sound: Snd.on })); } catch {} }
 
-function resetGame() {
-  G.score = [0, 0]; G.hits = 0; G.serveVy = 0;
-  G.serveDir = Math.random() < .5 ? -1 : 1;
-  G.state = "serve"; G.serveTimer = SERVE_FIELDS;
-  applyPendingCourt();                   // geometria oczekująca na koniec wymiany
+function resetGame() {                   // v0.3.0: każdy start rozgrywki = odliczanie 3-2-1
+  startCountdown();                   // geometria oczekująca na koniec wymiany
 }
 function refreshUI() {
   $("b1p").classList.toggle("on", G.mode === 1);
   $("b2p").classList.toggle("on", G.mode === 2);
+  $("bside").textContent = "Player: " + (G.side === 2 ? "Right" : "Left");  // v0.3.0
   $("bto").textContent = "Game to " + G.target;
   $("bsnd").textContent = "Sound: " + (Snd.on ? "On" : "Off");
   $("bsnd").classList.toggle("on", Snd.on);
@@ -611,9 +733,29 @@ function refreshHint() {
   el.classList.toggle("muted", mute);          // puls kolorem klubu = „zajrzyj tu”
 }
 function applySound() { refreshUI(); refreshHint(); savePrefs(); }
-$("b1p").onclick = () => { unlock(); G.mode = 1; resetGame(); refreshUI(); savePrefs(); };
-$("b2p").onclick = () => { unlock(); if (G.mode !== 2) { G.mode = 2; resetGame(); } refreshUI(); savePrefs(); };
+/* v0.3.1: zmiana trybu/strony = zerowanie celów wskaźnika — stary cel ze
+   slotu, który zostaje AI, zamrażał paletkę AI po przełączeniu */
+$("b1p").onclick = () => { unlock(); G.mode = 1; releaseAllPointers(); resetGame(); refreshUI(); savePrefs(); };
+$("b2p").onclick = () => { unlock(); if (G.mode !== 2) { G.mode = 2; releaseAllPointers(); resetGame(); } refreshUI(); savePrefs(); };
 $("bto").onclick  = () => { unlock(); G.target = G.target === 11 ? 15 : 11; resetGame(); refreshUI(); savePrefs(); };
+/* v0.3.0: wybór strony gracza w 1P (domyślnie PRAWA — życzenie Ciby);
+   zmiana strony = nowa rozgrywka (odliczanie 3-2-1); v0.3.1: + zwolnienie
+   wskaźników — AI gra PRZECIWNIKA, nie dziedziczy zamrożonego celu */
+$("bside").onclick = () => { unlock(); G.side = G.side === 2 ? 1 : 2; releaseAllPointers(); resetGame(); refreshUI(); savePrefs(); };
+/* v0.3.0: wyjście z gry — przycisk EXIT albo Esc. Pełny ekran -> wyjdź z niego;
+   w iframe -> sygnał dla strony rodzica (postMessage pong:exit — rodzic zamyka
+   grę/wraca do treści); samodzielna karta -> wstecz w historii albo start. */
+function exitGame() {
+  try { if (document.fullscreenElement) { document.exitFullscreen(); return; } } catch (_) {}
+  let framed = false;
+  try { framed = window.self !== window.top; } catch (_) { framed = true; }
+  if (framed) {
+    try { window.top.postMessage({ type: "pong:exit" }, "*"); } catch (_) {}
+    return;
+  }
+  if (history.length > 1) history.back(); else location.replace("/");
+}
+$("bexit").onclick = () => { unlock(); exitGame(); };
 /* Kolejność celowa: klik w włącznik = ŚWIADOMA decyzja (nie nadpisuj jej później
    domyślną polityką „dźwięk on po 1. interakcji”); przełącz stan WYŚWIETLANY,
    potem budź audio. W v0.1.1 unlock() najpierw włączał domyślny dźwięk, a `!Snd.on`
@@ -632,43 +774,43 @@ $("bsnd").onclick = () => {
   /* v0.2.1: „2 Players” ukryte → gra zawsze startuje w 1P; stary zapis
      mode:2 nie uwięzi gry w trybie, którego nie da się przełączyć */
   if (p.mode === 1) G.mode = 1;
+  if (p.side === 1 || p.side === 2) G.side = p.side;      // v0.3.0: strona gracza
   if (p.target === 11 || p.target === 15) G.target = p.target;
   if (p.sound) Snd.on = true;               // dźwięk zadziała dopiero po odblokowaniu
   refreshUI(); refreshHint();
 })();
 
-/* --- dopasowanie rozmiaru + adaptacyjny kort (v0.2 / v0.2.2) ----------------
-   Kort korzysta z pełnej szerokości współczesnych ekranów (decyzja Ciby):
-   wysokość świata = 246 linii jak w oryginale, szerokość (cykle) dobierana
-   do proporcji okna w granicach 374 (4:3, oryginał) … 954 (~3,4:1 — telefon
-   w poziomie ma przez pasek nagłówka/stopki proporcje okna ~2,8-3,2:1,
-   więc stary kap 673 zostawiał czarne pasy boczne i paletki ~11% od
-   krawędzi EKRANU).
-   Paletki: margines ~4,5% szerokości kortu (padEdge, 16-44 cykli) — zawsze
-   przy samej krawędzi ekranu, w KAŻDEJ orientacji (v0.2.2 naprawia też start
-   w pionie/kwadracie: layout jest wyliczany jawnie, nie tylko przy zmianie
-   szerokości kortu).
-   Skala pikselowa bez zmian (4 px/cykl; 1122/246 px/linii) — kształty
-   elementów i fizyka (cykle/pole) identyczne; rośnie tylko dystans
-   między paletkami, więc gracz ma więcej czasu na reakcję.
-   Zmiana geometrii W TRAKCIE wymiany jest wstrzymywana do końca punktu
-   (kontrola nad przebiegiem gry). ?classic=1 = dokładna geometria oryginału.
-   Szczegóły i wzory: docs/badania.md §12 i §14.                                */
+/* --- dopasowanie rozmiaru + adaptacyjny kort (v0.3.0) -----------------------
+   Zasady geometrii (życzenia Ciby, 2026-11-06):
+   1. Kort NIGDY nie jest szerszy niż 16:9 (CY_MAX=500) — koniec „zbyt
+      rozciągniętej” gry na desktopie; szersze okna dostają pasy boczne.
+   2. Telefon w poziomie: po lewej i prawej RAMKI o szerokości 1/6 EKRANU →
+      kort zajmuje dokładnie 2/3 szerokości ekranu (mniej rozciągnięty;
+      kap 16:9 nie obowiązuje — granicą jest sama ramka).
+   3. Zmiana orientacji/rozmiaru = przerys NATYCHMIAST, także w trakcie
+      wymiany: piłka w locie przenoszona proporcjonalnie, paletki dociskane
+      do zakresu — nic nie czeka do końca punktu (v0.2.x odkładało zmianę).
+      Pilnuje tego ResizeObserver na scenie + resize/orientationchange/
+      screen.orientation.change (telefon potrafi zgłosić zmianę, zanim
+      przeliczy layout — stąd ponawiane próby).
+   4. Wysokość świata = 246 linii jak w oryginale; skala bez zmian (4 px/cykl)
+      — kształty i fizyka (cykle/pole) identyczne.
+   ?classic=1 = dokładna geometria oryginału (4:3, paletki 128H/384H).
+   Szczegóły i wzory: docs/badania.md §12 i §14.                              */
 const FORCE_CLASSIC = new URLSearchParams(location.search).get("classic") === "1";
-let pendingW = null;                           // geometria oczekująca na koniec wymiany
 const stage = document.getElementById("stage");
 
+function isPhoneLandscape() {                  // telefon w poziomie (dotyk + krótki bok ≤540)
+  return matchMedia("(pointer: coarse)").matches
+      && innerWidth > innerHeight && Math.min(innerWidth, innerHeight) <= 540;
+}
 function courtCyclesFor(ar) {                  // ar = proporcje dostępnego miejsca
   if (FORCE_CLASSIC) return CY_MIN;
   return Math.max(CY_MIN, Math.min(CY_MAX, Math.round(ar * 280.5)));
 }
 function applyCourt(w) {                       // świat pod kort o szerokości w cykli
-  /* v0.2.2: bez wcześniejszego `if (w === VIS_W) return` — layout MUSI być
-     wyliczony także dla w === 374 (start w pionie/kwadracie). W v0.2.0-v0.2.1
-     ta gałąź sprawiała, że po załadowaniu przy proporcjach ≤ 4:3 paletki
-     zostawały na starych pozycjach 47/303 (12,6%/82% szerokości) — dokładnie
-     zgłoszenie Ciby „paletki bliżej krawędzi, prosiłem poprzednio”.      */
-  pendingW = null;
+  /* v0.2.2: bez `if (w === VIS_W) return` — layout wyliczony także dla
+     w === 374 (start w pionie/kwadracie i tryb ?classic). */
   const oldW = VIS_W;
   VIS_W = w;
   NET_X = (w >> 1) - 12;                       // quirka oryginału: siatka 12 cykli LEWO od środka [T5]
@@ -678,41 +820,76 @@ function applyCourt(w) {                       // świat pod kort o szerokości 
   SC1 = [PAD_X1 + 16, PAD_X1 + 48];            // okna wyniku przy paletkach (jak w oryginale)
   SC2 = [PAD_X2 - 48, PAD_X2 - 16];
   cv.width = w * 4;                            // wysokość 1122 px bez zmian
-  if (G.state === "gameover")                  // attract: piłka w locie → przenieś proporcjonalnie
-    G.ball.x = Math.max(0, Math.min(w - BALL, Math.round(G.ball.x * w / oldW)));
+  /* v0.3.0: przerys zawsze — także W TRAKCIE wymiany (decyzja Ciby):
+     piłka w locie przenoszona proporcjonalnie, paletki dociskane do zakresu */
+  G.ball.x = Math.max(0, Math.min(w - BALL, Math.round(G.ball.x * w / oldW)));
+  G.pads[0].top = clampPad(G.pads[0].top);
+  G.pads[1].top = clampPad(G.pads[1].top);
 }
-function requestCourt(w) {                     // w trakcie wymiany → odłóż do końca punktu
-  if (w === VIS_W) return;                     // layout już aktualny (init: applyCourt)
-  if (G.state === "play") { pendingW = w; return; }
-  applyCourt(w);
-}
-function applyPendingCourt() {
-  if (pendingW == null) return;
-  applyCourt(pendingW);
-  fit();
+function requestCourt(w) {                     // v0.3.0: bez odkładania — od razu
+  if (w !== VIS_W) applyCourt(w);
 }
 function fit() {
   const r = stage.getBoundingClientRect();
   const availW = Math.max(120, r.width - 20), availH = Math.max(90, r.height - 20);
-  requestCourt(courtCyclesFor(availW / availH));
-  const ar = VIS_W * 4 / 1122;                 // proporcje kortu (4:3 … ~2,4:1)
-  let w = availW, h = w / ar;
+  /* telefon w poziomie: ramki dokładnie 1/6 EKRANU po bokach → kort = 2/3
+     szerokości ekranu (v0.3.0, decyzja Ciby). W tym trybie NIE działa kap 16:9 —
+     górna granica to sama ramka (CY_PHONE_MAX); przy bardzo krótkiej scenie
+     dodatkowy letterbox góra/dół. */
+  const phone = !FORCE_CLASSIC && isPhoneLandscape();
+  const maxW = phone ? Math.min(availW, innerWidth * 2 / 3) : availW;
+  const cap = phone ? CY_PHONE_MAX : CY_MAX;
+  requestCourt(FORCE_CLASSIC ? CY_MIN :
+    Math.max(CY_MIN, Math.min(cap, Math.round(maxW / availH * 280.5))));
+  const ar = VIS_W * 4 / 1122;                 // proporcje kortu (4:3 … 16:9; telefon: ~2:1)
+  let w = maxW, h = w / ar;
   if (h > availH) { h = availH; w = h * ar; }
   cv.style.width = w + "px";
   cv.style.height = h + "px";
 }
 addEventListener("resize", fit);
-addEventListener("orientationchange", () => setTimeout(fit, 60));
-applyCourt(CY_MIN);        // v0.2.2: spójny layout od 1. klatki (klasyka lub ~4,5% od krawędzi)
+addEventListener("orientationchange", () => { fit(); setTimeout(fit, 120); setTimeout(fit, 350); });
+try { screen.orientation && screen.orientation.addEventListener("change",
+  () => { fit(); setTimeout(fit, 120); setTimeout(fit, 350); }); } catch (_) {}
+try { new ResizeObserver(() => fit()).observe(stage); } catch (_) {}  // pewniak: każdy przesuw layoutu
+applyCourt(CY_MIN);        // spójny layout od 1. klatki (klasyka lub ~4,5% od krawędzi)
 fit();
 
 /* hook testowy/kalibracyjny (nie wpływa na rozgrywkę) */
-window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX,
+window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
   get VIS_W() { return VIS_W }, get NET_X() { return NET_X },
   get PAD_X1() { return PAD_X1 }, get PAD_X2() { return PAD_X2 },
   get SC1() { return SC1 }, get SC2() { return SC2 },
-  get pendingW() { return pendingW },
-  courtCyclesFor, applyCourt, fit };
+  get aiIdx() { return aiIdx() },
+  courtCyclesFor, applyCourt, fit,
+  getVersion: () => ({ game: "pong-1972-replica", version: VERSION,
+                       released: RELEASE }) };
+
+/* v0.3.2: MASZYNOWO CZYTELNA WERSJA — strona klubu i agent AI zawsze wiedzą,
+   którą wersją grają. Kanały: version.json obok pliku, meta[name=game-version],
+   html[data-version], tytuł karty, plakietka nagłówka, window.__pong.getVersion(),
+   komunikat startowy w konsoli + postMessage:
+     gra    -> rodzic: {type:'pong:version', game, version, released}
+     rodzic -> gra:    {type:'pong:get-version'}  → ponowne ogłoszenie wersji */
+function announceVersion() {
+  try {
+    if (window.parent !== window)
+      window.parent.postMessage(
+        { type: "pong:version", game: "pong-1972-replica",
+          version: VERSION, released: RELEASE }, "*");
+  } catch (_) {}
+}
+addEventListener("message", (e) => {
+  if (e.data && e.data.type === "pong:get-version") announceVersion();
+});
+try {   // spójność statycznych atrybutów (dla parserów bez JS) z kodem gry
+  document.documentElement.dataset.version = VERSION;
+  document.querySelector('meta[name="game-version"]').setAttribute("content", VERSION);
+  document.querySelector(".ver").textContent = "v" + VERSION;
+} catch (_) {}
+announceVersion();
+console.log("[PONG] v" + VERSION + " · replika Atari 1972 · wersja też w: " +
+            "version.json / meta[name=game-version] / html[data-version]");
 </script>
 </body>
 </html>
