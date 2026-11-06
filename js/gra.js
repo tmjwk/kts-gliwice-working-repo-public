@@ -38,6 +38,19 @@
    stronie gdzie ją prezentujesz”. Gdy plik nie ma znacznika wersji,
    chip pokazuje skrót SHA mirroru (kierunek zawsze prawdziwy).
 
+   1.29.6 — OFICJALNY PROTOKÓŁ WERSJI GRY v0.3.2 (właściciel wbudował
+   go w grę specjalnie dla tej strony — patrz gra/version.json):
+   - źródła wersji wg kolei: gra/version.json (zawsze obok pliku gry),
+     <meta name="game-version">, <html data-version>, stary komentarz
+     „Wersja: X.Y.Z”, a gdy nic — skrót SHA mirroru;
+   - działająca gra SAMA potwierdza wersję postMessage
+     {type:'pong:version'} (auto po starcie; na żądanie strona wysyła
+     {type:'pong:get-version'}) — chip pokazuje to, co gra NAPRAWDĘ
+     uruchomiła, nie tylko deklarację z pliku;
+   - {type:'pong:exit'} (gracz wcisnął EXIT/Esc w grze): strona chowa
+     planszę i pokazuje panel „Gra zakończona” z przyciskem
+     „Zagraj ponownie” — twardy EXIT z gry nie zostawia pustej ramki.
+
    Wersja strony: konwencja jak na innych podstronach (WERSJA_KODU
    + toast o nowszej wersji; pełna historia w js/app.js). Od 1.29.0
    js/gra.js DOŁĄCZA do zestawu plików podnoszonych przy KAŻDYM
@@ -54,7 +67,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.29.5";
+const WERSJA_KODU = "1.29.6";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -164,30 +177,56 @@ async function pobierzGre() {
   return { blad: problemy.join(" · ") || "nieznany błąd" };
 }
 
-/** Wersja gry z nagłówka pobranego pliku — gra deklaruje ją w komentarzu
- *  otwierającym („Wersja: 0.3.1 (…)”). Szukamy w pierwszych 4 KB,
- *  wielkość liter bez znaczenia, „v” przed numerem opcjonalne.
+/** Wersja gry z pobranego pliku — wg oficjalnych kanałów v0.3.2
+ *  (patrz gra/version.json, sekcja read_version):
+ *  1. <meta name="game-version" content="X.Y.Z"> — deklaracja dla parserów;
+ *  2. <html data-version="X.Y.Z">;
+ *  3. komentarz „Wersja: X.Y.Z (…)” — jedyne źródło w starszych wersjach.
  *  Null = plik bez znacznika (wtedy chip pokazuje skrót SHA mirroru). */
 function wersjaGryZHtml(html) {
-  const m = String(html).slice(0, 4096).match(/\bwersja:\s*v?(\d+\.\d+\.\d+)/i);
+  const s = String(html);
+  const meta = s.match(/<meta\s+name=["']game-version["']\s+content=["']([^"']+)["']/i);
+  if (meta) return meta[1].trim().replace(/^v/i, "");
+  const dane = s.match(/<html[^>]*\sdata-version=["']([^"']+)["']/i);
+  if (dane) return dane[1].trim().replace(/^v/i, "");
+  const m = s.slice(0, 4096).match(/\bwersja:\s*v?(\d+\.\d+\.\d+)/i);
   return m ? m[1] : null;
 }
 
+/** gra/version.json — podstawowy kanał wersji (v0.3.2+: „zawsze obok
+ *  pong.html”). Zwraca {version, released} albo null (starsze wersje
+ *  gry / chwilowy problem sieci — wtedy decydują kanały z pliku). */
+async function pobierzVersionJson(baza) {
+  try {
+    const res = await fetch(`${baza}version.json`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const w = await res.json();
+    if (w && typeof w.version === "string" && /^v?\d+\.\d+\.\d+/.test(w.version.trim())) {
+      return { version: w.version.trim().replace(/^v/i, ""),
+               released: typeof w.released === "string" ? w.released : null };
+    }
+  } catch (e) { /* brak pliku = starsza wersja gry — nieistotne */ }
+  return null;
+}
+
 /** Pokaż wersję gry tam, gdzie ją prezentujemy: chip przy tytule
- *  (#gra-wersja) + stopka (#gra-wersja-stopka). Źródło = nagłówek
- *  pobranego pliku; fallback = skrót SHA mirroru. Wywoływane po
- *  KAŻDYM pobraniu (także „↻ Odśwież grę”). */
-function pokazWersjeGry(wynik) {
+ *  (#gra-wersja) + stopka (#gra-wersja-stopka). Źródła wg kolei
+ *  (v1.29.6): version.json → kanały z pliku → skrót SHA mirroru.
+ *  Wywoływane po KAŻDYM pobraniu (także „↻ Odśwież grę”). */
+function pokazWersjeGry(wynik, vjson) {
   const chip = $("#gra-wersja");
   const stopka = $("#gra-wersja-stopka");
   if (!chip && !stopka) return;
-  const w = wersjaGryZHtml(wynik.html);
+  const zPliku = wersjaGryZHtml(wynik.html);
+  const w = vjson?.version || zPliku;
   const etykieta = w ? `v${w}` : `mirror ${wynik.refKrotki}`;
   if (chip) {
     chip.textContent = `wersja gry: ${etykieta}`;
-    chip.title = w
-      ? `Wersja odczytana z pobranego pliku gry (nagłówek „Wersja: ${w}”)`
-      : `Plik gry bez znacznika „Wersja:” — pokazany commit mirroru (${wynik.refKrotki})`;
+    const zrodlo = vjson ? "version.json"
+      : zPliku ? "znacznik w pliku gry" : "commit mirroru";
+    chip.title = `Wersja z ${zrodlo} (${wynik.refKrotki})`
+      + (vjson?.released ? ` · wydana: ${vjson.released}` : "")
+      + " — pobierane przy każdym wejściu, zawsze najnowsza";
   }
   if (stopka) stopka.textContent = etykieta;
 }
@@ -268,10 +307,12 @@ async function zaladujGre() {
   const status = $("#gra-status");
   const scena = $("#gra-scena");
   const blad = $("#gra-blad");
+  const zamknieta = $("#gra-zamknieta");
   const ramka = $("#gra-ramka");
   status.hidden = false;
   scena.hidden = true;
   blad.hidden = true;
+  if (zamknieta) zamknieta.hidden = true;
 
   const wynik = await pobierzGre();
   if (wynik.blad) {
@@ -281,16 +322,37 @@ async function zaladujGre() {
     return;
   }
 
+  const vjson = await pobierzVersionJson(wynik.baza);
   const dokument = zbudujDokument(wynik.html, wynik.baza);
   ramka.addEventListener("load", function raz() {
     ramka.removeEventListener("load", raz);
     status.hidden = true;
     scena.hidden = false;
-    try { ramka.contentWindow.focus(); } catch (e) { /* cross-origin — nie przeszkadza */ }
+    try {
+      ramka.contentWindow.focus();
+      /* v1.29.6: poproś grę o potwierdzenie wersji (gra v0.3.2+ sama
+       *  ogłasza „pong:version” po starcie — to zabezpieczenie na
+       *  wyścig z podłączeniem słuchacza; starsze wersje ignorują). */
+      ramka.contentWindow.postMessage({ type: "pong:get-version" }, "*");
+    } catch (e) { /* cross-origin — nie przeszkadza */ }
   });
   ramka.srcdoc = dokument;
-  pokazWersjeGry(wynik);
+  pokazWersjeGry(wynik, vjson);
   pokazInfoMirroru(wynik.baza);
+}
+
+/** v1.29.6: {type:'pong:exit'} — gracz zamknął grę w jej menu (EXIT/Esc).
+ *  Gra prosi stronę o zamknięcie ramki (protokół z gra/version.json):
+ *  chowamy planszę i pokazujemy panel „Gra zakończona” — pusta ramka
+ *  nie zostaje na ekranie. „Zagraj ponownie” = pełne pobranie świeżej
+ *  wersji (ta sama droga co wejście na stronę). */
+function zamknijGre() {
+  const scena = $("#gra-scena");
+  const zamknieta = $("#gra-zamknieta");
+  if (!scena || scena.hidden) return;
+  scena.hidden = true;
+  if (zamknieta) zamknieta.hidden = false;
+  try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) { /* odmówił */ }
 }
 
 /* ===== start ===== */
@@ -320,6 +382,35 @@ async function start() {
     } catch (e) { /* przeglądarka odmówiła — gra działa dalej w oknie */ }
   });
   $("#gra-probij").addEventListener("click", () => zaladujGre());
+  const zagraj = $("#gra-zagraj");
+  if (zagraj) zagraj.addEventListener("click", () => zaladujGre());
+
+  /* v1.29.6: protokół postMessage z grą (v0.3.2+; patrz gra/version.json).
+     Przyjmujemy komunikaty WYŁĄCZNIE z naszej ramki z grą (e.source),
+     treści trafiają tylko do textContent/title — nic nie wstrzykujemy. */
+  window.addEventListener("message", (e) => {
+    const ramka = $("#gra-ramka");
+    if (!ramka || e.source !== ramka.contentWindow) return;
+    const d = e.data;
+    if (!d || typeof d !== "object") return;
+    if (d.type === "pong:version" && typeof d.version === "string"
+        && /^v?\d+\.\d+\.\d+/.test(d.version.trim())) {
+      /* gra potwierdza wersję, w której NAPRAWDĘ działa — chip podmienia
+         deklarację z pliku na słowa działającej gry */
+      const w = d.version.trim().replace(/^v/i, "");
+      const chip = $("#gra-wersja");
+      const stopka = $("#gra-wersja-stopka");
+      if (chip) {
+        chip.textContent = `wersja gry: v${w}`;
+        chip.title = "Wersja potwierdzona przez działającą grę (postMessage)"
+          + (d.released ? ` · wydana: ${d.released}` : "")
+          + " — pobierane przy każdym wejściu, zawsze najnowsza";
+      }
+      if (stopka) stopka.textContent = `v${w}`;
+    } else if (d.type === "pong:exit") {
+      zamknijGre();
+    }
+  });
 
   pokazWersje();
   zaladujGre();
