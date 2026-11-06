@@ -1191,10 +1191,15 @@ function wierszMeczu(m, oczekuje = false, wGrupie = false) {
   // 1.26.5 (właściciel 04.11: „w wersji mobilnej inną strukturę — niech
   // będzie jak na komputerze”): wiersz = dwie GRUPY — .match-glowne
   // (drużyny + wynik + plakietka) i .match-info (data · godzina ·
-  // kolejka). Na desktopie stoją w JEDNYM wierszu (główna lewa,
-  // info dopchnięte do prawej), na telefonie info schodzi do drugiej
-  // linii (flex-basis:100%) — ŚWIADOMY, stały układ zamiast dowolnego
-  // zawijania; identyczna struktura DOM na obu szerokościach.
+  // kolejka). 1.29.5 (właściciel 06.11: „nie wyświetlasz informacji
+  // konsystentnie — brakuje w niektórych wierszach daty, godz. i
+  // kolejki”): .match-info ZAWSZE w drugiej linii wiersza (CSS
+  // flex-basis:100% bez media query) — do 1.29.4 na szerokich ekranach
+  // dzieliła pierwszy wiersz z drużynami tylko przy KRÓTKICH nazwach,
+  // a przy długich (np. „PGE Fibrain AZS Politechnika Rzeszów”) spadała
+  // pod nie — jedna lista, dwa różne układy. Od 1.29.5 identyczna,
+  // stała struktura na każdej szerokości i w każdym miejscu
+  // (dialog, kafelki index.html, podstrona drużyny).
   return `
     <li>
       <div class="match-row">
@@ -1482,7 +1487,7 @@ function sledzSystemowyTryb() {
    komunikat i sprawdź natychmiast (nie częściej niż co 45 s).
 */
 
-const WERSJA_KODU = "1.29.4";
+const WERSJA_KODU = "1.29.5";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
