@@ -144,7 +144,17 @@ function statusMeczuDla(m, zespol) {
   return "R";
 }
 
-/** Wiersz meczu dla widoku drużyny (bez powtarzania ligi w meta). */
+/** Wiersz meczu dla widoku drużyny (bez powtarzania ligi w meta).
+ *  1.29.5 (właściciel 06.11: „nie wyświetlasz informacji konsystentnie —
+ *  brakuje w niektórych wierszach daty, godz. i kolejki”): DOKŁADNIE
+ *  ta sama struktura DOM co wierszMeczu w js/app.js (dialog „Wyniki”
+ *  i kafelki na stronie głównej): .match-glowne (drużyny + wynik +
+ *  plakietka) i .match-info (data · godzina · kolejka) — a CSS
+ *  (v1.29.5) stawia .match-info ZAWSZE w drugiej linii wiersza,
+ *  na każdej szerokości. Do 1.29.4 podstrona miała własny układ:
+ *  pięć równorzędnych elementów .match-row zawijało się dowolnie
+ *  (data przed nazwami, kolejka po plakiecie — 3–4 nieregularne
+ *  linie na telefonie) i wyglądało inaczej niż dialog. */
 function wierszMeczuDruzyny(m, zespol) {
   const derby = druzynyMeczu(m).length > 1;
   const st = statusMeczuDla(m, zespol);
@@ -156,11 +166,15 @@ function wierszMeczuDruzyny(m, zespol) {
   return `
     <li>
       <div class="match-row">
-        <span class="match-date">${etykietaDnia(m.dataMeczu)}${m.godzina ? ` · g. ${esc(m.godzina)}` : ""}</span>
-        <span class="match-teams">${esc(m.gospodarz)} — ${esc(m.gosc)}</span>
-        <span class="match-score t-nums ${wynikKolor}">${esc(m.wynik)}</span>
-        ${oczekuje ? `<span class="badge badge--pending">wynik w drodze</span>` : badge}
-        ${m.kolejka ? `<span class="match-date">kolejka ${m.kolejka}</span>` : ""}
+        <span class="match-glowne">
+          <span class="match-teams">${esc(m.gospodarz)} — ${esc(m.gosc)}</span>
+          <span class="match-score t-nums ${wynikKolor}">${esc(m.wynik)}</span>
+          ${oczekuje ? `<span class="badge badge--pending">wynik w drodze</span>` : badge}
+        </span>
+        <span class="match-info">
+          <span class="match-date">${etykietaDnia(m.dataMeczu)}${m.godzina ? ` · g. ${esc(m.godzina)}` : ""}</span>
+          ${m.kolejka ? `<span class="match-date match-kolejka">· kolejka ${m.kolejka}</span>` : ""}
+        </span>
       </div>
       ${!derby ? "" : `<p class="match-meta">mecze wewnątrzklubowe — punkty dla obu drużyn wg regulaminy</p>`}
     </li>`;
@@ -225,7 +239,7 @@ function ustawIkoneTrybu() {
    wzorzec strony głównej z wynikami. „Odśwież stronę” omija cache
    przeglądarki (GitHub Pages trzyma pliki ~10 min) — dociąga HTML,
    skrypty i styl, dopiero potem przeładowuje. */
-const WERSJA_KODU = "1.29.4";
+const WERSJA_KODU = "1.29.5";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie)? Jak app.js. */
 function nowszaWersja(a, b) {
