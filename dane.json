@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-05T23:41:56.222Z",
+  "wygenerowano": "2026-11-06T06:57:53.495Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-05T23:41:56.222Z"
+      "zaktualizowano": "2026-11-06T06:57:53.495Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "10:50"
         }
       ],
-      "zaktualizowano": "2026-11-05T23:41:56.222Z"
+      "zaktualizowano": "2026-11-06T06:57:53.495Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "6:44"
         }
       ],
-      "zaktualizowano": "2026-11-05T23:41:56.222Z"
+      "zaktualizowano": "2026-11-06T06:57:53.495Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "7:23"
         }
       ],
-      "zaktualizowano": "2026-11-05T23:41:56.222Z"
+      "zaktualizowano": "2026-11-06T06:57:53.495Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-05T23:41:56.222Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-05T23:41:56.222Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -1930,7 +1930,7 @@
     {
       "zespol": "KTS II",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1480/kts-ii-gliwice/",
-      "zaktualizowano": "2026-11-05T00:55:51.547Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "zawodnicy": [
         {
           "nazwisko": "Bartosz Kwodawski",
@@ -2037,7 +2037,7 @@
     {
       "zespol": "KTS III",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
-      "zaktualizowano": "2026-11-05T00:55:51.547Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "zawodnicy": [
         {
           "nazwisko": "Michał Rosiek",
@@ -2104,7 +2104,7 @@
     {
       "zespol": "KTS IV",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
-      "zaktualizowano": "2026-11-05T00:55:51.547Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "zawodnicy": [
         {
           "nazwisko": "Piotr Zemła",
@@ -2191,16 +2191,16 @@
     {
       "zespol": "KTS V",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1557/kts-v-gliwice/",
-      "zaktualizowano": "2026-11-05T00:55:51.547Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "zawodnicy": [
         {
           "nazwisko": "Grzegorz Machał",
           "licencja": "08890",
           "narodowosc": "Polska",
           "rok": 1982,
-          "zwyciestwa": 8,
-          "porazki": 1,
-          "punkty": "8:1",
+          "zwyciestwa": 9,
+          "porazki": 2,
+          "punkty": "9:2",
           "skutecznosc": null
         },
         {
@@ -2209,8 +2209,8 @@
           "narodowosc": "Polska",
           "rok": 1976,
           "zwyciestwa": 8,
-          "porazki": 2,
-          "punkty": "8:2",
+          "porazki": 4,
+          "punkty": "8:4",
           "skutecznosc": null
         },
         {
@@ -2218,9 +2218,19 @@
           "licencja": "11330",
           "narodowosc": "Polska",
           "rok": 2007,
-          "zwyciestwa": 5,
+          "zwyciestwa": 6,
+          "porazki": 6,
+          "punkty": "6:6",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Adam Makselon",
+          "licencja": "08891",
+          "narodowosc": "Polska",
+          "rok": 1972,
+          "zwyciestwa": 3,
           "porazki": 5,
-          "punkty": "5:5",
+          "punkty": "3:5",
           "skutecznosc": null
         },
         {
@@ -2244,16 +2254,6 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Adam Makselon",
-          "licencja": "08891",
-          "narodowosc": "Polska",
-          "rok": 1972,
-          "zwyciestwa": 1,
-          "porazki": 5,
-          "punkty": "1:5",
-          "skutecznosc": null
-        },
-        {
           "nazwisko": "Adam Pasiński",
           "licencja": "11329",
           "narodowosc": "Polska",
@@ -2268,7 +2268,7 @@
     {
       "zespol": "KTS VI",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
-      "zaktualizowano": "2026-11-05T00:55:51.547Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "zawodnicy": [
         {
           "nazwisko": "Wojciech Wieczorek",
@@ -2345,7 +2345,7 @@
     {
       "zespol": "KA Krokus VII",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1558/kts-ka-krokus-vii-gliwice/",
-      "zaktualizowano": "2026-11-05T00:55:51.547Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "zawodnicy": [
         {
           "nazwisko": "Łukasz Francka",
@@ -2422,7 +2422,7 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-11-05T00:55:51.547Z",
+      "zaktualizowano": "2026-11-06T06:57:53.495Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-05T23:41:56.222Z",
-    "pzts": "2026-11-05T23:41:56.222Z"
+    "szts": "2026-11-06T06:57:53.495Z",
+    "pzts": "2026-11-06T06:57:53.495Z"
   },
   "zrodla": {
     "szts": "ok",
