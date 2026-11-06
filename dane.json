@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-06T06:57:53.495Z",
+  "wygenerowano": "2026-11-06T21:35:28.584Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -33,7 +33,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "5. miejsce · 9 pkt",
+      "stan": "4. miejsce · 11 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/",
       "tabela": "18/138",
       "wiersz": "KTS IV Gliwice"
@@ -42,7 +42,7 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "5. miejsce · 8 pkt",
+      "stan": "6. miejsce · 8 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS V Gliwice"
@@ -51,7 +51,7 @@
       "nazwa": "KTS VI",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "10. miejsce · 2 pkt",
+      "stan": "11. miejsce · 2 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS VI Gliwice"
@@ -60,7 +60,7 @@
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "6. miejsce · 8 pkt",
+      "stan": "3. miejsce · 10 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS KA Krokus VII Gliwice"
@@ -83,30 +83,30 @@
         {
           "pozycja": 1,
           "nazwa": "LITS Meble Anders Żywiec",
-          "mecze": 7,
-          "punkty": 14,
-          "stosunek": "55:15"
+          "mecze": 8,
+          "punkty": 16,
+          "stosunek": "64:16"
         },
         {
           "pozycja": 2,
+          "nazwa": "MKS Skarbek Tarnowskie Góry",
+          "mecze": 8,
+          "punkty": 15,
+          "stosunek": "60:20"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "MUKS Jedynka Pszów",
           "mecze": 8,
           "punkty": 13,
           "stosunek": "62:18"
         },
         {
-          "pozycja": 3,
-          "nazwa": "MKS Skarbek Tarnowskie Góry",
-          "mecze": 7,
-          "punkty": 13,
-          "stosunek": "50:20"
-        },
-        {
           "pozycja": 4,
           "nazwa": "MKS Czechowice Dziedzice",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 12,
-          "stosunek": "47:23"
+          "stosunek": "51:29"
         },
         {
           "pozycja": 5,
@@ -138,24 +138,24 @@
         },
         {
           "pozycja": 9,
+          "nazwa": "MKS Tajfun Kuźnia Raciborska",
+          "mecze": 8,
+          "punkty": 8,
+          "stosunek": "41:39"
+        },
+        {
+          "pozycja": 10,
           "nazwa": "KTS Olimpijczyk Zawiercie",
           "mecze": 7,
           "punkty": 6,
           "stosunek": "36:34"
         },
         {
-          "pozycja": 10,
-          "nazwa": "MKS Skarbek II Tarnowskie Góry",
-          "mecze": 7,
-          "punkty": 6,
-          "stosunek": "35:35"
-        },
-        {
           "pozycja": 11,
-          "nazwa": "MKS Tajfun Kuźnia Raciborska",
-          "mecze": 7,
+          "nazwa": "MKS Skarbek II Tarnowskie Góry",
+          "mecze": 8,
           "punkty": 6,
-          "stosunek": "35:35"
+          "stosunek": "36:44"
         },
         {
           "pozycja": 12,
@@ -174,26 +174,26 @@
         {
           "pozycja": 14,
           "nazwa": "GUKS Byczyna",
-          "mecze": 7,
-          "punkty": 0,
-          "stosunek": "14:56"
+          "mecze": 8,
+          "punkty": 2,
+          "stosunek": "22:58"
         },
         {
           "pozycja": 15,
           "nazwa": "LUKS GK Logistics Bodzanów",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 0,
-          "stosunek": "9:61"
+          "stosunek": "11:69"
         },
         {
           "pozycja": 16,
           "nazwa": "KTS III Gliwice",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 0,
-          "stosunek": "9:61"
+          "stosunek": "9:71"
         }
       ],
-      "zaktualizowano": "2026-11-06T06:57:53.495Z"
+      "zaktualizowano": "2026-11-06T21:35:28.584Z"
     },
     {
       "klucz": "18/138",
@@ -222,31 +222,31 @@
         },
         {
           "pozycja": 4,
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 7,
+          "punkty": 11,
+          "stosunek": "44:26"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "LKS Strażak Mikołów",
           "mecze": 7,
           "punkty": 10,
           "stosunek": "49:21"
         },
         {
-          "pozycja": 5,
-          "nazwa": "KTS IV Gliwice",
-          "mecze": 6,
-          "punkty": 9,
-          "stosunek": "38:22"
-        },
-        {
           "pozycja": 6,
-          "nazwa": "KU AZS UJD Częstochowa",
-          "mecze": 6,
-          "punkty": 9,
-          "stosunek": "37:23"
-        },
-        {
-          "pozycja": 7,
           "nazwa": "KS Mysław II Mysłowice",
           "mecze": 7,
           "punkty": 9,
           "stosunek": "42:28"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "KU AZS UJD Częstochowa",
+          "mecze": 7,
+          "punkty": 9,
+          "stosunek": "41:29"
         },
         {
           "pozycja": 8,
@@ -271,31 +271,31 @@
         },
         {
           "pozycja": 11,
+          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
+          "mecze": 7,
+          "punkty": 5,
+          "stosunek": "29:41"
+        },
+        {
+          "pozycja": 12,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
           "mecze": 7,
           "punkty": 4,
           "stosunek": "34:36"
         },
         {
-          "pozycja": 12,
+          "pozycja": 13,
           "nazwa": "KS Unia Kalety",
           "mecze": 7,
           "punkty": 4,
           "stosunek": "23:47"
         },
         {
-          "pozycja": 13,
+          "pozycja": 14,
           "nazwa": "GLKS Lot Konopiska",
           "mecze": 7,
           "punkty": 4,
           "stosunek": "20:50"
-        },
-        {
-          "pozycja": 14,
-          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
-          "mecze": 6,
-          "punkty": 3,
-          "stosunek": "22:38"
         },
         {
           "pozycja": 15,
@@ -307,12 +307,12 @@
         {
           "pozycja": 16,
           "nazwa": "LKS Ciężkowianka Jaworzno",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 0,
-          "stosunek": "10:50"
+          "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-06T06:57:53.495Z"
+      "zaktualizowano": "2026-11-06T21:35:28.584Z"
     },
     {
       "klucz": "18/142",
@@ -334,31 +334,31 @@
         },
         {
           "pozycja": 3,
+          "nazwa": "KTS KA Krokus VII Gliwice",
+          "mecze": 6,
+          "punkty": 10,
+          "stosunek": "36:24"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 6,
           "punkty": 9,
           "stosunek": "45:15"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "LKS Strażak II Mikołów",
           "mecze": 5,
           "punkty": 8,
           "stosunek": "36:14"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "KTS V Gliwice",
           "mecze": 6,
           "punkty": 8,
           "stosunek": "36:24"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "KTS KA Krokus VII Gliwice",
-          "mecze": 5,
-          "punkty": 8,
-          "stosunek": "28:22"
         },
         {
           "pozycja": 7,
@@ -383,17 +383,17 @@
         },
         {
           "pozycja": 10,
-          "nazwa": "KTS VI Gliwice",
+          "nazwa": "UKS Feniks II Pyskowice",
           "mecze": 5,
-          "punkty": 2,
-          "stosunek": "14:36"
+          "punkty": 3,
+          "stosunek": "17:33"
         },
         {
           "pozycja": 11,
-          "nazwa": "UKS Feniks II Pyskowice",
-          "mecze": 4,
-          "punkty": 1,
-          "stosunek": "10:30"
+          "nazwa": "KTS VI Gliwice",
+          "mecze": 6,
+          "punkty": 2,
+          "stosunek": "17:43"
         },
         {
           "pozycja": 12,
@@ -412,12 +412,12 @@
         {
           "pozycja": 14,
           "nazwa": "ULKS Pławniowice",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 0,
-          "stosunek": "6:44"
+          "stosunek": "8:52"
         }
       ],
-      "zaktualizowano": "2026-11-06T06:57:53.495Z"
+      "zaktualizowano": "2026-11-06T21:35:28.584Z"
     },
     {
       "klucz": "18/144",
@@ -446,17 +446,17 @@
         },
         {
           "pozycja": 4,
+          "nazwa": "UKS Wolej Solver II Ruda Śląska",
+          "mecze": 4,
+          "punkty": 4,
+          "stosunek": "22:18"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "TKKF Aut Łagisza Będzin",
           "mecze": 4,
           "punkty": 4,
           "stosunek": "21:19"
-        },
-        {
-          "pozycja": 5,
-          "nazwa": "UKS Wolej Solver III Ruda Śląska",
-          "mecze": 3,
-          "punkty": 3,
-          "stosunek": "15:15"
         },
         {
           "pozycja": 6,
@@ -474,27 +474,27 @@
         },
         {
           "pozycja": 8,
-          "nazwa": "AKS Mikołów",
-          "mecze": 3,
+          "nazwa": "UKS Wolej Solver III Ruda Śląska",
+          "mecze": 4,
           "punkty": 3,
-          "stosunek": "13:17"
+          "stosunek": "17:23"
         },
         {
           "pozycja": 9,
-          "nazwa": "UKS Wolej Solver II Ruda Śląska",
-          "mecze": 3,
-          "punkty": 2,
-          "stosunek": "14:16"
+          "nazwa": "AKS Mikołów",
+          "mecze": 4,
+          "punkty": 3,
+          "stosunek": "15:25"
         },
         {
           "pozycja": 10,
           "nazwa": "UKS Huragan I Sosnowiec",
-          "mecze": 3,
-          "punkty": 0,
-          "stosunek": "7:23"
+          "mecze": 4,
+          "punkty": 2,
+          "stosunek": "15:25"
         }
       ],
-      "zaktualizowano": "2026-11-06T06:57:53.495Z"
+      "zaktualizowano": "2026-11-06T21:35:28.584Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -856,8 +856,8 @@
       "kolejka": 8,
       "gospodarz": "MKS Skarbek Tarnowskie Góry",
       "gosc": "KTS III Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "10:0",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS III"
@@ -1038,8 +1038,8 @@
       "kolejka": 7,
       "gospodarz": "KU AZS UJD Częstochowa",
       "gosc": "KTS IV Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "4:6",
+      "rozegrany": true,
       "liga": "3. Liga Mężczyzn · gr. II",
       "zespoly": [
         "KTS IV"
@@ -1391,8 +1391,8 @@
       "kolejka": 6,
       "gospodarz": "KTS VI Gliwice",
       "gosc": "UKS Feniks II Pyskowice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "3:7",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS VI"
@@ -1535,8 +1535,8 @@
       "kolejka": 6,
       "gospodarz": "KTS KA Krokus VII Gliwice",
       "gosc": "ULKS Pławniowice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "8:2",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KA Krokus VII"
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -1930,7 +1930,7 @@
     {
       "zespol": "KTS II",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1480/kts-ii-gliwice/",
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "zawodnicy": [
         {
           "nazwisko": "Bartosz Kwodawski",
@@ -2037,7 +2037,7 @@
     {
       "zespol": "KTS III",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "zawodnicy": [
         {
           "nazwisko": "Michał Rosiek",
@@ -2045,8 +2045,8 @@
           "narodowosc": "Polska",
           "rok": 1995,
           "zwyciestwa": 4,
-          "porazki": 6,
-          "punkty": "8:12",
+          "porazki": 8,
+          "punkty": "8:16",
           "skutecznosc": null
         },
         {
@@ -2055,8 +2055,8 @@
           "narodowosc": "Polska",
           "rok": 2003,
           "zwyciestwa": 3,
-          "porazki": 11,
-          "punkty": "6:24",
+          "porazki": 13,
+          "punkty": "6:30",
           "skutecznosc": null
         },
         {
@@ -2075,8 +2075,8 @@
           "narodowosc": "Polska",
           "rok": 1994,
           "zwyciestwa": 0,
-          "porazki": 12,
-          "punkty": "0:36",
+          "porazki": 14,
+          "punkty": "0:42",
           "skutecznosc": null
         },
         {
@@ -2085,8 +2085,8 @@
           "narodowosc": "Polska",
           "rok": 1992,
           "zwyciestwa": 0,
-          "porazki": 4,
-          "punkty": "0:8",
+          "porazki": 6,
+          "punkty": "0:12",
           "skutecznosc": null
         },
         {
@@ -2104,16 +2104,16 @@
     {
       "zespol": "KTS IV",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "zawodnicy": [
         {
           "nazwisko": "Piotr Zemła",
           "licencja": "08899",
           "narodowosc": "Polska",
           "rok": 1969,
-          "zwyciestwa": 8,
+          "zwyciestwa": 10,
           "porazki": 0,
-          "punkty": "8:0",
+          "punkty": "10:0",
           "skutecznosc": null
         },
         {
@@ -2121,9 +2121,9 @@
           "licencja": "08893",
           "narodowosc": "Polska",
           "rok": 1979,
-          "zwyciestwa": 8,
-          "porazki": 4,
-          "punkty": "8:4",
+          "zwyciestwa": 9,
+          "porazki": 5,
+          "punkty": "9:5",
           "skutecznosc": null
         },
         {
@@ -2132,8 +2132,8 @@
           "narodowosc": "Polska",
           "rok": 1968,
           "zwyciestwa": 8,
-          "porazki": 4,
-          "punkty": "8:4",
+          "porazki": 6,
+          "punkty": "8:6",
           "skutecznosc": null
         },
         {
@@ -2141,9 +2141,9 @@
           "licencja": "08897",
           "narodowosc": "Polska",
           "rok": 1975,
-          "zwyciestwa": 6,
+          "zwyciestwa": 8,
           "porazki": 2,
-          "punkty": "6:2",
+          "punkty": "8:2",
           "skutecznosc": null
         },
         {
@@ -2191,7 +2191,7 @@
     {
       "zespol": "KTS V",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1557/kts-v-gliwice/",
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "zawodnicy": [
         {
           "nazwisko": "Grzegorz Machał",
@@ -2268,16 +2268,16 @@
     {
       "zespol": "KTS VI",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "zawodnicy": [
         {
           "nazwisko": "Wojciech Wieczorek",
           "licencja": "07757",
           "narodowosc": "Polska",
           "rok": 2013,
-          "zwyciestwa": 5,
+          "zwyciestwa": 7,
           "porazki": 5,
-          "punkty": "5:5",
+          "punkty": "7:5",
           "skutecznosc": null
         },
         {
@@ -2286,8 +2286,8 @@
           "narodowosc": "Polska",
           "rok": 2005,
           "zwyciestwa": 3,
-          "porazki": 7,
-          "punkty": "3:7",
+          "porazki": 9,
+          "punkty": "3:9",
           "skutecznosc": null
         },
         {
@@ -2316,8 +2316,8 @@
           "narodowosc": "Polska",
           "rok": 1979,
           "zwyciestwa": 1,
-          "porazki": 9,
-          "punkty": "1:9",
+          "porazki": 11,
+          "punkty": "1:11",
           "skutecznosc": null
         },
         {
@@ -2326,8 +2326,8 @@
           "narodowosc": "Polska",
           "rok": 1986,
           "zwyciestwa": 0,
-          "porazki": 0,
-          "punkty": "0:0",
+          "porazki": 2,
+          "punkty": "0:2",
           "skutecznosc": null
         },
         {
@@ -2345,16 +2345,16 @@
     {
       "zespol": "KA Krokus VII",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1558/kts-ka-krokus-vii-gliwice/",
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "zawodnicy": [
         {
           "nazwisko": "Łukasz Francka",
           "licencja": "11324",
           "narodowosc": "Polska",
           "rok": 1986,
-          "zwyciestwa": 7,
+          "zwyciestwa": 9,
           "porazki": 3,
-          "punkty": "7:3",
+          "punkty": "9:3",
           "skutecznosc": null
         },
         {
@@ -2362,9 +2362,9 @@
           "licencja": "11334",
           "narodowosc": "Polska",
           "rok": 1962,
-          "zwyciestwa": 7,
+          "zwyciestwa": 9,
           "porazki": 3,
-          "punkty": "7:3",
+          "punkty": "9:3",
           "skutecznosc": null
         },
         {
@@ -2372,9 +2372,9 @@
           "licencja": "11331",
           "narodowosc": "Polska",
           "rok": 1973,
-          "zwyciestwa": 6,
+          "zwyciestwa": 8,
           "porazki": 4,
-          "punkty": "6:4",
+          "punkty": "8:4",
           "skutecznosc": null
         },
         {
@@ -2382,9 +2382,9 @@
           "licencja": "11325",
           "narodowosc": "Polska",
           "rok": 1960,
-          "zwyciestwa": 1,
-          "porazki": 5,
-          "punkty": "1:5",
+          "zwyciestwa": 2,
+          "porazki": 6,
+          "punkty": "2:6",
           "skutecznosc": null
         },
         {
@@ -2422,7 +2422,7 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-11-06T06:57:53.495Z",
+      "zaktualizowano": "2026-11-06T21:35:28.584Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-06T06:57:53.495Z",
-    "pzts": "2026-11-06T06:57:53.495Z"
+    "szts": "2026-11-06T21:35:28.584Z",
+    "pzts": "2026-11-06T21:35:28.584Z"
   },
   "zrodla": {
     "szts": "ok",
