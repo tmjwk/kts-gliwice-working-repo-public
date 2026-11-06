@@ -1682,6 +1682,16 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .btn-gra:hover { border-color: var(--kts-link); color: var(--kts-link); }
 .btn-gra:focus-visible { outline: 2px solid var(--kts-link); outline-offset: 2px; }
 
+/* 1.29.4: chip wersji gry przy tytule PONG (gra.html) — js/gra.js
+   wypełnia go z nagłówka pobranego pliku gry („Wersja: X.Y.Z”),
+   fallback: skrót SHA mirroru. Pismo body (nie display) + cyfry
+   tabularne (.t-nums), pigułka jak .badge--team-pzts (błękit primary). */
+.badge--gra {
+  border-color: rgba(90, 149, 255, 0.45); background: var(--kts-primary-light);
+  color: var(--kts-link); padding: 0.12rem 0.6rem; font-size: 0.74rem;
+  font-family: var(--font-body); white-space: nowrap; vertical-align: middle;
+}
+
 /* plansza + stany (loading / błąd) — jedna geometria, żeby nic nie skakało.
    Wysokość ELASTYCZNA (flex), nie calc(100dvh - X): body jest kolumną
    flex, planszownik dostaje całą resztę viewportu pomiędzy nagłówkiem,
