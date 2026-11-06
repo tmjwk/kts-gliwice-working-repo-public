@@ -671,6 +671,12 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .league-table td { padding-block: 0.5rem; border-bottom: 1px solid var(--kts-line); }
 .league-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+/* 1.29.5: wartości liczbowe NIE łamią się na dwie linie — na telefonie
+   bilans „Z-R-P” (np. 6-0-0) łamał się po myślniku na „6-0-”/„0”, a
+   header „Z-R-P” na „Z-”/„R-P” (kolumny liczbowe ściskane przez długie
+   nazwy drużyn). Z nowrap szerokość wchłania kolumna „Drużyna” (nazwy
+   zawijają się — to akceptowalne), liczby zawsze w jednej linii. */
+.league-table .num, .league-table th.num { white-space: nowrap; }
 .league-table tr.is-ours td { background: var(--kts-primary-light); color: var(--kts-link); font-weight: 600; }
 .source-note { border-top: 1px solid var(--kts-line); margin-top: 0.75rem; padding-top: 0.75rem; }
 .source-note a { color: var(--kts-link); font-weight: 600; }
@@ -688,11 +694,15 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    — zweryfikowane testem 390px vs 1280px: ta sama kolejność wierszy),
    ale dowolne zawijanie .match-row na wąskim ekranie dawało nieregularne
    3–4-linijkowe bloki. Teraz wiersz ma dwie grupy: .match-glowne
-   (drużyny + wynik + plakietka) i .match-info (data · godzina · kolejka)
-   — na desktopie JEDEN wiersz (info dopchnięte do prawej), na telefonie
-   info schodzi do drugiej linii. Te same elementy, ta sama logika,
-   świadomy układ zamiast losowego zawijania. (Zmiana dotyczy kafelków
-   index.html; podstrona drużyny ma własny układ — bez zmian.) */
+   (drużyny + wynik + plakietka) i .match-info (data · godzina · kolejka).
+   1.29.5 (właściciel 06.11: „nie wyświetlasz informacji konsystentnie —
+   brakuje w niektórych wierszach daty, godz. i kolejki”): linia info
+   ZAWSZE w drugiej linii wiersza, na KAŻDEJ szerokości i przy każdej
+   długości nazw. Do 1.29.4 dzieliła pierwszy wiersz z drużynami, gdy
+   się mieściła (krótkie nazwy → info po prawej), a przy długich nazwach
+   spadała pod nie — w jednej liście raz tak, raz inaczej (diagnoza:
+   dialog „Wyniki” 1-ligi, np. „PGE Fibrain AZS Politechnika Rzeszów”).
+   Od 1.29.5 też podstrona drużyny (druzyna.js) renderuje TEN SAM układ. */
 .match-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.75rem; }
 .match-glowne {
   display: flex; flex-wrap: wrap; align-items: baseline;
@@ -703,10 +713,7 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    przy prawej krawędzi pierwszego wiersza */
 .match-glowne .match-teams { flex: 1 1 0; min-width: 0; }
 .match-glowne .match-score { margin-left: auto; }
-.match-info { display: flex; flex-wrap: wrap; gap: 0.25rem 0.4rem; }
-@media (max-width: 40rem) {
-  .match-info { flex-basis: 100%; }
-}
+.match-info { display: flex; flex-wrap: wrap; gap: 0.25rem 0.4rem; flex-basis: 100%; }
 .match-date { font-size: 0.8rem; color: var(--kts-text-muted); font-variant-numeric: tabular-nums; }
 .match-teams { font-size: 0.9rem; font-weight: 600; color: var(--kts-text); }
 .match-score { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: var(--kts-ink); }
