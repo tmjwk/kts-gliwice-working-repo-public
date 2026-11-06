@@ -30,6 +30,14 @@
    - gdy nic nie da się pobrać — czytelny ekran „chwilowo
      niedostępna” z przyciskiem ponownej próby.
 
+   1.29.4 — WERSJA GRY WIDOCZNA NA STRONIE: chip „wersja gry: vX.Y.Z”
+   przy tytule planszy (+ dopisek w stopce). Odczytywana z nagłówka
+   pobranego pliku gry („Wersja: X.Y.Z (…)”) — czyli z tego, co gra
+   NAPRAWDĘ deklaruje w pliku, który właśnie gra gość. Właściciel
+   06.11: „podniosłem grę do v0.3.1 (…) wyświetlaj wersję gry na
+   stronie gdzie ją prezentujesz”. Gdy plik nie ma znacznika wersji,
+   chip pokazuje skrót SHA mirroru (kierunek zawsze prawdziwy).
+
    Wersja strony: konwencja jak na innych podstronach (WERSJA_KODU
    + toast o nowszej wersji; pełna historia w js/app.js). Od 1.29.0
    js/gra.js DOŁĄCZA do zestawu plików podnoszonych przy KAŻDYM
@@ -46,7 +54,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.29.3";
+const WERSJA_KODU = "1.29.4";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -156,6 +164,34 @@ async function pobierzGre() {
   return { blad: problemy.join(" · ") || "nieznany błąd" };
 }
 
+/** Wersja gry z nagłówka pobranego pliku — gra deklaruje ją w komentarzu
+ *  otwierającym („Wersja: 0.3.1 (…)”). Szukamy w pierwszych 4 KB,
+ *  wielkość liter bez znaczenia, „v” przed numerem opcjonalne.
+ *  Null = plik bez znacznika (wtedy chip pokazuje skrót SHA mirroru). */
+function wersjaGryZHtml(html) {
+  const m = String(html).slice(0, 4096).match(/\bwersja:\s*v?(\d+\.\d+\.\d+)/i);
+  return m ? m[1] : null;
+}
+
+/** Pokaż wersję gry tam, gdzie ją prezentujemy: chip przy tytule
+ *  (#gra-wersja) + stopka (#gra-wersja-stopka). Źródło = nagłówek
+ *  pobranego pliku; fallback = skrót SHA mirroru. Wywoływane po
+ *  KAŻDYM pobraniu (także „↻ Odśwież grę”). */
+function pokazWersjeGry(wynik) {
+  const chip = $("#gra-wersja");
+  const stopka = $("#gra-wersja-stopka");
+  if (!chip && !stopka) return;
+  const w = wersjaGryZHtml(wynik.html);
+  const etykieta = w ? `v${w}` : `mirror ${wynik.refKrotki}`;
+  if (chip) {
+    chip.textContent = `wersja gry: ${etykieta}`;
+    chip.title = w
+      ? `Wersja odczytana z pobranego pliku gry (nagłówek „Wersja: ${w}”)`
+      : `Plik gry bez znacznika „Wersja:” — pokazany commit mirroru (${wynik.refKrotki})`;
+  }
+  if (stopka) stopka.textContent = etykieta;
+}
+
 /** Metadane mirroru (gra/.mirror.json) — skąd i kiedy ta wersja gry. */
 async function pokazInfoMirroru(baza) {
   const el = $("#gra-mirror");
@@ -253,6 +289,7 @@ async function zaladujGre() {
     try { ramka.contentWindow.focus(); } catch (e) { /* cross-origin — nie przeszkadza */ }
   });
   ramka.srcdoc = dokument;
+  pokazWersjeGry(wynik);
   pokazInfoMirroru(wynik.baza);
 }
 
