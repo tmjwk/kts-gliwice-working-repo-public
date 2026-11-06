@@ -81,6 +81,22 @@
           <a class="gra-powrot" href="index.html">← Wróć na stronę główną</a>
         </div>
       </div>
+
+      <!-- 1.29.6: {type:'pong:exit'} z gry (EXIT/Esc w menu gry) — gra prosi
+           stronę o zamknięcie ramki; zamiast pustej planszy pokazujemy panel
+           z możliwością natychmiastowego rewanżu (świeże pobranie z repo). -->
+      <div class="gra-blad" id="gra-zamknieta" hidden>
+        <h2 class="t-h4">Gra zakończona</h2>
+        <p class="gra-blad-opis">
+          Zamknięto grę (EXIT w menu gry). Dziękujemy za rozgrywkę — wracaj
+          kiedy chcesz, przy każdym wejściu pobieramy najnowszą wersję
+          prosto z repozytorium klubu!
+        </p>
+        <div class="gra-blad-cta">
+          <button class="btn btn-accent" id="gra-zagraj" type="button">🏓 Zagraj ponownie</button>
+          <a class="gra-powrot" href="index.html">← Wróć na stronę główną</a>
+        </div>
+      </div>
     </div>
   </main>
 
