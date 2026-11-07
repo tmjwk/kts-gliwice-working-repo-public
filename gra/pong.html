@@ -1,13 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.3">
+<html lang="en" data-version="0.3.6">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.3"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.3</title>
+<meta name="game-version" content="0.3.6"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.6</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.6 (2026-11-07, zgłoszenie Ciby — „paletka przeskakuje po
+  odłożeniu palca i położeniu go w innym miejscu”): dotyk ustawiał cel
+  ABSOLUTNIE — pointerdown od razu na Y palca (a od v0.3.3 „tap też
+  pozycjonuje”), więc przerwany kontakt + ponowne dotknięcie gdzie indziej
+  TELEPORTOWAŁO paletkę w to miejsce. RUCH PALETKI MA BYĆ CIĄGŁY — także
+  po utracie kontaktu z ekranem. Dotyk/rysik = przeciąganie WZGLĘDNE:
+  pointerdown zapamiętuje tylko KOTWICĘ Y (cel zostaje bez zmian), ruch
+  palca dodaje DELTĘ od AKTUALNEJ pozycji paletki (clamp do zakresu —
+  brak martwej strefy na krańcach), pointerup/cancel celu NIE rusza —
+  paletka stoi, gdzie stała. Tap = brak ruchu (celowo: tap w innym
+  miejscu to właśnie źródłowy przeskok). MYSZ bez zmian: kursor jest
+  widoczny i ciągły → sterowanie absolutne (hover i drag), płynne
+  przejście drag↔hover bez skoku.
+  Wersja: 0.3.5 (2026-11-07, życzenie Ciby: „wszystkie EXIT/Esc = BACK”):
+  każde wyjście z gry (przycisk Exit, klawisz Esc) wraca na STRONĘ WEJŚCIA —
+  grę ładujemy w tej samej karcie/stronie (wyskakujące okienka nie działają
+  na iPhone), więc wyjście ma trafić w link, z którego wszedł gracz. ENTRY
+  liczone raz przy starcie: ?back=<http(s) | /ścieżka> (polecane dla strony
+  klubu — encodeURIComponent(bieżąca strona)) → document.referrer; wybór
+  CELOWY: location.replace(ENTRY), nie history.back() — wstecz wskoczyłby
+  na pustą kartę/stronę startową, gdy link otwarto w NOWEJ karcie, a replace
+  nie zostawia wpisu gry w historii (forward po wyjściu nie wraca do gry).
+  Bez ENTRY: wstecz w historii (bezpiecznik 400 ms → „/”), window.close(),
+  „/”. Koniec dwóch starych wczesnych powrotów: pełny ekran NIE wstrzymuje
+  wyjścia (do v0.3.4 Esc wychodził tylko z FS — FS zwalniamy w tle), a w
+  iframe ping pong:exit {back} + po 600 ms bez reakcji rodzica gra SAMA
+  wraca na stronę wejścia (nawigacja top; cross-origin zablokuje
+  przeglądarka — zostaje ping). Flag „exiting” + reset na pageshow:
+  podwójny Esc albo Esc+klik nie odpala wyjścia dwa razy.
+  Wersja: 0.3.4 (2026-11-06, błąd z kolejki sesji 9 — „sticky drag”:
+  ZGUBIONY POINTERUP): drag myszą rozpoczęty na grze i zwolniony POZA
+  OKNEM przeglądarki (okno mniejsze od ekranu / gra w iframe na stronie
+  klubu) nie dostarczał pointerup do strony — wpis w `touches` żył dalej
+  i KAŻDY ruch myszy bez przycisku ciągnął paletkę jak drag, TAKŻE nad
+  UI (stopka/nagłówek — tryb „hover tylko nad kortem” był ominięty).
+  Naprawa podwójna: (1) setPointerCapture przy pointerdown — przeglądarka
+  dostarcza pointerup/cancel niezależnie gdzie kursor opuści przycisk
+  (dla dotyku to no-op: ma implicite capture); (2) samonaprawa w
+  pointermove — mysz/pen bez wciśniętego przycisku (buttons===0) z żyjącym
+  wpisem w `touches` = zgubiony up → wpis wypruwany, paletka zostaje na
+  ostatniej pozycji; (3) blur okna w środku draga (alt-tab) też wypruwa
+  wejścia przeciągania — mouseup po utracie fokusu by nie doszedł.
   Wersja: 0.3.3 (2026-11-06, zgłoszenie Ciby: „w pionie też CAŁY EKRAN ma
   być touch sensitive, tak jak w poziomie”): (1) TAP pozycjonuje paletkę —
   szybki dotyk (pointerdown+pointerup w jednym polu gry, 16,6 ms) czyścił
@@ -56,7 +98,10 @@
      (v0.3.0, decyzja Ciby); fizyka (cykle/pole) bez zmian;
      ?classic=1 = geometrycznie dokładny oryginał (4:3, paletki 128H/384H)
    - osadzenie na stronie: rodzic powinien obsłużyć postMessage
-     {type:'pong:exit'} (przycisk EXIT / klawisz Esc) i zamknąć grę;
+     {type:'pong:exit', back} (przycisk EXIT / klawisz Esc) i zamknąć grę;
+     bez obsługi EXIT nie umiera — po 600 ms gra sama wróci na stronę wejścia
+     (nawigacja top, wymaga tego samego originu). Link „zagraj” najlepiej
+     z parametrem: pong.html?back=<encodeURIComponent(strona z linkiem)>;
      WERSJĘ gry rodzic dostaje automatycznie: postMessage {type:'pong:version',
      version, released} (na żądanie: wyślij {type:'pong:get-version'}),
      a bez uruchamiania JS: version.json / meta[name=game-version]
@@ -146,7 +191,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.3</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.6</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -162,7 +207,7 @@
          usuń atrybut hidden, by przywrócić przycisk. -->
     <button id="b2p" hidden>2 Players</button>
   </div>
-  <span class="hint" id="hint">W/S · ↑/↓ · MOUSE · TOUCH</span>
+  <span class="hint" id="hint">W/S · ↑/↓ · MOUSE · TOUCH (DRAG)</span>
   <div class="grp">
     <button id="bside">Player: Right</button>
     <button id="bto">Game to 11</button>
@@ -364,8 +409,8 @@ function drawScore(side) {                     // okna zakotwiczone przy paletka
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.3";      // jedno źródło prawdy o wersji — nagłówek,
-const RELEASE = "2026-11-06"; // tytuł karty, kort, meta, version.json, postMessage
+const VERSION = "0.3.6";      // jedno źródło prawdy o wersji — nagłówek,
+const RELEASE = "2026-11-07"; // tytuł karty, kort, meta, version.json, postMessage
 function drawVersion() {      // nr wersji małymi 7-seg. na dole kortu (od v0.3.1, życzenie Ciby)
   const k = 0.5, y0 = VIS_H - 22;              // skala ½ cyfry wyniku, linia 224..240
   let wTot = 0;
@@ -445,8 +490,10 @@ function stepPads() {
     if (Math.abs(dy) >= 1)
       ap.top = clampPad(ap.top + Math.max(-AI_SPEED, Math.min(AI_SPEED, dy)));
   }
-  /* palec/mysz ustawiają pozycję bezpośrednio (jak potencjometr) — v0.3.0:
-     dotyk CAŁEGO EKRANU prowadzi paletkę gracza (w 2P: połowa ekranu/gracza).
+  /* cel wskaźnika prowadzi paletkę — v0.3.6: MYSZ ustawia go bezpośrednio
+     (potencjometr), PALEC/rysik prowadzi DELTAMI przeciągania (zero
+     przeskoków po odłożeniu i położeniu palca gdzie indziej). v0.3.0: dotyk
+     CAŁEGO EKRANU prowadzi paletkę gracza (w 2P: połowa ekranu/gracza).
      v0.3.1: w 1P slot AI NIGDY nie ma celu wskaźnika — po zmianie strony
      stary cel z byłego slotu gracza „zamrażał" paletkę AI na zawsze. */
   if (G.mode === 1) pointer[G.side === 1 ? 1 : 0] = null;
@@ -595,16 +642,26 @@ addEventListener("keydown", e => {
 addEventListener("keyup", e => { const k = KMAP[e.code]; if (k) keys[k] = false; });
 addEventListener("blur", () => {          // v0.3.1: alt-tab z wciśniętym W/S/strzałką
   keys.p1u = keys.p1d = keys.p2u = keys.p2d = false;
+  /* v0.3.4: alt-tab W ŚRODKU draga — mouseup po utracie fokusu nie musi
+     dojść (stary „sticky drag”); wypruwamy wejścia przeciągania, paletka
+     zostaje na ostatniej pozycji (semantyka v0.3.3). Trzymane palce odzyskają
+     sterowanie po ponownym dotknięciu — jak w releaseAllPointers. */
+  for (const k in touches) delete touches[k];
+  if (mouseSlot >= 0) { pointer[mouseSlot] = null; mouseSlot = -1; }
 });
 
-/* --- wejście: palec / mysz (pozycyjnie, jak potencjometr pokrętła) ---------
-   v0.3.0: czuły na dotyk jest CAŁY EKRAN — nagłówek, ramki boczne i stopka
-   też prowadzą paletkę (nie tylko pole gry). Pozycja Y gestu mapowana na
-   linię kortu; X rozdziela graczy tylko w trybie 2P (połówki EKRANU, bo
-   kort bywa węższy od ekranu). Gest na przycisku = klik przycisku (paletka
-   nie skacze); mysz w spoczynku steruje tylko nad kortem (desktop).      */
+/* --- wejście: palec = PRZECIĄGANIE względne, mysz = potencjometr ------------
+   v0.3.6 (zgłoszenie Ciby: „paletka przeskakuje po odłożeniu palca”):
+   dotyk NIE pozycjonuje paletki absolutnie — prowadzi ją DELTAMI od
+   miejsca, w którym paletka jest. Podniesienie palca i położenie go w
+   innym miejscu = ZERO przeskoków; tap = brak ruchu. v0.3.0: czuły na
+   dotyk jest CAŁY EKRAN — nagłówek, ramki boczne i stopka też prowadzą
+   paletkę (nie tylko pole gry). Pozycja Y gestu mapowana na linię kortu;
+   X rozdziela graczy tylko w trybie 2P (połówki EKRANU, bo kort bywa
+   węższy od ekranu). Gest na przycisku = klik przycisku (paletka nie
+   skacze); mysz w spoczynku steruje tylko nad kortem (desktop).        */
 const pointer = [null, null];                 // celowane pozycje TOP paletki
-const touches = {};                           // pointerId -> strona (0/1)
+const touches = {};                           // pointerId -> {s: strona, y: kotwica Y}
 let mouseSlot = -1;                           // v0.3.1: slot prowadzony TERAZ samym hoverem myszy
 function releasePointer(i) { pointer[i] = null; }          // palec odzyska slot przy ruchu
 function releaseAllPointers() {               // v0.3.1: zmiana strony/trybu — zero starych celów
@@ -625,7 +682,8 @@ function fieldY(e) {                          // clientY -> linia kortu (clamp w
      do góry/dołu (palec „nie prowadził”). Teraz pełna scena mapuje się
      proporcjonalnie na pełny zakres paletki — „cały ekran czuły” dokładnie
      jak w poziomie (tam scena ≈ kort, więc odczuwalnie bez zmian).
-     Dotyk w nagłówku/stopce (poza sceną) nadal clampuje na krańce. */
+     v0.3.6: dotyk liczy z tej mapy DELTY ruchu (czułość bez zmian, bez
+     pozycjonowania absolutnego); mysz/hover bez zmian — absolutnie. */
   const r = stage.getBoundingClientRect();
   return (e.clientY - r.top) / r.height * VIS_H;
 }
@@ -643,10 +701,30 @@ addEventListener("pointerdown", e => {
     if (mouseSlot >= 0 && mouseSlot !== s) pointer[mouseSlot] = null;
     mouseSlot = -1;
   }
-  touches[e.pointerId] = s;
-  pointer[s] = fieldY(e) - PAD_H / 2;
+  touches[e.pointerId] = { s, y: fieldY(e) }; // v0.3.6: KOTWICA Y (stąd delty ruchu)
+  /* v0.3.4: PRZECHWYCENIE POINTERA — gwarancja dostarczenia pointerup/cancel.
+     Bez niego drag zwolniony POZA OKNEM przeglądarki (okno mniejsze od ekranu,
+     gra w iframe na stronie klubu) gubił pointerup — wpis w `touches` żył dalej
+     i każdy ruch myszy BEZ przycisku ciągnął paletkę jak drag, także nad UI
+     („sticky drag”; tryb hover-tylko-nad-kortem był ominięty). Dla dotyku
+     to no-op — ma implicite capture na celu dotyku. */
+  try { if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId); } catch (_) {}
+  /* v0.3.6: DOTYK/RYSIK nie ustawia celu na Y palca (to robiło przeskok przy
+     ponownym dotknięciu w innym miejscu) — chwyta paletkę TAM, GDZIE JEST,
+     i ruszy dopiero od RUCHU palca (delta w pointermove). MYSZ bez zmian:
+     kursor widoczny i ciągły → cel od razu pod kursorem (płynne hover↔drag). */
+  if (e.pointerType === "mouse") pointer[s] = fieldY(e) - PAD_H / 2;
+  else if (pointer[s] == null) pointer[s] = G.pads[s].top;
 });
 addEventListener("pointermove", e => {
+  /* v0.3.4: SAMONAPRAWA ZGUBIONEGO UP — mysz/pen bez wciśniętego przycisku
+     (buttons===0), a wpis w `touches` wciąż żyje = pointerup przepadł
+     (przeglądarka nie dostarczyła, stary przypadek bez capture). Wypruwamy
+     wpis BEZ zmiany pozycji — paletka zostaje tam, gdzie skończył się drag;
+     dalsze ruchy to znów zwykły hover (nad kortem prowadzi, nad UI nic).
+     Dotyk nie potrzebuje — podczas kontaktu buttons===1 zawsze. */
+  if (e.pointerType !== "touch" && e.buttons === 0 && (e.pointerId in touches))
+    delete touches[e.pointerId];
   /* mysz w spoczynku nad UI (przyciski/stopka/nagłówek) nie robi NIC —
      v0.3.0: bez rywania paletki i bez domyślnego dźwięku (decyzja dźwięku
      należy do gestu/przycisku; regresja B1 test_audio: hover po drodze
@@ -661,7 +739,17 @@ addEventListener("pointermove", e => {
     pointer[s] = fieldY(e) - PAD_H / 2;
     mouseSlot = s;                            // zwolniony przez pointerleave/klawisz
   } else if (e.pointerId in touches) {          // palec/rysik lub mysz z przyciskiem
-    pointer[touches[e.pointerId]] = fieldY(e) - PAD_H / 2;
+    const t = touches[e.pointerId];
+    if (e.pointerType === "mouse") {
+      pointer[t.s] = fieldY(e) - PAD_H / 2;     // mysz: absolutnie, spójnie z hoverem
+    } else {                                    // v0.3.6: DOTYK = DELTA od kotwicy
+      const y = fieldY(e), dy = y - t.y;        // ta sama mapa Y = ta sama czułość
+      t.y = y;
+      if (dy) {
+        const base = (pointer[t.s] != null) ? pointer[t.s] : G.pads[t.s].top;
+        pointer[t.s] = Math.max(PAD_MIN, Math.min(PAD_MAX, base + dy)); // bez martwej strefy
+      }
+    }
   }
 });
 /* v0.3.1: mysz ODESZŁA z kortu → zwolnij slot hovera (paletka zostaje na
@@ -674,16 +762,26 @@ cv.addEventListener("pointerleave", e => {
   if (mouseSlot >= 0) { pointer[mouseSlot] = null; mouseSlot = -1; }
 });
 const endPtr = e => {
-  /* v0.3.3: TAP TEŻ POZYCJONUJE. Szybki dotyk (down+up w jednym polu gry,
-     16,6 ms) czyścił cel ZANIM stepPads zdążył go zastosować — paletka
-     „nie reagowała” na tap wcale (tylko przeciąganie działało), co w pionie
-     (wąski pas kortu, tap to naturalny gest) odczuwano jako „cały ekran
-     nieczuły”. Teraz puszczenie palca/klawisza myszy zostawia ostatnią
-     pozycję jako cel — paletka skacze tam, gdzie palec opuścił ekran. */
+  /* v0.3.6: KONIEC KONTAKTU NIE PORUSZA PALETKI (życzenie Ciby: „ruch paletki
+     bez przeskoków, nawet gdy użytkownikowi zdarzy się utracić kontakt z
+     ekranem”). Dotyk/rysik: pointerup/pointercancel zostawia cel BEZ ZMIAN —
+     paletka stoi, gdzie stoi; nowy dotyk to nowa kotwica, a ruch paletki
+     następuje dopiero od RUCHU palca (delta). Do v0.3.5 puszczenie palca
+     zostawiało ostatnie Y palca jako cel (v0.3.3 „tap też pozycjonuje”),
+     a ponowne dotknięcie w innym miejscu przeskakiwało paletką na miejsce
+     palca — dokładnie zgłoszony błąd. MYSZ: kursor ciągły → cel = pozycja
+     kursora przy puszczeniu (płynne przejście do hovera; klik-tap na
+     desktopie nadal pozycjonuje). */
   if (e.pointerId in touches) {
-    pointer[touches[e.pointerId]] = fieldY(e) - PAD_H / 2;
+    if (e.pointerType === "mouse") pointer[touches[e.pointerId].s] = fieldY(e) - PAD_H / 2;
     delete touches[e.pointerId];
   }
+  /* v0.3.4: higiena — zwolnij przechwycenie z pointerdown (zwykle robi to
+     sam przeglądarka na up/cancel; tu dla pewności, np. po samonaprawie) */
+  try {
+    if (e.target && e.target.releasePointerCapture && e.target.hasPointerCapture(e.pointerId))
+      e.target.releasePointerCapture(e.pointerId);
+  } catch (_) {}
 };
 addEventListener("pointerup", endPtr);
 addEventListener("pointercancel", endPtr);
@@ -747,7 +845,7 @@ function refreshUI() {
   $("bsnd").classList.toggle("on", Snd.on);
 }
 /* stopka mówi wprost, kiedy dźwięk jeszcze śpi — żeby brak dźwięku nie był zagadką */
-const HINT_CTRL = "W/S · ↑/↓ · MOUSE · TOUCH";
+const HINT_CTRL = "W/S · ↑/↓ · MOUSE · TOUCH (DRAG)";
 const HINT_MUTE = "SOUND ASLEEP — CLICK / TAP / ANY KEY";
 let hintTxt = "";
 function refreshHint() {
@@ -767,19 +865,63 @@ $("bto").onclick  = () => { unlock(); G.target = G.target === 11 ? 15 : 11; rese
    zmiana strony = nowa rozgrywka (odliczanie 3-2-1); v0.3.1: + zwolnienie
    wskaźników — AI gra PRZECIWNIKA, nie dziedziczy zamrożonego celu */
 $("bside").onclick = () => { unlock(); G.side = G.side === 2 ? 1 : 2; releaseAllPointers(); resetGame(); refreshUI(); savePrefs(); };
-/* v0.3.0: wyjście z gry — przycisk EXIT albo Esc. Pełny ekran -> wyjdź z niego;
-   w iframe -> sygnał dla strony rodzica (postMessage pong:exit — rodzic zamyka
-   grę/wraca do treści); samodzielna karta -> wstecz w historii albo start. */
+/* v0.3.5: wyjście z gry — przycisk EXIT albo Esc = zawsze „BACK” (życzenie
+   Ciby): wracamy na STRONĘ WEJŚCIA, bo grę ładujemy w tej samej karcie
+   (popupy nie działają na iPhone). ENTRY liczone raz przy starcie:
+   ?back=<http(s) | /ścieżka> (strona klubu może podać dokładny link)
+   → document.referrer (karta/iframe otwarte z linku). Filtr http(s)/ścieżka
+   — ?back=javascript: nie przejdzie. Kolejność prób:
+   (1) ENTRY → location.replace: celowo NIE history.back() — wstecz
+       wskoczyłby na pustą kartę/stronę startową, gdy link otwarto w NOWEJ
+       karcie (historia karty ≠ droga wejścia); replace nie zostawia też
+       wpisu gry w historii — „forward” po wyjściu nie wraca do gry;
+   (2) brak ENTRY (referrer wycięty polityką prywatności) → wstecz
+       w historii karty + bezpiecznik: bez pagehide w 400 ms → „/”
+       (history.length potrafi kłamać);
+   (3) karta bez historii i ENTRY → window.close() (okno otwarte
+       skryptem), a gdy przeglądarka odmówi — „/”;
+   (4) iframe: ping pong:exit z polem back (rodzic zamyka grę jak
+       dotychczas — protokół bez zmian); brak reakcji przez 600 ms =
+       wracamy SAMI nawigacją top (działa przy tym samym originie;
+       cross-origin blokuje przeglądarka — zostaje ping).
+   Pełny ekran już NIE wstrzymuje wyjścia (do v0.3.4 Esc wychodził tylko
+   z FS): FS zwalniamy w tle, nawigacja i tak go kończy. Flag „exiting”
+   (reset na pageshow — powrót z bfcache): podwójny Esc albo Esc+klik nie
+   odpala wyjścia dwa razy i nie cofa historii o 2 pozycje. */
+const ENTRY = (() => {
+  let u = "";
+  try { u = new URLSearchParams(location.search).get("back") || ""; } catch (_) {}
+  if (u.startsWith("/") && !u.startsWith("//")) u = location.origin + u;  // /ścieżka, nie //host
+  if (!u) u = document.referrer || "";
+  return /^https?:/i.test(u) ? u : "";
+})();
+let exiting = false;
 function exitGame() {
-  try { if (document.fullscreenElement) { document.exitFullscreen(); return; } } catch (_) {}
+  if (exiting) return; exiting = true;
+  try { if (document.fullscreenElement) document.exitFullscreen(); } catch (_) {}
   let framed = false;
   try { framed = window.self !== window.top; } catch (_) { framed = true; }
   if (framed) {
-    try { window.top.postMessage({ type: "pong:exit" }, "*"); } catch (_) {}
+    const msg = { type: "pong:exit" };
+    if (ENTRY) msg.back = ENTRY;
+    try { window.top.postMessage(msg, "*"); } catch (_) {}
+    setTimeout(() => {          // rodzic nie obsługuje protokołu? wracamy sami
+      try { if (window.self !== window.top) window.top.location.replace(ENTRY || "/"); } catch (_) {}
+    }, 600);
     return;
   }
-  if (history.length > 1) history.back(); else location.replace("/");
+  if (ENTRY) { try { location.replace(ENTRY); } catch (_) {} return; }
+  if (history.length > 1) {
+    let gone = false;
+    addEventListener("pagehide", () => { gone = true; }, { once: true });
+    try { history.back(); } catch (_) {}
+    setTimeout(() => { if (!gone) try { location.replace("/"); } catch (_) {} }, 400);
+    return;
+  }
+  try { window.close(); } catch (_) {}
+  setTimeout(() => { try { location.replace("/"); } catch (_) {} }, 300);
 }
+addEventListener("pageshow", () => { exiting = false; });   // powrót bfcache = Exit znów działa
 $("bexit").onclick = () => { unlock(); exitGame(); };
 /* Kolejność celowa: klik w włącznik = ŚWIADOMA decyzja (nie nadpisuj jej później
    domyślną polityką „dźwięk on po 1. interakcji”); przełącz stan WYŚWIETLANY,

@@ -1,7 +1,7 @@
 {
   "game": "PONG · 1972 — Atari Replica",
-  "version": "0.3.3",
-  "released": "2026-11-06",
+  "version": "0.3.6",
+  "released": "2026-11-07",
   "file": "pong.html",
   "locations": {
     "repo": "game/pong.html (tmjwk/pong, prywatne — źródło prawdy)",
@@ -9,22 +9,26 @@
     "embed": "pong.html obok tego pliku (version.json zawsze towarzyszy grze)"
   },
   "embed": "<iframe src=\"/pong.html\" style=\"width:100%;height:100%;border:0\" allow=\"autoplay\" title=\"PONG 1972\"></iframe>",
+  "exit_back": "v0.3.5: EXIT/Esc = BACK na stronę wejścia. Kolejność: ?back=<http(s) | /ścieżka> → document.referrer → location.replace (bez wpisu gry w historii); brak ENTRY → wstecz w historii → window.close() → '/'. W iframe: ping pong:exit {back}; bez reakcji rodzica przez 600 ms gra sama wraca nawigacją top (ten sam origin). Link 'zagraj' najlepiej: pong.html?back=<encodeURIComponent(bieżąca strona)>",
   "read_version": [
     "version.json — ten plik (zawsze obok pong.html): fetch → .version",
-    "pong.html: <meta name=\"game-version\" content=\"0.3.3\">",
-    "pong.html: <html data-version=\"0.3.3\">",
-    "pong.html: const VERSION = \"0.3.3\" (jedno źródło prawdy w kodzie)",
+    "pong.html: <meta name=\"game-version\" content=\"0.3.6\">",
+    "pong.html: <html data-version=\"0.3.6\">",
+    "pong.html: const VERSION = \"0.3.6\" (jedno źródło prawdy w kodzie)",
     "runtime: window.__pong.VERSION albo window.__pong.getVersion()",
-    "iframe postMessage: gra sama ogłasza {type:'pong:version', version:'0.3.3'} po starcie; na żądanie wyślij {type:'pong:get-version'}",
-    "pong.html: <title> kończy się na „v0.3.3”",
+    "iframe postMessage: gra sama ogłasza {type:'pong:version', version:'0.3.6'} po starcie; na żądanie wyślij {type:'pong:get-version'}",
+    "pong.html: <title> kończy się na „v0.3.6”",
     "GitHub Release: GET /repos/tmjwk/pong/releases/latest → .tag_name (dla agenta z tokenem)"
   ],
   "postmessage_protocol": {
     "pong:version": "gra → strona: {type, game, version, released} — ogłaszane po starcie i na żądanie",
     "pong:get-version": "strona → gra (do iframe.contentWindow): prośba o ponowne pong:version",
-    "pong:exit": "gra → strona: grę zamknięto (EXIT / Esc) — strona zamyka iframe"
+    "pong:exit": "gra → strona (v0.3.5 + pole back): grę zamknięto (EXIT / Esc) — strona zamyka iframe / wraca do treści; back = link strony wejścia (?back= → referrer). Bez obsługi przez 600 ms gra sama wraca na stronę wejścia nawigacją top (ten sam origin)"
   },
   "changelog": {
+    "0.3.6": "dotyk bez przeskoków (zgłoszenie Ciby — na telefonie odłożenie palca i położenie go w innym miejscu przeskakiwało paletką w to miejsce): dotyk/rysik = przeciąganie WZGLĘDNE — pointerdown zapamiętuje kotwicę Y (cel bez zmian), ruch palca dodaje deltę od aktualnej pozycji paletki (clamp do zakresu, brak martwej strefy na krańcach), pointerup/cancel zostawia cel (paletka stoi), tap = brak ruchu; mysz/klawiatura/EXIT bez zmian (kursor ciągły → sterowanie absolutne, płynne drag↔hover)",
+    "0.3.5": "EXIT/Esc = zawsze BACK (życzenie Ciby — gra ładowana w tej samej karcie, popupy nie działają na iPhone): każde wyjście wraca na STRONĘ WEJŚCIA; ENTRY z ?back=<http(s) | /ścieżka> → document.referrer → location.replace (celowo nie history.back() — ten w NOWEJ karcie wskoczyłby na pustą stronę startową, a replace nie zostawia wpisu gry w historii); brak ENTRY → wstecz w historii (bezpiecznik 400 ms) → window.close() → '/'; pełny ekran nie wstrzymuje już wyjścia; iframe: ping pong:exit {back} + samonaprawa top po 600 ms bez reakcji rodzica; flaga exiting chroni przed podwójnym Esc; geometria/dźwięk/dotyk bez zmian",
+    "0.3.4": "pewny pointerup (błąd z kolejki s9 „sticky drag”): drag myszą zwolniony POZA oknem/iframe gubił pointerup — wpis w touches żył dalej i hover nad UI ciągnął paletkę bez wciśniętego przycisku; naprawa: setPointerCapture przy pointerdown (gwarancja dostarczenia up/cancel), samonaprawa w pointermove (mysz/pen z buttons===0 = zgubiony up → wypruj wpis), blur okna w środku draga też wypruwa wejścia; dotyk bez zmian (implicite capture); bez zmian w geometrii/dźwięku",
     "0.3.3": "cały ekran czuły na dotyk TAKŻE w pionie (życzenie Ciby): TAP pozycjonuje paletkę (down+up w jednym polu 16,6 ms czyścił cel przed zastosowaniem — działało tylko przeciąganie); mapa Y = cała scena proporcjonalnie (w pionie dotyk nad/pod kortem clampował sztywno do góry/dołu); w poziomie bez zmian odczuwalnych",
     "0.3.2": "maszynowo czytelna wersja: version.json, meta[name=game-version], html[data-version], postMessage pong:version / pong:get-version, komunikat startowy w konsoli, README z protokołem wersji; komplet poprawek v0.3.1",
     "0.3.1": "klawisze W/S i strzałki przejmują paletkę od myszy (ostatnie wejście wygrywa); mysz opuszczająca kort zwalnia paletkę; AI zawsze po stronie PRZECIWNEJ do gracza; blur zwalnia klawisze; fokus iframe; nr wersji na kort i w nagłówku",
