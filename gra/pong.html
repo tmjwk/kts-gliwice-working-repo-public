@@ -1,13 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.7">
+<html lang="en" data-version="0.3.8">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.7"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.7</title>
+<meta name="game-version" content="0.3.8"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.8</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.8 (2026-11-07, ustalenia ze strony klubu — dialog_ze_strona.md
+  RUNDA 1/2, propozycje P1–P4 Zeta): protokół EXIT w iframe „na czasach”
+  → porządny. P1: po ping pong:exit gra czeka do 600 ms na odpowiedź
+  rodzica {type:'pong:exit-ack'} — ACK = rodzic PRZEJMUJE wyjście, gra gasi
+  timer samonaprawy i nie rusza top (P4); brak ACK = samonaprawa jak
+  dotychczas (obce osadzenia bez protokołu). P2: ENTRY może nadpisać
+  RODZIC postMessage {type:'pong:set-back', back:<pełny URL>} — dla srcdoc,
+  gdzie location.search="" i document.referrer="" (F1: ?back= nie dociera);
+  ten sam filtr http(s)/ścieżka co ?back=; strona wysyła po odebraniu
+  pong:version (listener gry rejestruje się przed ogłoszeniem — bez wyścigu).
+  P3: fallback samonaprawy „/” → „../” (new URL("../", location.href)):
+  samodzielnie otwarty mirror (…/gra/pong.html z wyszukiwarki/zakładki)
+  wraca do KORZENIA strony klubu, nie na „/” (GitHub Pages projektowe:
+  „/” = 404 → github.com); w srcdoc about:srcdoc → URL() rzuca wyjątek →
+  zostaje „/” (tam i tak rządzi P1/P2). Q2 przy okazji: exitFullscreen
+  z zagaszonym .catch — pełny ekran nie może nawet zalogować odrzuconej
+  obietnicy; nawigacja nigdy na FS nie czeka (gra sama nie wchodzi w FS).
   Wersja: 0.3.7 (2026-11-07, zgłoszenie Ciby — „w full screen na desktopie
   połówki pola gry nie są symetryczne, lewa jest krótsza”): słuszna
   obserwacja — siatka stała 12 cykli LEWO od środka, WIERNIE skopiowana
@@ -108,10 +125,15 @@
      szerokości 1/6 ekranu po lewej i prawej → kort = 2/3 szerokości ekranu
      (v0.3.0, decyzja Ciby); fizyka (cykle/pole) bez zmian;
      ?classic=1 = geometrycznie dokładny oryginał (4:3, paletki 128H/384H)
-   - osadzenie na stronie: rodzic powinien obsłużyć postMessage
-     {type:'pong:exit', back} (przycisk EXIT / klawisz Esc) i zamknąć grę;
-     bez obsługi EXIT nie umiera — po 600 ms gra sama wróci na stronę wejścia
-     (nawigacja top, wymaga tego samego originu). Link „zagraj” najlepiej
+   - osadzenie na stronie (protokół v0.3.8 — dialog_ze_strona.md): rodzic
+     obsługuje postMessage {type:'pong:exit', back} (przycisk EXIT / Esc)
+     i odpowiada {type:'pong:exit-ack'} — ACK = rodzic przejmuje wyjście
+     (back()/panel), gra gasi timer samonaprawy i nie rusza top; bez ACK
+     przez 600 ms gra sama wróci na stronę wejścia (nawigacja top, wymaga
+     tego samego originu — obce osadzenia bez protokołu). ENTRY dla srcdoc
+     (puste ?back= i referrer) ustala rodzic: {type:'pong:set-back',
+     back:<http(s)|/ścieżka>}, najlepiej pełny URL strony wejścia, wysyłka
+     po odebraniu pong:version. Link „zagraj” bezpośredni nadal najlepiej
      z parametrem: pong.html?back=<encodeURIComponent(strona z linkiem)>;
      WERSJĘ gry rodzic dostaje automatycznie: postMessage {type:'pong:version',
      version, released} (na żądanie: wyślij {type:'pong:get-version'}),
@@ -202,7 +224,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.7</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.8</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -420,7 +442,7 @@ function drawScore(side) {                     // okna zakotwiczone przy paletka
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.7";      // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.8";      // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-07"; // tytuł karty, kort, meta, version.json, postMessage
 function drawVersion() {      // nr wersji małymi 7-seg. na dole kortu (od v0.3.1, życzenie Ciby)
   const k = 0.5, y0 = VIS_H - 22;              // skala ½ cyfry wyniku, linia 224..240
@@ -894,37 +916,74 @@ $("bside").onclick = () => { unlock(); G.side = G.side === 2 ? 1 : 2; releaseAll
        karcie (historia karty ≠ droga wejścia); replace nie zostawia też
        wpisu gry w historii — „forward” po wyjściu nie wraca do gry;
    (2) brak ENTRY (referrer wycięty polityką prywatności) → wstecz
-       w historii karty + bezpiecznik: bez pagehide w 400 ms → „/”
-       (history.length potrafi kłamać);
+       w historii karty + bezpiecznik: bez pagehide w 400 ms → „../”
    (3) karta bez historii i ENTRY → window.close() (okno otwarte
-       skryptem), a gdy przeglądarka odmówi — „/”;
-   (4) iframe: ping pong:exit z polem back (rodzic zamyka grę jak
-       dotychczas — protokół bez zmian); brak reakcji przez 600 ms =
+       skryptem), a gdy przeglądarka odmówi — „../”;
+   (4) iframe: ping pong:exit z polem back; brak ACK przez 600 ms =
        wracamy SAMI nawigacją top (działa przy tym samym originie;
        cross-origin blokuje przeglądarka — zostaje ping).
+   v0.3.8 (dialog_ze_strona.md RUNDA 1/2 — propozycje P1–P4 strony klubu,
+   wdrożone po mojej stronie w tej wersji):
+   P1 — ACK: po ping gra czeka do 600 ms na {type:'pong:exit-ack'}.
+       Doszło ACK = rodzic PRZEJMUJE wyjście → timer samonaprawy gaszony
+       (P4: przy ACK nawigację prowadzi STRONA — back()/panel; gra nie
+       rusza top). Brak ACK = samonaprawa jak dotychczas — EXIT nie umiera
+       w obcych osadzeniach bez protokołu.
+   P2 — set-back: w srcdoc location.search="" i document.referrer=""
+       (F1 Zeta — ?back= i referrer nie docierają), więc ENTRY może
+       nadpisać RODZIC: {type:'pong:set-back', back:<pełny URL>} — ten sam
+       filtr http(s)/ścieżka co ?back=; strona wysyła po odebraniu
+       pong:version (listener gry wisi przed ogłoszeniem — bez wyścigu).
+   P3 — fallback „../”: samodzielnie otwarty mirror (…/gra/pong.html
+       z wyszukiwarki/zakładki) wraca do KORZENIA strony klubu, nie na „/”
+       (GitHub Pages projektowe: „/” = 404 → github.com). W srcdoc
+       location.href=about:srcdoc → URL() rzuca → zostaje „/” (tam i tak
+       rządzi P1/P2). Kolejność celu samonaprawy: ENTRY → „../” → „/”.
    Pełny ekran już NIE wstrzymuje wyjścia (do v0.3.4 Esc wychodził tylko
-   z FS): FS zwalniamy w tle, nawigacja i tak go kończy. Flag „exiting”
-   (reset na pageshow — powrót z bfcache): podwójny Esc albo Esc+klik nie
-   odpala wyjścia dwa razy i nie cofa historii o 2 pozycje. */
-const ENTRY = (() => {
+   z FS): FS zwalniamy w tle (od v0.3.8 z zagaszonym .catch — Q2), nawigacja
+   i tak go kończy. Flag „exiting” (reset na pageshow — powrót z bfcache):
+   podwójny Esc albo Esc+klik nie odpala wyjścia dwa razy i nie cofa
+   historii o 2 pozycje. */
+let ENTRY = (() => {
   let u = "";
   try { u = new URLSearchParams(location.search).get("back") || ""; } catch (_) {}
   if (u.startsWith("/") && !u.startsWith("//")) u = location.origin + u;  // /ścieżka, nie //host
   if (!u) u = document.referrer || "";
   return /^https?:/i.test(u) ? u : "";
 })();
+/* P3 (v0.3.8): katalog wyżej = korzeń strony klubu z samodzielnie
+   otwartego mirroru; about:srcdoc → new URL rzuca → "" (zostaje „/”). */
+const FALLBACK_UP = (() => {
+  try {
+    const u = new URL("../", location.href);
+    return /^https?:/i.test(u.protocol) ? u.href : "";
+  } catch (_) { return ""; }
+})();
+/* P2 (v0.3.8): ENTRY nadpisany przez rodzica — wspólny filtr z ?back= */
+function setBack(u) {
+  if (typeof u !== "string") return;
+  if (u.startsWith("/") && !u.startsWith("//")) u = location.origin + u;
+  if (/^https?:/i.test(u)) ENTRY = u;
+}
 let exiting = false;
+let exitFuse = 0;   // P1 (v0.3.8): timer samonaprawy — do rozbrojenia przez pong:exit-ack
 function exitGame() {
   if (exiting) return; exiting = true;
-  try { if (document.fullscreenElement) document.exitFullscreen(); } catch (_) {}
+  try {
+    if (document.fullscreenElement) {
+      const p = document.exitFullscreen();               // Q2: iOS nie ma element-FS
+      if (p && p.catch) p.catch(() => {});               // → tu no-op; obietnica zgaszona
+    }
+  } catch (_) {}
   let framed = false;
   try { framed = window.self !== window.top; } catch (_) { framed = true; }
   if (framed) {
     const msg = { type: "pong:exit" };
     if (ENTRY) msg.back = ENTRY;
     try { window.top.postMessage(msg, "*"); } catch (_) {}
-    setTimeout(() => {          // rodzic nie obsługuje protokołu? wracamy sami
-      try { if (window.self !== window.top) window.top.location.replace(ENTRY || "/"); } catch (_) {}
+    exitFuse = setTimeout(() => {   // rodzic nie ACKował w 600 ms? wracamy sami
+      exitFuse = 0;
+      try { if (window.self !== window.top) window.top.location.replace(ENTRY || FALLBACK_UP || "/"); } catch (_) {}
     }, 600);
     return;
   }
@@ -933,13 +992,16 @@ function exitGame() {
     let gone = false;
     addEventListener("pagehide", () => { gone = true; }, { once: true });
     try { history.back(); } catch (_) {}
-    setTimeout(() => { if (!gone) try { location.replace("/"); } catch (_) {} }, 400);
+    setTimeout(() => { if (!gone) try { location.replace(FALLBACK_UP || "/"); } catch (_) {} }, 400);
     return;
   }
   try { window.close(); } catch (_) {}
-  setTimeout(() => { try { location.replace("/"); } catch (_) {} }, 300);
+  setTimeout(() => { try { location.replace(FALLBACK_UP || "/"); } catch (_) {} }, 300);
 }
-addEventListener("pageshow", () => { exiting = false; });   // powrót bfcache = Exit znów działa
+addEventListener("pageshow", () => {   // powrót bfcache = Exit znów działa
+  exiting = false;
+  if (exitFuse) { clearTimeout(exitFuse); exitFuse = 0; }   // P1: stary zapłon nie może strzelić po powrocie
+});
 $("bexit").onclick = () => { unlock(); exitGame(); };
 /* Kolejność celowa: klik w włącznik = ŚWIADOMA decyzja (nie nadpisuj jej później
    domyślną polityką „dźwięk on po 1. interakcji”); przełącz stan WYŚWIETLANY,
@@ -1058,7 +1120,10 @@ window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
    html[data-version], tytuł karty, plakietka nagłówka, window.__pong.getVersion(),
    komunikat startowy w konsoli + postMessage:
      gra    -> rodzic: {type:'pong:version', game, version, released}
-     rodzic -> gra:    {type:'pong:get-version'}  → ponowne ogłoszenie wersji */
+     rodzic -> gra:    {type:'pong:get-version'}  → ponowne ogłoszenie wersji
+   v0.3.8 (dialog_ze_strona.md, P1–P4):
+     rodzic -> gra:    {type:'pong:set-back', back}   → ENTRY dla srcdoc (P2)
+     rodzic -> gra:    {type:'pong:exit-ack'}         → rodzic przejął wyjście (P1/P4) */
 function announceVersion() {
   try {
     if (window.parent !== window)
@@ -1068,7 +1133,13 @@ function announceVersion() {
   } catch (_) {}
 }
 addEventListener("message", (e) => {
-  if (e.data && e.data.type === "pong:get-version") announceVersion();
+  const d = e.data;
+  if (!d || typeof d.type !== "string") return;
+  if (d.type === "pong:get-version") { announceVersion(); return; }
+  if (d.type === "pong:set-back") { setBack(d.back); return; }     // P2: ENTRY z rodzica
+  if (d.type === "pong:exit-ack" && exiting && exitFuse) {         // P1/P4: rodzic
+    clearTimeout(exitFuse); exitFuse = 0;                          // przejął wyjście —
+  }                                                                // samonaprawa rozbrojona
 });
 try {   // spójność statycznych atrybutów (dla parserów bez JS) z kodem gry
   document.documentElement.dataset.version = VERSION;
