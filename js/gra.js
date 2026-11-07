@@ -80,6 +80,28 @@
      Protokół wersji (version.json / meta / postMessage pong:version)
      zdjęty ze strony: strona go ignoruje, gra może nadal używać.
 
+   1.29.9 — OBRONA PRZED SAMONAPRAWĄ GRY (gra v0.3.5+: EXIT w iframe
+   wysyła ping pong:exit, a po 600 ms bez reakcji SAMA robi
+   top.location.replace(ENTRY || "/")). Problem zweryfikowany E2E
+   07.11 na żywej stronie: w naszym osadzeniu (iframe srcdoc)
+   document.referrer = "" i ?back= nie dociera → ENTRY="" → cel
+   samonaprawy = "/" = root tmjwk.github.io = 404/github.com. Przy
+   wejściu wprost na gra.html (nowa karta, bez historii) EXIT WYRZUCAŁ
+   gościa ze strony klubu na github.com. Naprawa po stronie strony:
+   - brak historii (history.length <= 1): NIE czekamy na back() —
+     natychmiast rozbrajamy grę (ramka.srcdoc = "" zastępuje dokument
+     gry pustym → jej timer 600 ms ginie razem z dokumentem) i
+     pokazujemy panel „Gra zakończona” — gość zostaje w klubie;
+   - back() w drodze: jeśli do 450 ms nie było pagehide, rozbrajamy
+     grę (timer samonaprawy umiera), back() kończy się, kiedy się
+     skończy — bez wyścigu z 600 ms gry; panel (700 ms) zostaje
+     fallbackiem, gdyby back() jednak nic nie zrobił.
+   Rozbrojenie przez srcdoc="" (a nie remove()) zachowuje ramkę w
+   DOM — „Zagraj ponownie” dalej działa (zaladujGre ustawia srcdoc
+   od nowa). poczekamy na protokół ACK z gry (propozycja dla v0.3.7 —
+   patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
+   samonaprawa będzie gaszona po cichu po stronie gry.
+
    Wersja strony: konwencja jak na innych podstronach (WERSJA_KODU
    + toast o nowszej wersji; pełna historia w js/app.js). Od 1.29.0
    js/gra.js DOŁĄCZA do zestawu plików podnoszonych przy KAŻDYM
@@ -96,7 +118,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.29.8";
+const WERSJA_KODU = "1.29.9";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -358,22 +380,43 @@ async function start() {
       return;
     }
     if (d.type === "pong:exit") {
-      /* v1.29.8: EXIT = „wstecz”. Najpierw 250 ms na grę (v0.3.5+ sama
-         cofa nawigację przez top.history.back() — ramka srcdoc jest
-         same-origin); pagehide = ktoś już cofnął, nie dublujemy.
-         Potem nasze history.back(): bfcache przywraca poprzednią stronę
-         co do piksela (ze stanem i przewinięciem). Panel „Gra zakończona”
-         po 700 ms zostaje fallbackiem, gdy „wstecz” nie ma dokąd iść
-         (bezpośrednie wejście na gra.html). */
+      /* v1.29.9: EXIT = „wstecz” + OBRONA przed samonaprawą gry.
+         Gra v0.3.5+ po 600 ms bez reakcji robi top.location.replace(
+         ENTRY || "/") — w naszym srcdoc ENTRY="" (referrer pusty,
+         ?back= nie dociera), więc „/” = 404/github.com (E2E 07.11:
+         nowa karta + EXIT = wyrzut z klubu). Kolejność:
+         - pagehide = ktoś już cofnął (back przeglądarki/graczy) — nic
+           nie robimy, gra zamarza w bfcache;
+         - 250 ms: jest historia → history.back() (bfcache przywraca
+           poprzednią stronę co do piksela); brak historii → bierzemy
+           stery: rozbrajamy grę (srcdoc="" — timer samonaprawy ginie
+           razem ze starym dokumentem) + panel „Gra zakończona”;
+         - 450 ms: back() jeszcze nie zdążył (wolne urządzenie) →
+           rozbrajamy grę, żeby jej 600 ms nie ubiegło nas z „/”;
+           back() dokańcza się we własnym tempie;
+         - 700 ms: nadal nic → panel (fallback).
+         Rozbrojenie nie psuje „Zagraj ponownie” — ramka zostaje w
+         DOM, zaladujGre ustawia srcdoc od nowa. */
       if (wyjscieWToku) return;
       wyjscieWToku = true;
+      const ramka = $("#gra-ramka");
       let poszlo = false;
       const pagehide = () => { poszlo = true; };
       window.addEventListener("pagehide", pagehide, { once: true });
+      const rozbrojGre = () => {
+        try { if (ramka) ramka.srcdoc = ""; } catch (e) { /* już złapana */ }
+      };
       setTimeout(() => {
-        window.removeEventListener("pagehide", pagehide);
-        if (!poszlo) { try { history.back(); } catch (e) { /* zostaje panel */ } }
+        if (poszlo) return;
+        if (history.length > 1) {
+          try { history.back(); } catch (e) { /* zostaje panel */ }
+        } else {
+          poszlo = true;    /* nie ma dokąd cofać — przejmujemy stery */
+          rozbrojGre();     /* timer samonaprawy umiera z dokumentem */
+          zamknijGre();     /* panel „Gra zakończona” zamiast github.com */
+        }
       }, 250);
+      setTimeout(() => { if (!poszlo) rozbrojGre(); }, 450);
       setTimeout(() => { if (!poszlo) zamknijGre(); }, 700);
     }
   });
