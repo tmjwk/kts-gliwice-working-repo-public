@@ -51,6 +51,18 @@
      planszę i pokazuje panel „Gra zakończona” z przyciskem
      „Zagraj ponownie” — twardy EXIT z gry nie zostawia pustej ramki.
 
+   1.29.7 — GRA W TYM SAMYM OKNIE + EXIT = „WSTECZ” (właściciel 07.11:
+   „otwieranie gry PONG w nowym oknie nie ma sensu bo na iphone to nie
+   działa — otwieraj w tym samym oknie, a ja zaprogramuję przycisk
+   EXIT w grze jako back”):
+   - stopka: href="gra.html" BEZ target=_blank (wszystkie podstrony);
+   - ramka gry jest srcdoc = SAME-ORIGIN z gra.html, więc gra v0.3.3+
+     przy EXIT może sama cofnąć nawigację (top.history.back());
+   - panel „Gra zakończona” (pong:exit) zostaje jako FALLBACK: starsze
+     wersje gry oraz wejście bezpośrednie na gra.html bez historii;
+     pokazuje się z opóźnieniem 350 ms, żeby nie migać, gdy gra sama
+     cofa nawigację.
+
    Wersja strony: konwencja jak na innych podstronach (WERSJA_KODU
    + toast o nowszej wersji; pełna historia w js/app.js). Od 1.29.0
    js/gra.js DOŁĄCZA do zestawu plików podnoszonych przy KAŻDYM
@@ -67,7 +79,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.29.6";
+const WERSJA_KODU = "1.29.7";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -408,7 +420,12 @@ async function start() {
       }
       if (stopka) stopka.textContent = `v${w}`;
     } else if (d.type === "pong:exit") {
-      zamknijGre();
+      /* v1.29.7: EXIT w grze (v0.3.3+) ma działać jak „wstecz” — gra sama
+         cofa nawigację (top.history.back() działa: ramka srcdoc jest
+         same-origin). Panel „Gra zakończona” to FALLBACK dla starszych
+         wersji gry i wejścia bez historii; opóźnienie 350 ms sprawia,
+         że nie zdąży zamigotać, gdy gra cofa nawigację sama. */
+      setTimeout(zamknijGre, 350);
     }
   });
 
