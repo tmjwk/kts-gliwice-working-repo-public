@@ -206,6 +206,16 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
   font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
 }
 .brand-mark-sm { width: 2rem; height: 2rem; font-size: 0.85rem; border-radius: 0.375rem; }
+/* 1.29.7: OFICJALNE GODŁO KLUBU (logo-klubu.svg — plik wektorowy od
+   właściciela, odpowiedź na pytanie brandingowe Q1) w nagłówku i stopce
+   zamiast niebieskiego kwadratu „KTS”. Odznaka jest okrągła: lewa połowa
+   czerwona #D30000, prawa granatowa #001D7D, herb Gliwic w środku.
+   Czytelna od ~48 px; poniżej rozpoznawalna po podziale kolorów —
+   dlatego favicon (piłeczka KTS) zostaje bez zmian. Godło jest pełnym
+   kołem, więc działa i w trybie dnia, i nocy. */
+.brand-logo { width: 2.75rem; height: 2.75rem; flex: none; display: block; }
+.brand-logo-sm { width: 2.25rem; height: 2.25rem; }
+@media (max-width: 48rem) { .brand-logo { width: 2.5rem; height: 2.5rem; } }
 .brand-name { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; letter-spacing: 0.02em; color: var(--kts-ink); }
 .brand-sub { color: var(--kts-text-muted); }
 .nav { margin-left: auto; display: flex; gap: 0.25rem; }
