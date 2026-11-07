@@ -102,6 +102,27 @@
    patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
    samonaprawa będzie gaszona po cichu po stronie gry.
 
+   1.30.0 — OFICJALNY PROTOKÓŁ EXIT=BACK (RUNDA 2 dialogu z Allanem,
+   gra v0.3.8 commit 7e67cab; zgodność P1–P4 potwierdzona w
+   tmjwk/pong docs/dialog_ze_strona.md). Strona realizuje checklist
+   Allanа w całości:
+   - P1/P4 — ACK: po pong:exit wysyłamy natychmiast {type:
+     'pong:exit-ack'} → gra gasi własny zapłon samonaprawy
+     (clearTimeout) i nie rusza top; wyjście w 100% po stronie strony:
+     history.back() (jest historia) albo panel „Gra zakończona”
+     (brak). Koniec czasówek 250/450 ms z v1.29.9 przy grach >= 0.3.8;
+   - P2 — set-back: po ogłoszeniu pong:version wysyłamy grze
+     {type:'pong:set-back', back:<pełny URL strony wejścia>}
+     (document.referrer gra.html; brak referrera = nie wysyłamy nic —
+     wyjście przejmuje ACK). Gra >= 0.3.8 nadpisuje nim ENTRY — cel
+     samonaprawy (gdyby ACK jednak nie doszedł) trafia we właściwy
+     adres, nie w „/” = 404;
+   - wersjonowanie: graWersja z pong:version; protokolExit() >= 0.3.8
+     decyduje o ścieżce. Starsze gry — obrona czasówkami z v1.29.9
+     bez zmian (wsteczna zgodność potwierdzona przez Allanа).
+   E2E po wdrożeniu: pełny zapis rundy komunikatów (version →
+   set-back → exit → exit-ack) + oba scenariusze wyjścia + replay.
+
    Wersja strony: konwencja jak na innych podstronach (WERSJA_KODU
    + toast o nowszej wersji; pełna historia w js/app.js). Od 1.29.0
    js/gra.js DOŁĄCZA do zestawu plików podnoszonych przy KAŻDYM
@@ -118,7 +139,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.29.9";
+const WERSJA_KODU = "1.30.0";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -290,6 +311,15 @@ function wzgledna(v) {
 /* v1.29.8: EXIT w trakcie (podwójne pong:exit nie cofa dwa razy) */
 let wyjscieWToku = false;
 
+/* v1.30.0: protokół z grą v0.3.8 (RUNDA 2) — stan per załadowanie gry */
+let graWersja = "";          /* z pong:version; "" = nieznana (stara gra) */
+let setBackWyslany = false;  /* jeden pong:set-back na załadowanie gry */
+
+/** Gra zna protokół ACK/set-back? (>= 0.3.8; RUNDA 2, checklist v1.30.0) */
+function protokolExit() {
+  return graWersja === "0.3.8" || nowszaWersja(graWersja, "0.3.8");
+}
+
 /** Pełny cykl: status → pobierz → zbuduj → wstrzyknij (albo fallback). */
 async function zaladujGre() {
   const status = $("#gra-status");
@@ -302,6 +332,8 @@ async function zaladujGre() {
   blad.hidden = true;
   if (zamknieta) zamknieta.hidden = true;
   wyjscieWToku = false; /* nowa rozgrywka = EXIT znów działa */
+  graWersja = "";         /* v1.30.0: fresh załadowanie = protokół od zera */
+  setBackWyslany = false; /* (pong:version przyjdzie z nowego dokumentu) */
 
   const wynik = await pobierzGre();
   if (wynik.blad) {
@@ -374,17 +406,60 @@ async function start() {
     const d = e.data;
     if (!d || typeof d !== "object") return;
     if (d.type === "pong:version") {
-      /* v1.29.8: wersję pokazuje już tylko gra (na korcie) — komunikat
-         przyjmujemy i ignorujemy (protokół z gra/version.json żyje,
-         strona nie ma już chipa do wypełnienia). */
+      /* v1.30.0: wersję pokazuje tylko gra na korcie — ale korzystamy
+         z ogłoszenia do P2: przekazujemy grze cel BACK (pełny URL
+         strony wejścia), którego srcdoc nie daje dostarczyć (?back=
+         i referrer nie docierają — patrz RUNDA 1/2, F1). Gra >= 0.3.8
+         ma listener pong:set-back zawieszony PRZED ogłoszeniem wersji
+         — bez wyścigu. Brak strony wejścia (referrer pusty — wejście
+         wprost na gra.html) = NIE wysyłamy nic: ENTRY zostaje puste,
+         a wyjście przejmujemy ACK-iem (P1/P4). Jeden set-back na
+         załadowanie gry (idempotentny po stronie gry, ale bez spamu). */
+      if (d.version) graWersja = String(d.version);
+      if (protokolExit() && !setBackWyslany) {
+        let wejscie = "";
+        try { wejscie = document.referrer || ""; } catch (e) { /* prywatny tryb */ }
+        if (/^https?:/i.test(wejscie)) {
+          try {
+            ramka.contentWindow.postMessage(
+              { type: "pong:set-back", back: wejscie }, "*");
+            setBackWyslany = true;
+          } catch (e) { /* ramka właśnie padła? wyjście i tak mamy */ }
+        }
+      }
       return;
     }
     if (d.type === "pong:exit") {
-      /* v1.29.9: EXIT = „wstecz” + OBRONA przed samonaprawą gry.
-         Gra v0.3.5+ po 600 ms bez reakcji robi top.location.replace(
-         ENTRY || "/") — w naszym srcdoc ENTRY="" (referrer pusty,
-         ?back= nie dociera), więc „/” = 404/github.com (E2E 07.11:
-         nowa karta + EXIT = wyrzut z klubu). Kolejność:
+      if (wyjscieWToku) return;
+      /* v1.30.0 + gra v0.3.8: OFICJALNY PROTOKÓŁ (RUNDA 2, P1–P4 —
+         zgodność potwierdzona przez Allanа). ACK {type:'pong:exit-ack'}
+         natychmiast po ping → gra gasi własny zapłon samonaprawy
+         (clearTimeout) i NIE rusza top — wyjście w 100% po stronie
+         strony (P4): jest historia → history.back() (bfcache przywraca
+         stronę wejścia co do piksela); brak → panel „Gra zakończona”.
+         Bez wyścigu z 600 ms gry — samonaprawa po ACK nie istnieje.
+         Panel po 700 ms zostaje fallbackiem na dziwne stany historii. */
+      if (protokolExit()) {
+        wyjscieWToku = true;
+        try { ramka.contentWindow.postMessage({ type: "pong:exit-ack" }, "*"); }
+        catch (e) { /* gra i tak zamarza w bfcache */ }
+        let poszlo = false;
+        const pagehide = () => { poszlo = true; };
+        window.addEventListener("pagehide", pagehide, { once: true });
+        if (history.length > 1) {
+          try { history.back(); } catch (e) { /* panel */ }
+          setTimeout(() => { if (!poszlo) zamknijGre(); }, 700);
+        } else {
+          zamknijGre();   /* nie ma dokąd — panel, gość zostaje w klubie */
+        }
+        return;
+      }
+      /* v1.29.9: starsze gry (< 0.3.8, np. z cache) — obrona czasówkami
+         (bez zmian). Gra v0.3.5+ po 600 ms bez reakcji robi
+         top.location.replace(ENTRY || "/") — w naszym srcdoc
+         ENTRY="" (referrer pusty, ?back= nie dociera), więc „/” =
+         404/github.com (E2E 07.11: nowa karta + EXIT = wyrzut z
+         klubu). Kolejność:
          - pagehide = ktoś już cofnął (back przeglądarki/graczy) — nic
            nie robimy, gra zamarza w bfcache;
          - 250 ms: jest historia → history.back() (bfcache przywraca
@@ -397,9 +472,7 @@ async function start() {
          - 700 ms: nadal nic → panel (fallback).
          Rozbrojenie nie psuje „Zagraj ponownie” — ramka zostaje w
          DOM, zaladujGre ustawia srcdoc od nowa. */
-      if (wyjscieWToku) return;
       wyjscieWToku = true;
-      const ramka = $("#gra-ramka");
       let poszlo = false;
       const pagehide = () => { poszlo = true; };
       window.addEventListener("pagehide", pagehide, { once: true });
