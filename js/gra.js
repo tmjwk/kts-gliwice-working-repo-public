@@ -63,6 +63,23 @@
      pokazuje się z opóźnieniem 350 ms, żeby nie migać, gdy gra sama
      cofa nawigację.
 
+   1.29.8 — EXIT = „WSTECZ” PO STRONIE + WERSJA TYLKO W GRZE (właściciel
+   07.11: „sprawdzanie wersji gry coś nie działa więc prawdopodobnie
+   lepiej niech tylko w grze widać wersję?”; wskazówka agenta gry:
+   wyjście ma wracać dokładnie tam, skąd wszedł):
+   - pong:exit → po 250 ms history.back() (bfcache przywraca stronę
+     co do piksela, ze stanem i przewinięciem); gdy gra sama cofnie
+     nawigację (v0.3.5+: top.history.back() w ramce same-origin),
+     pagehide anuluje nasz „wstecz” — bez podwójnego cofania;
+     panel „Gra zakończona” (po 700 ms) zostaje fallbackiem dla
+     wejścia bez historii;
+   - KONIEC POKAZYWANIA WERSJI GRY NA STRONIE: chip #gra-wersja
+     i dopisek w stopce zdjęte (diagnoza: na GitHubie wciąż v0.3.3 —
+     najnowsza OPUBLIKOWANA; gra nieopublikowanych wersji nie pokaże).
+     Wersję gra ma na korcie od v0.3.1 — jedno źródło prawdy.
+     Protokół wersji (version.json / meta / postMessage pong:version)
+     zdjęty ze strony: strona go ignoruje, gra może nadal używać.
+
    Wersja strony: konwencja jak na innych podstronach (WERSJA_KODU
    + toast o nowszej wersji; pełna historia w js/app.js). Od 1.29.0
    js/gra.js DOŁĄCZA do zestawu plików podnoszonych przy KAŻDYM
@@ -79,7 +96,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.29.7";
+const WERSJA_KODU = "1.29.8";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -189,72 +206,6 @@ async function pobierzGre() {
   return { blad: problemy.join(" · ") || "nieznany błąd" };
 }
 
-/** Wersja gry z pobranego pliku — wg oficjalnych kanałów v0.3.2
- *  (patrz gra/version.json, sekcja read_version):
- *  1. <meta name="game-version" content="X.Y.Z"> — deklaracja dla parserów;
- *  2. <html data-version="X.Y.Z">;
- *  3. komentarz „Wersja: X.Y.Z (…)” — jedyne źródło w starszych wersjach.
- *  Null = plik bez znacznika (wtedy chip pokazuje skrót SHA mirroru). */
-function wersjaGryZHtml(html) {
-  const s = String(html);
-  const meta = s.match(/<meta\s+name=["']game-version["']\s+content=["']([^"']+)["']/i);
-  if (meta) return meta[1].trim().replace(/^v/i, "");
-  const dane = s.match(/<html[^>]*\sdata-version=["']([^"']+)["']/i);
-  if (dane) return dane[1].trim().replace(/^v/i, "");
-  const m = s.slice(0, 4096).match(/\bwersja:\s*v?(\d+\.\d+\.\d+)/i);
-  return m ? m[1] : null;
-}
-
-/** gra/version.json — podstawowy kanał wersji (v0.3.2+: „zawsze obok
- *  pong.html”). Zwraca {version, released} albo null (starsze wersje
- *  gry / chwilowy problem sieci — wtedy decydują kanały z pliku). */
-async function pobierzVersionJson(baza) {
-  try {
-    const res = await fetch(`${baza}version.json`, { cache: "no-store" });
-    if (!res.ok) return null;
-    const w = await res.json();
-    if (w && typeof w.version === "string" && /^v?\d+\.\d+\.\d+/.test(w.version.trim())) {
-      return { version: w.version.trim().replace(/^v/i, ""),
-               released: typeof w.released === "string" ? w.released : null };
-    }
-  } catch (e) { /* brak pliku = starsza wersja gry — nieistotne */ }
-  return null;
-}
-
-/** Pokaż wersję gry tam, gdzie ją prezentujemy: chip przy tytule
- *  (#gra-wersja) + stopka (#gra-wersja-stopka). Źródła wg kolei
- *  (v1.29.6): version.json → kanały z pliku → skrót SHA mirroru.
- *  Wywoływane po KAŻDYM pobraniu (także „↻ Odśwież grę”). */
-function pokazWersjeGry(wynik, vjson) {
-  const chip = $("#gra-wersja");
-  const stopka = $("#gra-wersja-stopka");
-  if (!chip && !stopka) return;
-  const zPliku = wersjaGryZHtml(wynik.html);
-  const w = vjson?.version || zPliku;
-  const etykieta = w ? `v${w}` : `mirror ${wynik.refKrotki}`;
-  if (chip) {
-    chip.textContent = `wersja gry: ${etykieta}`;
-    const zrodlo = vjson ? "version.json"
-      : zPliku ? "znacznik w pliku gry" : "commit mirroru";
-    chip.title = `Wersja z ${zrodlo} (${wynik.refKrotki})`
-      + (vjson?.released ? ` · wydana: ${vjson.released}` : "")
-      + " — pobierane przy każdym wejściu, zawsze najnowsza";
-  }
-  if (stopka) stopka.textContent = etykieta;
-}
-
-/** Metadane mirroru (gra/.mirror.json) — skąd i kiedy ta wersja gry. */
-async function pokazInfoMirroru(baza) {
-  const el = $("#gra-mirror");
-  if (!el) return;
-  try {
-    const res = await fetch(`${baza}.mirror.json`, { cache: "no-store" });
-    if (!res.ok) return;
-    const m = await res.json();
-    if (m?.mirrored) el.textContent = m.mirrored;
-  } catch (e) { /* zostaje „—” — nieistotne dla gry */ }
-}
-
 /** Przepisz ścieżki względne na absolutne adresy raw i zbuduj dokument
  *  do srcdoc. <base> gwarantuje, że też zasoby dociągane później przez
  *  JS gry (fetch/img) trafiają do właściwej wersji mirroru. */
@@ -314,6 +265,9 @@ function wzgledna(v) {
   return !!v && !/^\s*(https?:|data:|blob:|mailto:|tel:|\/\/|#)/i.test(v);
 }
 
+/* v1.29.8: EXIT w trakcie (podwójne pong:exit nie cofa dwa razy) */
+let wyjscieWToku = false;
+
 /** Pełny cykl: status → pobierz → zbuduj → wstrzyknij (albo fallback). */
 async function zaladujGre() {
   const status = $("#gra-status");
@@ -325,6 +279,7 @@ async function zaladujGre() {
   scena.hidden = true;
   blad.hidden = true;
   if (zamknieta) zamknieta.hidden = true;
+  wyjscieWToku = false; /* nowa rozgrywka = EXIT znów działa */
 
   const wynik = await pobierzGre();
   if (wynik.blad) {
@@ -334,23 +289,14 @@ async function zaladujGre() {
     return;
   }
 
-  const vjson = await pobierzVersionJson(wynik.baza);
   const dokument = zbudujDokument(wynik.html, wynik.baza);
   ramka.addEventListener("load", function raz() {
     ramka.removeEventListener("load", raz);
     status.hidden = true;
     scena.hidden = false;
-    try {
-      ramka.contentWindow.focus();
-      /* v1.29.6: poproś grę o potwierdzenie wersji (gra v0.3.2+ sama
-       *  ogłasza „pong:version” po starcie — to zabezpieczenie na
-       *  wyścig z podłączeniem słuchacza; starsze wersje ignorują). */
-      ramka.contentWindow.postMessage({ type: "pong:get-version" }, "*");
-    } catch (e) { /* cross-origin — nie przeszkadza */ }
+    try { ramka.contentWindow.focus(); } catch (e) { /* nie przeszkadza */ }
   });
   ramka.srcdoc = dokument;
-  pokazWersjeGry(wynik, vjson);
-  pokazInfoMirroru(wynik.baza);
 }
 
 /** v1.29.6: {type:'pong:exit'} — gracz zamknął grę w jej menu (EXIT/Esc).
@@ -397,7 +343,7 @@ async function start() {
   const zagraj = $("#gra-zagraj");
   if (zagraj) zagraj.addEventListener("click", () => zaladujGre());
 
-  /* v1.29.6: protokół postMessage z grą (v0.3.2+; patrz gra/version.json).
+  /* v1.29.6/8: protokół postMessage z grą (v0.3.2+; patrz gra/version.json).
      Przyjmujemy komunikaty WYŁĄCZNIE z naszej ramki z grą (e.source),
      treści trafiają tylko do textContent/title — nic nie wstrzykujemy. */
   window.addEventListener("message", (e) => {
@@ -405,27 +351,30 @@ async function start() {
     if (!ramka || e.source !== ramka.contentWindow) return;
     const d = e.data;
     if (!d || typeof d !== "object") return;
-    if (d.type === "pong:version" && typeof d.version === "string"
-        && /^v?\d+\.\d+\.\d+/.test(d.version.trim())) {
-      /* gra potwierdza wersję, w której NAPRAWDĘ działa — chip podmienia
-         deklarację z pliku na słowa działającej gry */
-      const w = d.version.trim().replace(/^v/i, "");
-      const chip = $("#gra-wersja");
-      const stopka = $("#gra-wersja-stopka");
-      if (chip) {
-        chip.textContent = `wersja gry: v${w}`;
-        chip.title = "Wersja potwierdzona przez działającą grę (postMessage)"
-          + (d.released ? ` · wydana: ${d.released}` : "")
-          + " — pobierane przy każdym wejściu, zawsze najnowsza";
-      }
-      if (stopka) stopka.textContent = `v${w}`;
-    } else if (d.type === "pong:exit") {
-      /* v1.29.7: EXIT w grze (v0.3.3+) ma działać jak „wstecz” — gra sama
-         cofa nawigację (top.history.back() działa: ramka srcdoc jest
-         same-origin). Panel „Gra zakończona” to FALLBACK dla starszych
-         wersji gry i wejścia bez historii; opóźnienie 350 ms sprawia,
-         że nie zdąży zamigotać, gdy gra cofa nawigację sama. */
-      setTimeout(zamknijGre, 350);
+    if (d.type === "pong:version") {
+      /* v1.29.8: wersję pokazuje już tylko gra (na korcie) — komunikat
+         przyjmujemy i ignorujemy (protokół z gra/version.json żyje,
+         strona nie ma już chipa do wypełnienia). */
+      return;
+    }
+    if (d.type === "pong:exit") {
+      /* v1.29.8: EXIT = „wstecz”. Najpierw 250 ms na grę (v0.3.5+ sama
+         cofa nawigację przez top.history.back() — ramka srcdoc jest
+         same-origin); pagehide = ktoś już cofnął, nie dublujemy.
+         Potem nasze history.back(): bfcache przywraca poprzednią stronę
+         co do piksela (ze stanem i przewinięciem). Panel „Gra zakończona”
+         po 700 ms zostaje fallbackiem, gdy „wstecz” nie ma dokąd iść
+         (bezpośrednie wejście na gra.html). */
+      if (wyjscieWToku) return;
+      wyjscieWToku = true;
+      let poszlo = false;
+      const pagehide = () => { poszlo = true; };
+      window.addEventListener("pagehide", pagehide, { once: true });
+      setTimeout(() => {
+        window.removeEventListener("pagehide", pagehide);
+        if (!poszlo) { try { history.back(); } catch (e) { /* zostaje panel */ } }
+      }, 250);
+      setTimeout(() => { if (!poszlo) zamknijGre(); }, 700);
     }
   });
 
