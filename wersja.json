@@ -1,5 +1,5 @@
 {
- "wersja": "1.29.7",
- "data": "2026-11-07T00:09:00Z",
- "opis": "Gra otwiera się w tym samym oknie (EXIT = powrót); w nagłówku i stopce oficjalne godło klubu"
+ "wersja": "1.29.8",
+ "data": "2026-11-07T00:49:00Z",
+ "opis": "EXIT gry działa jak „wstecz”, wersję gry pokazuje już tylko gra, piłeczki kręcą się o połowę wolniej"
 }
