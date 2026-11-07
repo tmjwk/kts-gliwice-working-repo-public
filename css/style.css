@@ -1027,7 +1027,10 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .gal-chip-blad:hover { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .gal-pilka { animation: gal-pilka-spin 1.1s linear infinite; }
+  /* 1.29.8 (właściciel 07.11: „spowolnij prędkość obrotową piłeczki
+     o 50%”): 1.1s → 2.2s — łagodniejszy obrót wskaźnika ładowania
+     (gra, galeria, strona główna — wszędzie ta sama piłeczka). */
+  .gal-pilka { animation: gal-pilka-spin 2.2s linear infinite; }
 }
 @keyframes gal-pilka-spin { to { transform: rotate(360deg); } }
 /* 1.22.0 (właściciel 02.11): trwała piłeczka przy roku już WCZYTANYM —
@@ -1698,16 +1701,6 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .btn-gra:hover { border-color: var(--kts-link); color: var(--kts-link); }
 .btn-gra:focus-visible { outline: 2px solid var(--kts-link); outline-offset: 2px; }
-
-/* 1.29.4: chip wersji gry przy tytule PONG (gra.html) — js/gra.js
-   wypełnia go z nagłówka pobranego pliku gry („Wersja: X.Y.Z”),
-   fallback: skrót SHA mirroru. Pismo body (nie display) + cyfry
-   tabularne (.t-nums), pigułka jak .badge--team-pzts (błękit primary). */
-.badge--gra {
-  border-color: rgba(90, 149, 255, 0.45); background: var(--kts-primary-light);
-  color: var(--kts-link); padding: 0.12rem 0.6rem; font-size: 0.74rem;
-  font-family: var(--font-body); white-space: nowrap; vertical-align: middle;
-}
 
 /* plansza + stany (loading / błąd) — jedna geometria, żeby nic nie skakało.
    Wysokość ELASTYCZNA (flex), nie calc(100dvh - X): body jest kolumną
