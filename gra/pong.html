@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.6">
+<html lang="en" data-version="0.3.7">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.6"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.6</title>
+<meta name="game-version" content="0.3.7"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.7</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.7 (2026-11-07, zgłoszenie Ciby — „w full screen na desktopie
+  połówki pola gry nie są symetryczne, lewa jest krótsza”): słuszna
+  obserwacja — siatka stała 12 cykli LEWO od środka, WIERNIE skopiowana
+  z oryginalnego automatu (quirka sprzętowa 1972: 256H-81 → x=175 przy
+  374 cyklach, badania.md). Pole gry MA BYĆ SYMETRYCZNE: NET_X = środek,
+  a 1-cyklowa kreska (4 px) zostaje przesunięta o 2 px, żeby objąć oś
+  pikselową kanwy — lewa i prawa połowa KORTU równe CO DO PIKSELA przy
+  każdej szerokości i w każdej orientacji (desktop 4:3…16:9 również
+  full screen, pion telefonu, telefon w poziomie z ramkami 1/6).
+  ?classic=1 = muzeum: oryginalna asymetria ZOSTAJE celowo (siatka x=175,
+  paletki 47/303 — dokładna geometria automatu z 1972).
   Wersja: 0.3.6 (2026-11-07, zgłoszenie Ciby — „paletka przeskakuje po
   odłożeniu palca i położeniu go w innym miejscu”): dotyk ustawiał cel
   ABSOLUTNIE — pointerdown od razu na Y palca (a od v0.3.3 „tap też
@@ -191,7 +202,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.6</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.7</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -234,7 +245,7 @@ const VIS_H = 246;                            // wysokość kortu (linie) — ja
 const FIELD_HZ = 7159000 / (455 * 262);       // 60.054 Hz
 const FIELD_MS = 1000 / FIELD_HZ;
 
-let   NET_X = 175;                            // 256H-81: siatka lekko LEWO od środka [T5]
+let   NET_X = 187;                            // v0.3.7: środek dla 374 cykli; classic=1: 175 [T5]
 let   PAD_X1 = 17, PAD_X2 = 353;              // start = layout dla 374 cykli (ustawia applyCourt)
 const PAD_W   = 4,  PAD_H  = 15;              // paletka 4 cykle × 15 linii
 const BALL    = 4;                            // piłka 4×4
@@ -409,7 +420,7 @@ function drawScore(side) {                     // okna zakotwiczone przy paletka
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.6";      // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.7";      // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-07"; // tytuł karty, kort, meta, version.json, postMessage
 function drawVersion() {      // nr wersji małymi 7-seg. na dole kortu (od v0.3.1, życzenie Ciby)
   const k = 0.5, y0 = VIS_H - 22;              // skala ½ cyfry wyniku, linia 224..240
@@ -428,9 +439,16 @@ function drawVersion() {      // nr wersji małymi 7-seg. na dole kortu (od v0.3
 function render() {
   ctx.fillStyle = "#000"; ctx.fillRect(0, 0, cv.width, cv.height);
 
-  /* siatka: 1 cykl szerokości, kreski 4 linie co 8 (V mod 8 ∈ 0..3) [T5] */
+  /* siatka: 1 cykl szerokości, kreski 4 linie co 8 (V mod 8 ∈ 0..3) [T5].
+     v0.3.7: DOKŁADNIE na środku — 4-pikselowa kreska zostaje przesunięta
+     2 px w lewo od osi cykli, żeby objąć oś pikselową kanwy: lewa i prawa
+     połowa równe CO DO PIKSELA przy KAŻDEJ szerokości kortu (parzystej
+     i nieparzystej — asercja testowa bierze piksele z kanwy, nie logikę).
+     ?classic=1 rysuje jak oryginał 1972: na siatce cykli, 12 cykli w
+     lewo od środka (x=175) — celowo zachowana quirka muzealna. */
   ctx.fillStyle = C_WHITE;
-  for (let y = 0; y < VIS_H; y += 8) ctx.fillRect(PX(NET_X), PY(y), PX(1), PH(4));
+  const netPx = FORCE_CLASSIC ? PX(NET_X) : (cv.width - PX(1)) / 2;
+  for (let y = 0; y < VIS_H; y += 8) ctx.fillRect(netPx, PY(y), PX(1), PH(4));
 
   if (G.state !== "gameover") {                // w attract paletki znikają
     ctx.fillRect(PX(PAD_X1), PY(G.pads[0].top), PX(PAD_W), PH(PAD_H));
@@ -962,6 +980,9 @@ $("bsnd").onclick = () => {
       przeliczy layout — stąd ponawiane próby).
    4. Wysokość świata = 246 linii jak w oryginale; skala bez zmian (4 px/cykl)
       — kształty i fizyka (cykle/pole) identyczne.
+   5. Siatka DOKŁADNIE na środku kortu (v0.3.7, życzenie Ciby: „pole gry musi
+      być symetryczne”) — połówki równe co do piksela w każdym widoku i
+      orientacji; oryginalna asymetria (12 cykli w lewo) tylko w ?classic=1.
    ?classic=1 = dokładna geometria oryginału (4:3, paletki 128H/384H).
    Szczegóły i wzory: docs/badania.md §12 i §14.                              */
 const FORCE_CLASSIC = new URLSearchParams(location.search).get("classic") === "1";
@@ -980,7 +1001,7 @@ function applyCourt(w) {                       // świat pod kort o szerokości 
      w === 374 (start w pionie/kwadracie i tryb ?classic). */
   const oldW = VIS_W;
   VIS_W = w;
-  NET_X = (w >> 1) - 12;                       // quirka oryginału: siatka 12 cykli LEWO od środka [T5]
+  NET_X = FORCE_CLASSIC ? (w >> 1) - 12 : (w >> 1);  // v0.3.7: ŚRODEK (Ciba — pole symetryczne); classic: quirka [T5]
   if (FORCE_CLASSIC) { PAD_X1 = 47; PAD_X2 = 303; }        // 128H/384H-81 (oryginał)
   else { const e = padEdge(w); PAD_X1 = e; PAD_X2 = w - e - PAD_W; }  // ~4,5% od krawędzi (v0.2.2)
   SERVE_X = NET_X + 1;                         // [T2] serw tuż na prawo od siatki

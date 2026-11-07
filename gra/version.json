@@ -1,6 +1,6 @@
 {
   "game": "PONG · 1972 — Atari Replica",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "released": "2026-11-07",
   "file": "pong.html",
   "locations": {
@@ -12,12 +12,12 @@
   "exit_back": "v0.3.5: EXIT/Esc = BACK na stronę wejścia. Kolejność: ?back=<http(s) | /ścieżka> → document.referrer → location.replace (bez wpisu gry w historii); brak ENTRY → wstecz w historii → window.close() → '/'. W iframe: ping pong:exit {back}; bez reakcji rodzica przez 600 ms gra sama wraca nawigacją top (ten sam origin). Link 'zagraj' najlepiej: pong.html?back=<encodeURIComponent(bieżąca strona)>",
   "read_version": [
     "version.json — ten plik (zawsze obok pong.html): fetch → .version",
-    "pong.html: <meta name=\"game-version\" content=\"0.3.6\">",
-    "pong.html: <html data-version=\"0.3.6\">",
-    "pong.html: const VERSION = \"0.3.6\" (jedno źródło prawdy w kodzie)",
+    "pong.html: <meta name=\"game-version\" content=\"0.3.7\">",
+    "pong.html: <html data-version=\"0.3.7\">",
+    "pong.html: const VERSION = \"0.3.7\" (jedno źródło prawdy w kodzie)",
     "runtime: window.__pong.VERSION albo window.__pong.getVersion()",
-    "iframe postMessage: gra sama ogłasza {type:'pong:version', version:'0.3.6'} po starcie; na żądanie wyślij {type:'pong:get-version'}",
-    "pong.html: <title> kończy się na „v0.3.6”",
+    "iframe postMessage: gra sama ogłasza {type:'pong:version', version:'0.3.7'} po starcie; na żądanie wyślij {type:'pong:get-version'}",
+    "pong.html: <title> kończy się na „v0.3.7”",
     "GitHub Release: GET /repos/tmjwk/pong/releases/latest → .tag_name (dla agenta z tokenem)"
   ],
   "postmessage_protocol": {
@@ -26,6 +26,7 @@
     "pong:exit": "gra → strona (v0.3.5 + pole back): grę zamknięto (EXIT / Esc) — strona zamyka iframe / wraca do treści; back = link strony wejścia (?back= → referrer). Bez obsługi przez 600 ms gra sama wraca na stronę wejścia nawigacją top (ten sam origin)"
   },
   "changelog": {
+    "0.3.7": "SYMETRYCZNE POŁÓWKI POLA (zgłoszenie Ciby: „w full screen na desktopie połówki pola gry nie są symetryczne, lewa jest krótsza”): siatka stała 12 cykli LEWO od środka — wiernie skopiowana quirka oryginalnego automatu Atari 1972 (256H-81 → x=175 przy 374 cyklach; badania.md §geometria, foto z 1972). Pole gry ma być symetryczne: NET_X = środek, a 1-cyklowa kreska (4 px) przesunięta o 2 px, żeby objąć oś pikselową kanwy → lewa i prawa połowa kortu równe CO DO PIKSELA w każdym widoku: desktop 4:3…16:9 (także full screen), pion telefonu (374 cykle), telefon w poziomie (ramki 1/6, do 954 cykli). ?classic=1 = muzeum — tam oryginalna asymetria zostaje celowo (siatka x=175, paletki 47/303). Dowód: testy pikselowe (getImageData kanwy — G1f/G4e/G8e), nie tylko logika. Przy okazji wersjonowanie potwierdzone: 3.6 na stronie = bieżąca wtedy v0.3.6 (root cause dawnych rozbieżności — poprawki bez pushu, CI publikuje ostatni push — naprawiony przy v0.3.4–0.3.6)",
     "0.3.6": "dotyk bez przeskoków (zgłoszenie Ciby — na telefonie odłożenie palca i położenie go w innym miejscu przeskakiwało paletką w to miejsce): dotyk/rysik = przeciąganie WZGLĘDNE — pointerdown zapamiętuje kotwicę Y (cel bez zmian), ruch palca dodaje deltę od aktualnej pozycji paletki (clamp do zakresu, brak martwej strefy na krańcach), pointerup/cancel zostawia cel (paletka stoi), tap = brak ruchu; mysz/klawiatura/EXIT bez zmian (kursor ciągły → sterowanie absolutne, płynne drag↔hover)",
     "0.3.5": "EXIT/Esc = zawsze BACK (życzenie Ciby — gra ładowana w tej samej karcie, popupy nie działają na iPhone): każde wyjście wraca na STRONĘ WEJŚCIA; ENTRY z ?back=<http(s) | /ścieżka> → document.referrer → location.replace (celowo nie history.back() — ten w NOWEJ karcie wskoczyłby na pustą stronę startową, a replace nie zostawia wpisu gry w historii); brak ENTRY → wstecz w historii (bezpiecznik 400 ms) → window.close() → '/'; pełny ekran nie wstrzymuje już wyjścia; iframe: ping pong:exit {back} + samonaprawa top po 600 ms bez reakcji rodzica; flaga exiting chroni przed podwójnym Esc; geometria/dźwięk/dotyk bez zmian",
     "0.3.4": "pewny pointerup (błąd z kolejki s9 „sticky drag”): drag myszą zwolniony POZA oknem/iframe gubił pointerup — wpis w touches żył dalej i hover nad UI ciągnął paletkę bez wciśniętego przycisku; naprawa: setPointerCapture przy pointerdown (gwarancja dostarczenia up/cancel), samonaprawa w pointermove (mysz/pen z buttons===0 = zgubiony up → wypruj wpis), blur okna w środku draga też wypruwa wejścia; dotyk bez zmian (implicite capture); bez zmian w geometrii/dźwięku",
