@@ -102,6 +102,13 @@
    patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
    samonaprawa będzie gaszona po cichu po stronie gry.
 
+   1.30.1 — BCACHE: reset wyjscieWToku na pageshow (scenariusz E2E:
+   galeria → gra → EXIT → back → FORWARD (przywrócenie z bfcache) →
+   drugi EXIT — bez resetu handler milczał (wyjscieWToku=true z
+   poprzedniego wyjścia), gra po 600 ms robiła replace(ENTRY||„/”), co
+   przy pustym ENTRY (wejście wprost) lądowało na github.com; z resetem
+   drugi EXIT działa normalnie przez protokół ACK).
+
    1.30.0 — OFICJALNY PROTOKÓŁ EXIT=BACK (RUNDA 2 dialogu z Allanem,
    gra v0.3.8 commit 7e67cab; zgodność P1–P4 potwierdzona w
    tmjwk/pong docs/dialog_ze_strona.md). Strona realizuje checklist
@@ -139,7 +146,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.30.0";
+const WERSJA_KODU = "1.30.1";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -493,6 +500,15 @@ async function start() {
       setTimeout(() => { if (!poszlo) zamknijGre(); }, 700);
     }
   });
+
+  /* v1.30.1: bfcache — po powrocie FORWARD na tę stronę (gra zamarznięta
+     w bfcache po naszym back()) wyjscieWToku zostało true z poprzedniego
+     EXIT → drugi EXIT w przywróconej stronie zostałby zignorowany przez
+     handler i gra strzeliłaby samonaprawą (600 ms, przy pustym referrerze
+     nawet „/” = github.com). Gra resetuje swoje exiting na pageshow
+     (v0.3.5) — my lustrzanie resetujemy wyjscieWToku. pageshow odpala
+     się też przy zwykłym załadowaniu (then wyjscieWToku i tak false). */
+  window.addEventListener("pageshow", () => { wyjscieWToku = false; });
 
   pokazWersje();
   zaladujGre();
