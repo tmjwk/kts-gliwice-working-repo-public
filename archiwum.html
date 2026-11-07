@@ -35,7 +35,7 @@
   <header class="header">
     <div class="container header-inner">
       <a class="brand" href="index.html" aria-label="KTS Gliwice — strona główna">
-        <span class="brand-mark">KTS</span>
+        <img class="brand-logo" src="logo-klubu.svg" alt="" width="44" height="44">
         <span class="brand-name">KTS GLIWICE</span>
       </a>
       <nav class="nav" id="nav" aria-label="Główna nawigacja">
@@ -84,7 +84,7 @@
     <div class="container footer-grid">
       <div>
         <div class="footer-brand">
-          <span class="brand-mark brand-mark-sm">KTS</span>
+          <img class="brand-logo brand-logo-sm" src="logo-klubu.svg" alt="" width="36" height="36">
           <span class="footer-brand-name">KTS Gliwice</span>
         </div>
         <!-- 1.26.3: klikalny kontakt — adres otwiera apkę nawigacji (routing
@@ -108,9 +108,12 @@
       <div>
         <p class="footer-col-title">Znajdź nas</p>
         <a class="t-small footer-fb" href="https://www.facebook.com/AkademiaTenisaStolowego" target="_blank" rel="noopener">🤝 Facebook — Akademia Tenisa Stolowego&nbsp;<span aria-hidden="true">↗</span></a>
-        <!-- 1.29.0: link do gry (nowa karta) — gra NIE jest częścią kodu
-             strony, gra.html pobiera ją z repo przy każdym wejściu -->
-        <a class="t-small footer-fb" href="gra.html" target="_blank" rel="noopener">🎮 Pong — gra (beta)&nbsp;<span aria-hidden="true">↗</span></a>
+        <!-- 1.29.7: gra otwiera się W TYM SAMYM oknie (na iPhone'ach
+             otwieranie nowej karty bywa blokowane); przycisk EXIT w grze
+             działa jak „wstecz” (programuje właściciel w repo gry).
+             Gra NIE jest częścią kodu strony — gra.html pobiera ją
+             z repo przy każdym wejściu. -->
+        <a class="t-small footer-fb" href="gra.html">🎮 Pong — gra (beta)</a>
         <p class="t-small footer-fade">[RODO · polityka cookies — do wdrożenia]</p>
       </div>
     </div>
@@ -169,7 +172,7 @@
          nawigacja po stronie to pełne przeładowania; „Odśwież stronę” omija
          cache przeglądarki — dociąga HTML, skrypty i styl, dopiero potem
          przeładowuje; toast w stylu .toast-danych z css/style.css). */
-      var WERSJA_KODU = "1.29.6";
+      var WERSJA_KODU = "1.29.7";
       var nowszaWersja = function (a, b) {
         if (!a || !b || a === b) return false;
         var pa = String(a).split("."), pb = String(b).split(".");
