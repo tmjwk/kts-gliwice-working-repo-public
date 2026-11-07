@@ -1,5 +1,5 @@
 {
- "wersja": "1.29.6",
- "data": "2026-11-06T01:07:09Z",
- "opis": "Gra: oficjalny protokół wersji v0.3.2 + wyjście EXIT z gry"
+ "wersja": "1.29.7",
+ "data": "2026-11-07T00:09:00Z",
+ "opis": "Gra otwiera się w tym samym oknie (EXIT = powrót); w nagłówku i stopce oficjalne godło klubu"
 }
