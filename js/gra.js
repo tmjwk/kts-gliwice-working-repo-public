@@ -102,6 +102,20 @@
    patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
    samonaprawa będzie gaszona po cichu po stronie gry.
 
+   1.30.2 — WATCHDOG NOWEJ WERSJI GRY (właściciel 07.11: „gra musi
+   wchodzić zawsze w najnowszej wersji”). Wejście na gra.html i tak
+   zawsze pobiera najnowszą (SHA-pinned z API GitHuba — natychmiast,
+   CDN pominięty); watchdog łapie drugi scenariusz: gość SIEDZI na
+   podstronie (kilka kolejek), a mirror dostaje nowszą wersję gry —
+   bez tego zobaczyłby ją dopiero przy kolejnym wejściu. Porównanie:
+   gra/version.json (mirror; CDN github.io trzyma do 10 min, parametry
+   ?x= ignorowane — test 07.11) vs graWersja (pong:version od żywej
+   gry). Nowsza w mirrorze = toast „Dostępna nowa wersja gry (vX.Y.Z)”
+   z przyciskiem „Odśwież grę” (pełne pobranie SHA-pinned — jak
+   przycisk nad planszą). Co 90 s + przy powrocie na kartę; bez API
+   GitHuba (limit 60/h). Toast jeden na wersję gry, nie nachodzi na
+   toast wersji strony (offset przy kolizji).
+
    1.30.1 — BCACHE: reset wyjscieWToku na pageshow (scenariusz E2E:
    galeria → gra → EXIT → back → FORWARD (przywrócenie z bfcache) →
    drugi EXIT — bez resetu handler milczał (wyjscieWToku=true z
@@ -146,7 +160,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.30.1";
+const WERSJA_KODU = "1.30.2";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -204,6 +218,64 @@ async function pokazWersje() {
       if (!document.hidden && nowszaWersja(w.wersja, WERSJA_KODU)) zglosNowaWersje(w.wersja);
     }
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
+}
+
+/* ===== 1.30.2: watchdog nowej wersji gry ===== */
+
+/** Toast „dostępna nowa wersja gry” — wzór zglosNowaWersje() wyżej.
+ *  Przycisk = pełne pobranie SHA-pinned (zaladujGre — dokładnie to
+ *  samo, co „↻ Odśwież grę” nad planszą), bez przeładowania karty. */
+function zglosNowaGre(wersja) {
+  if (document.querySelector(".toast-danych--gra")) return;
+  const el = document.createElement("div");
+  el.className = "toast-danych toast-danych--wersja toast-danych--gra";
+  el.setAttribute("role", "status");
+  /* oba toasty są fixed bottom — przy kolizji podnieś ten wyżej */
+  if (document.querySelector(".toast-danych:not(.toast-danych--gra)")) {
+    el.style.bottom = "5.5rem";
+  }
+  const tekst = document.createElement("span");
+  tekst.className = "toast-tekst";
+  tekst.textContent = `Dostępna nowa wersja gry (v${wersja})`;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btn btn-accent btn-sm toast-btn";
+  btn.textContent = "Odśwież grę";
+  el.append(tekst, btn);
+  el.addEventListener("click", (e) => {
+    if (!e.target.closest(".toast-btn")) el.remove();
+  });
+  btn.addEventListener("click", () => {
+    el.remove();
+    zaladujGre(); /* nowy SHA z API → nowy dokument w tej samej ramce */
+  });
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("widoczny"));
+  setTimeout(() => {
+    el.classList.remove("widoczny");
+    setTimeout(() => el.remove(), 400);
+  }, 20_000);
+}
+
+/** 1.30.2: czy w mirrorze jest nowsza wersja niż gra, która AKURAT
+ *  działa w ramce? Źródło: gra/version.json (statyczny plik mirroru —
+ *  bez limitu API; CDN github.io do ~10 min wstecz) vs graWersja
+ *  (ogłoszenie pong:version od żywej gry — jedno źródło prawdy).
+ *  Cicho przy błędzie sieci — kolejna próba za 90 s. */
+async function cwykajNowaGre() {
+  if (document.hidden) return;                    /* karta w tle = później */
+  if (document.querySelector(".toast-danych--gra")) return; /* już wisi */
+  if (!graWersja) return;           /* gra jeszcze nic nie ogłosiła */
+  try {
+    const res = await fetch("gra/version.json", { cache: "no-cache" });
+    if (!res.ok) return;
+    const w = await res.json();
+    if (!w?.version) return;
+    if (String(w.version) === graToastWersja) return; /* już zgłoszone */
+    if (!nowszaWersja(w.version, graWersja)) return;  /* nie nowsza */
+    graToastWersja = String(w.version);
+    zglosNowaGre(w.version);
+  } catch (e) { /* cicho */ }
 }
 
 /* ===== pobieranie gry ===== */
@@ -321,6 +393,7 @@ let wyjscieWToku = false;
 /* v1.30.0: protokół z grą v0.3.8 (RUNDA 2) — stan per załadowanie gry */
 let graWersja = "";          /* z pong:version; "" = nieznana (stara gra) */
 let setBackWyslany = false;  /* jeden pong:set-back na załadowanie gry */
+let graToastWersja = "";     /* 1.30.2: wersja gry, o której toast już poszedł */
 
 /** Gra zna protokół ACK/set-back? (>= 0.3.8; RUNDA 2, checklist v1.30.0) */
 function protokolExit() {
@@ -509,6 +582,14 @@ async function start() {
      (v0.3.5) — my lustrzanie resetujemy wyjscieWToku. pageshow odpala
      się też przy zwykłym załadowaniu (then wyjscieWToku i tak false). */
   window.addEventListener("pageshow", () => { wyjscieWToku = false; });
+
+  /* 1.30.2: watchdog nowej wersji gry — patrz cwykajNowaGre()
+     (wejście i tak pobiera najnowszą; to łapie „siedzę i gram, a
+     mirror właśnie dostał nowszą wersję”). */
+  setInterval(cwykajNowaGre, 90_000);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) cwykajNowaGre();
+  });
 
   pokazWersje();
   zaladujGre();
