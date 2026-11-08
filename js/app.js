@@ -1487,7 +1487,7 @@ function sledzSystemowyTryb() {
    komunikat i sprawdź natychmiast (nie częściej niż co 45 s).
 */
 
-const WERSJA_KODU = "1.30.2";
+const WERSJA_KODU = "1.31.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
