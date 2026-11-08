@@ -1,5 +1,5 @@
 {
- "wersja": "1.30.2",
- "data": "2026-11-07T03:55:00Z",
- "opis": "watchdog nowej wersji gry — toast „Odśwież grę”, gdy w trakcie gry wyjdzie nowszy mirror"
+ "wersja": "1.31.0",
+ "data": "2026-11-09T00:30:00Z",
+ "opis": "pełny ekran na iPhone — pseudo-fullscreen, gdy Safari nie ma API (przycisk ⛶ działa na każdym urządzeniu)"
 }
