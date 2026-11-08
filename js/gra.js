@@ -102,6 +102,27 @@
    patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
    samonaprawa będzie gaszona po cichu po stronie gry.
 
+   1.31.0 — PEŁNY EKRAN NA iPHONE (zgłoszenie właściciela 08.11:
+   „na iPhone nie działa przycisk pełny ekran — gra się ładuje, ale
+   nie powiększa się do pełnego ekranu”). Root cause: iPhone Safari
+   NIE MA element-owego Fullscreen API (Element.requestFullscreen
+   nie istnieje — tylko <video> ma webkitEnterFullscreen; iPad i
+   desktop Safari mają webkitRequestFullscreen). Klik w ⛶ rzucał
+   TypeError zgaszony w catch — plansza zostawała w oknie.
+   Naprawa (całość po stronie strony — gra nie potrzebuje zmian):
+   - wykrycie API: requestFullscreen LUB webkitRequestFullscreen
+     (starsze Safari iPad/desktop) → prawdziwy fullscreen + etykieta
+     synchronizowana zdarzeniem fullscreenchange/webkitfullscreenchange;
+   - brak API (iPhone) → PSEUDO-FULLSCREEN: .gra-scena staje się
+     position:fixed na 100dvh (z-index 45: nad nagłówkiem 40, pod
+     toastem 50 i modalem 60), body blokuje przewijanie, pływający
+     „✕” (safe-area-aware, prawy górny róg — nad nagłówkiem gry,
+     z dala od przycisków w stopce gry) wraca do widoku strony.
+     Gra w ramce sama dopasowuje kort (ResizeObserver po jej stronie).
+   Wyjście: ten sam przycisk (etykieta „⛶ Zwykły widok”), „✕”, Esc
+   (gdzie jest klawisz), zamknięcie gry (zamknijGre sprząta oba
+     tryby — bez tego body zostawałoby zablokowane).
+
    1.30.2 — WATCHDOG NOWEJ WERSJI GRY (właściciel 07.11: „gra musi
    wchodzić zawsze w najnowszej wersji”). Wejście na gra.html i tak
    zawsze pobiera najnowszą (SHA-pinned z API GitHuba — natychmiast,
@@ -160,7 +181,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.30.2";
+const WERSJA_KODU = "1.31.0";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -433,6 +454,71 @@ async function zaladujGre() {
   ramka.srcdoc = dokument;
 }
 
+/* ===== 1.31.0: pełny ekran także na iPhonie ==============================
+   iPhone Safari nie ma element-FS API — patrz opis wersji u góry.
+   FS_NATIVE = prawdziwy fullscreen (desktop/Android/iPad, także starsze
+   Safari z webkit-prefixem); bez API → pseudo-fullscreen klasą .fs-fake
+   (position:fixed 100dvh — patrz css/style.css). Stan trzyma fsFake;
+   etykietę przycisku synchronizuje ustawPrzyciskFs (zdarzenia zmiany FS
+   LUB wejście/wyjście pseudo-FS). */
+const FS_SONDA = document.createElement("div");
+const FS_NATIVE = typeof FS_SONDA.requestFullscreen === "function"
+               || typeof FS_SONDA.webkitRequestFullscreen === "function";
+let fsFake = false;
+
+function fsAktywny() {
+  return fsFake || !!(document.fullscreenElement || document.webkitFullscreenElement);
+}
+
+function ustawPrzyciskFs() {
+  const btn = $("#gra-fullscreen");
+  if (!btn) return;
+  const on = fsAktywny();
+  btn.textContent = on ? "⛶ Zwykły widok" : "⛶ Pełny ekran";
+  btn.setAttribute("aria-pressed", on ? "true" : "false");
+  btn.title = on
+    ? (fsFake ? "Wróć do widoku strony" : "Wróć do okna (Esc)")
+    : "Rozszerz planszę na cały ekran" + (FS_NATIVE ? " (Esc = powrót)" : "");
+}
+
+function fsWlacz() {
+  const scena = $("#gra-scena");
+  if (!scena) return;
+  if (FS_NATIVE) {
+    /* prawdziwy FS; obietnica-webkit (stare Safari) zwraca undefined */
+    try {
+      const p = scena.requestFullscreen
+        ? scena.requestFullscreen()
+        : scena.webkitRequestFullscreen();
+      if (p && p.catch) p.catch(() => { /* odmowa (gest/prawo) — zostajemy w oknie */ });
+    } catch (e) { /* przeglądarka odmówiła — gra działa dalej w oknie */ }
+    return;
+  }
+  /* iPhone: pseudo-fullscreen */
+  fsFake = true;
+  scena.classList.add("fs-fake");
+  document.body.classList.add("gra-fs-fake");
+  ustawPrzyciskFs();
+}
+
+function fsWylacz() {
+  const scena = $("#gra-scena");
+  if (fsFake) {
+    fsFake = false;
+    if (scena) scena.classList.remove("fs-fake");
+    document.body.classList.remove("gra-fs-fake");
+    ustawPrzyciskFs();
+  }
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    try {
+      const p = document.exitFullscreen
+        ? document.exitFullscreen()
+        : document.webkitExitFullscreen();
+      if (p && p.catch) p.catch(() => { /* odmowa — nie blokuje niczego */ });
+    } catch (e) { /* odmówił */ }
+  }
+}
+
 /** v1.29.6: {type:'pong:exit'} — gracz zamknął grę w jej menu (EXIT/Esc).
  *  Gra prosi stronę o zamknięcie ramki (protokół z gra/version.json):
  *  chowamy planszę i pokazujemy panel „Gra zakończona” — pusta ramka
@@ -441,10 +527,10 @@ async function zaladujGre() {
 function zamknijGre() {
   const scena = $("#gra-scena");
   const zamknieta = $("#gra-zamknieta");
+  fsWylacz();   /* 1.31.0: pseudo-FS i prawdziwy FS schodzą ZAWSZE — body nie może zostać zablokowane */
   if (!scena || scena.hidden) return;
   scena.hidden = true;
   if (zamknieta) zamknieta.hidden = false;
-  try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) { /* odmówił */ }
 }
 
 /* ===== start ===== */
@@ -467,12 +553,17 @@ async function start() {
   /* kontrolki nad planszą — „Odśwież grę” od 1.29.2 DZIAŁA NAPRAWDĘ:
      nowe pytanie o SHA → nowy adres → cache CDN ominięty */
   $("#gra-odswiez").addEventListener("click", () => zaladujGre());
-  $("#gra-fullscreen").addEventListener("click", async () => {
-    try {
-      if (document.fullscreenElement) await document.exitFullscreen();
-      else await $("#gra-scena").requestFullscreen();
-    } catch (e) { /* przeglądarka odmówiła — gra działa dalej w oknie */ }
+  /* 1.31.0: pełny ekran wszędzie — prawdziwy FS (desktop/Android/iPad)
+     albo pseudo-FS (iPhone bez element-FS API). Etykieta i title trzymają
+     stan; Esc działa tam, gdzie jest klawisz, na iPhone wyjście = ✕/przycisk. */
+  $("#gra-fullscreen").addEventListener("click", () => {
+    if (fsAktywny()) fsWylacz(); else fsWlacz();
   });
+  const fsExit = $("#gra-fs-exit");
+  if (fsExit) fsExit.addEventListener("click", fsWylacz);
+  document.addEventListener("fullscreenchange", ustawPrzyciskFs);
+  document.addEventListener("webkitfullscreenchange", ustawPrzyciskFs);
+  ustawPrzyciskFs();   /* od razu poprawny title (iPhone: bez podpowiedzi Esc) */
   $("#gra-probij").addEventListener("click", () => zaladujGre());
   const zagraj = $("#gra-zagraj");
   if (zagraj) zagraj.addEventListener("click", () => zaladujGre());
