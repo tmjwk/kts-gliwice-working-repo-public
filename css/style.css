@@ -1714,6 +1714,37 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 .gra-scena { display: block; }
 .gra-scena:fullscreen { max-width: none; height: 100dvh; min-height: 0; }
+/* 1.31.0 — PSEUDO-FULLSCREEN (iPhone Safari: brak element-FS API, klik „⛶”
+   był cichym no-opem). Plansza = fixed na cały dynamiczny viewport;
+   z-index 45: nad przyklejonym nagłówkiem (40), pod toastem (50) i modalem
+   (60). dvh sledzi pasek Safari (fallback vh dla starszych); body z klasą
+   .gra-fs-fake blokuje przewijanie pod planszą. */
+.gra-scena.fs-fake {
+  position: fixed; inset: 0; z-index: 45;
+  width: 100%; max-width: none; min-height: 0;
+  height: 100vh; height: 100dvh;
+  margin-inline: 0; background: #0b0f1a;
+}
+.gra-scena.fs-fake iframe {
+  border: 0; border-radius: 0; box-shadow: none;
+}
+body.gra-fs-fake { overflow: hidden; }
+/* pływające „✕” (wyjście z pseudo-FS): prawy górny róg, poza obszarem
+   home indicator/notch (safe-area); nad nagłówkiem gry (tekst — bez
+   konfliktu), daleko od przycisków gry w jej stopce */
+.gra-fs-exit {
+  display: none; position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 0.55rem);
+  right: calc(env(safe-area-inset-right, 0px) + 0.55rem);
+  z-index: 46; width: 2.75rem; height: 2.75rem; padding: 0;
+  border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(11, 15, 26, 0.72); color: #fff;
+  font-size: 1.05rem; line-height: 1; cursor: pointer;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center;
+}
+.gra-fs-exit:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.gra-scena.fs-fake .gra-fs-exit { display: flex; }
 .gra-scena iframe {
   width: 100%; height: 100%; border: 0; display: block;
   background: #0b0f1a; border-radius: 0.75rem;
