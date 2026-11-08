@@ -64,6 +64,9 @@
 
       <div class="gra-scena" id="gra-scena" hidden>
         <iframe id="gra-ramka" title="Pong — gra KTS Gliwice" allow="fullscreen; pointer-lock; gamepad"></iframe>
+        <!-- 1.31.0: wyjście z pseudo-fullscreenu (iPhone Safari nie ma
+             element-FS API) — widoczny tylko przy .fs-fake (patrz style.css) -->
+        <button id="gra-fs-exit" class="gra-fs-exit" type="button" aria-label="Zamknij pełny ekran" title="Zamknij pełny ekran">✕</button>
       </div>
 
       <div class="gra-blad" id="gra-blad" hidden>
