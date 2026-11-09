@@ -1,5 +1,5 @@
 {
-  "wersja": "1.32.0",
-  "data": "2026-11-09T21:17:54Z",
-  "opis": "plansza gry jak największa w oknie — ramka absolutna (height:100% nie rozwiązywał się przy flex-wysokości sceny; kort był 160×90), max-width 72rem jak kontener"
+  "wersja": "1.32.1",
+  "data": "2026-11-09T21:42:02Z",
+  "opis": "komunikat o nowej wersji strony także na podstronie gra — watchdog co 90 s i po powrocie do karty (wcześniej tylko przy wejściu)"
 }
