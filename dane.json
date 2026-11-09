@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-06T21:35:28.584Z",
+  "wygenerowano": "2026-11-09T20:49:45.800Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -60,7 +60,7 @@
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "3. miejsce · 10 pkt",
+      "stan": "4. miejsce · 10 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS KA Krokus VII Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "9:71"
         }
       ],
-      "zaktualizowano": "2026-11-06T21:35:28.584Z"
+      "zaktualizowano": "2026-11-09T20:49:45.800Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-06T21:35:28.584Z"
+      "zaktualizowano": "2026-11-09T20:49:45.800Z"
     },
     {
       "klucz": "18/142",
@@ -334,24 +334,24 @@
         },
         {
           "pozycja": 3,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 6,
+          "punkty": 10,
+          "stosunek": "45:15"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "KTS KA Krokus VII Gliwice",
           "mecze": 6,
           "punkty": 10,
           "stosunek": "36:24"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "LKS Naprzód Świbie",
           "mecze": 6,
           "punkty": 9,
           "stosunek": "45:15"
-        },
-        {
-          "pozycja": 5,
-          "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 5,
-          "punkty": 8,
-          "stosunek": "36:14"
         },
         {
           "pozycja": 6,
@@ -384,9 +384,9 @@
         {
           "pozycja": 10,
           "nazwa": "UKS Feniks II Pyskowice",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 3,
-          "stosunek": "17:33"
+          "stosunek": "18:42"
         },
         {
           "pozycja": 11,
@@ -417,7 +417,7 @@
           "stosunek": "8:52"
         }
       ],
-      "zaktualizowano": "2026-11-06T21:35:28.584Z"
+      "zaktualizowano": "2026-11-09T20:49:45.800Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "15:25"
         }
       ],
-      "zaktualizowano": "2026-11-06T21:35:28.584Z"
+      "zaktualizowano": "2026-11-09T20:49:45.800Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-06T21:35:28.584Z",
+      "zaktualizowano": "2026-11-09T20:49:45.800Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-06T21:35:28.584Z",
+      "zaktualizowano": "2026-11-09T20:49:45.800Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-06T21:35:28.584Z",
-    "pzts": "2026-11-06T21:35:28.584Z"
+    "szts": "2026-11-09T20:49:45.800Z",
+    "pzts": "2026-11-09T20:49:45.800Z"
   },
   "zrodla": {
     "szts": "ok",
