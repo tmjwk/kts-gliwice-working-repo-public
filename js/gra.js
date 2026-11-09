@@ -102,6 +102,25 @@
    patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
    samonaprawa będzie gaszona po cichu po stronie gry.
 
+   1.32.2 — PLANSZA NIE WYSTAJE NA NISKICH OKNACH (kontynuacja
+   zgłoszenia 10.11: „gra jak największa w oknie, ale nie wystawała
+   poza ekran”). Weryfikacja v1.32.0 po wdrożeniu (7 widoków,
+   verify_v1321_rozmiary.mjs): 6/7 OK, ale telefon w POZIOMIE
+   (926×428) — scena z min-height:20rem (320px) + nagłówek (69px) +
+   pasek (64px) + stopka (72px) + padding (20px) = 545px > 428px
+   viewportu → strona przewijana, dolne ~25px planszy i cała stopka
+   pod zakładką. Naprawa (css/style.css, gra bez zmian):
+   - podłoga wysokości sceny adaptacyjna: min-height:
+     min(20rem, calc(100dvh - 15rem)) — na niskich oknach nie
+     więcej niż zostaje po chrome; na normalnych min() wybiera
+     20rem (zero zmian); fallback bez dvh = 20rem (status quo);
+   - @media (max-height: 30rem): stopka kompaktowa znika — plansza
+     dostaje ~4.5rem więcej (telefon w poziomie: kort ~489×275
+     zamiast ~392×220); atrybucja/wersja wracają w pionie;
+   - :fullscreen i .fs-fake bez zmian (min-height:0 i tak wygrywa).
+   Skutek: cała strona (nagłówek+pasek+plansza[+stopka]) mieści się
+   w każdym oknie bez przewijania; kort maksymalny w tej scenie.
+
    1.32.1 — WATCHDOG NOWEJ WERSJI STRONY TAKŻE NA gra.html (zgłoszenie
    właściciela 10.11: „na stronie nie wyskoczył komunikat o tym, że
    pojawiła się nowa wersja strony. dlaczego?”). Diagnoza — trzy
@@ -230,7 +249,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.32.1";
+const WERSJA_KODU = "1.32.2";
 
 const $ = (sel) => document.querySelector(sel);
 
