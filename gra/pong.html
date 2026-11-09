@@ -1,13 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.8">
+<html lang="en" data-version="0.3.9">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.8"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.8</title>
+<meta name="game-version" content="0.3.9"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.9</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.9 (2026-11-09, zgłoszenie Ciby — „na telefonie w pionie
+  nie mogę nadążyć za piłeczką”): przyczyna NIE w fizyce (piłka wszędzie
+  taka sama: 2/3/4 cykle/pole, vy ≤ 3 linie/pole), tylko w czułości
+  DOTYKU w pionie — cała wysokość sceny mapowała się na 246 linii kortu,
+  więc w pionie (scena ~740 px) pełny przejazd paletki kosztował ~620 px
+  (prawie cały ekran), a palec musiał płynąć ~540 px/s, żeby nadążyć za
+  piłką przy vy=3; w poziomie (scena ~390 px) to ~330 px — grywalnie.
+  NORMALIZACJA (decyzja z Cibą, wariant A): delta dotyku × m, gdzie
+  m = wysokość sceny / 390 px (poziom telefonu = złoty standard
+  czułości), clamp [0.5, 2] — pion dostaje ×1.9, mały poziom ~250 px
+  łagodniej ×0.64, ultrawysokie ekrany 20:9 cap ×2; efekt: pełny
+  przejazd paletki ≈ 330 px gestu NA KAŻDYM ekranie („pion czułościowo
+  = poziom”). MYSZ (potencjometr — absolutnie), klawisz (3 linie/pole)
+  i AI (2.9) bez zmian; gwarancja v0.3.6 (kotwica + delty, zero
+  przeskoków po odłożeniu i przełożeniu palca) nietknięta — mnożnik
+  siedzi TYLKO na delcie. ?touch=<1..3> — tryb testowy (nadpisuje
+  AUTO; śmieci → AUTO). Bez localStorage/UI — świadomie: default ma
+  być dobry dla każdego bez konfiguracji (ustalenie z Cibą).
   Wersja: 0.3.8 (2026-11-07, ustalenia ze strony klubu — dialog_ze_strona.md
   RUNDA 1/2, propozycje P1–P4 Zeta): protokół EXIT w iframe „na czasach”
   → porządny. P1: po ping pong:exit gra czeka do 600 ms na odpowiedź
@@ -224,7 +242,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.8</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.9</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -442,8 +460,8 @@ function drawScore(side) {                     // okna zakotwiczone przy paletka
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.8";      // jedno źródło prawdy o wersji — nagłówek,
-const RELEASE = "2026-11-07"; // tytuł karty, kort, meta, version.json, postMessage
+const VERSION = "0.3.9";      // jedno źródło prawdy o wersji — nagłówek,
+const RELEASE = "2026-11-09"; // tytuł karty, kort, meta, version.json, postMessage
 function drawVersion() {      // nr wersji małymi 7-seg. na dole kortu (od v0.3.1, życzenie Ciby)
   const k = 0.5, y0 = VIS_H - 22;              // skala ½ cyfry wyniku, linia 224..240
   let wTot = 0;
@@ -722,10 +740,35 @@ function fieldY(e) {                          // clientY -> linia kortu (clamp w
      do góry/dołu (palec „nie prowadził”). Teraz pełna scena mapuje się
      proporcjonalnie na pełny zakres paletki — „cały ekran czuły” dokładnie
      jak w poziomie (tam scena ≈ kort, więc odczuwalnie bez zmian).
-     v0.3.6: dotyk liczy z tej mapy DELTY ruchu (czułość bez zmian, bez
-     pozycjonowania absolutnego); mysz/hover bez zmian — absolutnie. */
+     v0.3.6: dotyk liczy z tej mapy DELTY ruchu (bez pozycjonowania
+     absolutnego); mysz/hover bez zmian — absolutnie. */
   const r = stage.getBoundingClientRect();
   return (e.clientY - r.top) / r.height * VIS_H;
+}
+/* v0.3.9 — NORMALIZACJA czułości dotyku (zgłoszenie Ciby: „na telefonie
+   w pionie nie mogę nadążyć za piłeczką”). Mapa Y z fieldY mapuje CAŁĄ
+   wysokość sceny na 246 linii — w poziomie (scena ~390 px) pełny przejazd
+   paletki to ~330 px (grywalnie), w pionie (scena ~740 px) ~620 px, prawie
+   cały ekran: palec musi płynąć ~540 px/s, żeby nadążyć za piłką przy
+   vy=3, a przełożenie palca na drugą połowę (sterowanie względne) kosztuje
+   200–400 ms — piłka ucieka. Mnożnik delty: m = wysokość sceny / TOUCH_REF
+   (poziom telefonu = złoty standard), clamp [0.5, 2] → gest d px daje
+   d·246/390 linii NA KAŻDEJ wysokości sceny: pion ×1.9, mały poziom
+   ~250 px łagodniej ×0.64, ultrawysokie 20:9 cap ×2. MYSZ/klawisz/AI
+   nietknięte (to ścieżka DOTYKU tylko); gwarancja v0.3.6 bez zmian.
+   ?touch=<1..3> — tryb testowy (nadpisuje AUTO; śmieci → AUTO).
+   Bez localStorage/UI — świadomie: default dobry dla każdego (Ciba). */
+const TOUCH_REF = 390;                         // px wysokości sceny = złoty standard czułości
+const TOUCH_MODE = (() => {                    // ?touch=1..3 testowo; 0 = AUTO
+  try {
+    const v = parseFloat(new URLSearchParams(location.search).get("touch") || "");
+    return (isFinite(v) && v >= 1 && v <= 3) ? v : 0;
+  } catch (_) { return 0; }
+})();
+function touchGain() {                         // mnożnik delty DOTYKU (palec/rysik)
+  if (TOUCH_MODE > 0) return TOUCH_MODE;
+  const h = stage.getBoundingClientRect().height;
+  return (h > 0) ? Math.max(0.5, Math.min(2, h / TOUCH_REF)) : 1;
 }
 function sideFor(e) {                         // 2P: połowa EKRANU (nie kanwy)
   return e.clientX < innerWidth / 2 ? 0 : 1;
@@ -783,11 +826,11 @@ addEventListener("pointermove", e => {
     if (e.pointerType === "mouse") {
       pointer[t.s] = fieldY(e) - PAD_H / 2;     // mysz: absolutnie, spójnie z hoverem
     } else {                                    // v0.3.6: DOTYK = DELTA od kotwicy
-      const y = fieldY(e), dy = y - t.y;        // ta sama mapa Y = ta sama czułość
+      const y = fieldY(e), dy = y - t.y;        // v0.3.9: delta × touchGain() — „pion czułościowo = poziom”
       t.y = y;
       if (dy) {
         const base = (pointer[t.s] != null) ? pointer[t.s] : G.pads[t.s].top;
-        pointer[t.s] = Math.max(PAD_MIN, Math.min(PAD_MAX, base + dy)); // bez martwej strefy
+        pointer[t.s] = Math.max(PAD_MIN, Math.min(PAD_MAX, base + dy * touchGain())); // czułość znormalizowana, bez martwej strefy
       }
     }
   }
