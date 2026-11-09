@@ -1,13 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.12">
+<html lang="en" data-version="0.3.13">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.12"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.12</title>
+<meta name="game-version" content="0.3.13"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.13</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.13 (2026-11-10, życzenie Ciby — „zrobię grę trochę
+  łatwiejszą, ale żeby było wiadomo, O ILE łatwiejsza, a nie trochę
+  więcej czy trochę mniej” → „niech AI gry będzie o 10% gorsza; obecny
+  poziom AI gry zapamiętaj jako bazowy”): POZIOM AI (AI_LEVEL) — jedno
+  źródło prawdy o sile AI. BAZA 1.00 = poziom v0.3.12 (prędkość 2,9
+  linii/pole, błąd celowania ±(2+h, cap 11)) — ZAPAMIĘTANY TRWALE.
+  Każdy wymiar kompetencji skaluje się liniowo: prędkość ×L, precyzja
+  ×L (amplituda błędu ÷L) — „AI o 10% gorsza” = L 0,90 → prędkość
+  2,61 linii/pole, błąd ±(2,22+h, cap 12,22). Korekty trudności
+  wyrażamy odtąd JEDNĄ liczbą (AI_LEVEL), a jej efekt mierzymy Win
+  Rate-em 3 zamrożonych botów wzorcowych (trackery ludzkie: bez
+  predykcji odbić, refleks mrożony też po odbiciach od ścian):
+  scripts/sim_difficulty.py (linijka) + docs/trudnosc.md (skala i
+  pomiary) + docs/pomiary/*.json (surowe wyniki). Baza zmierzona
+  (2048 gier/bota): nowicjusz 0% (podłoga), średniak 53,4% (środek
+  skali), ekspert 100% (sufit). __pong: +AI_LEVEL, +step/
+  startCountdown, +geometria (hook kalibracyjny — nie wpływa na
+  rozgrywkę). Fizyka/serwis/dotyk/dźwięk/liczniki bez zmian.
   Wersja: 0.3.12 (2026-11-10, zgłoszenie Ciby — „zobacz, znowu
   niesymetrycznie” na screenie przy 0:0): v0.3.11 objęło lustrem RAMY
   PAR okien ([-112,-64] ↔ [+64,+112] cykli od siatki), ale przy wyniku
@@ -294,7 +312,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.12</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.13</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -352,8 +370,20 @@ const COUNT_FIELDS = Math.round(2.4 * FIELD_HZ);     // v0.3.0: odliczanie 3-2-1
 
 const SPEED_BY_HITS = h => h >= 12 ? 4 : (h >= 4 ? 3 : 2);   // 2/3/4 cykle/pole
 const ZONE_VY = [-3, -2, -1, 0, 0, 1, 2, 3];                // strefy paletki 8×2 linii
-const AI_SPEED = 2.9;                                        // linie/pole (dodatek, nie oryginał)
-const AI_ERR  = h => Math.min(11, 2 + h);                   // „ludzki” błąd celowania (rośnie z wymianą)
+/* v0.3.13 (życzenie Ciby — „niech AI gry będzie o 10% gorsza; obecny
+   poziom zapamiętaj jako bazowy”): POZIOM AI — jedno źródło prawdy
+   o sile AI. BAZA 1.00 = poziom v0.3.12 (prędkość 2,9 linii/pole,
+   błąd ±(2+h, cap 11)) — zapisany trwale w docs/trudnosc.md. Każdy
+   wymiar kompetencji skaluje się LINIOWO: prędkość ×L, precyzja ×L
+   (amplituda błędu ÷L) — „o 10% gorsza” = L 0,90: prędkość 2,61,
+   błąd ±(2,22+h, cap 12,22). Korekta trudności = JEDNA liczba
+   (AI_LEVEL), efekt mierzony Win Rate-em botów wzorcowych
+   (scripts/sim_difficulty.py — linijka zamrożona; pomiary w
+   docs/pomiary/). Wracając do 1.00 odzyskuje się v0.3.12 co do
+   linii — zmiana odwracalna jednoznacznie. */
+const AI_LEVEL = 0.90;                                       // 1.00 = baza v0.3.12
+const AI_SPEED = 2.9 * AI_LEVEL;                             // linie/pole (dodatek, nie oryginał)
+const AI_ERR  = h => Math.min(11 / AI_LEVEL, (2 + h) / AI_LEVEL); // „ludzki” błąd ÷ poziom (rośnie z wymianą)
 const KEY_SPEED = 3;                                         // linie/pole dla klawiatury
 
 /* Dźwięki — bity licznika pozycji pionowej piłki (ic_a3): QA=491,7 Hz,
@@ -512,7 +542,7 @@ function drawScore(side) {                     // jedności lustrzane wokół si
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.12";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.13";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-10"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -1210,7 +1240,11 @@ window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
   get VIS_W() { return VIS_W }, get NET_X() { return NET_X },
   get PAD_X1() { return PAD_X1 }, get PAD_X2() { return PAD_X2 },
   get SC1() { return SC1 }, get SC2() { return SC2 },
+  get VIS_H() { return VIS_H }, get BALL() { return BALL },
+  get PAD_H() { return PAD_H }, get PAD_W() { return PAD_W },
+  get AI_LEVEL() { return AI_LEVEL },
   get aiIdx() { return aiIdx() },
+  step, startCountdown,          // v0.3.13: kalibracja linijką botów (sim_difficulty.py)
   courtCyclesFor, applyCourt, fit,
   getVersion: () => ({ game: "pong-1972-replica", version: VERSION,
                        released: RELEASE }) };
