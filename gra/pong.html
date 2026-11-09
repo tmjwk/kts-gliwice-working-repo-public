@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.9">
+<html lang="en" data-version="0.3.10">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.9"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.9</title>
+<meta name="game-version" content="0.3.10"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.10</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.10 (2026-11-10, życzenie Ciby — „na górze i na dole
+  wyświetlasz wersję gry, ten dolny komunikat jest niepotrzebny”):
+  USUNIĘTY nr wersji rysowany małymi 7-seg. NA DOLE KORTU (był od v0.3.1
+  — pokazywał się przy odliczaniu 3-2-1 i po końcu gry; duplikat
+  plakietki nagłówka). Nagłówek („PONG · 1972 REPLICA v0.3.10”) zostaje
+  JEDYNYM widocznym miejscem wersji; kanały maszynowe v0.3.2 bez zmian
+  (version.json, meta, data-version, <title>, __pong, postMessage).
+  Kort wraca do czystego obrazu automatu: odliczanie, wynik, siatka —
+  nic więcej. Mechanika/fizyka/dotyk/dźwięk bez zmian — czysty
+  demontaż kosmetyczny, w pełni wstecznie zgodny z v0.3.9.
   Wersja: 0.3.9 (2026-11-09, zgłoszenie Ciby — „na telefonie w pionie
   nie mogę nadążyć za piłeczką”): przyczyna NIE w fizyce (piłka wszędzie
   taka sama: 2/3/4 cykle/pole, vy ≤ 3 linie/pole), tylko w czułości
@@ -242,7 +252,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.9</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.10</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -460,21 +470,12 @@ function drawScore(side) {                     // okna zakotwiczone przy paletka
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.9";      // jedno źródło prawdy o wersji — nagłówek,
-const RELEASE = "2026-11-09"; // tytuł karty, kort, meta, version.json, postMessage
-function drawVersion() {      // nr wersji małymi 7-seg. na dole kortu (od v0.3.1, życzenie Ciby)
-  const k = 0.5, y0 = VIS_H - 22;              // skala ½ cyfry wyniku, linia 224..240
-  let wTot = 0;
-  for (const ch of VERSION) wTot += (ch === "." ? 8 : 20) * k;
-  let x = (VIS_W - wTot) / 2;                  // wyśrodkowane (kropka = blok 4×4 przy podstawie)
-  for (const ch of VERSION) {
-    if (ch === ".") {
-      ctx.fillStyle = C_SCORE;
-      ctx.fillRect(PX(x + 4 * k), PY(y0 + 27 * k), PX(4 * k), PH(4 * k));
-      x += 8 * k;
-    } else { drawDigit(+ch, x, y0, k); x += 20 * k; }
-  }
-}
+const VERSION = "0.3.10";     // jedno źródło prawdy o wersji — nagłówek,
+const RELEASE = "2026-11-10"; // tytuł karty, meta, version.json, postMessage
+/* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
+   drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
+   rysowany przy odliczaniu i po końcu gry) — USUNIĘTY. Wersję pokazuje
+   plakietka nagłówka + kanały maszynowe v0.3.2; kort czysty jak w 1972. */
 
 function render() {
   ctx.fillStyle = "#000"; ctx.fillRect(0, 0, cv.width, cv.height);
@@ -501,8 +502,8 @@ function render() {
     drawDigit(Math.max(1, Math.ceil(G.countF / (COUNT_FIELDS / 3))),
               (VIS_W - 32) / 2, (VIS_H - 64) / 2, 2);
   drawScore(0); drawScore(1);                  // wynik zostaje też po końcu gry
-  if (G.state === "count" || G.state === "gameover")   // v0.3.1: nr wersji na kortu
-    drawVersion();
+  /* v0.3.10: tu rysował się nr wersji przy odliczaniu i po końcu gry —
+     usunięty (życzenie Ciby): nagłówek wystarcza, kort czysty. */
 }
 
 /* --- kroki symulacji (1 krok = 1 pole 60,054 Hz) --------------------------- */
