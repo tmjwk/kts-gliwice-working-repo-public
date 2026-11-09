@@ -1708,11 +1708,16 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
    paskiem i stopką — stopka zawsze mieści się na ekranie (audyt VLM:
    przy sztywnym calc stopka wystawała poza pierwszy ekran). */
 .gra-planszownik { padding: 0 1rem 1.25rem; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+/* 1.32.0: max-width 72rem = .container/.gra-pasek — plansza i pasek
+   nad nią mają równe krawędzie, kort większy na szerokich ekranach. */
 .gra-scena, .gra-status, .gra-blad {
-  width: 100%; max-width: 68.75rem; margin-inline: auto;
+  width: 100%; max-width: 72rem; margin-inline: auto;
   flex: 1 1 auto; min-height: 20rem; height: auto;
 }
-.gra-scena { display: block; }
+/* 1.32.0: position:relative = kotwica dla absolutnej ramki — wysokość
+   sceny z flexa jest NIEOKREŚLONA dla procentów dzieci, a inset:0
+   procentów nie potrzebuje (patrz .gra-scena iframe niżej). */
+.gra-scena { display: block; position: relative; }
 .gra-scena:fullscreen { max-width: none; height: 100dvh; min-height: 0; }
 /* 1.31.0 — PSEUDO-FULLSCREEN (iPhone Safari: brak element-FS API, klik „⛶”
    był cichym no-opem). Plansza = fixed na cały dynamiczny viewport;
@@ -1745,8 +1750,17 @@ body.gra-fs-fake { overflow: hidden; }
 }
 .gra-fs-exit:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .gra-scena.fs-fake .gra-fs-exit { display: flex; }
+/* 1.32.0: ramka ABSOLUTNA (inset:0) — height:100% nie rozwiązywało się
+   przy elastycznej (flex) wysokości sceny (łańcuch body→main→
+   planszownik→scena bez określonej wysokości) i ramka trzymała się
+   intrinsycznych 150 px → kort 160×90 na środku ciemnej sceny
+   (zgłoszenie właściciela: „gra za wąska”). inset:0 wypełnia scenę
+   ZAWSZE: okno, :fullscreen (100dvh) i .fs-fake (fixed inset:0).
+   Gra sama maksymalizuje kort (adaptacyjnie 374–500 cykli,
+   4:3…16:9 — ResizeObserver po jej stronie). */
 .gra-scena iframe {
-  width: 100%; height: 100%; border: 0; display: block;
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  border: 0; display: block;
   background: #0b0f1a; border-radius: 0.75rem;
   box-shadow: 0 10px 30px rgba(9, 16, 29, 0.18);
   border: 1px solid var(--kts-line);
