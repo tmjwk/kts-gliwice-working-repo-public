@@ -102,6 +102,32 @@
    patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
    samonaprawa będzie gaszona po cichu po stronie gry.
 
+   1.32.0 — PLANSZA JAK NAJWIĘKSZA W OKNIE (zgłoszenie właściciela
+   10.11: „gra na podstronie jest za wąska — ma być jak największa
+   w oknie zależnie od rozdzielczości, ale nie wystawać poza ekran”).
+   Root cause (pomiar żywy, pomiar_v1320.mjs): ramka gry siedziała na
+   INTRINSYCZNYCH 150 px wysokości — .gra-scena iframe {height:100%}
+   nie rozwiązywało się, bo łańcuch wysokości body(min-height:100vh,
+   auto) → .gra-main(flex) → .gra-planszownik(flex) → .gra-scena(flex,
+   height:auto) nie daje OKREŚLONEJ wysokości dla procentów dzieci;
+   kort w ramce dopasowywał się do 150 px → 160×90 na środku wielkiej
+   ciemnej sceny (stąd wrażenie „za wąska”). W :fullscreen i .fs-fake
+   działało — tam wysokość sceny jest sztywna (100dvh/fixed), więc
+   procent się rozwiązywał.
+   Naprawa (css/style.css, całość po stronie strony — gra bez zmian):
+   - .gra-scena { position:relative } + .gra-scena iframe
+     { position:absolute; inset:0 } — wypełnienie sceny BEZ procentów,
+     działa w każdym trybie (okno / :fullscreen / .fs-fake);
+   - max-width sceny 68.75rem → 72rem — równe krawędzie z .gra-pasek/
+     .container (pasek nad planszą i plansza w jednej linii) + większy
+     kort na szerokich ekranach.
+   Skutek: kort adaptacyjny gry (374–500 cykli, 4:3…16:9 — v0.3.0)
+   wypełnia scenę w całości w każdym oknie — scena zajmuje całą
+   przestrzeń między nagłówkiem, paskiem i stopką (elastyczny flex,
+   audyt VLM — stopka zawsze na ekranie), a gra sama maksymalizuje
+   kort w tej scenie: „jak największa w oknie, nie wystaje poza
+   ekran” bez ani jednego mediazapytania po naszej stronie.
+
    1.31.0 — PEŁNY EKRAN NA iPHONE (zgłoszenie właściciela 08.11:
    „na iPhone nie działa przycisk pełny ekran — gra się ładuje, ale
    nie powiększa się do pełnego ekranu”). Root cause: iPhone Safari
@@ -181,7 +207,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.31.0";
+const WERSJA_KODU = "1.32.0";
 
 const $ = (sel) => document.querySelector(sel);
 
