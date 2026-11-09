@@ -102,6 +102,29 @@
    patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
    samonaprawa będzie gaszona po cichu po stronie gry.
 
+   1.32.1 — WATCHDOG NOWEJ WERSJI STRONY TAKŻE NA gra.html (zgłoszenie
+   właściciela 10.11: „na stronie nie wyskoczył komunikat o tym, że
+   pojawiła się nowa wersja strony. dlaczego?”). Diagnoza — trzy
+   przyczyny: (1) toast celowo NIE pokazuje się po odświeżeniu karty
+   po deployu — gość ma już nowy kod (cisza zamierzona od v1.28.4;
+   aktualna wersja widać w stopce); (2) NA gra.html wersja strony
+   była sprawdzana TYLKO przy wejściu (pokazWersje) — karta
+   zostawiona otwarta nigdy się nie dowiadywała o deploju (na
+   index.html app.js sprawdza okresowo w sprawdzDane, 1-10 min, i
+   po powrocie do karty); (3) CDN github.io trzyma wersja.json do
+   10 min (max-age=600) i IGNORUJE parametry ?x= (test 09.11:
+   unikalne parametry → ten sam HIT z Age) — toast na otwartej
+   karcie potrafi się pojawić dopiero ~10-20 min po deployu; to
+   ograniczenie CDN dotyczy tak samo app.js (bez cache-bustu).
+   Naprawa (2): cwykajNowaWersjeStrony() — w tym samym takcie 90 s
+   co watchdog wersji GRY + natychmiast po powrocie do karty; toast
+   raz na wersję (stronaToastWersja — kolejny deploy znów da toast),
+   stopka aktualizowana przy okazji, toast z wejścia zapisany
+   (bez dubla po 90 s), przy kolizji z toastem GRY podniesiony
+   wyżej (lustrzanie do zglosNowaGre). Uchwyt
+   window._ktsSprawdzWersjeStrony — testy/debug (konwencja
+   _ktsSprawdzDane z app.js). Punkty (1) i (3) zostają zamierzone.
+
    1.32.0 — PLANSZA JAK NAJWIĘKSZA W OKNIE (zgłoszenie właściciela
    10.11: „gra na podstronie jest za wąska — ma być jak największa
    w oknie zależnie od rozdzielczości, ale nie wystawać poza ekran”).
@@ -207,7 +230,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.32.0";
+const WERSJA_KODU = "1.32.1";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -228,6 +251,9 @@ function zglosNowaWersje(wersja) {
   const el = document.createElement("div");
   el.className = "toast-danych toast-danych--wersja";
   el.setAttribute("role", "status");
+  /* 1.32.1: oba toasty fixed bottom — przy kolizji z toastem wersji
+     GRY podnieś ten wyżej (lustrzane do zglosNowaGre) */
+  if (document.querySelector(".toast-danych--gra")) el.style.bottom = "5.5rem";
   const tekst = document.createElement("span");
   tekst.className = "toast-tekst";
   tekst.textContent = `Dostępna nowa wersja strony (v${wersja})`;
@@ -262,9 +288,41 @@ async function pokazWersje() {
     const w = await res.json();
     if (w?.wersja) {
       $("#wersja-strony").textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
-      if (!document.hidden && nowszaWersja(w.wersja, WERSJA_KODU)) zglosNowaWersje(w.wersja);
+      if (!document.hidden && nowszaWersja(w.wersja, WERSJA_KODU)) {
+        stronaToastWersja = String(w.wersja);   /* 1.32.1: toast z wejścia zapisany — watchdog nie dubluje */
+        zglosNowaWersje(w.wersja);
+      }
     }
   } catch (e) { /* brak pliku — zostaje „wersja —” */ }
+}
+
+/* ===== 1.32.1: watchdog nowej wersji STRONY ==============================
+   Do v1.32.0 wersja strony była tu sprawdzana TYLKO przy wejściu
+   (pokazWersje wyżej) — karta zostawiona otwarta na gra.html nigdy
+   nie dowiadywała się o deploju. Teraz lustrzanie do watchdogu
+   wersji GRY (niżej): co 90 s + natychmiast po powrocie do karty.
+   CDN github.io trzyma wersja.json do 10 min (max-age=600) i
+   ignoruje parametry ?x= — realne opóźnienie toastu na otwartej
+   karcie: do ~10 min (wygaśnięcie CDN) + takt 90 s; app.js ma to
+   samo ograniczenie. Cicho przy błędzie sieci — następna próba
+   za 90 s. */
+let stronaToastWersja = "";   /* wersja strony, o której toast już poszedł */
+
+async function cwykajNowaWersjeStrony() {
+  if (document.hidden) return;                     /* karta w tle = później */
+  if (document.querySelector(".toast-danych--wersja:not(.toast-danych--gra)")) return; /* już wisi */
+  try {
+    const res = await fetch("wersja.json", { cache: "no-cache" });
+    if (!res.ok) return;
+    const w = await res.json();
+    if (!w?.wersja) return;
+    const stopka = $("#wersja-strony");
+    if (stopka) stopka.textContent = `wersja v${w.wersja}${w.opis ? " · " + w.opis : ""}`;
+    if (String(w.wersja) === stronaToastWersja) return;  /* już zgłoszone */
+    if (!nowszaWersja(w.wersja, WERSJA_KODU)) return;    /* nie nowsza */
+    stronaToastWersja = String(w.wersja);
+    zglosNowaWersje(w.wersja);
+  } catch (e) { /* cicho */ }
 }
 
 /* ===== 1.30.2: watchdog nowej wersji gry ===== */
@@ -703,10 +761,11 @@ async function start() {
   /* 1.30.2: watchdog nowej wersji gry — patrz cwykajNowaGre()
      (wejście i tak pobiera najnowszą; to łapie „siedzę i gram, a
      mirror właśnie dostał nowszą wersję”). */
-  setInterval(cwykajNowaGre, 90_000);
+  setInterval(() => { cwykajNowaGre(); cwykajNowaWersjeStrony(); }, 90_000);
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) cwykajNowaGre();
+    if (!document.hidden) { cwykajNowaGre(); cwykajNowaWersjeStrony(); }
   });
+  window._ktsSprawdzWersjeStrony = cwykajNowaWersjeStrony; /* testy/debug — konwencja _ktsSprawdzDane z app.js */
 
   pokazWersje();
   zaladujGre();
