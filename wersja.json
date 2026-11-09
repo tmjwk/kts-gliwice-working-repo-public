@@ -1,5 +1,5 @@
 {
-  "wersja": "1.32.1",
-  "data": "2026-11-09T21:42:02Z",
-  "opis": "komunikat o nowej wersji strony także na podstronie gra — watchdog co 90 s i po powrocie do karty (wcześniej tylko przy wejściu)"
+  "wersja": "1.32.2",
+  "data": "2026-11-09T21:59:41Z",
+  "opis": "gra: plansza nie wystaje poza ekran na niskich oknach (telefon w poziomie) — podłoga wysokości adaptacyjna + stopka chowana na bardzo niskich ekranach"
 }
