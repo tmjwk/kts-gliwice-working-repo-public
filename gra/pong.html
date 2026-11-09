@@ -1,13 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.10">
+<html lang="en" data-version="0.3.11">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.10"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.10</title>
+<meta name="game-version" content="0.3.11"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.11</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.11 (2026-11-10, zgłoszenie Ciby — liczniki punktów:
+  „a) nie są rozmieszczone symetrycznie, b) umieść je w takiej samej
+  odległości od środka (siatki) — bliżej środka niż obecnie”):
+  okna wyniku przestawione z kotwic przy paletkach (v0.2.x) na pozycje
+  LUSTRZANE wokół siatki — najbliższa krawędź pary dokładnie 64 cykle
+  od siatki po OBU stronach (64 = odległość okien P1 w oryginale 1972:
+  para [63,111], siatka 175 → 64). Naprawione naraz: (a) asymetria —
+  prawa para stała 12 cykli dalej od siatki niż lewa (kotwiczenie do
+  PAD_X2 z prawej, PAD_X1 z lewej skopiowało quirkowe przesunięcie
+  okien H oryginału, ale bez muzealnej wymówki); (b) odległość — pary
+  stoją w TYM SAMYM miejscu względem środka na każdej geometrii
+  (374–954; wcześniej odległość od siatki rosła z kortem: pion
+  106/118, desktop 16:9 163/175, poziom telefonu ~370 cykli).
+  Na pionie 374: pary [75,123] i [251,299]. Cyfry bez zmian (7-seg.
+  7448, skala 1, y=16). ?classic=1 = muzeum: okna oryginalne
+  [63,95]/[255,287] bez zmian. Fizyka/dotyk/dźwięk bez zmian.
   Wersja: 0.3.10 (2026-11-10, życzenie Ciby — „na górze i na dole
   wyświetlasz wersję gry, ten dolny komunikat jest niepotrzebny”):
   USUNIĘTY nr wersji rysowany małymi 7-seg. NA DOLE KORTU (był od v0.3.1
@@ -252,7 +268,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.10</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.11</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -303,7 +319,7 @@ const GAP_TOP = 16, GAP_BOT = 8;              // [T1] szczeliny zakresu paletki 
 const PAD_MIN = GAP_TOP, PAD_MAX = VIS_H - PAD_H - GAP_BOT + 1; // 16..223
 
 let   SERVE_X = NET_X + 1;                    // [T2] tuż na prawo od siatki
-let   SC1 = [33, 65], SC2 = [305, 337];       // okna wyniku [dziesiątki, jedności] — przy paletkach
+let   SC1 = [75, 107], SC2 = [251, 283];       // okna wyniku [dziesiątki, jedności] — lustrzanie wokół siatki (applyCourt)
 const SERVE_FIELDS = Math.round(1.708 * FIELD_HZ);  // 1,708 s = 103 pola (555: 330k×4,7uF)
 const GAMEOVER_FIELDS = Math.round(5 * FIELD_HZ);    // „attract" po końcu gry → auto-restart
 const COUNT_FIELDS = Math.round(2.4 * FIELD_HZ);     // v0.3.0: odliczanie 3-2-1 (3 × 0,8 s)
@@ -464,13 +480,13 @@ function drawDigit(d, x0, y0, k = 1) {          // k = skala (1 = wynik; 2 = odl
   if (s.includes("c")) R(12, 16, 4, 16);      // prawy dolny pion
   if (s.includes("d")) R(0, 28, 16, 4);      // dolna
 }
-function drawScore(side) {                     // okna zakotwiczone przy paletkach (applyCourt)
+function drawScore(side) {                     // okna lustrzane wokół siatki (applyCourt, v0.3.11)
   const sc = G.score[side];
   const [tens, units] = side === 0 ? SC1 : SC2;
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.10";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.11";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-10"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -1111,8 +1127,15 @@ function applyCourt(w) {                       // świat pod kort o szerokości 
   if (FORCE_CLASSIC) { PAD_X1 = 47; PAD_X2 = 303; }        // 128H/384H-81 (oryginał)
   else { const e = padEdge(w); PAD_X1 = e; PAD_X2 = w - e - PAD_W; }  // ~4,5% od krawędzi (v0.2.2)
   SERVE_X = NET_X + 1;                         // [T2] serw tuż na prawo od siatki
-  SC1 = [PAD_X1 + 16, PAD_X1 + 48];            // okna wyniku przy paletkach (jak w oryginale)
-  SC2 = [PAD_X2 - 48, PAD_X2 - 16];
+  /* v0.3.11 (zgłoszenie Ciby — liczniki: „a) nie są rozmieszczone
+     symetrycznie, b) tak sama odległość od środka — bliżej środka”):
+     okna wyniku LUSTRZANE wokół siatki, najbliższa krawędź pary 64
+     cykle od niej (jak okna P1 w oryginale: para kończyła się 64
+     cykle przed siatką). Koniec asymetrii kotwic przy paletkach
+     (prawa para 12 cykli dalej) i koniec ucieczki okien na szerokich
+     kortach — stały dystans od środka na każdej geometrii. */
+  if (FORCE_CLASSIC) { SC1 = [PAD_X1 + 16, PAD_X1 + 48]; SC2 = [PAD_X2 - 48, PAD_X2 - 16]; }  // oryginał: okna H 128–191 / 320–383
+  else { SC1 = [NET_X - 112, NET_X - 80]; SC2 = [NET_X + 64, NET_X + 96]; }  // lustrzane: ±64 cykle od siatki
   cv.width = w * 4;                            // wysokość 1122 px bez zmian
   /* v0.3.0: przerys zawsze — także W TRAKCIE wymiany (decyzja Ciby):
      piłka w locie przenoszona proporcjonalnie, paletki dociskane do zakresu */
