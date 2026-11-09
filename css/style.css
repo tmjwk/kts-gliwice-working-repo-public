@@ -1713,6 +1713,14 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .gra-scena, .gra-status, .gra-blad {
   width: 100%; max-width: 72rem; margin-inline: auto;
   flex: 1 1 auto; min-height: 20rem; height: auto;
+  /* 1.32.2: na niskich oknach (telefon w poziomie) sztywna podłoga
+     20rem wypychała planszę i stopkę poza ekran (pomiar 926×428:
+     545px treści przy 428px viewportu). Podłoga adaptacyjna: nie
+     więcej niż realnie zostaje po nagłówku+pasku+stopce (≈14rem
+     chrome + zapas). Na normalnych ekranach min() wybiera 20rem —
+     zero zmian. dvh = dynamiczny viewport; przeglądarki bez dvh
+     zostają przy 20rem z linii wyżej (dzisiejszy stan). */
+  min-height: min(20rem, calc(100dvh - 15rem));
 }
 /* 1.32.0: position:relative = kotwica dla absolutnej ramki — wysokość
    sceny z flexa jest NIEOKREŚLONA dla procentów dzieci, a inset:0
@@ -1789,10 +1797,21 @@ body.gra-fs-fake { overflow: hidden; }
   .gra-tytul { font-size: 1rem; }
   .gra-kontrolki { width: 100%; }
   .gra-kontrolki .btn-gra { flex: 1; }
-  .gra-scena, .gra-status, .gra-blad { min-height: 16rem; }
+  .gra-scena, .gra-status, .gra-blad {
+    min-height: 16rem;
+    min-height: min(16rem, calc(100dvh - 15rem)); /* 1.32.2 — j.w. */
+  }
   .gra-header-akcje { gap: 0.5rem; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .btn-gra { transition: border-color 0.15s ease, color 0.15s ease; }
+}
+
+/* 1.32.2: BARDZO NISKIE ekrany (telefon w poziomie, <30rem wysokości)
+   — kompaktowa stopka (atrybucja + wersja strony) znika, żeby plansza
+   dostała ~4.5rem więcej; wraca po obrocie do pionu i na wyższych
+   oknach. Nagłówek (⬅ powrót) i pasek (↻ / ⛶) zostają. */
+@media (max-height: 30rem) {
+  .gra-stopka { display: none; }
 }
