@@ -1,13 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.11">
+<html lang="en" data-version="0.3.12">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.11"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.11</title>
+<meta name="game-version" content="0.3.12"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.12</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.12 (2026-11-10, zgłoszenie Ciby — „zobacz, znowu
+  niesymetrycznie” na screenie przy 0:0): v0.3.11 objęło lustrem RAMY
+  PAR okien ([-112,-64] ↔ [+64,+112] cykli od siatki), ale przy wyniku
+  jednocyfrowym — 0:0 przez niemal całą grę — świeci tylko cyfra
+  JEDNOŚCI, a jedności stały 64 (lewa) i 96 (prawa) cykli od siatki:
+  lewa bliżej o 32 cykle — widać to na screenie Ciby (131,5 px vs
+  197,5 px od siatki; stosunek 1,5 = 96/64). v0.3.12 przesuwa oś
+  lustra na OKNA JEDNOŚCI: lewe [N-64, N-48], prawe [nR+48, nR+64] —
+  obie cyfry po 48 cykli od siatki (BLIŻEJ środka niż 64/96) i
+  lustrzane CO DO PIKSELA wokół narysowanej siatki. Prawa kotwica
+  nR = VIS_W - NET_X (nie NET_X!): siatka rysowana jest na osi
+  PIKSELOWEJ kanwy ((w·4-4)/2), nie na osi cykli — przy nieparzystym
+  VIS_W to +1 cykl; bez niego prawa jedność byłaby o 4 px bliżej.
+  Dziesiątki (wynik ≥ 10): lewa para [N-96, N-80] na zewnątrz, prawa
+  [nR+16, nR+32] przy siatce — dziesiątki na lewo od jedności na OBU
+  stronach (czytanie zwykłe); pełne lustro liczby dwucyfrowej jest
+  matematycznie sprzeczne z czytelnością (lustro jedności ⟹ po jednej
+  stronie dziesiątki lądują na prawo od jedności), więc symetrią
+  objęte jest to, co widać najdłużej. Pion 374: okna [91,123] i
+  [203,235], jedności [123,139] / [235,251] (48 cykli od siatki 187).
+  Testy: G1g przepisane z LICZENIA pikseli w pasach ram par (count =
+  count nie odróżnia POZYCJI — tak v0.3.11 przeszło z przechyloną
+  geometrią!) na test pozycyjny: 64 kolumny okien jedności parami
+  przez lustro osi kanwy + równy dystans od osi; G1d/G4f/G8f nowe
+  wzory. ?classic=1 bez zmian (muzeum 1972). Fizyka/dotyk/dźwięk
+  bez zmian.
   Wersja: 0.3.11 (2026-11-10, zgłoszenie Ciby — liczniki punktów:
   „a) nie są rozmieszczone symetrycznie, b) umieść je w takiej samej
   odległości od środka (siatki) — bliżej środka niż obecnie”):
@@ -268,7 +294,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.11</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.12</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -319,7 +345,7 @@ const GAP_TOP = 16, GAP_BOT = 8;              // [T1] szczeliny zakresu paletki 
 const PAD_MIN = GAP_TOP, PAD_MAX = VIS_H - PAD_H - GAP_BOT + 1; // 16..223
 
 let   SERVE_X = NET_X + 1;                    // [T2] tuż na prawo od siatki
-let   SC1 = [75, 107], SC2 = [251, 283];       // okna wyniku [dziesiątki, jedności] — lustrzanie wokół siatki (applyCourt)
+let   SC1 = [91, 123], SC2 = [203, 235];       // okna wyniku [dziesiątki, jedności] — jedności lustrzane ±48 od siatki (applyCourt)
 const SERVE_FIELDS = Math.round(1.708 * FIELD_HZ);  // 1,708 s = 103 pola (555: 330k×4,7uF)
 const GAMEOVER_FIELDS = Math.round(5 * FIELD_HZ);    // „attract" po końcu gry → auto-restart
 const COUNT_FIELDS = Math.round(2.4 * FIELD_HZ);     // v0.3.0: odliczanie 3-2-1 (3 × 0,8 s)
@@ -480,13 +506,13 @@ function drawDigit(d, x0, y0, k = 1) {          // k = skala (1 = wynik; 2 = odl
   if (s.includes("c")) R(12, 16, 4, 16);      // prawy dolny pion
   if (s.includes("d")) R(0, 28, 16, 4);      // dolna
 }
-function drawScore(side) {                     // okna lustrzane wokół siatki (applyCourt, v0.3.11)
+function drawScore(side) {                     // jedności lustrzane wokół siatki (applyCourt, v0.3.12)
   const sc = G.score[side];
   const [tens, units] = side === 0 ? SC1 : SC2;
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.11";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.12";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-10"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -1127,15 +1153,22 @@ function applyCourt(w) {                       // świat pod kort o szerokości 
   if (FORCE_CLASSIC) { PAD_X1 = 47; PAD_X2 = 303; }        // 128H/384H-81 (oryginał)
   else { const e = padEdge(w); PAD_X1 = e; PAD_X2 = w - e - PAD_W; }  // ~4,5% od krawędzi (v0.2.2)
   SERVE_X = NET_X + 1;                         // [T2] serw tuż na prawo od siatki
-  /* v0.3.11 (zgłoszenie Ciby — liczniki: „a) nie są rozmieszczone
-     symetrycznie, b) tak sama odległość od środka — bliżej środka”):
-     okna wyniku LUSTRZANE wokół siatki, najbliższa krawędź pary 64
-     cykle od niej (jak okna P1 w oryginale: para kończyła się 64
-     cykle przed siatką). Koniec asymetrii kotwic przy paletkach
-     (prawa para 12 cykli dalej) i koniec ucieczki okien na szerokich
-     kortach — stały dystans od środka na każdej geometrii. */
+  /* v0.3.12 (zgłoszenie Ciby — „znowu niesymetrycznie” na screenie 0:0):
+     v0.3.11 ustawiło lustrzanie RAMY PAR okien, ale jednocyfrowy wynik
+     (0:0 — niemal cała gra) świeci tylko JEDNOŚCIĄ, a jedności stały
+     64 (L) i 96 (P) cykli od siatki — lewa bliżej o 32. Oś lustra:
+     OKNA JEDNOŚCI [N-64, N-48] i [nR+48, nR+64], po 48 cykli od siatki
+     (bliżej niż 64/96), piksel w piksel wokół NARYSOWANEJ siatki.
+     Prawa kotwica nR = w - NET_X, bo siatka rysowana jest na osi
+     PIKSELOWEJ kanwy ((w*4-4)/2), nie na osi cykli — przy nieparzystym
+     w to +1 cykl i bez niego prawa cyfra byłaby o 4 px bliżej siatki.
+     Dziesiątki (wynik ≥ 10): lewa [N-96, N-80] na zewnątrz, prawa
+     [nR+16, nR+32] przy siatce — po obu stronach dziesiątki na lewo
+     od jedności (czytanie zwykłe); pełne lustro liczby dwucyfrowej
+     jest matematycznie sprzeczne z czytelnością, więc symetrią objęte
+     jest to, co świeci najdłużej. */
   if (FORCE_CLASSIC) { SC1 = [PAD_X1 + 16, PAD_X1 + 48]; SC2 = [PAD_X2 - 48, PAD_X2 - 16]; }  // oryginał: okna H 128–191 / 320–383
-  else { SC1 = [NET_X - 112, NET_X - 80]; SC2 = [NET_X + 64, NET_X + 96]; }  // lustrzane: ±64 cykle od siatki
+  else { SC1 = [NET_X - 96, NET_X - 64]; SC2 = [w - NET_X + 16, w - NET_X + 48]; }  // jedności lustrzane: ±48 cykli od siatki
   cv.width = w * 4;                            // wysokość 1122 px bez zmian
   /* v0.3.0: przerys zawsze — także W TRAKCIE wymiany (decyzja Ciby):
      piłka w locie przenoszona proporcjonalnie, paletki dociskane do zakresu */
