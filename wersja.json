@@ -1,5 +1,5 @@
 {
-  "wersja": "1.32.2",
-  "data": "2026-11-09T21:59:41Z",
-  "opis": "gra: plansza nie wystaje poza ekran na niskich oknach (telefon w poziomie) — podłoga wysokości adaptacyjna + stopka chowana na bardzo niskich ekranach"
+  "wersja": "1.33.0",
+  "data": "2026-11-10T16:52:17Z",
+  "opis": "listy meczów z przełącznikiem widoku: chronologicznie / wg drużyn (domyślnie chronologicznie na obu), wybór zapamiętywany"
 }
