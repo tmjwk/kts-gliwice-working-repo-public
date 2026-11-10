@@ -1,13 +1,40 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.16">
+<html lang="en" data-version="0.3.17">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.16"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.16</title>
+<meta name="game-version" content="0.3.17"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.17</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.17 (2026-11-11, życzenie Ciby — „w żadnej wersji u dołu
+  ekranu nie może być dwóch wierszy. Niech będzie tylko jeden zawierający
+  wszystkie opcje, tj. exit, pause, etc.” + „Niech gra rozpoczyna się
+  przyciskiem start po środku ekranu — w każdej wersji. Po kliknięciu
+  w start przechodzimy do odliczania 3,2,1,0 ale zera już nie pokazujesz,
+  tylko rozpoczyna się gra. Po zakończonej rozgrywce gra przechodzi
+  do odliczania.”): START + JEDEN WIERSZ STOPKI.
+  (1) STOPKA = jeden wiersz ZAWSZE: wszystkie opcje (Exit, Pause, 1P,
+      strona, punkty docelowe, dźwięk) w JEDNYM rzędzie — flex-wrap:nowrap
+      (nigdy drugi wiersz) + bezpiecznik overflow-x (hipotetycznie węższe
+      okno przewinie, nie złamie); poniżej 560 px krótkie etykiety
+      (1P / Side: R / To 11 / Snd: On) i ciaśniejszy padding — całość mieści
+      się bez przewijania już od 320 px; podpowiedź sterowania na końcu
+      rzędu z ellipsis (na ≤560 px ukryta, jak dotychczas).
+  (2) START: nowy stan „menu” na starcie strony — kort (wynik 0:0, brak
+      piłki) pod kurtyną rgba(0,0,0,.45) (jak pauza) + duży przycisk START
+      pośrodku sceny (klik / Enter / Space; skanlinie CRT kładą się na nim
+      jak na wszystkim na korcie). Symulacja stoi (fields nie rosną),
+      ustawienia w stopce przełączają się bez startu gry. START →
+      odliczanie 3-2-1 („0” NIGDY nie rysowane — Math.max(1,…) od v0.3.0)
+      i przy „0” startuje serwis.
+  (3) KONIEC PARTII: krótkie zestopienie z WYNIKIEM (2,5 s — zwycięzca
+      czytelny; attract z odbijającą się piłką zdemontowany, paletki
+      zostają na korcie) → odliczanie 3-2-1 → nowa partia BEZ powrotu
+      do START — ciągła pętla jak na automacie.
+  __pong: +start, +countDigit; test_ui nowa seria U20. Fizyka/dotyk/
+  dźwięk/geometria/liczniki bez zmian.
   Wersja: 0.3.16 (2026-11-10, życzenie Ciby — „dodaj napis Paused — o ile
   to poprawna forma”; forma poprawna: „Paused” = stan/imiesłów, standard
   w grach): NAPIS NA KORCIE W PAUZIE — nad przyciemnionym kortem świeci
@@ -317,35 +344,76 @@
     touch-action:none;
     image-rendering:auto;
   }
+  /* v0.3.17 (życzenie Ciby — „Niech gra rozpoczyna się przyciskiem start
+     po środku ekranu — w każdej wersji”): menu startowe — kurtyna jak przy
+     pauzie (rgba(0,0,0,.45)) + duży START pośrodku SCENY (telefon w pionie,
+     w poziomie, desktop — zawsze środek). Skanlinie CRT (::after, dalej w
+     kolejności malowania) kładą się na przycisku jak na wszystkim na
+     korcie; pointer-events:none na nich, więc klik zawsze trafia w START. */
+  #startov{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    background:rgba(0,0,0,.45);
+    pointer-events:none;   /* kurtyna NIE łapie zdarzeń — hover nad kortem dalej
+                             przygotowuje audio i chwyta fokus (semantyka v0.3.1+);
+                             łapie tylko sam przycisk poniżej */
+  }
+  #startov.on{display:flex}
+  #bstart{
+    pointer-events:auto;   /* jedyny „gorący” punkt menu — reszta to obraz */
+    font:inherit;color:var(--ink);background:transparent;
+    border:2px solid var(--ink);border-radius:12px;
+    padding:14px 28px 14px calc(28px + .35em);   /* +ls: optyczne wyśrodkowanie liter */
+    font-size:clamp(16px,4.5vmin,26px);letter-spacing:.35em;text-transform:uppercase;
+    cursor:pointer;transition:background .15s,color .15s;
+    animation:startPulse 1.6s ease-in-out infinite;   /* „press start” — jak automat */
+  }
+  #bstart:hover,#bstart:focus-visible{background:var(--ink);color:#0b0b0d;animation:none}
+  #bstart:focus-visible{outline:2px solid var(--club-accent);outline-offset:4px}
+  @keyframes startPulse{50%{opacity:.55}}
   /* subtelne scanlines CRT (do usunięcia: usuń ::after) */
   #stage::after{
     content:"";position:absolute;inset:10px;pointer-events:none;border-radius:10px;
     background:repeating-linear-gradient(0deg,rgba(0,0,0,.20) 0 1px,transparent 1px 3px);
     mix-blend-mode:multiply;
   }
-  /* pasek dolny — sterowania */
+  /* pasek dolny — sterowania. v0.3.17 (życzenie Ciby — „w żadnej wersji
+     u dołu ekranu nie może być dwóch wierszy. Niech będzie tylko jeden
+     zawierający wszystkie opcje, tj. exit, pause, etc.”): JEDEN wiersz
+     ZAWSZE — wszystkie opcje obok siebie; flex-wrap:nowrap (drugi wiersz
+     niemożliwy z definicji) + bezpiecznik overflow-x (okno węższe niż
+     wszystko razem przewinie się poziomo zamiast łamać; z krótkimi
+     etykietami poniżej 560 px całość mieści się bez przewijania od 320 px).
+     „safe center”: gdyby jednak przyszło do przewijania, rząd dociąga się
+     do lewej (zwykłe center przy przepełnieniu obcinałoby nieosiągalną
+     lewą stronę). */
   footer{
-    flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;
-    gap:8px;padding:8px 14px;border-top:1px solid var(--line);
-    flex-wrap:wrap;font-size:11px;letter-spacing:.1em;
+    flex:0 0 auto;display:flex;align-items:center;
+    justify-content:center;justify-content:safe center;
+    gap:6px;padding:8px 12px;border-top:1px solid var(--line);
+    flex-wrap:nowrap;font-size:11px;letter-spacing:.1em;
+    overflow-x:auto;overscroll-behavior-x:contain;
   }
-  .grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
   button{
-    font:inherit;color:var(--ink-dim);background:transparent;
+    flex:0 0 auto;font:inherit;color:var(--ink-dim);background:transparent;
     border:1px solid var(--line);border-radius:6px;padding:7px 12px;
     letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
     transition:color .12s,border-color .12s;
   }
   button:hover{color:var(--ink)}
   button.on{color:var(--club-accent);border-color:var(--club-accent)}
-  .hint{color:#55555c;font-size:10px;letter-spacing:.08em}
+  .hint{
+    flex:0 1 auto;min-width:0;margin-left:4px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    color:#55555c;font-size:10px;letter-spacing:.08em;
+  }
   /* stopka z „audio śpi” — pulsuje kolorem klubu, aż gracz da pierwszy gest */
   .hint.muted{color:var(--club-accent);animation:hintPulse 1.6s ease-in-out infinite}
   @keyframes hintPulse{50%{opacity:.3}}
   @media (max-width:560px){
     header{font-size:10px;padding:6px 10px}
     header b{font-size:12px;letter-spacing:.22em}
-    footer{padding:6px 10px;justify-content:center}
+    footer{padding:5px 6px;gap:4px}
+    button{padding:6px 7px;font-size:9px;letter-spacing:.05em;border-radius:5px}
     .hint{display:none}
   }
 </style>
@@ -353,31 +421,38 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.16</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.17</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
 
-<div id="stage"><canvas id="screen" width="1496" height="1122"></canvas></div>
+<div id="stage"><canvas id="screen" width="1496" height="1122"></canvas>
+  <!-- v0.3.17 (życzenie Ciby — „gra rozpoczyna się przyciskiem start po
+       środku ekranu — w każdej wersji”): menu startowe; widoczne tylko w
+       stanie menu (klasę .on prowadzi render() co klatkę) -->
+  <div id="startov"><button id="bstart">Start</button></div>
+</div>
 
 <footer>
-  <div class="grp">
-    <button id="bexit">Exit</button>
-    <!-- v0.3.15 (życzenie Ciby — „dodaj przycisk Pauza”): zamrożenie symulacji
-         w każdym stanie gry; label i stan .on prowadzi applyPause() -->
-    <button id="bpauze">Pause</button>
-    <button id="b1p">1 Player</button>
-    <!-- v0.2.1: „2 Players” ukryte do czasu serwera multiplayer (decyzja Ciby).
-         Kod trybu 2P (klawisze, dwie paletki dotykowe, sideFor) pozostaje —
-         usuń atrybut hidden, by przywrócić przycisk. -->
-    <button id="b2p" hidden>2 Players</button>
-  </div>
+  <!-- v0.3.17 (życzenie Ciby — „w żadnej wersji u dołu ekranu nie może być
+       dwóch wierszy. Niech będzie tylko jeden zawierający wszystkie opcje,
+       tj. exit, pause, etc.”): WSZYSTKIE opcje w JEDNYM rzędzie (flex-wrap:
+       nowrap — drugi wiersz niemożliwy). Poniżej 560 px refreshUI skraca
+       etykiety (1P / Side: R / To 11 / Snd: On), by rząd mieścił się bez
+       przewijania. Podpowiedź sterowania na końcu rzędu (ellipsis). -->
+  <button id="bexit">Exit</button>
+  <!-- v0.3.15 (życzenie Ciby — „dodaj przycisk Pauza”): zamrożenie symulacji
+       w każdym stanie gry; label i stan .on prowadzi applyPause() -->
+  <button id="bpauze">Pause</button>
+  <button id="b1p">1 Player</button>
+  <!-- v0.2.1: „2 Players” ukryte do czasu serwera multiplayer (decyzja Ciby).
+       Kod trybu 2P (klawisze, dwie paletki dotykowe, sideFor) pozostaje —
+       usuń atrybut hidden, by przywrócić przycisk. -->
+  <button id="b2p" hidden>2 Players</button>
+  <button id="bside">Player: Right</button>
+  <button id="bto">Game to 11</button>
+  <button id="bsnd">Sound: Off</button>
   <span class="hint" id="hint">W/S · ↑/↓ · MOUSE · TOUCH (DRAG)</span>
-  <div class="grp">
-    <button id="bside">Player: Right</button>
-    <button id="bto">Game to 11</button>
-    <button id="bsnd">Sound: Off</button>
-  </div>
 </footer>
 
 <script>
@@ -409,7 +484,7 @@ const PAD_MIN = GAP_TOP, PAD_MAX = VIS_H - PAD_H - GAP_BOT + 1; // 16..223
 let   SERVE_X = NET_X + 1;                    // [T2] tuż na prawo od siatki
 let   SC1 = [91, 123], SC2 = [203, 235];       // okna wyniku [dziesiątki, jedności] — jedności lustrzane ±48 od siatki (applyCourt)
 const SERVE_FIELDS = Math.round(1.708 * FIELD_HZ);  // 1,708 s = 103 pola (555: 330k×4,7uF)
-const GAMEOVER_FIELDS = Math.round(5 * FIELD_HZ);    // „attract" po końcu gry → auto-restart
+const GAMEOVER_FIELDS = Math.round(2.5 * FIELD_HZ);  // v0.3.17: krótkie zestopienie z wynikiem → odliczanie nowej partii
 const COUNT_FIELDS = Math.round(2.4 * FIELD_HZ);     // v0.3.0: odliczanie 3-2-1 (3 × 0,8 s)
 
 /* v0.3.14 (życzenie Ciby — „może zwolnij piłkę o 10%; obecne parametry
@@ -452,7 +527,7 @@ const G = {
   mode: 1,                 // 1 = gracz vs AI, 2 = dwóch graczy
   side: 2,                 // 1P: strona GRACZA — 2 = prawa (domyślnie, v0.3.0), 1 = lewa
   target: 11,              // „Game Won" — przełącznik operatora 11/15
-  state: "count",          // count | serve | play | gameover (attract freeze)
+  state: "menu",           // v0.3.17: menu (START) | count | serve | play | gameover (zestopiony wynik)
   countF: COUNT_FIELDS,    // v0.3.0: odliczanie 3-2-1 przed startem (w polach)
   serveTimer: SERVE_FIELDS,
   serveDir: Math.random() < .5 ? -1 : 1,   // pierwsza „moneta" — kierunek dowolny
@@ -608,8 +683,8 @@ function drawScore(side) {                     // jedności lustrzane wokół si
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.16";     // jedno źródło prawdy o wersji — nagłówek,
-const RELEASE = "2026-11-10"; // tytuł karty, meta, version.json, postMessage
+const VERSION = "0.3.17";     // jedno źródło prawdy o wersji — nagłówek,
+const RELEASE = "2026-11-11"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
    rysowany przy odliczaniu i po końcu gry) — USUNIĘTY. Wersję pokazuje
@@ -629,11 +704,12 @@ function render() {
   const netPx = FORCE_CLASSIC ? PX(NET_X) : (cv.width - PX(1)) / 2;
   for (let y = 0; y < VIS_H; y += 8) ctx.fillRect(netPx, PY(y), PX(1), PH(4));
 
-  if (G.state !== "gameover") {                // w attract paletki znikają
-    ctx.fillRect(PX(PAD_X1), PY(G.pads[0].top), PX(PAD_W), PH(PAD_H));
-    ctx.fillRect(PX(PAD_X2), PY(G.pads[1].top), PX(PAD_W), PH(PAD_H));
-  }
-  if (G.state !== "serve" && G.state !== "count") {   // przed serwem/w odliczaniu piłki brak
+  /* v0.3.17: paletki ZAWSZE na korcie — koniec partii to zamrożony wynik
+     (jak foto mety), nie attract znikający z paletkami; w menu (START)
+     kort świeci pustą ramą 0:0 */
+  ctx.fillRect(PX(PAD_X1), PY(G.pads[0].top), PX(PAD_W), PH(PAD_H));
+  ctx.fillRect(PX(PAD_X2), PY(G.pads[1].top), PX(PAD_W), PH(PAD_H));
+  if (G.state !== "serve" && G.state !== "count" && G.state !== "menu") {   // przed serwem/w odliczaniu/w menu piłki brak
     ctx.fillRect(PX(G.ball.x), PY(G.ball.y), PX(BALL), PH(BALL));
   }
   if (G.state === "count" && !G.paused)         // v0.3.16: w pauzie cyfra ustępuje napisowi
@@ -659,6 +735,9 @@ function render() {
        nakładania glifów — patrz wyżej). */
     drawWord("PAUSED", (VIS_W - 232) / 2, (VIS_H - 64) / 2, 2);
   }
+  /* v0.3.17: menu startowe — START pośrodku sceny; render woła to co klatkę,
+     więc zmiana stanu (klik/test/handler) od razu odwzorowuje się w DOM */
+  $("startov").classList.toggle("on", G.state === "menu");
 }
 
 /* --- kroki symulacji (1 krok = 1 pole 60,054 Hz) --------------------------- */
@@ -765,17 +844,13 @@ function stepBall() {
       G.serveVy = b.vy;                        // prędkość pionowa zachowana
       G.hits = 0;                              // reset prędkości poziomej (MISS)
       snd(SND_SCORE);
-      if (G.score[winner] >= G.target) {       // STOPG → attract freeze
+      if (G.score[winner] >= G.target) {       // STOPG → koniec partii
         G.state = "gameover"; G.overTimer = GAMEOVER_FIELDS;
         if (b.x < 0) b.x = -b.x; else if (b.x > VIS_W - BALL) b.x = 2 * (VIS_W - BALL) - b.x;
       } else {
         G.state = "serve"; G.serveTimer = SERVE_FIELDS;
       }
     }
-  } else if (G.state === "gameover") {
-    /* attract: piłka odbija się też od ścian bocznych, bez dźwięku i punktów */
-    if (b.x <= 0) { b.x = -b.x; b.vx = -b.vx; }
-    if (b.x >= VIS_W - BALL) { b.x = 2 * (VIS_W - BALL) - b.x; b.vx = -b.vx; }
   }
 }
 
@@ -785,6 +860,7 @@ function startCountdown() {                    // v0.3.0: rozgrywka startuje od 
   G.state = "count"; G.countF = COUNT_FIELDS;
 }
 function step() {
+  if (G.state === "menu") return;   // v0.3.17: START czeka — symulacja stoi (fields nie rosną)
   G.fields++;
   stepPads();
   if (G.state === "count") {                   // odliczanie 3-2-1 (0,8 s na cyfrę)
@@ -804,11 +880,13 @@ function step() {
     }
   } else if (G.state === "play") {
     stepBall();
-  } else {                                             /* gameover */
-    stepBall();
-    if (--G.overTimer <= 0) {                          // „moneta": nowa gra
-      startCountdown();                       // v0.3.0: nowa rozgrywka od odliczania                     // odroczona zmiana geometrii kortu
-    }
+  } else if (G.state === "gameover") {
+    /* v0.3.17 (życzenie Ciby — „po zakończonej rozgrywce gra przechodzi
+       do odliczania”): koniec partii = krótkie zestopienie z WYNIKIEM
+       (2,5 s — zwycięzca czytelny; attract z odbijającą piłką zdemontowany,
+       paletki i piłka w miejscu ostatniego pudła), potem odliczanie 3-2-1
+       i NOWA partia — bez powrotu do START (ciągła pętla jak na automacie) */
+    if (--G.overTimer <= 0) startCountdown();
   }
 }
 
@@ -845,7 +923,13 @@ const KMAP = {
 };
 addEventListener("keydown", e => {
   if (e.code === "Escape") { exitGame(); return; }      // v0.3.0: Esc = wyjście z gry
-  if (e.code === "KeyP") { togglePause(); unlock(); return; }  // v0.3.15: P = pauza/wznowienie
+  /* v0.3.17: START klawiaturą — Enter/Space (Space nie scrolluje strony:
+     preventDefault); działa tylko w menu, w grze bez znaczenia */
+  if (G.state === "menu" && (e.code === "Enter" || e.code === "NumpadEnter" || e.code === "Space")) {
+    e.preventDefault();
+    startGame(); return;
+  }
+  if (e.code === "KeyP") { if (G.state !== "menu") togglePause(); unlock(); return; }  // v0.3.15: P = pauza/wznowienie (v0.3.17: w menu no-op)
   const k = KMAP[e.code];
   if (k) {
     keys[k] = true;
@@ -1089,14 +1173,39 @@ function applyPause() {
   b.classList.toggle("on", G.paused);
 }
 function setPaused(v) { G.paused = !!v; applyPause(); }
-function togglePause() { setPaused(!G.paused); }
+function togglePause() { if (G.state !== "menu") setPaused(!G.paused); }   // v0.3.17: pauza w menu = no-op (symulacja i tak stoi)
 $("bpauze").onclick = () => { unlock(); togglePause(); };
+/* v0.3.17 (życzenie Ciby — „Niech gra rozpoczyna się przyciskiem start
+   po środku ekranu — w każdej wersji. Po kliknięciu w start przechodzimy
+   do odliczania 3,2,1,0 ale zera już nie pokazujesz, tylko rozpoczyna się
+   gra. Po zakończonej rozgrywce gra przechodzi do odliczania.”):
+   START = jedyna brama do PIERWSZEJ partii (klik / Enter / Space).
+   Odliczanie pokazuje 3-2-1 — „0" NIGDY nie jest rysowane (Math.max(1,…)
+   od v0.3.0) i przy „0” startuje serwis, dokładnie jak w życzeniu.
+   Po partii nie wracamy do START — odliczanie prowadzi do następnej. */
+function startGame() {
+  if (G.state !== "menu") return;
+  unlock();
+  setPaused(false);
+  startCountdown();
+  refreshUI();
+}
+$("bstart").onclick = startGame;
+/* v0.3.17: krótkie etykiety poniżej 560 px — cały pasek opcji mieści się
+   w JEDNYM wierszu bez przewijania (na 320 px wypada ~275 px przycisków);
+   powrót ponad 560 px przywraca pełne („1 Player”, „Player: Right”…) */
+const NARROW = matchMedia("(max-width:560px)");
+try { NARROW.addEventListener && NARROW.addEventListener("change", refreshUI); } catch (_) {}
+function uiTxt(full, short) { return NARROW.matches ? short : full; }
 function refreshUI() {
   $("b1p").classList.toggle("on", G.mode === 1);
   $("b2p").classList.toggle("on", G.mode === 2);
-  $("bside").textContent = "Player: " + (G.side === 2 ? "Right" : "Left");  // v0.3.0
-  $("bto").textContent = "Game to " + G.target;
-  $("bsnd").textContent = "Sound: " + (Snd.on ? "On" : "Off");
+  $("b1p").textContent = uiTxt("1 Player", "1P");
+  $("bside").textContent = uiTxt("Player: " + (G.side === 2 ? "Right" : "Left"),
+                                  "Side: " + (G.side === 2 ? "R" : "L"));  // v0.3.0
+  $("bto").textContent = uiTxt("Game to " + G.target, "To " + G.target);
+  $("bsnd").textContent = uiTxt("Sound: " + (Snd.on ? "On" : "Off"),
+                                 "Snd: " + (Snd.on ? "On" : "Off"));
   $("bsnd").classList.toggle("on", Snd.on);
 }
 /* stopka mówi wprost, kiedy dźwięk jeszcze śpi — żeby brak dźwięku nie był zagadką */
@@ -1112,14 +1221,18 @@ function refreshHint() {
 }
 function applySound() { refreshUI(); refreshHint(); savePrefs(); }
 /* v0.3.1: zmiana trybu/strony = zerowanie celów wskaźnika — stary cel ze
-   slotu, który zostaje AI, zamrażał paletkę AI po przełączeniu */
-$("b1p").onclick = () => { unlock(); G.mode = 1; releaseAllPointers(); setPaused(false); resetGame(); refreshUI(); savePrefs(); };
-$("b2p").onclick = () => { unlock(); if (G.mode !== 2) { G.mode = 2; releaseAllPointers(); setPaused(false); resetGame(); } refreshUI(); savePrefs(); };
-$("bto").onclick  = () => { unlock(); G.target = G.target === 11 ? 15 : 11; setPaused(false); resetGame(); refreshUI(); savePrefs(); };
+   slotu, który zostaje AI, zamrażał paletkę AI po przełączeniu.
+   v0.3.17: w menu START ustawienia tylko się przełączają (partia i tak
+   czeka na przycisk — bez samoistnego startu); w trakcie gry = świadomy
+   nowy start (odliczanie 3-2-1) jak dotychczas */
+const restartOrMenu = () => { if (G.state !== "menu") resetGame(); };
+$("b1p").onclick = () => { unlock(); G.mode = 1; releaseAllPointers(); setPaused(false); restartOrMenu(); refreshUI(); savePrefs(); };
+$("b2p").onclick = () => { unlock(); if (G.mode !== 2) { G.mode = 2; releaseAllPointers(); setPaused(false); restartOrMenu(); } refreshUI(); savePrefs(); };
+$("bto").onclick  = () => { unlock(); G.target = G.target === 11 ? 15 : 11; setPaused(false); restartOrMenu(); refreshUI(); savePrefs(); };
 /* v0.3.0: wybór strony gracza w 1P (domyślnie PRAWA — życzenie Ciby);
    zmiana strony = nowa rozgrywka (odliczanie 3-2-1); v0.3.1: + zwolnienie
    wskaźników — AI gra PRZECIWNIKA, nie dziedziczy zamrożonego celu */
-$("bside").onclick = () => { unlock(); G.side = G.side === 2 ? 1 : 2; releaseAllPointers(); setPaused(false); resetGame(); refreshUI(); savePrefs(); };
+$("bside").onclick = () => { unlock(); G.side = G.side === 2 ? 1 : 2; releaseAllPointers(); setPaused(false); restartOrMenu(); refreshUI(); savePrefs(); };
 /* v0.3.5: wyjście z gry — przycisk EXIT albo Esc = zawsze „BACK” (życzenie
    Ciby): wracamy na STRONĘ WEJŚCIA, bo grę ładujemy w tej samej karcie
    (popupy nie działają na iPhone). ENTRY liczone raz przy starcie:
@@ -1345,6 +1458,11 @@ window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
   get BALL_SPEED() { return BALL_SPEED },   // v0.3.14: linijka zapisuje BALL_SPEED w pomiarze
   get paused() { return G.paused },        // v0.3.15: pauza (przycisk/klawisz P)
   setPaused, togglePause,                   // v0.3.15: seria testowa U19
+  start: startGame,                         // v0.3.17: menu START → odliczanie (seria U20)
+  get countDigit() {                        // v0.3.17: cyfra odliczania („0” NIGDY nie rysowane)
+    return G.state === "count"
+      ? Math.max(1, Math.ceil(G.countF / (COUNT_FIELDS / 3))) : null;
+  },
   get aiIdx() { return aiIdx() },
   step, startCountdown,          // v0.3.13: kalibracja linijką botów (sim_difficulty.py)
   courtCyclesFor, applyCourt, fit,
