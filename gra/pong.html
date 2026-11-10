@@ -1,13 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.19">
+<html lang="en" data-version="0.3.20">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.19"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.19</title>
+<meta name="game-version" content="0.3.20"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.20</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.20 (2026-11-11, poprawka Ciby — „nie wiem co to liczy ale
+  na pewnio nie prawdopodobieństwo odbicia w %. dla ai gry na początku
+  pokazuje 0! chce widziec jak wygląda prawdopodobieństwo, że AI gry
+  trafi w pia a jak moje. rozumiesz? musisz uwzględnić to jak
+  zaprogamowana jest AI.”): NAROŻNIKI ŚWIECĄ P(trafienia) —
+  PRAWDOPODOBIEŃSTWO ODBICIA piłki w % (zamiast „szans na pudło” z
+  v0.3.18/19: odbicie = 100% − pudło, więc „0” na starcie czytane było
+  jak „AI nie trafi”, a znaczyło „AI pewno trafi”). AI (1P) = P(trafi)
+  z JEJ WŁASNEGO PROGRAMU — dokładnie z tego, jak AI jest zaprogamowana:
+  przy piłce lecącej w jej stronę losuje błąd celowania ±AI_ERR(h)
+  (h = długość wymiany, ±(2+h)/0,9, cap ±12,22) i celuje paletką w
+  przewidzuty punkt + błąd; paletka 15 linii łapie piłkę 4 linie, gdy
+  |błąd| < (15+4)/2 = 9,5 → P(trafi) = 9,5/E dla E > 9,5, inaczej
+  100%: NA STARCIE 100,0% (błąd ±2,22 mieści się w oknie ±9,5 — AI
+  pewnie odbija pierwsze piłki), 95,0% przy 7, 85,5% przy 8, 77,7% od
+  9 odbić w górę — w długiej wymianie widać NA OCZACH, jak szansa AI
+  spada (dlatego długie wymiany „same” wygrywają). CZŁOWIEK = EMPIRIA
+  z bieżącej partii: odbite/(odbite+pudła); przed pierwszą piłką brak
+  danych („—”); 2P: obaj z empirii. Notka pod liczbą mówi wprost
+  „P(trafienia) · …” — jednoznaczne, co liczba znaczy. Mechanika bez
+  zmian z v0.3.19: 3×T zał./wył., górne narożniki, na żywo co klatkę,
+  bez pauzy, P = czysta pauza.
   Wersja: 0.3.19 (2026-11-11, poprawka Ciby — „nie tak, bez pauzy w górnych
   narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’ jest
   zajęty prze pauzę. mój błąd. sorry”): EASTER EGG 3×T — NA ŻYWO W NAROŻNIKACH,
@@ -421,8 +443,9 @@
   @keyframes startPulse{50%{opacity:.55}}
   /* v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
      narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’ jest
-     zajęty prze pauzę. mój błąd. sorry”): HUD „szans na pudło” w GÓRNYCH
-     NAROŻNIKACH — 3×T pod rząd (każde naciśnięcie w <1 s od poprzedniego)
+     zajęty prze pauzę. mój błąd. sorry”): HUD P(trafienia) w GÓRNYCH
+     NAROŻNIKACH (v0.3.20: liczba = prawdopodobieństwo ODBICIA piłki w %)
+     — 3×T pod rząd (każde naciśnięcie w <1 s od poprzedniego)
      ZAŁĄCZA, kolejne 3×T WYŁĄCZA; pauzy NIE wymusza — liczby liczone
      NA ŻYWO CO KLATKĘ (updateEggs woła render). Lewy narożnik = gracz
      lewy, prawy = prawy. pointer-events:none — narożniki są OBRAZEM:
@@ -447,7 +470,7 @@
     letter-spacing:.14em;text-transform:uppercase;
     max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
-  .egg b{                          /* P(nieodbicia) — liczona NA ŻYWO */
+  .egg b{                          /* P(trafienia) — liczona NA ŻYWO (v0.3.20) */
     color:var(--club-accent);font-weight:700;line-height:1.05;
     font-size:clamp(12px,2.3vmin,17px);
     max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -507,7 +530,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.19</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.20</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -519,9 +542,9 @@
   <div id="startov"><button id="bstart">Start</button></div>
   <!-- v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
        narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’
-       jest zajęty prze pauzę”): HUD „szans na pudło” w GÓRNYCH NAROŻNIKACH
+       jest zajęty prze pauzę”): HUD P(trafienia) w GÓRNYCH NAROŻNIKACH
        (3×T zał./wył.); wypełnia go updateEggs() CO KLATKĘ — AI: model błędu
-       celowania (na żywo z długością wymiany), człowiek: realne pudła/
+       celowania (na żywo z długością wymiany), człowiek: realne odbicia/
        piłki z tej partii; pointer-events:none, gra biegnie DALEJ (bez pauzy) -->
   <div id="eggs" aria-hidden="true">
     <div class="egg" id="egg0"><small></small><b></b><span></span></div>
@@ -636,7 +659,7 @@ const G = {
   fields: 0,                 // licznik pól (testy/kalibracja T1–T7)
   aiErr: 0, aiComing: false, // błąd celowania AI / czy piłka leci w jego stronę
   paused: false,              // v0.3.15: PAUZA — zamrożenie symulacji (przycisk/klawisz P)
-  returns: [0, 0],            // v0.3.18: easter egg — odbicia stron (empiria „szans na pudło”; od v0.3.19 na żywo w narożnikach)
+  returns: [0, 0],            // v0.3.18: easter egg — odbicia stron (empiria P(trafienia); od v0.3.19 na żywo w narożnikach)
   misses: [0, 0],             // v0.3.18: easter egg — pudła stron (piłka minęła paletkę; od v0.3.19 na żywo w narożnikach)
 };
 const aiIdx = () => (G.mode === 1 ? (G.side === 1 ? 1 : 0) : -1);  // indeks paletki AI (-1 = 2P)
@@ -781,7 +804,7 @@ function drawScore(side) {                     // jedności lustrzane wokół si
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.19";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.20";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-11"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -836,7 +859,7 @@ function render() {
   /* v0.3.17: menu startowe — START pośrodku sceny; render woła to co klatkę,
      więc zmiana stanu (klik/test/handler) od razu odwzorowuje się w DOM */
   $("startov").classList.toggle("on", G.state === "menu");
-  /* v0.3.19: HUD „szans na pudło” — NA ŻYWO co klatkę (także w menu; w pauzie
+  /* v0.3.19/20: HUD P(trafienia) — NA ŻYWO co klatkę (także w menu; w pauzie
      liczby stoją razem z grą — to ta sama zamrożona symulacja); DOM pisany
      tylko przy zmianie tekstu (cache EGGC — bez ciągłego ubijania layoutu) */
   if (EGG.on) updateEggs();
@@ -918,7 +941,7 @@ function paddleHit(p, px) {
   b.vy = ZONE_VY[zone] * BALL_SPEED;   // v0.3.14: ×BALL_SPEED (baza: ZONE_VY[zone])
   b.vx = -b.vx;
   G.hits++;
-  G.returns[px === PAD_X1 ? 0 : 1]++;   // v0.3.18: easter egg — odbicie strony (empiria pudła)
+  G.returns[px === PAD_X1 ? 0 : 1]++;   // v0.3.18: easter egg — odbicie strony (empiria P(trafienia))
   snd(SND_HIT);
   return true;
 }
@@ -960,7 +983,7 @@ function stepBall() {
 
 function startCountdown() {                    // v0.3.0: rozgrywka startuje od 3-2-1
   G.score = [0, 0]; G.hits = 0; G.serveVy = 0;
-  G.returns = [0, 0]; G.misses = [0, 0];       // v0.3.18: nowa partia = czyste „szans na pudło” (HUD v0.3.19 ZOSTAJE — liczby startują od zera)
+  G.returns = [0, 0]; G.misses = [0, 0];       // v0.3.18: nowa partia = czysta empiria P(trafienia) (HUD ZOSTAJE — liczby startują od zera)
   G.serveDir = Math.random() < .5 ? -1 : 1;
   G.state = "count"; G.countF = COUNT_FIELDS;
 }
@@ -1045,7 +1068,7 @@ addEventListener("keydown", e => {
   /* v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
      narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t' bo ‚p'
      jest zajęty prze pauzę. mój błąd. sorry”): easter egg — 3×T pod rząd
-     (okno 1 s) ZAŁĄCZA/WYŁĄCZA HUD „szans na pudło” w górnych narożnikach —
+     (okno 1 s) ZAŁĄCZA/WYŁĄCZA HUD P(trafienia) w górnych narożnikach —
      liczony NA ŻYWO, BEZ PAUZY (gra biegnie dalej). Auto-repeat
      (przytrzymanie) nie liczy się jako osobne naciśnięcie — trzeba
      trzykrotnie stuknąć. */
@@ -1307,42 +1330,56 @@ $("bpauze").onclick = () => { unlock(); togglePause(); };
 /* v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
    narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t' bo ‚p'
    jest zajęty prze pauzę. mój błąd. sorry”): EASTER EGG 3×T — HUD
-   „szans na pudło” W GÓRNYCH NAROŻNIKACH, LICZONY NA ŻYWO, BEZ PAUZY.
+   P(trafienia) W GÓRNYCH NAROŻNIKACH, LICZONY NA ŻYWO, BEZ PAUZY.
    Poprawka designu v0.3.18: (a) pauza NIE jest wymuszana — liczby żyją
    razem z grą („bez pauzy”); (b) panel ze środka kortu → dwa narożniki
    u góry (lewy = gracz lewy, prawy = prawy — „w górnych narożnikach”);
    (c) klawisz P → T („p jest zajęty prze pauzę” — P zostaje czystą
    pauzą, semantyka v0.3.15 bez zmian). 3×T pod rząd (każde <1 s od
    poprzedniego; e.repeat pomijane) ZAŁĄCZA, kolejne 3×T WYŁĄCZA —
-   bez TTL: to żywy licznik, nie zapiska. Liczby co do wartości jak
-   w v0.3.18:
-   - AI (tryb 1P) = MODEL BŁĘDU CELOWANIA: ±AI_ERR(h), h = długość
-     wymiany (±(2+h)/0,9, cap ±12,22); paletka 15 linii łapie piłkę
-     4 linie, gdy |błąd| < 9,5 → P(pudło) = (E−9,5)/E — w narożniku
-     widać, jak liczba rośnie NA OCZACH w długiej wymianie (22,3% od
-     9 odbić w górę — dlatego długie wymiany „same” wygrywają).
-   - CZŁOWIEK = EMPIRIA z bieżącej partii: pudła/(pudła+odbicia); przed
+   bez TTL: to żywy licznik, nie zapiska. Liczby co do wartości —
+   v0.3.20 (poprawka Ciby — „nie wiem co to liczy ale na pewnio nie
+   prawdopodobieństwo odbicia w %. dla ai gry na początku pokazuje 0!
+   chce widziec jak wygląda prawdopodobieństwo, że AI gry trafi w pia
+   a jak moje. musisz uwzględnić to jak zaprogamowana jest AI.”):
+   narożniki świecą P(trafienia) = PRAWDOPODOBIEŃSTWO ODBICIA piłki
+   (odbicie = 100% − pudło; „0” z v0.3.18/19 na starcie czytane było
+   jak „AI nie trafi”, a znaczyło „AI pewno trafi”):
+   - AI (tryb 1P) = P(trafi) z JEJ WŁASNEGO PROGRAMU — z tego, JAK AI
+     jest zaprogamowana (stepPads): przy piłce lecącej w jej stronę
+     losuje błąd celowania ±AI_ERR(h), h = długość wymiany (±(2+h)/0,9,
+     cap ±12,22) i celuje w przewidzuty punkt + błąd; paletka 15 linii
+     łapie piłkę 4, gdy |błąd| < (15+4)/2 = 9,5 → P(trafi) = 9,5/E dla
+     E > 9,5, inaczej 100%: 100,0% na starcie (i do 6 odbić), 95,0%
+     przy 7, 85,5% przy 8, 77,7% od 9 w górę — w narożniku widać
+     NA OCZACH, jak szansa AI spada w długiej wymianie (dlatego długie
+     wymiany „same” wygrywają).
+   - CZŁOWIEK = EMPIRIA z bieżącej partii: odbite/(odbite+pudła); przed
      pierwszą piłką brak danych („—”); 2P: obaj z empirii.
    updateEggs() woła render() CO KLATKĘ („liczoną na żywo”; także w
-   pauzie — liczby stoją razem z grą, i w menu — świeci bazę 0,0%/„—”);
+   pauzie — liczby stoją razem z grą, i w menu — świeci bazę 100,0%/„—”);
    DOM pisany tylko przy ZMIANIE tekstu (cache EGGC — bez ciągłego
    ubijania layoutu). Nowa partia: statystyki zerują się w
    startCountdown, HUD zostaje. */
 const EGG = { n: 0, t: -1e9, WIN: 1000, on: false };  // licznik 3×T (okno 1 s)
 const EGGC = ["", ""];                                // cache tekstów narożników
-function aiMissModel() {              // P(pudło AI) z modelu — patrz komentarz wyżej
+function aiMissModel() {              // model z JEJ programu (stepPads) — patrz komentarz wyżej
   const h = G.hits + (G.state === "play" && !G.aiComing ? 1 : 0);  // której wymiany dotyczy następny rzut błędu
-  const E = AI_ERR(h);                // amplituda błędu celowania
-  const reach = (PAD_H + BALL) / 2;   // 8 linii — |błąd| mniejszy = paletka jeszcze łapie
-  return { h, E, reach, p: E > reach ? (E - reach) / E : 0 };
+  const E = AI_ERR(h);                // amplituda błędu celowania (±(2+h)/0,9, cap ±12,22)
+  const reach = (PAD_H + BALL) / 2;   // 9,5 linii — |błąd| mniejszy = paletka jeszcze łapie
+  return { h, E, reach,
+           miss: E > reach ? (E - reach) / E : 0,   // P(pudło)  = (E−9,5)/E
+           hit:  E > reach ? reach / E       : 1 }; // P(trafienia) = 9,5/E — v0.3.20: TO świeci w narożniku
 }
 function humanMissRate(i) {           // empiria gracza i z bieżącej partii
   const faced = G.misses[i] + G.returns[i];
-  return { faced, misses: G.misses[i], p: faced ? G.misses[i] / faced : null };
+  return { faced, misses: G.misses[i], returns: G.returns[i],
+           miss: faced ? G.misses[i]  / faced : null,
+           hit:  faced ? G.returns[i] / faced : null };  // v0.3.20: odbite/(odbite+pudła) — TO świeci
 }
 const fmtPct = p => p == null ? "—" :
   (p * 100).toLocaleString("pl-PL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
-function eggTexts() {                 // [lewy, prawy] — etykieta / % / notka (NA ŻYWO)
+function eggTexts() {                 // [lewy, prawy] — P(trafienia): etykieta / % / notka (NA ŻYWO)
   const ai = G.mode === 1 ? aiIdx() : -1;
   const m = aiMissModel();
   const out = [];
@@ -1353,14 +1390,14 @@ function eggTexts() {                 // [lewy, prawy] — etykieta / % / notka 
                   : (i === 0 ? "LEWY · GRACZ" : "PRAWY · GRACZ"));
     const emp = humanMissRate(i);
     let pct, sub;
-    if (i === ai) {                   // AI: liczba główna = model; empiria w notce
-      pct = m.p;
-      sub = "model ±" + m.E.toLocaleString("pl-PL", { maximumFractionDigits: 2 })
-           + (emp.faced ? " · partia " + emp.misses + " z " + emp.faced : "");
-    } else {                          // człowiek: realne pudła z tej partii
-      pct = emp.p;
-      sub = emp.faced ? "partia: nieodbite " + emp.misses + " z " + emp.faced
-                      : "jeszcze bez piłki";
+    if (i === ai) {                   // AI: P(trafi) z modelu jej celowania; empiria w notce
+      pct = m.hit;
+      sub = "P(trafienia) · model ±" + m.E.toLocaleString("pl-PL", { maximumFractionDigits: 2 })
+           + (emp.faced ? " · partia: odbite " + emp.returns + " z " + emp.faced : "");
+    } else {                          // człowiek: realne odbicia z tej partii
+      pct = emp.hit;
+      sub = emp.faced ? "P(trafienia) · partia: odbite " + emp.returns + " z " + emp.faced
+                      : "P(trafienia) · jeszcze bez piłki";
     }
     out.push(who + "\n" + fmtPct(pct) + "\n" + sub);
   }
@@ -1668,7 +1705,7 @@ window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
   setPaused, togglePause,                   // v0.3.15: seria testowa U19
   start: startGame,                         // v0.3.17: menu START → odliczanie (seria U20)
   aiMissModel, humanMissRate,             // v0.3.18/19: easter egg — model AI / empiria gracza (seria U21)
-  setEggs, updateEggs,                    // v0.3.19: HUD „szans na pudło” — narożniki, 3×T, na żywo
+  setEggs, updateEggs,                    // v0.3.19/20: HUD P(trafienia) — narożniki, 3×T, na żywo
   get eggsOpen() { return EGG.on },       // v0.3.19: czy narożniki świecą
   egg: EGG,                               // v0.3.19: licznik 3×T (okno 1 s)
   get countDigit() {                        // v0.3.17: cyfra odliczania („0” NIGDY nie rysowane)
