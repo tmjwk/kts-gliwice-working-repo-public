@@ -1261,6 +1261,66 @@ function podpinKafelkiMeczy() {
   });
 }
 
+/* 1.33.0: WIDOKI LIST MECZÓW — „chronologicznie” / „wg drużyn”
+   (zgłoszenie właściciela 10.11). Wybór gościa zapamiętywany OSOBNO
+   dla każdej listy (localStorage „kts-widoki-meczy”). DOMYŚLNIE
+   chronologicznie na OBU listach: „Najbliższe” = najbliższe pierwsze
+   („kiedy najbliższy mecz?”), „Ostatnie” = najświeższe pierwsze
+   („co było wczoraj?”) — do 1.32.2 „Ostatnie” były zawsze wg drużyn.
+   Grupowanie (obie listy, zasady z 1.20.0): drużyny w kolejności
+   sezonu (dane.zespoly = 1. liga → … → amatorzy — decyzja właściciela
+   02.11), w grupie: najbliższe rosnąco, ostatnie malejąco; derby
+   naszych drużyn trafia do grupy wyżej notowanej (raz, nie dwa). */
+const WIDOKI_MECZY = { najblizsze: "czas", ostatnie: "czas" };
+try {
+  const zapisane = JSON.parse(localStorage.getItem("kts-widoki-meczy") || "{}");
+  for (const lista of ["najblizsze", "ostatnie"]) {
+    if (zapisane[lista] === "czas" || zapisane[lista] === "druzyny") {
+      WIDOKI_MECZY[lista] = zapisane[lista];
+    }
+  }
+} catch (e) { /* tryb prywatny przeglądarki — zostają domyślne */ }
+
+function zapiszWidokiMeczy() {
+  try { localStorage.setItem("kts-widoki-meczy", JSON.stringify(WIDOKI_MECZY)); } catch (e) { /* jw. */ }
+}
+
+/** 1.33.0: mecze pogrupowane wg drużyn (kolejność sezonu, derby do
+    wyżej notowanej). Sortowanie W grupie po stronie wołającego
+    (najbliższe: od najstarszego; ostatnie: od najnowszego). */
+function grupyWgDruzyn(dane, mecze) {
+  const zespoly = dane?.zespoly ?? [];
+  const kolejnosc = zespoly.map((z) => z.nazwa);
+  const grupy = new Map();                 // nazwa drużyny → mecze
+  for (const m of mecze) {
+    const nasze = druzynyMeczu(m);
+    let klucz = kolejnosc.find((nazwa) => nasze.includes(nazwa));
+    if (!klucz) klucz = nasze[0] ?? "Inne";   // mecz poza zespoly — na koniec
+    if (!grupy.has(klucz)) grupy.set(klucz, []);
+    grupy.get(klucz).push(m);
+  }
+  const klucze = [...grupy.keys()].sort((a, b) => {
+    const ia = kolejnosc.indexOf(a), ib = kolejnosc.indexOf(b);
+    return (ia === -1 ? Infinity : ia) - (ib === -1 ? Infinity : ib)
+      || a.localeCompare(b, "pl");
+  });
+  return { klucze, grupy, zespoly };
+}
+
+/** 1.33.0: sekcje grup („drużyna · liga” + lista) dla widoku „wg
+    drużyn” — wspólne dla „Najbliższych” i „Ostatnich”. */
+function htmlGrupMeczy(dane, mecze, sortuj) {
+  const { klucze, grupy, zespoly } = grupyWgDruzyn(dane, mecze);
+  return klucze.map((nazwa) => {
+    const z = zespoly.find((x) => x.nazwa === nazwa);
+    const lista = grupy.get(nazwa).sort(sortuj);
+    return `<section class="mecz-grupa">
+      <p class="list-title mecz-grupa-naglowek">${esc(nazwa)}${z ? ` <span class="t-small muted">· ${esc(z.liga)}</span>` : ""}</p>
+      <ul class="divide-list">${lista.map((m) => wierszMeczu(m, meczRozpoczety(m), true)).join("")}</ul>
+    </section>`;
+  }).join("");
+}
+
 function renderMecze(dane, mecze) {
   const dzis = dzisISO();
 
@@ -1276,12 +1336,14 @@ function renderMecze(dane, mecze) {
   // piłka (#pilka-kts) spoczywa, komunikat tłumaczy, skąd wezmą się dane.
   const elNajblizsze = $("#najblizsze-mecze");
   if (elNajblizsze) {
-    elNajblizsze.innerHTML = najblizsze.length
-      ? najblizsze.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")
-      : `<li class="pusty-stan">
+    elNajblizsze.innerHTML = !najblizsze.length
+      ? `<ul class="divide-list"><li class="pusty-stan">
            <svg class="pilka-odpoczyna" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><use href="#pilka-kts"/></svg>
            <span class="t-small muted">Brak zaplanowanych meczów — przerwa w rozgrywkach.</span>
-         </li>`;
+         </li></ul>`
+      : WIDOKI_MECZY.najblizsze === "druzyny"
+        ? htmlGrupMeczy(dane, najblizsze, odNajstarszego)
+        : `<ul class="divide-list">${najblizsze.map((m) => wierszMeczu(m, meczRozpoczety(m))).join("")}</ul>`;
   }
   const licznikNajblizsze = $("#najblizsze-mecze-licznik");
   if (licznikNajblizsze) licznikNajblizsze.textContent = liczbaMeczy(najblizsze.length);
@@ -1289,45 +1351,52 @@ function renderMecze(dane, mecze) {
   const zwinN = $("#zwin-najblizsze");
   if (zwinN) zwinN.hidden = najblizsze.length === 0;
 
-  /* „Ostatnie” (1.20.0): pogrupowane wg DRUŻYN w kolejności sezonu
-     (dane.zespoly = 1. liga → … → amatorzy — decyzja właściciela 02.11:
-     „od 1-szej ligi w dół”), w grupie chronologicznie OD NAJNOWSZEGO.
-     Derby naszych drużyn trafia do grupy wyżej notowanej drużyny
-     (pokazujemy raz, nie dwa razy). */
-  const zespoly = dane?.zespoly ?? [];
-  const kolejnosc = zespoly.map((z) => z.nazwa);
+  /* „Ostatnie” (1.20.0): rozegrane mecze wszystkich drużyn.
+     1.33.0: DOMYŚLNIE chronologicznie od najnowszego („co było
+     wczoraj?” — do 1.32.2 zawsze wg drużyn); „Wg drużyn” = grupy
+     jak w 1.20.0–1.32.2 (kolejność sezonu, w grupie od najnowszego,
+     derby do wyżej notowanej — pokazujemy raz, nie dwa razy). */
   const rozegrane = mecze.filter((m) => m.rozegrany);
-  const grupy = new Map();                 // nazwa drużyny → mecze
-  for (const m of rozegrane) {
-    const nasze = druzynyMeczu(m);
-    let klucz = kolejnosc.find((nazwa) => nasze.includes(nazwa));
-    if (!klucz) klucz = nasze[0] ?? "Inne";   // mecz poza zespoly — na koniec
-    if (!grupy.has(klucz)) grupy.set(klucz, []);
-    grupy.get(klucz).push(m);
-  }
-  const klucze = [...grupy.keys()].sort((a, b) => {
-    const ia = kolejnosc.indexOf(a), ib = kolejnosc.indexOf(b);
-    return (ia === -1 ? Infinity : ia) - (ib === -1 ? Infinity : ib)
-      || a.localeCompare(b, "pl");
-  });
-
-  const elGrupy = $("#ostatnie-mecze-grupy");
-  if (elGrupy) {
-    elGrupy.innerHTML = klucze.length
-      ? klucze.map((nazwa) => {
-          const z = zespoly.find((x) => x.nazwa === nazwa);
-          const lista = grupy.get(nazwa).sort(odNajnowszego);
-          return `<section class="mecz-grupa">
-            <p class="list-title mecz-grupa-naglowek">${esc(nazwa)}${z ? ` <span class="t-small muted">· ${esc(z.liga)}</span>` : ""}</p>
-            <ul class="divide-list">${lista.map((m) => wierszMeczu(m, false, true)).join("")}</ul>
-          </section>`;
-        }).join("")
-      : `<p class="t-small muted">Brak rozegranych meczów w bazie.</p>`;
+  const elOstatnie = $("#ostatnie-mecze-lista");
+  if (elOstatnie) {
+    elOstatnie.innerHTML = !rozegrane.length
+      ? `<p class="t-small muted">Brak rozegranych meczów w bazie.</p>`
+      : WIDOKI_MECZY.ostatnie === "druzyny"
+        ? htmlGrupMeczy(dane, rozegrane, odNajnowszego)
+        : `<ul class="divide-list">${rozegrane.sort(odNajnowszego).map((m) => wierszMeczu(m, false, false)).join("")}</ul>`;
   }
   const licznikOstatnie = $("#ostatnie-mecze-licznik");
   if (licznikOstatnie) licznikOstatnie.textContent = liczbaMeczy(rozegrane.length);
   const zwinO = $("#zwin-ostatnie");
-  if (zwinO) zwinO.hidden = klucze.length === 0;
+  if (zwinO) zwinO.hidden = rozegrane.length === 0;
+}
+
+/* 1.33.0: przełączniki widoku („chronologicznie” / „wg drużyn”) —
+   podpinane RAZ przy starcie; przyciski żyją w panelach mimo
+   przerysowań danych (render zamienia tylko wnętrza kontenerów).
+   Klik = zapis wyboru (localStorage, osobno dla każdej listy) +
+   przerysowanie samych kafelków meczów danymi ze SWIEZOSC.dane. */
+function podpinWidokiMeczy() {
+  document.querySelectorAll(".mecz-widok").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const { lista, widok } = btn.dataset;
+      if (WIDOKI_MECZY[lista] === widok) return;
+      WIDOKI_MECZY[lista] = widok;
+      zapiszWidokiMeczy();
+      odswiezPrzyciskiWidokow();
+      const dane = SWIEZOSC.dane;
+      if (dane) renderMecze(dane, meczeZDanych(dane));
+    });
+  });
+  odswiezPrzyciskiWidokow();   // stan z localStorage także przed pierwszymi danymi
+}
+
+function odswiezPrzyciskiWidokow() {
+  document.querySelectorAll(".mecz-widok").forEach((btn) => {
+    const aktywny = WIDOKI_MECZY[btn.dataset.lista] === btn.dataset.widok;
+    btn.classList.toggle("is-aktywny", aktywny);
+    btn.setAttribute("aria-pressed", String(aktywny));
+  });
 }
 
 function renderBadges(dane, ok) {
@@ -1487,7 +1556,7 @@ function sledzSystemowyTryb() {
    komunikat i sprawdź natychmiast (nie częściej niż co 45 s).
 */
 
-const WERSJA_KODU = "1.32.2";
+const WERSJA_KODU = "1.33.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
@@ -1976,6 +2045,7 @@ async function start() {
   podpiezKartyDruzyn();   // 1.12.0: dialog szczegółów (kontener żyje mimo przerysowań)
   podpiezForme();         // 1.23.0: dymki piłeczek formy — hover + dotyk (jw.)
   podpinKafelkiMeczy();   // 1.20.0: trójkąciki kafelków meczów (jw. — podpięte raz)
+  podpinWidokiMeczy();    // 1.33.0: przełączniki widoku list (chronologia / drużyny)
   const hamburger = $("#hamburger");
   const nav = $("#nav");
   hamburger.addEventListener("click", () => {
