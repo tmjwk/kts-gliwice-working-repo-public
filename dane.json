@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-10T20:11:00.988Z",
+  "wygenerowano": "2026-11-10T20:53:26.722Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:71"
         }
       ],
-      "zaktualizowano": "2026-11-10T20:11:00.988Z"
+      "zaktualizowano": "2026-11-10T20:53:26.722Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-10T20:11:00.988Z"
+      "zaktualizowano": "2026-11-10T20:53:26.722Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "8:52"
         }
       ],
-      "zaktualizowano": "2026-11-10T20:11:00.988Z"
+      "zaktualizowano": "2026-11-10T20:53:26.722Z"
     },
     {
       "klucz": "18/144",
@@ -447,9 +447,9 @@
         {
           "pozycja": 4,
           "nazwa": "UKS Wolej Solver II Ruda Śląska",
-          "mecze": 4,
-          "punkty": 4,
-          "stosunek": "22:18"
+          "mecze": 5,
+          "punkty": 5,
+          "stosunek": "27:23"
         },
         {
           "pozycja": 5,
@@ -460,24 +460,24 @@
         },
         {
           "pozycja": 6,
+          "nazwa": "UKS Wolej Solver III Ruda Śląska",
+          "mecze": 5,
+          "punkty": 4,
+          "stosunek": "22:28"
+        },
+        {
+          "pozycja": 7,
           "nazwa": "UKS Ikar Mierzęcice",
           "mecze": 5,
           "punkty": 3,
           "stosunek": "24:26"
         },
         {
-          "pozycja": 7,
+          "pozycja": 8,
           "nazwa": "Speed Team 43 Stolarzowice",
           "mecze": 4,
           "punkty": 3,
           "stosunek": "18:22"
-        },
-        {
-          "pozycja": 8,
-          "nazwa": "UKS Wolej Solver III Ruda Śląska",
-          "mecze": 4,
-          "punkty": 3,
-          "stosunek": "17:23"
         },
         {
           "pozycja": 9,
@@ -494,7 +494,7 @@
           "stosunek": "15:25"
         }
       ],
-      "zaktualizowano": "2026-11-10T20:11:00.988Z"
+      "zaktualizowano": "2026-11-10T20:53:26.722Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-10T20:11:00.988Z",
+      "zaktualizowano": "2026-11-10T20:53:26.722Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-10T20:11:00.988Z",
+      "zaktualizowano": "2026-11-10T20:53:26.722Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-10T20:11:00.988Z",
-    "pzts": "2026-11-10T20:11:00.988Z"
+    "szts": "2026-11-10T20:53:26.722Z",
+    "pzts": "2026-11-10T20:53:26.722Z"
   },
   "zrodla": {
     "szts": "ok",
