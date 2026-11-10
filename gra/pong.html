@@ -1,13 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.17">
+<html lang="en" data-version="0.3.18">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.17"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.17</title>
+<meta name="game-version" content="0.3.18"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.18</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.18 (2026-11-11, życzenie Ciby — „czy możemy dodać do gry taki
+  easter egg, że jak trzy razy po sobie nacisnę p to wyświetli się dla
+  każdego gracza prawdopodobieństwo, że nie odbije piłeczki?”):
+  EASTER EGG 3×P — SZANSE NA PUDŁO. Trzy naciśnięcia P pod rząd (każde
+  w <1 s od poprzedniego; przytrzymany klawisz nie liczy się — e.repeat
+  pomijane) otwierają nad kortem panel „PRAWDOPODOBIEŃSTWO NIEODBICIA”
+  dla obu graczy + WYMUŚZAJĄ pauzę (liczby czyta się na zamrożonym
+  korcie; w menu symulacja i tak stoi — pauzy nie wymuszamy). Każde
+  pojedyncze P działa dokładnie jak dotychczas (pauza/wznowienie —
+  semantyka v0.3.15 bez zmian); panel znika po 10 s albo przy najbliższym
+  P (to P przy okazji wznawia grę). Skąd liczby:
+  - AI (1P) = MODEL BŁĘDU CELOWANIA z konstrukcji AI: błąd ±AI_ERR(h)
+    (h = długość wymiany, ±(2+h)/0,9, cap ±12,22), paletka 15 linii
+    łapie piłkę 4, gdy |błąd| < (15+4)/2 = 9,5 → P(pudło) = (E−9,5)/E
+    dla E > 9,5, inaczej 0: 0% do 6 odbić, 5% przy 7, 14,5% przy 8,
+    22,3% od 9 w górę (dlatego długie wymiany „same” wygrywają); notka
+    dokleja realne pudła AI z tej partii.
+  - CZŁOWIEK = EMPIRIA z bieżącej partii: pudła / (pudła + odbicia)
+    (G.misses/G.returns); przed pierwszą piłką brak danych („—”).
+    Tryb 2P: obaj gracze z empirii.
+  Statystyki liczone w paddleHit (odbicia) i przy pudle, reset w
+  startCountdown (nowa partia = czysty licznik + panel chowa się sam).
+  Panel = DOM nad kortem, pointer-events:none (nie chwyta dotyku ani
+  myszy — pauza/EXIT/kort działają pod nim). __pong: +aiMissModel,
+  +humanMissRate, +showOdds/hideOdds, +oddsOpen, +egg (seria U21).
+  Fizyka/dotyk/dźwięk/geometria/liczniki bez zmian.
   Wersja: 0.3.17 (2026-11-11, życzenie Ciby — „w żadnej wersji u dołu
   ekranu nie może być dwóch wierszy. Niech będzie tylko jeden zawierający
   wszystkie opcje, tj. exit, pause, etc.” + „Niech gra rozpoczyna się
@@ -370,6 +396,50 @@
   #bstart:hover,#bstart:focus-visible{background:var(--ink);color:#0b0b0d;animation:none}
   #bstart:focus-visible{outline:2px solid var(--club-accent);outline-offset:4px}
   @keyframes startPulse{50%{opacity:.55}}
+  /* v0.3.18 (easter egg — życzenie Ciby: „…jak trzy razy po sobie nacisnę
+     p to wyświetli się dla każdego gracza prawdopodobieństwo, że nie
+     odbije piłeczki?”): panel „szans na pudło” — 3×P pod rząd (każde
+     naciśnięcie w <1 s od poprzedniego). Nad kortem, pointer-events:none
+     — panel jest OBRAZEM: nic nie chwyta (pauza/EXIT/dotyk/kort działają
+     pod nim); skanlinie CRT kładą się na nim jak na wszystkim na scenie.
+     Znika po 10 s albo przy najbliższym P. */
+  #odds{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    pointer-events:none;padding:10px;
+  }
+  #odds.on{display:flex}
+  #odds .card{
+    max-width:min(94%,540px);background:rgba(11,11,13,.93);
+    border:1px solid var(--line);border-radius:10px;
+    box-shadow:0 14px 50px rgba(0,0,0,.65);
+    padding:12px 16px;font-size:clamp(10px,2.1vmin,13px);
+    letter-spacing:.05em;line-height:1.5;
+  }
+  #odds .ttl{
+    text-align:center;text-transform:uppercase;letter-spacing:.2em;
+    color:var(--ink);font-size:.95em;margin-bottom:8px;
+  }
+  #odds .ttl small{
+    display:block;color:var(--club-accent);font-size:.72em;
+    letter-spacing:.16em;margin-top:3px;
+  }
+  #odds .row{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;column-gap:14px;row-gap:1px;
+    border-top:1px solid var(--line);padding:7px 2px;
+  }
+  #odds .who{grid-column:1;color:var(--ink);white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis}
+  #odds .sub{grid-column:1;color:#71717a;font-size:.85em;white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis}
+  #odds .pct{
+    grid-column:2;grid-row:1/3;color:var(--club-accent);
+    font-weight:700;font-size:1.45em;white-space:nowrap;
+  }
+  #odds .ftr{
+    margin-top:9px;padding-top:8px;border-top:1px solid var(--line);
+    color:#55555c;font-size:.78em;text-align:center;letter-spacing:.04em;
+  }
   /* subtelne scanlines CRT (do usunięcia: usuń ::after) */
   #stage::after{
     content:"";position:absolute;inset:10px;pointer-events:none;border-radius:10px;
@@ -421,7 +491,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.17</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.18</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -431,6 +501,16 @@
        środku ekranu — w każdej wersji”): menu startowe; widoczne tylko w
        stanie menu (klasę .on prowadzi render() co klatkę) -->
   <div id="startov"><button id="bstart">Start</button></div>
+  <!-- v0.3.18 (easter egg — życzenie Ciby: „jak trzy razy po sobie nacisnę
+       p to wyświetli się dla każdego gracza prawdopodobieństwo, że nie
+       odbije piłeczki?”): panel „szans na pudło” (3×P); wypełnia go
+       showOdds() — AI: model błędu celowania, człowiek: realne pudła/
+       piłki z tej partii; pointer-events:none, znika po 10 s / przy P -->
+  <div id="odds"><div class="card">
+    <div class="ttl">Prawdopodobieństwo nieodbicia<small>easter egg · 3 × P</small></div>
+    <div class="rows"></div>
+    <div class="ftr">AI: model błędu celowania · człowiek: ta partia · znika po 10 s — P zamyka</div>
+  </div></div>
 </div>
 
 <footer>
@@ -540,6 +620,8 @@ const G = {
   fields: 0,                 // licznik pól (testy/kalibracja T1–T7)
   aiErr: 0, aiComing: false, // błąd celowania AI / czy piłka leci w jego stronę
   paused: false,              // v0.3.15: PAUZA — zamrożenie symulacji (przycisk/klawisz P)
+  returns: [0, 0],            // v0.3.18: easter egg — odbicia stron (empiria „szans na pudło”)
+  misses: [0, 0],             // v0.3.18: easter egg — pudła stron (piłka minęła paletkę)
 };
 const aiIdx = () => (G.mode === 1 ? (G.side === 1 ? 1 : 0) : -1);  // indeks paletki AI (-1 = 2P)
 
@@ -683,7 +765,7 @@ function drawScore(side) {                     // jedności lustrzane wokół si
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.17";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.18";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-11"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -816,6 +898,7 @@ function paddleHit(p, px) {
   b.vy = ZONE_VY[zone] * BALL_SPEED;   // v0.3.14: ×BALL_SPEED (baza: ZONE_VY[zone])
   b.vx = -b.vx;
   G.hits++;
+  G.returns[px === PAD_X1 ? 0 : 1]++;   // v0.3.18: easter egg — odbicie strony (empiria pudła)
   snd(SND_HIT);
   return true;
 }
@@ -838,6 +921,7 @@ function stepBall() {
     /* pudło: HVID wchodzi w blanking poziomy (krawędź ekranu) */
     if (b.x <= 0 || b.x >= VIS_W - BALL) {
       const missedLeft = b.x <= 0;
+      G.misses[missedLeft ? 0 : 1]++;   // v0.3.18: easter egg — pudło strony (piłka minęła paletkę)
       const winner = missedLeft ? 1 : 0;
       G.score[winner]++;
       G.serveDir = missedLeft ? -1 : 1;       // serw do gracza, który spudłował
@@ -856,6 +940,8 @@ function stepBall() {
 
 function startCountdown() {                    // v0.3.0: rozgrywka startuje od 3-2-1
   G.score = [0, 0]; G.hits = 0; G.serveVy = 0;
+  G.returns = [0, 0]; G.misses = [0, 0];       // v0.3.18: nowa partia = czyste „szanse na pudło”
+  hideOdds();                                  // v0.3.18: panel nie pokazuje liczb STAREJ partii
   G.serveDir = Math.random() < .5 ? -1 : 1;
   G.state = "count"; G.countF = COUNT_FIELDS;
 }
@@ -929,7 +1015,21 @@ addEventListener("keydown", e => {
     e.preventDefault();
     startGame(); return;
   }
-  if (e.code === "KeyP") { if (G.state !== "menu") togglePause(); unlock(); return; }  // v0.3.15: P = pauza/wznowienie (v0.3.17: w menu no-op)
+  if (e.code === "KeyP") {
+    if (G.state !== "menu") togglePause(); unlock();   // v0.3.15: P = pauza/wznowienie (v0.3.17: w menu no-op)
+    /* v0.3.18: easter egg — 3×P pod rząd (okno 1 s) = „szanse na pudło”;
+       P z otwartym panelem go zamyka (toggle pauzy wyżej już zadziałał —
+       to P jednocześnie wznawia grę). Auto-repeat (przytrzymanie) nie
+       liczy się jako osobne naciśnięcie — trzeba trzykrotnie stuknąć. */
+    if ($("odds").classList.contains("on")) { hideOdds(); EGG.n = 0; return; }
+    if (!e.repeat) {
+      const now = performance.now();
+      EGG.n = now - EGG.t <= EGG.WIN ? EGG.n + 1 : 1;
+      EGG.t = now;
+      if (EGG.n >= 3) { EGG.n = 0; showOdds(); }
+    }
+    return;
+  }
   const k = KMAP[e.code];
   if (k) {
     keys[k] = true;
@@ -1175,6 +1275,74 @@ function applyPause() {
 function setPaused(v) { G.paused = !!v; applyPause(); }
 function togglePause() { if (G.state !== "menu") setPaused(!G.paused); }   // v0.3.17: pauza w menu = no-op (symulacja i tak stoi)
 $("bpauze").onclick = () => { unlock(); togglePause(); };
+/* v0.3.18 (easter egg — życzenie Ciby: „czy możemy dodać do gry taki
+   easter egg, że jak trzy razy po sobie naciszę p to wyświetli się dla
+   każdego gracza prawdopodobieństwo, że nie odbije piłeczki?”):
+   3×P POD RZĄD = panel „szans na pudło” + wymuszenie PAUZY (liczby czyta
+   się na zamrożonym korcie; w menu — symulacja i tak stoi — pauzy nie
+   wymuszamy). Panel znika po 10 s albo przy najbliższym P. Skąd liczby:
+   - AI (tryb 1P) = MODEL BŁĘDU CELOWANIA z konstrukcji AI: przy piłce
+     nadlatującej AI losuje błąd ±AI_ERR(h), h = długość wymiany
+     (±(2+h)/0,9, cap ±12,22 — AI_LEVEL 0,9). Paletka 15 linii łapie
+     piłkę 4 linie, dopóki |błąd| < (15+4)/2 = 9,5 → P(pudło) =
+     (E−9,5)/E dla E > 9,5, inaczej 0: 0% do 6 odbić, 5% przy 7,
+     14,5% przy 8, 22,3% od 9 w górę — stąd „długie wymiany same
+     wygrywają”. Notka dokleja realne pudła AI z tej partii (w partii:
+     m z f).
+   - CZŁOWIEK = EMPIRIA z bieżącej partii: pudła / (pudła + odbicia)
+     (G.misses/G.returns); przed pierwszą piłką brak danych („—”).
+     Tryb 2P: obaj gracze z empirii (modelu ludzkiego nie ma — liczy się
+     to, co gracz faktycznie robi). */
+const EGG = { n: 0, t: -1e9, timer: 0, WIN: 1000, TTL: 10000 };
+function aiMissModel() {              // P(pudło AI) z modelu — patrz komentarz wyżej
+  const h = G.hits + (G.state === "play" && !G.aiComing ? 1 : 0);  // której wymiany dotyczy następny rzut błędu
+  const E = AI_ERR(h);                // amplituda błędu celowania
+  const reach = (PAD_H + BALL) / 2;   // 8 linii — |błąd| mniejszy = paletka jeszcze łapie
+  return { h, E, reach, p: E > reach ? (E - reach) / E : 0 };
+}
+function humanMissRate(i) {           // empiria gracza i z bieżącej partii
+  const faced = G.misses[i] + G.returns[i];
+  return { faced, misses: G.misses[i], p: faced ? G.misses[i] / faced : null };
+}
+const fmtPct = p => p == null ? "—" :
+  (p * 100).toLocaleString("pl-PL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
+function oddsRows() {                 // wiersze panelu: [kto, %, notka]
+  const ai = G.mode === 1 ? aiIdx() : -1;
+  const m = aiMissModel();
+  const out = [];
+  for (let i = 0; i < 2; i++) {
+    const who = G.mode === 2
+      ? (i === 0 ? "LEWY · GRACZ 1" : "PRAWY · GRACZ 2")
+      : (i === ai ? (i === 0 ? "LEWY · AI" : "PRAWY · AI")
+                  : (i === 0 ? "LEWY · GRACZ" : "PRAWY · GRACZ"));
+    const emp = humanMissRate(i);
+    if (i === ai) {                   // AI: liczba główna = model; empiria w notce
+      out.push({ who, pct: fmtPct(m.p),
+        sub: "model: błąd ±" + m.E.toLocaleString("pl-PL", { maximumFractionDigits: 2 })
+           + " przy " + m.h + (m.h === 1 ? " odbiciu" : " odbiciach")
+           + (emp.faced ? " · w partii: " + emp.misses + " z " + emp.faced : "") });
+    } else {                          // człowiek: realne pudła z tej partii
+      out.push({ who, pct: fmtPct(emp.p),
+        sub: emp.faced ? "ta partia: nieodbite " + emp.misses + " z " + emp.faced
+                       : "jeszcze żadnej piłki w tej partii" });
+    }
+  }
+  return out;
+}
+function showOdds() {
+  $("odds").querySelector(".rows").innerHTML = oddsRows().map(r =>
+    '<div class="row"><span class="who">' + r.who + '</span>'
+    + '<span class="pct">' + r.pct + '</span>'
+    + '<span class="sub">' + r.sub + '</span></div>').join("");
+  $("odds").classList.add("on");
+  if (EGG.timer) clearTimeout(EGG.timer);
+  EGG.timer = setTimeout(hideOdds, EGG.TTL);
+  if (G.state !== "menu") setPaused(true);   // czytelny stan: kort zamrożony pod liczbami
+}
+function hideOdds() {
+  if (EGG.timer) { clearTimeout(EGG.timer); EGG.timer = 0; }
+  $("odds").classList.remove("on");
+}
 /* v0.3.17 (życzenie Ciby — „Niech gra rozpoczyna się przyciskiem start
    po środku ekranu — w każdej wersji. Po kliknięciu w start przechodzimy
    do odliczania 3,2,1,0 ale zera już nie pokazujesz, tylko rozpoczyna się
@@ -1459,6 +1627,10 @@ window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
   get paused() { return G.paused },        // v0.3.15: pauza (przycisk/klawisz P)
   setPaused, togglePause,                   // v0.3.15: seria testowa U19
   start: startGame,                         // v0.3.17: menu START → odliczanie (seria U20)
+  aiMissModel, humanMissRate,             // v0.3.18: easter egg — model AI / empiria gracza (seria U21)
+  showOdds, hideOdds,                     // v0.3.18: panel „szans na pudło” (3×P)
+  get oddsOpen() { return $("odds").classList.contains("on") },
+  egg: EGG,                               // v0.3.18: licznik 3×P (okno 1 s, TTL 10 s)
   get countDigit() {                        // v0.3.17: cyfra odliczania („0” NIGDY nie rysowane)
     return G.state === "count"
       ? Math.max(1, Math.ceil(G.countF / (COUNT_FIELDS / 3))) : null;
