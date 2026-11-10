@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-09T20:49:45.800Z",
+  "wygenerowano": "2026-11-10T20:11:00.988Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:71"
         }
       ],
-      "zaktualizowano": "2026-11-09T20:49:45.800Z"
+      "zaktualizowano": "2026-11-10T20:11:00.988Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-09T20:49:45.800Z"
+      "zaktualizowano": "2026-11-10T20:11:00.988Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "8:52"
         }
       ],
-      "zaktualizowano": "2026-11-09T20:49:45.800Z"
+      "zaktualizowano": "2026-11-10T20:11:00.988Z"
     },
     {
       "klucz": "18/144",
@@ -426,9 +426,9 @@
         {
           "pozycja": 1,
           "nazwa": "Bartek II Siemianowice",
-          "mecze": 4,
-          "punkty": 6,
-          "stosunek": "28:12"
+          "mecze": 5,
+          "punkty": 8,
+          "stosunek": "34:16"
         },
         {
           "pozycja": 2,
@@ -461,9 +461,9 @@
         {
           "pozycja": 6,
           "nazwa": "UKS Ikar Mierzęcice",
-          "mecze": 4,
+          "mecze": 5,
           "punkty": 3,
-          "stosunek": "20:20"
+          "stosunek": "24:26"
         },
         {
           "pozycja": 7,
@@ -494,7 +494,7 @@
           "stosunek": "15:25"
         }
       ],
-      "zaktualizowano": "2026-11-09T20:49:45.800Z"
+      "zaktualizowano": "2026-11-10T20:11:00.988Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-09T20:49:45.800Z",
+      "zaktualizowano": "2026-11-10T20:11:00.988Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-09T20:49:45.800Z",
+      "zaktualizowano": "2026-11-10T20:11:00.988Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-09T20:49:45.800Z",
-    "pzts": "2026-11-09T20:49:45.800Z"
+    "szts": "2026-11-10T20:11:00.988Z",
+    "pzts": "2026-11-10T20:11:00.988Z"
   },
   "zrodla": {
     "szts": "ok",
