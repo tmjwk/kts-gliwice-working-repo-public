@@ -1,13 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.14">
+<html lang="en" data-version="0.3.15">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.14"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.14</title>
+<meta name="game-version" content="0.3.15"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.15</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.15 (2026-11-10, życzenie Ciby — „dodaj przycisk Pauza”):
+  PAUZA — przycisk w stopce obok EXIT („Pause” ↔ „Resume”, stan pauzy
+  podświetlony kolorem klubu) + klawisz P. Zamrożenie SYMULACJI (krok =
+  1 pole 60,054 Hz) w KAŻDYM stanie: count (odliczanie 3-2-1), serve
+  (timer 1,71 s), play (wymiana), gameover (attract) — piłka, paletki,
+  AI, liczniki, wszystkie timery stoją co do pola. Mechanika czysta:
+  pętla czasu NIE akumuluje pól podczas pauzy (acc zamrożone przy
+  bieżącym last) — wznowienie bez skoku i bez nadrabiania, dokładnie
+  jak powrót z tła. Obraz: zamrożona klatka + przyciemnienie kortu
+  rgba(0,0,0,.45) — sytuację widać do studiowania, a stan „nie biegnie”
+  jest jednoznaczny także na telefonie, bez czytania stopki. Zmiana
+  ustawień rozgrywki (tryb/strona/punkty docelowe) = świadomy nowy
+  start → AUTOMATYCZNE WZNOWIENIE + odliczanie od nowa; EXIT/Esc działa
+  spod pauzy bez zmian; dźwięk bez zmian — pauza z definicji nie generuje
+  zdarzeń gry (krótki beep ≤242 ms zaplanowany tuż przed pauzą po prostu
+  dobrzmiewa). __pong: +paused, +setPaused/togglePause (seria testowa
+  U19). Fizyka/dotyk/geometria/liczniki/dźwięk bez zmian.
   Wersja: 0.3.14 (2026-11-10, życzenie Ciby — „może zwolnij piłkę o 10%; obecne
   parametry piłki zapisz jako bazowe”): PRĘDKOŚĆ PIŁKI (BALL_SPEED) — drugi,
   niezależny od AI_LEVEL suwak trudności. BAZA 1.00 = fizyka piłki v0.3.13
@@ -325,7 +342,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.14</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.15</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -335,6 +352,9 @@
 <footer>
   <div class="grp">
     <button id="bexit">Exit</button>
+    <!-- v0.3.15 (życzenie Ciby — „dodaj przycisk Pauza”): zamrożenie symulacji
+         w każdym stanie gry; label i stan .on prowadzi applyPause() -->
+    <button id="bpauze">Pause</button>
     <button id="b1p">1 Player</button>
     <!-- v0.2.1: „2 Players” ukryte do czasu serwera multiplayer (decyzja Ciby).
          Kod trybu 2P (klawisze, dwie paletki dotykowe, sideFor) pozostaje —
@@ -433,6 +453,7 @@ const G = {
   overTimer: 0,
   fields: 0,                 // licznik pól (testy/kalibracja T1–T7)
   aiErr: 0, aiComing: false, // błąd celowania AI / czy piłka leci w jego stronę
+  paused: false,              // v0.3.15: PAUZA — zamrożenie symulacji (przycisk/klawisz P)
 };
 const aiIdx = () => (G.mode === 1 ? (G.side === 1 ? 1 : 0) : -1);  // indeks paletki AI (-1 = 2P)
 
@@ -566,7 +587,7 @@ function drawScore(side) {                     // jedności lustrzane wokół si
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.14";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.15";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-10"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -600,6 +621,14 @@ function render() {
   drawScore(0); drawScore(1);                  // wynik zostaje też po końcu gry
   /* v0.3.10: tu rysował się nr wersji przy odliczaniu i po końcu gry —
      usunięty (życzenie Ciby): nagłówek wystarcza, kort czysty. */
+  /* v0.3.15: PAUZA — zamrożona klatka + przyciemnienie kortu. Sytuacja
+     pozostaje widoczna (do studiowania toru piłki), a stan „nie biegnie”
+     jest czytelny także na telefonie bez patrzenia na stopkę; rgba .45
+     daje ~55% jasności — obiekty nadal wyraźne, tło bez zmiany odcienia. */
+  if (G.paused) {
+    ctx.fillStyle = "rgba(0,0,0,.45)";
+    ctx.fillRect(0, 0, cv.width, cv.height);
+  }
 }
 
 /* --- kroki symulacji (1 krok = 1 pole 60,054 Hz) --------------------------- */
@@ -761,7 +790,7 @@ function loop(t) {
   if (!last) { last = t; return; }
   let dt = t - last; last = t;
   if (dt > 120) dt = 120;                     // karta w tle → bez nadrabiania
-  acc += dt;
+  if (!G.paused) acc += dt;   // v0.3.15: pauza — pola się nie piętrzą; wznowienie bez skoku
   let guard = 8;
   while (acc >= FIELD_MS && guard--) { step(); acc -= FIELD_MS; }
   render();
@@ -786,6 +815,7 @@ const KMAP = {
 };
 addEventListener("keydown", e => {
   if (e.code === "Escape") { exitGame(); return; }      // v0.3.0: Esc = wyjście z gry
+  if (e.code === "KeyP") { togglePause(); unlock(); return; }  // v0.3.15: P = pauza/wznowienie
   const k = KMAP[e.code];
   if (k) {
     keys[k] = true;
@@ -1016,6 +1046,21 @@ function savePrefs() { try { localStorage.setItem("pong72", JSON.stringify({ mod
 function resetGame() {                   // v0.3.0: każdy start rozgrywki = odliczanie 3-2-1
   startCountdown();                   // geometria oczekująca na koniec wymiany
 }
+/* v0.3.15 (życzenie Ciby — „dodaj przycisk Pauza”): PAUZA. Przycisk w stopce
+   obok EXIT („Pause” ↔ „Resume”, stan podświetlony kolorem klubu) + klawisz P.
+   Zamrożenie SYMULACJI (kroki pól — loop nie akumuluje czasu, więc po wznowieniu
+   zero nadrabiania) w KAŻDYM stanie: count/serve/play/gameover. Zmiana ustawień
+   rozgrywki (tryb/strona/punkty docelowe) = świadomy nowy start → automatyczne
+   WZNOWIENIE + odliczanie od nowa. EXIT/Esc działa spod pauzy; dźwięk bez zmian
+   (pauza nie generuje zdarzeń — cisza z definicji). */
+function applyPause() {
+  const b = $("bpauze");
+  b.textContent = G.paused ? "Resume" : "Pause";
+  b.classList.toggle("on", G.paused);
+}
+function setPaused(v) { G.paused = !!v; applyPause(); }
+function togglePause() { setPaused(!G.paused); }
+$("bpauze").onclick = () => { unlock(); togglePause(); };
 function refreshUI() {
   $("b1p").classList.toggle("on", G.mode === 1);
   $("b2p").classList.toggle("on", G.mode === 2);
@@ -1038,13 +1083,13 @@ function refreshHint() {
 function applySound() { refreshUI(); refreshHint(); savePrefs(); }
 /* v0.3.1: zmiana trybu/strony = zerowanie celów wskaźnika — stary cel ze
    slotu, który zostaje AI, zamrażał paletkę AI po przełączeniu */
-$("b1p").onclick = () => { unlock(); G.mode = 1; releaseAllPointers(); resetGame(); refreshUI(); savePrefs(); };
-$("b2p").onclick = () => { unlock(); if (G.mode !== 2) { G.mode = 2; releaseAllPointers(); resetGame(); } refreshUI(); savePrefs(); };
-$("bto").onclick  = () => { unlock(); G.target = G.target === 11 ? 15 : 11; resetGame(); refreshUI(); savePrefs(); };
+$("b1p").onclick = () => { unlock(); G.mode = 1; releaseAllPointers(); setPaused(false); resetGame(); refreshUI(); savePrefs(); };
+$("b2p").onclick = () => { unlock(); if (G.mode !== 2) { G.mode = 2; releaseAllPointers(); setPaused(false); resetGame(); } refreshUI(); savePrefs(); };
+$("bto").onclick  = () => { unlock(); G.target = G.target === 11 ? 15 : 11; setPaused(false); resetGame(); refreshUI(); savePrefs(); };
 /* v0.3.0: wybór strony gracza w 1P (domyślnie PRAWA — życzenie Ciby);
    zmiana strony = nowa rozgrywka (odliczanie 3-2-1); v0.3.1: + zwolnienie
    wskaźników — AI gra PRZECIWNIKA, nie dziedziczy zamrożonego celu */
-$("bside").onclick = () => { unlock(); G.side = G.side === 2 ? 1 : 2; releaseAllPointers(); resetGame(); refreshUI(); savePrefs(); };
+$("bside").onclick = () => { unlock(); G.side = G.side === 2 ? 1 : 2; releaseAllPointers(); setPaused(false); resetGame(); refreshUI(); savePrefs(); };
 /* v0.3.5: wyjście z gry — przycisk EXIT albo Esc = zawsze „BACK” (życzenie
    Ciby): wracamy na STRONĘ WEJŚCIA, bo grę ładujemy w tej samej karcie
    (popupy nie działają na iPhone). ENTRY liczone raz przy starcie:
@@ -1268,6 +1313,8 @@ window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
   get PAD_H() { return PAD_H }, get PAD_W() { return PAD_W },
   get AI_LEVEL() { return AI_LEVEL },
   get BALL_SPEED() { return BALL_SPEED },   // v0.3.14: linijka zapisuje BALL_SPEED w pomiarze
+  get paused() { return G.paused },        // v0.3.15: pauza (przycisk/klawisz P)
+  setPaused, togglePause,                   // v0.3.15: seria testowa U19
   get aiIdx() { return aiIdx() },
   step, startCountdown,          // v0.3.13: kalibracja linijką botów (sim_difficulty.py)
   courtCyclesFor, applyCourt, fit,
