@@ -1,13 +1,34 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.18">
+<html lang="en" data-version="0.3.19">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.18"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.18</title>
+<meta name="game-version" content="0.3.19"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.19</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.19 (2026-11-11, poprawka Ciby — „nie tak, bez pauzy w górnych
+  narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’ jest
+  zajęty prze pauzę. mój błąd. sorry”): EASTER EGG 3×T — NA ŻYWO W NAROŻNIKACH,
+  BEZ PAUZY. Poprawka designu v0.3.18: (a) pauzy już NIE wymuszamy — liczby
+  żyją razem z grą („bez pauzy”); (b) panel ze środka kortu przeniesiony
+  do GÓRNYCH NAROŻNIKÓW (lewy = gracz lewy, prawy = prawy — „w górnych
+  narożnikach”); (c) klawisz P → T, bo „p jest zajęty prze pauzę” — P zostaje
+  CZYSTĄ pauzą (semantyka v0.3.15 bez zmian). Trzy naciśnięcia T pod rząd
+  (każde w <1 s od poprzedniego; przytrzymany klawisz nie liczy się — e.repeat
+  pomijane) ZAŁĄCZAJĄ HUD, kolejne 3×T WYŁĄCZAJĄ — bez TTL: to żywy licznik,
+  nie zapiska. HUD aktualizuje się CO KLATKĘ (updateEggs z render — „liczoną
+  na żywo”): AI (1P) = model błędu celowania ±AI_ERR(h) — widać, jak liczba
+  rośnie NA OCZACH w długiej wymianie (0% do 6 odbić, 5% przy 7, 14,5%
+  przy 8, 22,3% od 9 w górę, cap ±12,22); człowiek = empiria z bieżącej
+  partii (pudła/(pudła+odbicia); przed pierwszą piłką „—”); 2P: obaj z
+  empirii. Narożniki = DOM nad sceną, pointer-events:none (nic nie chwyta —
+  pauza/EXIT/dotyk/kort działają pod nimi), skanlinie CRT kładą się na nich
+  jak na wszystkim. Nowa partia: statystyki zerują się w startCountdown,
+  HUD ZOSTAJE — liczby startują od zera. __pong: setEggs/updateEggs/
+  eggsOpen zamiast showOdds/hideOdds/oddsOpen (seria U21 przepisana).
+  Pauza/fizyka/dotyk/dźwięk/geometria bez zmian.
   Wersja: 0.3.18 (2026-11-11, życzenie Ciby — „czy możemy dodać do gry taki
   easter egg, że jak trzy razy po sobie nacisnę p to wyświetli się dla
   każdego gracza prawdopodobieństwo, że nie odbije piłeczki?”):
@@ -34,6 +55,8 @@
   myszy — pauza/EXIT/kort działają pod nim). __pong: +aiMissModel,
   +humanMissRate, +showOdds/hideOdds, +oddsOpen, +egg (seria U21).
   Fizyka/dotyk/dźwięk/geometria/liczniki bez zmian.
+  (NADPISANE w v0.3.19: pauza zdjęta, licznik w górnych narożnikach
+  na żywo, klawisz T — patrz blok v0.3.19 powyżej.)
   Wersja: 0.3.17 (2026-11-11, życzenie Ciby — „w żadnej wersji u dołu
   ekranu nie może być dwóch wierszy. Niech będzie tylko jeden zawierający
   wszystkie opcje, tj. exit, pause, etc.” + „Niech gra rozpoczyna się
@@ -396,49 +419,42 @@
   #bstart:hover,#bstart:focus-visible{background:var(--ink);color:#0b0b0d;animation:none}
   #bstart:focus-visible{outline:2px solid var(--club-accent);outline-offset:4px}
   @keyframes startPulse{50%{opacity:.55}}
-  /* v0.3.18 (easter egg — życzenie Ciby: „…jak trzy razy po sobie nacisnę
-     p to wyświetli się dla każdego gracza prawdopodobieństwo, że nie
-     odbije piłeczki?”): panel „szans na pudło” — 3×P pod rząd (każde
-     naciśnięcie w <1 s od poprzedniego). Nad kortem, pointer-events:none
-     — panel jest OBRAZEM: nic nie chwyta (pauza/EXIT/dotyk/kort działają
-     pod nim); skanlinie CRT kładą się na nim jak na wszystkim na scenie.
-     Znika po 10 s albo przy najbliższym P. */
-  #odds{
-    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
-    pointer-events:none;padding:10px;
+  /* v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
+     narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’ jest
+     zajęty prze pauzę. mój błąd. sorry”): HUD „szans na pudło” w GÓRNYCH
+     NAROŻNIKACH — 3×T pod rząd (każde naciśnięcie w <1 s od poprzedniego)
+     ZAŁĄCZA, kolejne 3×T WYŁĄCZA; pauzy NIE wymusza — liczby liczone
+     NA ŻYWO CO KLATKĘ (updateEggs woła render). Lewy narożnik = gracz
+     lewy, prawy = prawy. pointer-events:none — narożniki są OBRAZEM:
+     nic nie chwyta (pauza/EXIT/dotyk/kort działają pod nimi); skanlinie CRT
+     kładą się na nich jak na wszystkim na scenie. Podkład rgba(11,11,13,.62)
+     + cień tekstu — czytelność nad kortem (pion telefonu) i nad letterboxem
+     (desktop) bez kart wiszących nad grą. */
+  #eggs{
+    position:absolute;inset:0;display:none;pointer-events:none;
   }
-  #odds.on{display:flex}
-  #odds .card{
-    max-width:min(94%,540px);background:rgba(11,11,13,.93);
-    border:1px solid var(--line);border-radius:10px;
-    box-shadow:0 14px 50px rgba(0,0,0,.65);
-    padding:12px 16px;font-size:clamp(10px,2.1vmin,13px);
-    letter-spacing:.05em;line-height:1.5;
+  #eggs.on{display:block}
+  .egg{
+    position:absolute;top:10px;max-width:38%;min-width:0;
+    display:flex;flex-direction:column;gap:2px;
+    padding:5px 9px;background:rgba(11,11,13,.62);
+    border-radius:8px;text-shadow:0 1px 2px rgba(0,0,0,.8);
   }
-  #odds .ttl{
-    text-align:center;text-transform:uppercase;letter-spacing:.2em;
-    color:var(--ink);font-size:.95em;margin-bottom:8px;
+  #egg0{left:10px;align-items:flex-start;text-align:left}
+  #egg1{right:10px;align-items:flex-end;text-align:right}
+  .egg small{                      /* kto — etykieta narożnika */
+    color:#8e8e97;font-size:clamp(8px,1.5vmin,10px);
+    letter-spacing:.14em;text-transform:uppercase;
+    max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
-  #odds .ttl small{
-    display:block;color:var(--club-accent);font-size:.72em;
-    letter-spacing:.16em;margin-top:3px;
+  .egg b{                          /* P(nieodbicia) — liczona NA ŻYWO */
+    color:var(--club-accent);font-weight:700;line-height:1.05;
+    font-size:clamp(12px,2.3vmin,17px);
+    max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
-  #odds .row{
-    display:grid;grid-template-columns:minmax(0,1fr) auto;
-    align-items:center;column-gap:14px;row-gap:1px;
-    border-top:1px solid var(--line);padding:7px 2px;
-  }
-  #odds .who{grid-column:1;color:var(--ink);white-space:nowrap;
-    overflow:hidden;text-overflow:ellipsis}
-  #odds .sub{grid-column:1;color:#71717a;font-size:.85em;white-space:nowrap;
-    overflow:hidden;text-overflow:ellipsis}
-  #odds .pct{
-    grid-column:2;grid-row:1/3;color:var(--club-accent);
-    font-weight:700;font-size:1.45em;white-space:nowrap;
-  }
-  #odds .ftr{
-    margin-top:9px;padding-top:8px;border-top:1px solid var(--line);
-    color:#55555c;font-size:.78em;text-align:center;letter-spacing:.04em;
+  .egg span{                       /* źródło liczby (notka) */
+    color:#55555c;font-size:clamp(8px,1.4vmin,9.5px);letter-spacing:.04em;
+    max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
   /* subtelne scanlines CRT (do usunięcia: usuń ::after) */
   #stage::after{
@@ -491,7 +507,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.18</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.19</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -501,16 +517,16 @@
        środku ekranu — w każdej wersji”): menu startowe; widoczne tylko w
        stanie menu (klasę .on prowadzi render() co klatkę) -->
   <div id="startov"><button id="bstart">Start</button></div>
-  <!-- v0.3.18 (easter egg — życzenie Ciby: „jak trzy razy po sobie nacisnę
-       p to wyświetli się dla każdego gracza prawdopodobieństwo, że nie
-       odbije piłeczki?”): panel „szans na pudło” (3×P); wypełnia go
-       showOdds() — AI: model błędu celowania, człowiek: realne pudła/
-       piłki z tej partii; pointer-events:none, znika po 10 s / przy P -->
-  <div id="odds"><div class="card">
-    <div class="ttl">Prawdopodobieństwo nieodbicia<small>easter egg · 3 × P</small></div>
-    <div class="rows"></div>
-    <div class="ftr">AI: model błędu celowania · człowiek: ta partia · znika po 10 s — P zamyka</div>
-  </div></div>
+  <!-- v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
+       narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’
+       jest zajęty prze pauzę”): HUD „szans na pudło” w GÓRNYCH NAROŻNIKACH
+       (3×T zał./wył.); wypełnia go updateEggs() CO KLATKĘ — AI: model błędu
+       celowania (na żywo z długością wymiany), człowiek: realne pudła/
+       piłki z tej partii; pointer-events:none, gra biegnie DALEJ (bez pauzy) -->
+  <div id="eggs" aria-hidden="true">
+    <div class="egg" id="egg0"><small></small><b></b><span></span></div>
+    <div class="egg" id="egg1"><small></small><b></b><span></span></div>
+  </div>
 </div>
 
 <footer>
@@ -620,8 +636,8 @@ const G = {
   fields: 0,                 // licznik pól (testy/kalibracja T1–T7)
   aiErr: 0, aiComing: false, // błąd celowania AI / czy piłka leci w jego stronę
   paused: false,              // v0.3.15: PAUZA — zamrożenie symulacji (przycisk/klawisz P)
-  returns: [0, 0],            // v0.3.18: easter egg — odbicia stron (empiria „szans na pudło”)
-  misses: [0, 0],             // v0.3.18: easter egg — pudła stron (piłka minęła paletkę)
+  returns: [0, 0],            // v0.3.18: easter egg — odbicia stron (empiria „szans na pudło”; od v0.3.19 na żywo w narożnikach)
+  misses: [0, 0],             // v0.3.18: easter egg — pudła stron (piłka minęła paletkę; od v0.3.19 na żywo w narożnikach)
 };
 const aiIdx = () => (G.mode === 1 ? (G.side === 1 ? 1 : 0) : -1);  // indeks paletki AI (-1 = 2P)
 
@@ -765,7 +781,7 @@ function drawScore(side) {                     // jedności lustrzane wokół si
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.18";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.19";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-11"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -820,6 +836,10 @@ function render() {
   /* v0.3.17: menu startowe — START pośrodku sceny; render woła to co klatkę,
      więc zmiana stanu (klik/test/handler) od razu odwzorowuje się w DOM */
   $("startov").classList.toggle("on", G.state === "menu");
+  /* v0.3.19: HUD „szans na pudło” — NA ŻYWO co klatkę (także w menu; w pauzie
+     liczby stoją razem z grą — to ta sama zamrożona symulacja); DOM pisany
+     tylko przy zmianie tekstu (cache EGGC — bez ciągłego ubijania layoutu) */
+  if (EGG.on) updateEggs();
 }
 
 /* --- kroki symulacji (1 krok = 1 pole 60,054 Hz) --------------------------- */
@@ -940,8 +960,7 @@ function stepBall() {
 
 function startCountdown() {                    // v0.3.0: rozgrywka startuje od 3-2-1
   G.score = [0, 0]; G.hits = 0; G.serveVy = 0;
-  G.returns = [0, 0]; G.misses = [0, 0];       // v0.3.18: nowa partia = czyste „szanse na pudło”
-  hideOdds();                                  // v0.3.18: panel nie pokazuje liczb STAREJ partii
+  G.returns = [0, 0]; G.misses = [0, 0];       // v0.3.18: nowa partia = czyste „szans na pudło” (HUD v0.3.19 ZOSTAJE — liczby startują od zera)
   G.serveDir = Math.random() < .5 ? -1 : 1;
   G.state = "count"; G.countF = COUNT_FIELDS;
 }
@@ -1016,18 +1035,28 @@ addEventListener("keydown", e => {
     startGame(); return;
   }
   if (e.code === "KeyP") {
-    if (G.state !== "menu") togglePause(); unlock();   // v0.3.15: P = pauza/wznowienie (v0.3.17: w menu no-op)
-    /* v0.3.18: easter egg — 3×P pod rząd (okno 1 s) = „szanse na pudło”;
-       P z otwartym panelem go zamyka (toggle pauzy wyżej już zadziałał —
-       to P jednocześnie wznawia grę). Auto-repeat (przytrzymanie) nie
-       liczy się jako osobne naciśnięcie — trzeba trzykrotnie stuknąć. */
-    if ($("odds").classList.contains("on")) { hideOdds(); EGG.n = 0; return; }
+    /* v0.3.15: P = pauza/wznowienie (v0.3.17: w menu no-op). Od v0.3.19 P
+       robi TYLKO pauzę — easter egg przeprowadzony na klawisz T (poprawka
+       Ciby: „p jest zajęty prze pauzę”). */
+    if (G.state !== "menu") togglePause();
+    unlock();
+    return;
+  }
+  /* v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
+     narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t' bo ‚p'
+     jest zajęty prze pauzę. mój błąd. sorry”): easter egg — 3×T pod rząd
+     (okno 1 s) ZAŁĄCZA/WYŁĄCZA HUD „szans na pudło” w górnych narożnikach —
+     liczony NA ŻYWO, BEZ PAUZY (gra biegnie dalej). Auto-repeat
+     (przytrzymanie) nie liczy się jako osobne naciśnięcie — trzeba
+     trzykrotnie stuknąć. */
+  if (e.code === "KeyT") {
     if (!e.repeat) {
       const now = performance.now();
       EGG.n = now - EGG.t <= EGG.WIN ? EGG.n + 1 : 1;
       EGG.t = now;
-      if (EGG.n >= 3) { EGG.n = 0; showOdds(); }
+      if (EGG.n >= 3) { EGG.n = 0; setEggs(!EGG.on); }
     }
+    unlock();
     return;
   }
   const k = KMAP[e.code];
@@ -1275,25 +1304,32 @@ function applyPause() {
 function setPaused(v) { G.paused = !!v; applyPause(); }
 function togglePause() { if (G.state !== "menu") setPaused(!G.paused); }   // v0.3.17: pauza w menu = no-op (symulacja i tak stoi)
 $("bpauze").onclick = () => { unlock(); togglePause(); };
-/* v0.3.18 (easter egg — życzenie Ciby: „czy możemy dodać do gry taki
-   easter egg, że jak trzy razy po sobie naciszę p to wyświetli się dla
-   każdego gracza prawdopodobieństwo, że nie odbije piłeczki?”):
-   3×P POD RZĄD = panel „szans na pudło” + wymuszenie PAUZY (liczby czyta
-   się na zamrożonym korcie; w menu — symulacja i tak stoi — pauzy nie
-   wymuszamy). Panel znika po 10 s albo przy najbliższym P. Skąd liczby:
-   - AI (tryb 1P) = MODEL BŁĘDU CELOWANIA z konstrukcji AI: przy piłce
-     nadlatującej AI losuje błąd ±AI_ERR(h), h = długość wymiany
-     (±(2+h)/0,9, cap ±12,22 — AI_LEVEL 0,9). Paletka 15 linii łapie
-     piłkę 4 linie, dopóki |błąd| < (15+4)/2 = 9,5 → P(pudło) =
-     (E−9,5)/E dla E > 9,5, inaczej 0: 0% do 6 odbić, 5% przy 7,
-     14,5% przy 8, 22,3% od 9 w górę — stąd „długie wymiany same
-     wygrywają”. Notka dokleja realne pudła AI z tej partii (w partii:
-     m z f).
-   - CZŁOWIEK = EMPIRIA z bieżącej partii: pudła / (pudła + odbicia)
-     (G.misses/G.returns); przed pierwszą piłką brak danych („—”).
-     Tryb 2P: obaj gracze z empirii (modelu ludzkiego nie ma — liczy się
-     to, co gracz faktycznie robi). */
-const EGG = { n: 0, t: -1e9, timer: 0, WIN: 1000, TTL: 10000 };
+/* v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
+   narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t' bo ‚p'
+   jest zajęty prze pauzę. mój błąd. sorry”): EASTER EGG 3×T — HUD
+   „szans na pudło” W GÓRNYCH NAROŻNIKACH, LICZONY NA ŻYWO, BEZ PAUZY.
+   Poprawka designu v0.3.18: (a) pauza NIE jest wymuszana — liczby żyją
+   razem z grą („bez pauzy”); (b) panel ze środka kortu → dwa narożniki
+   u góry (lewy = gracz lewy, prawy = prawy — „w górnych narożnikach”);
+   (c) klawisz P → T („p jest zajęty prze pauzę” — P zostaje czystą
+   pauzą, semantyka v0.3.15 bez zmian). 3×T pod rząd (każde <1 s od
+   poprzedniego; e.repeat pomijane) ZAŁĄCZA, kolejne 3×T WYŁĄCZA —
+   bez TTL: to żywy licznik, nie zapiska. Liczby co do wartości jak
+   w v0.3.18:
+   - AI (tryb 1P) = MODEL BŁĘDU CELOWANIA: ±AI_ERR(h), h = długość
+     wymiany (±(2+h)/0,9, cap ±12,22); paletka 15 linii łapie piłkę
+     4 linie, gdy |błąd| < 9,5 → P(pudło) = (E−9,5)/E — w narożniku
+     widać, jak liczba rośnie NA OCZACH w długiej wymianie (22,3% od
+     9 odbić w górę — dlatego długie wymiany „same” wygrywają).
+   - CZŁOWIEK = EMPIRIA z bieżącej partii: pudła/(pudła+odbicia); przed
+     pierwszą piłką brak danych („—”); 2P: obaj z empirii.
+   updateEggs() woła render() CO KLATKĘ („liczoną na żywo”; także w
+   pauzie — liczby stoją razem z grą, i w menu — świeci bazę 0,0%/„—”);
+   DOM pisany tylko przy ZMIANIE tekstu (cache EGGC — bez ciągłego
+   ubijania layoutu). Nowa partia: statystyki zerują się w
+   startCountdown, HUD zostaje. */
+const EGG = { n: 0, t: -1e9, WIN: 1000, on: false };  // licznik 3×T (okno 1 s)
+const EGGC = ["", ""];                                // cache tekstów narożników
 function aiMissModel() {              // P(pudło AI) z modelu — patrz komentarz wyżej
   const h = G.hits + (G.state === "play" && !G.aiComing ? 1 : 0);  // której wymiany dotyczy następny rzut błędu
   const E = AI_ERR(h);                // amplituda błędu celowania
@@ -1306,7 +1342,7 @@ function humanMissRate(i) {           // empiria gracza i z bieżącej partii
 }
 const fmtPct = p => p == null ? "—" :
   (p * 100).toLocaleString("pl-PL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
-function oddsRows() {                 // wiersze panelu: [kto, %, notka]
+function eggTexts() {                 // [lewy, prawy] — etykieta / % / notka (NA ŻYWO)
   const ai = G.mode === 1 ? aiIdx() : -1;
   const m = aiMissModel();
   const out = [];
@@ -1316,32 +1352,36 @@ function oddsRows() {                 // wiersze panelu: [kto, %, notka]
       : (i === ai ? (i === 0 ? "LEWY · AI" : "PRAWY · AI")
                   : (i === 0 ? "LEWY · GRACZ" : "PRAWY · GRACZ"));
     const emp = humanMissRate(i);
+    let pct, sub;
     if (i === ai) {                   // AI: liczba główna = model; empiria w notce
-      out.push({ who, pct: fmtPct(m.p),
-        sub: "model: błąd ±" + m.E.toLocaleString("pl-PL", { maximumFractionDigits: 2 })
-           + " przy " + m.h + (m.h === 1 ? " odbiciu" : " odbiciach")
-           + (emp.faced ? " · w partii: " + emp.misses + " z " + emp.faced : "") });
+      pct = m.p;
+      sub = "model ±" + m.E.toLocaleString("pl-PL", { maximumFractionDigits: 2 })
+           + (emp.faced ? " · partia " + emp.misses + " z " + emp.faced : "");
     } else {                          // człowiek: realne pudła z tej partii
-      out.push({ who, pct: fmtPct(emp.p),
-        sub: emp.faced ? "ta partia: nieodbite " + emp.misses + " z " + emp.faced
-                       : "jeszcze żadnej piłki w tej partii" });
+      pct = emp.p;
+      sub = emp.faced ? "partia: nieodbite " + emp.misses + " z " + emp.faced
+                      : "jeszcze bez piłki";
     }
+    out.push(who + "\n" + fmtPct(pct) + "\n" + sub);
   }
   return out;
 }
-function showOdds() {
-  $("odds").querySelector(".rows").innerHTML = oddsRows().map(r =>
-    '<div class="row"><span class="who">' + r.who + '</span>'
-    + '<span class="pct">' + r.pct + '</span>'
-    + '<span class="sub">' + r.sub + '</span></div>').join("");
-  $("odds").classList.add("on");
-  if (EGG.timer) clearTimeout(EGG.timer);
-  EGG.timer = setTimeout(hideOdds, EGG.TTL);
-  if (G.state !== "menu") setPaused(true);   // czytelny stan: kort zamrożony pod liczbami
+function updateEggs() {               // pisze do DOM tylko gdy tekst się zmienił
+  const t = eggTexts();
+  for (let i = 0; i < 2; i++) {
+    if (t[i] === EGGC[i]) continue;
+    EGGC[i] = t[i];
+    const el = $("egg" + i), L = t[i].split("\n");
+    el.querySelector("small").textContent = L[0];
+    el.querySelector("b").textContent = L[1];
+    el.querySelector("span").textContent = L[2];
+  }
 }
-function hideOdds() {
-  if (EGG.timer) { clearTimeout(EGG.timer); EGG.timer = 0; }
-  $("odds").classList.remove("on");
+function setEggs(v) {                  // włącz/wyłącz HUD narożników (3×T)
+  EGG.on = !!v;
+  $("eggs").classList.toggle("on", EGG.on);
+  EGGC[0] = EGGC[1] = "";             // wymuś odświeżenie przy włączeniu
+  if (EGG.on) updateEggs();
 }
 /* v0.3.17 (życzenie Ciby — „Niech gra rozpoczyna się przyciskiem start
    po środku ekranu — w każdej wersji. Po kliknięciu w start przechodzimy
@@ -1627,10 +1667,10 @@ window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
   get paused() { return G.paused },        // v0.3.15: pauza (przycisk/klawisz P)
   setPaused, togglePause,                   // v0.3.15: seria testowa U19
   start: startGame,                         // v0.3.17: menu START → odliczanie (seria U20)
-  aiMissModel, humanMissRate,             // v0.3.18: easter egg — model AI / empiria gracza (seria U21)
-  showOdds, hideOdds,                     // v0.3.18: panel „szans na pudło” (3×P)
-  get oddsOpen() { return $("odds").classList.contains("on") },
-  egg: EGG,                               // v0.3.18: licznik 3×P (okno 1 s, TTL 10 s)
+  aiMissModel, humanMissRate,             // v0.3.18/19: easter egg — model AI / empiria gracza (seria U21)
+  setEggs, updateEggs,                    // v0.3.19: HUD „szans na pudło” — narożniki, 3×T, na żywo
+  get eggsOpen() { return EGG.on },       // v0.3.19: czy narożniki świecą
+  egg: EGG,                               // v0.3.19: licznik 3×T (okno 1 s)
   get countDigit() {                        // v0.3.17: cyfra odliczania („0” NIGDY nie rysowane)
     return G.state === "count"
       ? Math.max(1, Math.ceil(G.countF / (COUNT_FIELDS / 3))) : null;
