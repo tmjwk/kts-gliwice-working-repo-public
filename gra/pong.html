@@ -1,13 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.15">
+<html lang="en" data-version="0.3.16">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.15"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.15</title>
+<meta name="game-version" content="0.3.16"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.16</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.16 (2026-11-10, życzenie Ciby — „dodaj napis Paused — o ile
+  to poprawna forma”; forma poprawna: „Paused” = stan/imiesłów, standard
+  w grach): NAPIS NA KORCIE W PAUZIE — nad przyciemnionym kortem świeci
+  PAUSED, literami 7-seg. P,A,U,S,E,D (geometria 7448 jak wynik i
+  odliczanie: poprzeczne 16 cykli, piony 12/16 linii), k=2 jak wielka
+  cyfra odliczania, rysowane PO przyciemnieniu rgba(0,0,0,.45) → pełna
+  jasność, sytuacja pod spłem czytelna. Słowo 232 cykle (6 glifów × 32
+  + 5 × 8 przerwy) — mieści się na najwęższym korcie 374 (pion telefonu),
+  wyśrodkowane na wysokości odliczania; w stanie count zamrożona cyfra
+  odliczania ustępuje napisowi (bez nakładania glifów). Fizyka/dotyk/
+  dźwięk/geometria bez zmian.
   Wersja: 0.3.15 (2026-11-10, życzenie Ciby — „dodaj przycisk Pauza”):
   PAUZA — przycisk w stopce obok EXIT („Pause” ↔ „Resume”, stan pauzy
   podświetlony kolorem klubu) + klawisz P. Zamrożenie SYMULACJI (krok =
@@ -342,7 +353,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.15</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.16</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -567,7 +578,12 @@ const C_WHITE = "#f2f2ee", C_SCORE = "#cfcdc7";   // wynik ~17% ciemniej (R 1,2k
    piony 12 linii, dolne 16; poprzeczne 16 cykli długości, 4 linie grubości). */
 const SEG = {
   0: "abcdef", 1: "bc", 2: "abged", 3: "abgcd", 4: "fgbc",
-  5: "afgcd", 6: "afgedc", 7: "abc", 8: "abcdefg", 9: "abcdfg"
+  5: "afgcd", 6: "afgedc", 7: "abc", 8: "abcdefg", 9: "abcdfg",
+  /* v0.3.16: litery 7-seg. dla napisu PAUSED (życzenie Ciby — „dodaj
+     napis Paused”) — klasyka wyświetlaczy kalkulatorów: P = a,b,e,f,g
+     (bez c/d), U = b,c,d,e,f, S = jak „5”, E = a,f,g,e,d, D = b,c,d,e,g,
+     A = „8” bez d. drawDigit przyjmuje też znak — SEG[d] działa. */
+  P: "abefg", A: "abcefg", U: "bcdef", S: "afgcd", E: "afged", D: "bcdeg",
 };
 function drawDigit(d, x0, y0, k = 1) {          // k = skala (1 = wynik; 2 = odliczanie 3-2-1)
   const s = SEG[d] || "";
@@ -581,13 +597,18 @@ function drawDigit(d, x0, y0, k = 1) {          // k = skala (1 = wynik; 2 = odl
   if (s.includes("c")) R(12, 16, 4, 16);      // prawy dolny pion
   if (s.includes("d")) R(0, 28, 16, 4);      // dolna
 }
+function drawWord(word, x0, y0, k = 1) {         // v0.3.16: napis 7-seg. (PAUSED)
+  const step = 16 * k + 8;                     // glif 16×k + przerwa 8 cykli
+  for (let i = 0; i < word.length; i++)
+    drawDigit(word[i], x0 + i * step, y0, k);
+}
 function drawScore(side) {                     // jedności lustrzane wokół siatki (applyCourt, v0.3.12)
   const sc = G.score[side];
   const [tens, units] = side === 0 ? SC1 : SC2;
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.15";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.16";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-10"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -615,7 +636,7 @@ function render() {
   if (G.state !== "serve" && G.state !== "count") {   // przed serwem/w odliczaniu piłki brak
     ctx.fillRect(PX(G.ball.x), PY(G.ball.y), PX(BALL), PH(BALL));
   }
-  if (G.state === "count")                     // v0.3.0: wielka cyfra 3/2/1 na środku kortu
+  if (G.state === "count" && !G.paused)         // v0.3.16: w pauzie cyfra ustępuje napisowi
     drawDigit(Math.max(1, Math.ceil(G.countF / (COUNT_FIELDS / 3))),
               (VIS_W - 32) / 2, (VIS_H - 64) / 2, 2);
   drawScore(0); drawScore(1);                  // wynik zostaje też po końcu gry
@@ -628,6 +649,15 @@ function render() {
   if (G.paused) {
     ctx.fillStyle = "rgba(0,0,0,.45)";
     ctx.fillRect(0, 0, cv.width, cv.height);
+    /* v0.3.16 (życzenie Ciby — „dodaj napis Paused”): status na korcie —
+       litery 7-seg. P,A,U,S,E,D (geometria 7448 jak wynik/odliczanie),
+       k=2 jak odliczanie, rysowane PO przyciemnieniu → pełna jasność
+       (sytuacja pod spłem przyciemniona, stan „nie biegnie” widać z
+       jednego rzutu oka). Słowo 232 cykle — mieści się nawet na
+       najwęższym korcie 374 (pion telefonu); wyśrodkowane na wysokości
+       odliczania; w stanie count cyfra odliczania jest pomijana (bez
+       nakładania glifów — patrz wyżej). */
+    drawWord("PAUSED", (VIS_W - 232) / 2, (VIS_H - 64) / 2, 2);
   }
 }
 
