@@ -196,7 +196,15 @@
               </span>
             </button>
             <div class="mecz-panel" id="najblizsze-mecze-panel" hidden>
-              <ul class="divide-list" id="najblizsze-mecze"></ul>
+              <!-- 1.33.0 (właściciel 10.11): listowanie chronologicznie LUB
+                   wg drużyn; wybór zapamiętywany. Domyślnie chronologicznie
+                   (najbliższe pierwsze). Stan przycisków ustawia js/app.js
+                   (localStorage) — is-aktywny tu = tylko bez-JS fallback. -->
+              <div class="mecz-widoki" role="group" aria-label="Sposób listowania najbliższych meczów">
+                <button type="button" class="mecz-widok is-aktywny" data-lista="najblizsze" data-widok="czas" aria-pressed="true">Chronologicznie</button>
+                <button type="button" class="mecz-widok" data-lista="najblizsze" data-widok="druzyny" aria-pressed="false">Wg drużyn</button>
+              </div>
+              <div id="najblizsze-mecze"></div>
               <!-- 1.26.5 (właściciel 04.11: „brak wygodnego sposobu do zwinięcia
                    listy w trakcie czytania; lista jest długa, więc możliwość
                    zwijania nie może być po prostu na samym dole”): Zwiń listę
@@ -216,7 +224,13 @@
               </span>
             </button>
             <div class="mecz-panel" id="ostatnie-mecze-panel" hidden>
-              <div id="ostatnie-mecze-grupy"></div>
+              <!-- 1.33.0 (właściciel 10.11): j.w. — domyślnie chronologicznie
+                   (najświeższe pierwsze); „Wg drużyn” = układ znany z 1.20.0–1.32.2 -->
+              <div class="mecz-widoki" role="group" aria-label="Sposób listowania ostatnich meczów">
+                <button type="button" class="mecz-widok is-aktywny" data-lista="ostatnie" data-widok="czas" aria-pressed="true">Chronologicznie</button>
+                <button type="button" class="mecz-widok" data-lista="ostatnie" data-widok="druzyny" aria-pressed="false">Wg drużyn</button>
+              </div>
+              <div id="ostatnie-mecze-lista"></div>
               <!-- 1.26.5: jak wyżej — zwijanie w trakcie czytania -->
               <button type="button" class="mecz-zwin" id="zwin-ostatnie">Zwiń listę ▲</button>
             </div>
