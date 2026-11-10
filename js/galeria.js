@@ -307,7 +307,7 @@ $("#gal-lightbox").addEventListener("click", (e) => {
    nawigacja po stronie to pełne przeładowania, a długo otwarte karty to
    wzorzec strony głównej z wynikami; „Odśwież stronę” omija cache
    przeglądarki — dociąga HTML, skrypty i styl, dopiero potem przeładowuje). */
-const WERSJA_KODU = "1.32.2";
+const WERSJA_KODU = "1.33.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie)? Jak app.js. */
 function nowszaWersja(a, b) {
