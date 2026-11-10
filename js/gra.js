@@ -102,6 +102,29 @@
    patrz tmjwk/pong docs/dialog_ze_strona.md, runda 1): wtedy
    samonaprawa będzie gaszona po cichu po stronie gry.
 
+   1.33.0 — LISTY MECZÓW: CHRONOLOGIA / WG DRUŻYN (zgłoszenie
+   właściciela 10.11: „Niech listy ‹Najbliższe mecze — wszystkie
+   drużyny› i ‹Ostatnie mecze — wszystkie drużyny› mają opcje
+   listowania wg chronologi i wg drużyna. Wybierz odpowiednie
+   sortowanie domyślne dla każdej z list.”). Każdy z dwóch kafelków
+   dostaje pigułkowy przełącznik („Chronologicznie” / „Wg drużyn”),
+   wybór zapamiętywany OSOBNO dla każdej listy (localStorage
+   „kts-widoki-meczy”, wraca po powrocie na stronę). DOMYŚLNIE
+   chronologicznie na OBU listach — uzasadnienie: „Najbliższe” =
+   najbliższe pierwsze (gość pyta „kiedy najbliższy mecz?”,
+   niezależnie od drużyny), „Ostatnie” = najświeższe pierwsze (gość
+   pyta „co było wczoraj?”) — do 1.32.2 „Ostatnie” były ZAWSZE wg
+   drużyn, teraz grupowanie jest drugą opcją. Zasady grupowania
+   (wspólne, jak 1.20.0): drużyny w kolejności sezonu (dane.zespoly
+   = 1. liga → … → amatorzy), w grupie: najbliższe rosnąco, ostatnie
+   malejąco; derby naszych drużyn → grupa wyżej notowanej (raz).
+   Technicznie (js/app.js + index.html + css/style.css): stan
+   WIDOKI_MECZY + grupyWgDruzyn()/htmlGrupMeczy() (wspólne dla obu
+   list), renderMecze() rysuje płaską <ul> albo sekcje .mecz-grupa,
+   podpinWidokiMeczy() w start() (przyciski żyją mimo przerysowań
+   pętli świeżości), kontenery #najblizsze-mecze/#ostatnie-mecze-lista
+   jako div-y, pigułki .mecz-widoki (aktywna = granat, aria-pressed).
+
    1.32.2 — PLANSZA NIE WYSTAJE NA NISKICH OKNACH (kontynuacja
    zgłoszenia 10.11: „gra jak największa w oknie, ale nie wystawała
    poza ekran”). Weryfikacja v1.32.0 po wdrożeniu (7 widoków,
@@ -249,7 +272,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.32.2";
+const WERSJA_KODU = "1.33.0";
 
 const $ = (sel) => document.querySelector(sel);
 
