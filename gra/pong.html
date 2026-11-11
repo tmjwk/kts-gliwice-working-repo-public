@@ -1,13 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.22">
+<html lang="en" data-version="0.3.23">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.22"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.22</title>
+<meta name="game-version" content="0.3.23"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.23</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.23 (2026-11-12, zgłoszenie Ciby — „Nie wiem czy to safari
+  ale na pewno Web kit. Zrób tak aby to działało pls. W wersji na iPhone”):
+  WYMUŚONY POZIOM = ROTACJA SOFTWARE. Po diagnozie v0.3.22 (Safari na
+  iPhonie NIE MA Fullscreen API dla elementów ani screen.orientation.lock()
+  — żadna strona nie wymusi poziomu) Ciba dalej nie widzi poziomu, więc
+  gra bierze sprawy w swoje ręce: skoro ekranu nie obróci przeglądarka,
+  obraca się GRA. Całe <body> dostaje transform: rotate(±90°) + wymiary
+  zamienione (width=innerHeight, height=innerWidth, transform-origin 0 0;
+  rozmiary z JS, NIE 100vh/100vw — iOS liczy vh z dużego viewportu,
+  wystawałoby pod pasek Safari), więc telefon trzymany BOKIEM pokazuje
+  pełny poziomy kort dokładnie jak po prawdziwym obrocie — na KAŻDYM
+  WebKicie (Safari, ale też wbudowane przeglądarki aplikacji trzymające
+  pion — one właśnie tego potrzebują). Stan prowadzi ROT.mode: 0=pion,
+  1=+90° (body.frcw), 2=−90° (body.frccw). Włączenie: chip w menu na
+  telefonie w pionie STAŁ SIĘ PRZYCISKIEM („Tap: rotate game to
+  landscape”, role=button, pointer-events:auto — dawne „rotate phone”
+  było tylko prośbą; tap = +90°) + przycisk ROT w stopce (widoczny
+  TYLKO: dotyk + krótki bok ≤540 + pion lub aktywna rotacja; ukryty na
+  desktop/iPad/w prawdziwym poziomie) CYKLUJE: pion → +90° → −90° →
+  pion (Flip/Upright — oba kierunki, bo jedni kręcą telefon w lewo,
+  inni w prawo, a kabel ładowania wpada tylko z jednej strony).
+  Współrzędne zdarzeń wracają do osi kortu odwrotnym obrotem:
+  fieldY/sideFor/touchGain liczą z przestrzeni LAYOUTU sceny (stageBox:
+  offsetWidth/offsetHeight/offsetLeft/offsetTop — transform ich nie
+  rusza; w pionie to samo co getBoundingClientRect). PRAWDZIWY poziom
+  (viewport szerszy niż wyższy) gasi rotację automatycznie (bez
+  podwójnego obrotu) — a powrót do pionu jej NIE wznawia: telefon
+  trzymany znowu pionowo musiałby pokazywać treść bokiem; bez rotacji
+  wznawianej samo z siebie (kto chce — jedno stuknięcie). Rotacja
+  działa w KAŻDYM stanie gry (fit() przerysuje kort natychmiast —
+  v0.3.0), zwalnia stare kotwice dotyku (releaseAllPointers — palec nie
+  może prowadzić paletki w martwej osi), niczego nie cofa:
+  EXIT/postMessage/pauza/fizyka/dźwięk/easter egg bez zmian. Klasy
+  body.frcw/.frccw: position:fixed;top:0;left:0;overflow:hidden — iOS
+  nie scrolluje ani nie odbija strony w trybie obróconym;
+  visualViewport.resize pilnuje paska Safari. Pion ZOSTAJE pełnoprawnym
+  trybem gry (czułość v0.3.9 bez zmian) — rotacja to opcja, nie przymus.
   Wersja: 0.3.22 (2026-11-12, zgłoszenie Ciby — „przetestowałem grę na
   iPhonie. Gra się otwiera, przechodzi w pełny ekran w widoku pionowym
   ale auto obracanie nie działa stąd nie można zobaczyć gry w widoku
@@ -482,22 +519,46 @@
   #bstart:hover,#bstart:focus-visible{background:var(--ink);color:#0b0b0d;animation:none}
   #bstart:focus-visible{outline:2px solid var(--club-accent);outline-offset:4px}
   @keyframes startPulse{50%{opacity:.55}}
-  /* v0.3.22 (zgłoszenie Ciby — test na iPhonie: „Gra się otwiera, przechodzi
-     w pełny ekran w widoku pionowym ale auto obracanie nie działa…”):
-     chip „ROTATE PHONE FOR LANDSCAPE” w menu na telefonie w pionie —
-     iOS nie ma element-FS ani orientation.lock (poziomu nie wymusi żadna
-     strona), więc gra tylko delikatnie PROSI o obrót telefonu.
-     pointer-events:none (nic nie chwyta), gaśnie po START i w poziomie;
-     skanlinie CRT (::after sceny) kładą się na nim jak na wszystkim. */
+  /* v0.3.22→23 (zgłoszenie Ciby — test na iPhonie: „Gra się otwiera, przechodzi
+     w pełny ekran w widoku pionowym ale auto obracanie nie działa…” →
+     „Zrób tak aby to działało pls”): iOS nie ma element-FS ani
+     orientation.lock (poziomu nie wymusi żadna strona) — v0.3.22 prosiło
+     o obrót telefonu, v0.3.23 daje PRZYCISK: chip w menu na telefonie
+     w pionie = „Tap: rotate game to landscape”; tap obraca GRĘ (rotacja
+     software całego body — patrz body.frcw/.frccw niżej). Dalej tylko
+     MENU + pion (dotyk, krótki bok ≤540), gaśnie po START/w rotacji/w
+     poziomie — w grze steruje przycisk ROT w stopce. :aktywność jak
+     przycisk; skanlinie CRT (::after sceny) kładą się na nim jak na
+     wszystkim. */
   #rot{
     position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
-    display:none;pointer-events:none;white-space:nowrap;
+    display:none;pointer-events:auto;cursor:pointer;white-space:nowrap;
     color:#8d8d94;font-size:clamp(9px,1.9vmin,11px);letter-spacing:.16em;
     text-transform:uppercase;padding:4px 10px;border:1px solid var(--line);
     border-radius:6px;background:rgba(11,11,13,.62);
     text-shadow:0 1px 2px rgba(0,0,0,.8);
+    transition:color .12s,border-color .12s;
   }
   #rot.on{display:block}
+  #rot:active{color:var(--ink);border-color:var(--ink)}
+  /* v0.3.23: ROTACJA SOFTWARE — wymuszony poziom na iPhonie/WebKicie.
+     Body: transform ±90° (origin 0 0) + wymiary zamienione z JS
+     (width=innerHeight, height=innerWidth — NIE 100vh/100vw: iOS liczy
+     vh z dużego viewportu, wystawałoby pod pasek Safari).
+     rotate(90deg)translateY(-100%) / rotate(-90deg)translateX(-100%):
+     obrócone body wypełnia portretowy viewport co do piksela, a LAYOUT
+     w środku jest poziomy (844×390 na iPhonie) — gra widzi dokładnie to,
+     co po prawdziwym obrocie (ramki 1/6, kort 2/3 szerokości).
+     position:fixed + overflow:hidden: iOS nie scrolluje i nie odbija
+     obróconej strony; visualViewport.resize pilnuje paska Safari.
+     Współrzędne dotyku wracają do osi kortu w JS (fieldY/sideFor).
+     Sterowanie: chip w menu (engage +90°) / przycisk ROT w stopce
+     (cykl pion → +90° → −90° → pion). */
+  body.frcw,body.frccw{
+    position:fixed;top:0;left:0;transform-origin:0 0;overflow:hidden;
+  }
+  body.frcw{transform:rotate(90deg) translateY(-100%)}
+  body.frccw{transform:rotate(-90deg) translateX(-100%)}
   /* v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
      narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’ jest
      zajęty prze pauzę. mój błąd. sorry”): HUD P(trafienia) w GÓRNYCH
@@ -587,7 +648,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.22</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.23</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -597,14 +658,16 @@
        środku ekranu — w każdej wersji”): menu startowe; widoczne tylko w
        stanie menu (klasę .on prowadzi render() co klatkę) -->
   <div id="startov"><button id="bstart">Start</button></div>
-  <!-- v0.3.22 (zgłoszenie Ciby — iPhone: pełny ekran w pionie, auto-obracanie
-       nie działa): Safari na iPhonie nie ma element-FS ani orientation.lock —
-       poziomu nie wymusi żadna strona; gra przerysowuje się natychmiast po
-       obrocie (fit + resize/orientationchange/RO, próby ponawiane — v0.3.0/07).
-       Chip tylko w MENU na telefonie w pionie (dotyk, krótki bok ≤540):
-       dyskretna sugestia obrotu; pointer-events:none; po START i w poziomie
-       gaśnie — pion pozostaje pełnoprawnym trybem gry (czułość v0.3.9). -->
-  <div id="rot" aria-hidden="true">Rotate phone for landscape</div>
+  <!-- v0.3.22/23 (zgłoszenie Ciby — iPhone: pełny ekran w pionie,
+       auto-obracanie nie działa → „Zrób tak aby to działało pls. W wersji
+       na iPhone”): Safari na iPhonie nie ma element-FS ani orientation.lock
+       — poziomu nie wymusi żadna strona, więc od v0.3.23 gra obraca SIĘ
+       (rotacja software: body.frcw/frccw). Chip tylko w MENU na telefonie
+       w pionie (dotyk, krótki bok ≤540); od v0.3.23 to PRZYCISK: tap = +90°
+       (telefon trzymany bokiem pokazuje pełny poziomy kort); klasę .on
+       prowadzi render() co klatkę; gaśnie po START, w rotacji i w poziomie.
+       Pion pozostaje pełnoprawnym trybem gry (czułość v0.3.9). -->
+  <div id="rot" role="button">Tap: rotate game to landscape</div>
   <!-- v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
        narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’
        jest zajęty prze pauzę”): HUD P(trafienia) w GÓRNYCH NAROŻNIKACH
@@ -627,6 +690,14 @@
        etykiety (1P / Side: R / To 11 / Snd: On), by rząd mieścił się bez
        przewijania. Podpowiedź sterowania na końcu rzędu (ellipsis). -->
   <button id="bexit">Exit</button>
+  <!-- v0.3.23 (zgłoszenie Ciby — iPhone/WebKit: „Zrób tak aby to działało
+       pls”): ROT = wymuszony poziom przez rotację SOFTWARE (body.frcw/frccw).
+       Widoczny TYLKO na telefonie z dotykiem (krótki bok ≤540) w pionie
+       LUB przy aktywnej rotacji (by obrócić drugą stronę / wrócić do
+       pionu); ukryty na desktopie, iPadzie i w prawdziwym poziomie (tam
+       nie ma czego obracać). Cykl: Rotate → Flip (−90°) → Upright (pion);
+       pod skróconymi etykietami (<560 px) „Rot”. -->
+  <button id="brot" hidden>Rotate</button>
   <!-- v0.3.15 (życzenie Ciby — „dodaj przycisk Pauza”): zamrożenie symulacji
        w każdym stanie gry; label i stan .on prowadzi applyPause() -->
   <button id="bpauze">Pause</button>
@@ -872,7 +943,7 @@ function drawScore(side) {                     // jedności lustrzane wokół si
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.22";     // jedno źródło prawdy o wersji — nagłówek,
+const VERSION = "0.3.23";     // jedno źródło prawdy o wersji — nagłówek,
 const RELEASE = "2026-11-12"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
@@ -1212,9 +1283,19 @@ function fieldY(e) {                          // clientY -> linia kortu (clamp w
      proporcjonalnie na pełny zakres paletki — „cały ekran czuły” dokładnie
      jak w poziomie (tam scena ≈ kort, więc odczuwalnie bez zmian).
      v0.3.6: dotyk liczy z tej mapy DELTY ruchu (bez pozycjonowania
-     absolutnego); mysz/hover bez zmian — absolutnie. */
-  const r = stage.getBoundingClientRect();
-  return (e.clientY - r.top) / r.height * VIS_H;
+     absolutnego); mysz/hover bez zmian — absolutnie.
+     v0.3.23: rotacja SOFTWARE (wymuszony poziom) — palec żyje w osiach
+     EKRANU (pion), kort w osiach LAYOUTU (poziom). Oś paletki (Y sceny)
+     leży na ekranowym X, więc +90°: sy = innerWidth − clientX − top
+     (prawa strona ekranu = dół kortu), −90°: sy = clientX − top.
+     stageBox() daje scenę w przestrzeni LAYOUTU (offset*, nietknięte
+     transformem; w pionie to samo co getBoundingClientRect). */
+  const r = stageBox();
+  if (ROT.mode === 1)                         // body.frcw: rotate(90deg) — osie zamienione
+    return (innerWidth - e.clientX - r.top) / r.h * VIS_H;
+  if (ROT.mode === 2)                         // body.frccw: rotate(-90deg) — osie zamienione
+    return (e.clientX - r.top) / r.h * VIS_H;
+  return (e.clientY - r.top) / r.h * VIS_H;
 }
 /* v0.3.9 — NORMALIZACJA czułości dotyku (zgłoszenie Ciby: „na telefonie
    w pionie nie mogę nadążyć za piłeczką”). Mapa Y z fieldY mapuje CAŁĄ
@@ -1238,14 +1319,21 @@ const TOUCH_MODE = (() => {                    // ?touch=1..3 testowo; 0 = AUTO
 })();
 function touchGain() {                         // mnożnik delty DOTYKU (palec/rysik)
   if (TOUCH_MODE > 0) return TOUCH_MODE;
-  const h = stage.getBoundingClientRect().height;
+  const h = stageBox().h;                      // v0.3.23: LAYOUT sceny — w rotacji ~330 px jak prawdziwy poziom
   return (h > 0) ? Math.max(0.5, Math.min(2, h / TOUCH_REF)) : 1;
 }
 function sideFor(e) {                         // 2P: połowa EKRANU (nie kanwy)
+  if (ROT.on) {                                // v0.3.23: połowa ekranu w osiach LAYOUTU
+    const b = stageBox();                     // (+90°: x = clientY; −90°: x = innerHeight − clientY)
+    const sx = ROT.mode === 1 ? e.clientY - b.left
+                             : innerHeight - e.clientY - b.left;
+    return sx < b.w / 2 ? 0 : 1;
+  }
   return e.clientX < innerWidth / 2 ? 0 : 1;
 }
 function onButton(e) {                        // gest na kontrolce = klik przycisku
-  return !!(e.target && e.target.closest && e.target.closest("button"));
+  /* v0.3.23: chip #rot (menu) też jest kontrolką — tap nie kotwiczy paletki */
+  return !!(e.target && e.target.closest && e.target.closest("button, #rot"));
 }
 addEventListener("pointerdown", e => {
   if (onButton(e)) return;
@@ -1723,13 +1811,77 @@ $("bsnd").onclick = () => {
 const FORCE_CLASSIC = new URLSearchParams(location.search).get("classic") === "1";
 const stage = document.getElementById("stage");
 
+/* --- v0.3.23: WYMUŚONY POZIOM — ROTACJA SOFTWARE (zgłoszenie Ciby: „Nie
+   wiem czy to safari ale na pewno Web kit. Zrób tak aby to działało pls.
+   W wersji na iPhone”) -------------------------------------------------------
+   Safari/WebKit na iPhonie nie ma element-FS ani screen.orientation.lock —
+   przeglądarka nie obróci strony; skoro SYSTEM nie obróci ekranu (blokada
+   obrotu albo wbudowana przeglądarka aplikacji trzymająca pion), GRA
+   obraca siebie: body.frcw/.frccw = transform ±90° + wymiary zamienione
+   (width=innerHeight, height=innerWidth — z JS, nie vh/vw: iOS vh = duży
+   viewport, wystawałoby pod pasek). Telefon trzymany BOKIEM widzi pełny
+   poziomy kort jak po prawdziwym obrocie (v0.3.0: ramki 1/6, kort 2/3,
+   przerys natychmiastowy). Cykl: pion → +90° → −90° → pion (ROT.toggle
+   — przycisk w stopce; ROT.engage = chip w menu). Prawdziwy poziom
+   (viewport szerszy) gasi rotację SAM (bez podwójnego obrotu); powrót
+   do pionu jej NIE wznawia — telefon trzymany pionowo musiałby widzieć
+   treść bokiem. Stare kotwice dotyku zwalniane (releaseAllPointers) —
+   palec nie może prowadzić paletki w martwej osi. Desktop/iPad: ukryte
+   (dotyk + krótki bok ≤540 + pian albo aktywna rotacja). */
+const ROT = {
+  mode: 0,                                    // 0 = pion; 1 = +90° (frcw); 2 = −90° (frccw)
+  get on() { return this.mode !== 0; },
+  engage() {                                  // chip (menu, pion): tap = od razu +90°
+    if (this.mode === 0 && innerWidth < innerHeight) { this.mode = 1; rotApply(); }
+  },
+  toggle() {                                  // ROT w stopce: cykl pion → +90° → −90° → pion
+    if (this.mode === 0 && innerWidth >= innerHeight) return;   // prawdziwy poziom — nie ma czego obracać
+    this.mode = (this.mode + 1) % 3;
+    rotApply();
+  },
+};
+function vpW() { return ROT.on ? innerHeight : innerWidth; }  // wirtualny viewport — osie KORTU
+function vpH() { return ROT.on ? innerWidth : innerHeight; }
+function stageBox() {                          // v0.3.23: scena w przestrzeni LAYOUTU
+  if (ROT.on)                                  // transform nie rusza offsetów — to są osie kortu
+    return { left: stage.offsetLeft, top: stage.offsetTop,
+             w: stage.offsetWidth, h: stage.offsetHeight };
+  const r = stage.getBoundingClientRect();
+  return { left: r.left, top: r.top, w: r.width, h: r.height };
+}
+function rotApply() {                          // ustawia/ściąga rotację → odświeża layout kortu
+  const b = document.body;
+  b.classList.remove("frcw", "frccw");
+  if (ROT.mode === 1) b.classList.add("frcw");
+  if (ROT.mode === 2) b.classList.add("frccw");
+  if (ROT.on) {                                // wymiary Z JS co do piksela (patrz blok wyżej)
+    b.style.width = innerHeight + "px";
+    b.style.height = innerWidth + "px";
+  } else { b.style.width = b.style.height = ""; }
+  releaseAllPointers();                        // kotwice dotyku żyły w starych osiach
+  rotUI();
+  fit();
+}
+function rotResize() {                         // resize/orientationchange/visualViewport
+  if (!ROT.on) { rotUI(); return; }
+  if (innerWidth > innerHeight) { ROT.mode = 0; rotApply(); return; }   // PRAWDZIWY poziom → rotacja zbędna
+  rotApply();                                  // pasek Safari zmienił innerHeight → odśwież wymiary body
+}
+function rotUI() {                             // przycisk ROT w stopce: widoczność + etykieta cyklu
+  const el = $("brot");
+  el.hidden = !(matchMedia("(pointer: coarse)").matches
+                && Math.min(innerWidth, innerHeight) <= 540
+                && (ROT.on || innerWidth < innerHeight));   // pian LUB aktywna rotacja; poziom/desktop/iPad → nie
+  el.textContent = uiTxt(["Rotate", "Flip", "Upright"][ROT.mode],
+                         ["Rot", "Flip", "Upright"][ROT.mode]);
+}
 function isPhoneLandscape() {                  // telefon w poziomie (dotyk + krótki bok ≤540)
-  return matchMedia("(pointer: coarse)").matches
-      && innerWidth > innerHeight && Math.min(innerWidth, innerHeight) <= 540;
+  return matchMedia("(pointer: coarse)").matches                 // v0.3.23: osie WIRTUALNE — rotacja
+      && vpW() > vpH() && Math.min(vpW(), vpH()) <= 540;         // liczy się jak prawdziwy obrót
 }
 function phonePortrait() {                    // v0.3.22: telefon w PIONIE (dotyk + krótki bok ≤540) —
-  return matchMedia("(pointer: coarse)").matches   // → chip „rotate for landscape” w menu
-      && innerHeight > innerWidth && Math.min(innerWidth, innerHeight) <= 540;
+  return matchMedia("(pointer: coarse)").matches   // → chip „rotate game” w menu (v0.3.23: przycisk)
+      && vpH() > vpW() && Math.min(vpW(), vpH()) <= 540;
 }
 function courtCyclesFor(ar) {                  // ar = proporcje dostępnego miejsca
   if (FORCE_CLASSIC) return CY_MIN;
@@ -1771,14 +1923,14 @@ function requestCourt(w) {                     // v0.3.0: bez odkładania — od
   if (w !== VIS_W) applyCourt(w);
 }
 function fit() {
-  const r = stage.getBoundingClientRect();
-  const availW = Math.max(120, r.width - 20), availH = Math.max(90, r.height - 20);
+  const r = stageBox();                       // v0.3.23: osie LAYOUTU (rotacja software = jak prawdziwy poziom)
+  const availW = Math.max(120, r.w - 20), availH = Math.max(90, r.h - 20);
   /* telefon w poziomie: ramki dokładnie 1/6 EKRANU po bokach → kort = 2/3
      szerokości ekranu (v0.3.0, decyzja Ciby). W tym trybie NIE działa kap 16:9 —
      górna granica to sama ramka (CY_PHONE_MAX); przy bardzo krótkiej scenie
      dodatkowy letterbox góra/dół. */
   const phone = !FORCE_CLASSIC && isPhoneLandscape();
-  const maxW = phone ? Math.min(availW, innerWidth * 2 / 3) : availW;
+  const maxW = phone ? Math.min(availW, vpW() * 2 / 3) : availW;   // v0.3.23: vpW — w rotacji = innerHeight
   const cap = phone ? CY_PHONE_MAX : CY_MAX;
   requestCourt(FORCE_CLASSIC ? CY_MIN :
     Math.max(CY_MIN, Math.min(cap, Math.round(maxW / availH * 280.5))));
@@ -1788,11 +1940,15 @@ function fit() {
   cv.style.width = w + "px";
   cv.style.height = h + "px";
 }
-addEventListener("resize", fit);
-addEventListener("orientationchange", () => { fit(); setTimeout(fit, 120); setTimeout(fit, 350); });
+addEventListener("resize", () => { rotResize(); fit(); });
+addEventListener("orientationchange", () => { rotResize(); fit(); setTimeout(fit, 120); setTimeout(fit, 350); });
 try { screen.orientation && screen.orientation.addEventListener("change",
-  () => { fit(); setTimeout(fit, 120); setTimeout(fit, 350); }); } catch (_) {}
+  () => { rotResize(); fit(); setTimeout(fit, 120); setTimeout(fit, 350); }); } catch (_) {}
+try { window.visualViewport && visualViewport.addEventListener("resize", rotResize); } catch (_) {}  // pasek Safari (iOS) w rotacji
 try { new ResizeObserver(() => fit()).observe(stage); } catch (_) {}  // pewniak: każdy przesuw layoutu
+$("rot").addEventListener("click", () => { unlock(); ROT.engage(); });   // v0.3.23: chip = przycisk (+90°)
+$("brot").onclick = () => { unlock(); ROT.toggle(); };                    // v0.3.23: cykl pion/±90°/pion
+rotUI();                                     // v0.3.23: przycisk ROT — widoczność wg urządzenia
 applyCourt(CY_MIN);        // spójny layout od 1. klatki (klasyka lub ~4,5% od krawędzi)
 fit();
 
@@ -1807,6 +1963,7 @@ window.__pong = { G, Snd, FIELD_HZ, PAD_MIN, PAD_MAX, VERSION,
   get BALL_SPEED() { return BALL_SPEED },   // v0.3.14: linijka zapisuje BALL_SPEED w pomiarze
   get paused() { return G.paused },        // v0.3.15: pauza (przycisk/klawisz P)
   setPaused, togglePause,                   // v0.3.15: seria testowa U19
+  rot: ROT, rotApply, rotResize,           // v0.3.23: wymuszony poziom (rotacja software) — seria U23
   start: startGame,                         // v0.3.17: menu START → odliczanie (seria U20)
   aiMissModel, humanMissRate,             // v0.3.18/19: easter egg — model AI / empiria gracza (seria U21)
   setEggs, updateEggs,                    // v0.3.19/20: HUD P(trafienia) — narożniki, 3×T, na żywo
