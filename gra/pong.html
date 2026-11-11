@@ -1,13 +1,54 @@
 <!DOCTYPE html>
-<html lang="en" data-version="0.3.20">
+<html lang="en" data-version="0.3.22">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="game-version" content="0.3.20"><!-- wersja dla parserów bez JS (curl / agent AI) -->
-<title>PONG · 1972 — Atari Replica · v0.3.20</title>
+<meta name="game-version" content="0.3.22"><!-- wersja dla parserów bez JS (curl / agent AI) -->
+<title>PONG · 1972 — Atari Replica · v0.3.22</title>
 <!--
   ============================================================================
   PONG — wierna replika automatu Atari (listopad 1972, logika dyskretna TTL)
+  Wersja: 0.3.22 (2026-11-12, zgłoszenie Ciby — „przetestowałem grę na
+  iPhonie. Gra się otwiera, przechodzi w pełny ekran w widoku pionowym
+  ale auto obracanie nie działa stąd nie można zobaczyć gry w widoku
+  poziomym.”): ROTATE HINT + diagnoza iOS. Fakty najpierw: gra NIGDY nie
+  woła requestFullscreen (jedyne FS w kodzie to obronny exitFullscreen przy
+  wyjściu) — „pełny ekran” na iPhonie to tryb Safari/strony osadzającej,
+  nie gry; Safari na iPhonie W OGÓLE nie ma element-FS (dopiero iPad/
+  macOS od 16.4) ani screen.orientation.lock() — ŻADNA strona nie może
+  na iPhonie wymusić poziomu; obrót musi przyjść z systemu (telefon
+  obrócony fizycznie + blokada obrotu w Centrum sterowania wyłączona;
+  wbudowane przeglądarki aplikacji potrafią trzymać pion — wtedy grę
+  trzeba otworzyć w Safari). Gra jest gotowa na obrót od v0.3.0/07:
+  fit() na resize + orientationchange + screen.orientation.change +
+  ResizeObserver (próby ponawiane 120/350 ms) przerysowuje kort
+  NATYCHMIAST — poziom (ramki 1/6, kort 2/3 ekranu) widać od pierwszej
+  klatki PO obrocie. NOWOŚĆ: w MENU na telefonie w pionie (dotyk,
+  krótki bok ≤540) pod kortem świeci chip „ROTATE PHONE FOR LANDSCAPE”
+  — pointer-events:none (nic nie chwyta, START/dotyk działają pod nim),
+  skanlinie CRT kładą się na nim jak na wszystkim; znika po START i
+  w poziomie; pion ZOSTAJE pełnoprawnym trybem gry (czułość dotyku
+  znormalizowana v0.3.9 bez zmian). phonePortrait() = dotyk + pion +
+  krótki bok ≤540 (iPad odpada). Fizyka/dotyk/dźwięk/easter egg/
+  geometria bez zmian z v0.3.21.
+  Wersja: 0.3.21 (2026-11-11, poprawka Ciby — „ziom ale ty mi liczysz
+  prawdopodobieństwo trafienia dla już odbitych piłek a mnie chodzi
+  o nastepną. pamietasz ai gry ma lagorytm który podobno powoduje, że
+  każde kolejne trafienie jest dla ai trudniejsze.”): NAROŻNIKI ŚWIECĄ
+  P(trafienia) NASTĘPNEJ PIŁKI — liczba dotyczy ZAWSZE KOLEJNEGO odbicia,
+  nigdy piłki już odbitej. Notka mówi to wprost: „P(trafienia) NASTĘPNEJ ·
+  nr X · błąd ±E” — X = następne z rzędu trafienie AI w bieżącej wymianie
+  (nowy licznik G.aiRally: ++ gdy AI odbije, reset przy pudle/nowej
+  partii), E = amplituda błędu TEJ właśnie próby (±(2+h)/0,9, cap ±12,22 —
+  rośnie z KAŻDYM odbiciem wymiany, więc każde kolejne trafienie AI jest
+  faktycznie trudniejsze: 100,0% dla pierwszych prób, potem 95,0% →
+  85,5% → 77,7% na suficie — spadek widać NA OCZACH w długiej wymianie).
+  Stan serve liczy h dokładnie z G.serveDir (serw do gracza = +1 za jego
+  odbicie). Z notki AI ZNIKNĘŁA empiria partii („odbite X z Y” — statystyka
+  JUŻ ODBITYCH piłek, to właśnie czytało się jak cofanie w przeszłość);
+  CZŁOWIEK = najlepszy szacunek na następną piłkę z empirii partii
+  (odbite X z Y); 2P: obaj z empirii. Sterowanie/fizyka bez zmian z
+  v0.3.20: 3×T zał./wył., bez pauzy, na żywo co klatkę.
   Wersja: 0.3.20 (2026-11-11, poprawka Ciby — „nie wiem co to liczy ale
   na pewnio nie prawdopodobieństwo odbicia w %. dla ai gry na początku
   pokazuje 0! chce widziec jak wygląda prawdopodobieństwo, że AI gry
@@ -441,6 +482,22 @@
   #bstart:hover,#bstart:focus-visible{background:var(--ink);color:#0b0b0d;animation:none}
   #bstart:focus-visible{outline:2px solid var(--club-accent);outline-offset:4px}
   @keyframes startPulse{50%{opacity:.55}}
+  /* v0.3.22 (zgłoszenie Ciby — test na iPhonie: „Gra się otwiera, przechodzi
+     w pełny ekran w widoku pionowym ale auto obracanie nie działa…”):
+     chip „ROTATE PHONE FOR LANDSCAPE” w menu na telefonie w pionie —
+     iOS nie ma element-FS ani orientation.lock (poziomu nie wymusi żadna
+     strona), więc gra tylko delikatnie PROSI o obrót telefonu.
+     pointer-events:none (nic nie chwyta), gaśnie po START i w poziomie;
+     skanlinie CRT (::after sceny) kładą się na nim jak na wszystkim. */
+  #rot{
+    position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+    display:none;pointer-events:none;white-space:nowrap;
+    color:#8d8d94;font-size:clamp(9px,1.9vmin,11px);letter-spacing:.16em;
+    text-transform:uppercase;padding:4px 10px;border:1px solid var(--line);
+    border-radius:6px;background:rgba(11,11,13,.62);
+    text-shadow:0 1px 2px rgba(0,0,0,.8);
+  }
+  #rot.on{display:block}
   /* v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
      narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’ jest
      zajęty prze pauzę. mój błąd. sorry”): HUD P(trafienia) w GÓRNYCH
@@ -470,7 +527,7 @@
     letter-spacing:.14em;text-transform:uppercase;
     max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
-  .egg b{                          /* P(trafienia) — liczona NA ŻYWO (v0.3.20) */
+  .egg b{                          /* P(trafienia) NASTĘPNEJ piłki — NA ŻYWO (v0.3.20/21) */
     color:var(--club-accent);font-weight:700;line-height:1.05;
     font-size:clamp(12px,2.3vmin,17px);
     max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -530,7 +587,7 @@
 <body>
 
 <header>
-  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.20</span></span>
+  <span><b>PONG</b>&nbsp;· 1972 REPLICA&nbsp;<span class="ver">v0.3.22</span></span>
   <!-- [A-04] podmień na nazwę klubu / wstaw logo (patrz docs) -->
   <span class="club">TABLE TENNIS CLUB</span>
 </header>
@@ -540,12 +597,22 @@
        środku ekranu — w każdej wersji”): menu startowe; widoczne tylko w
        stanie menu (klasę .on prowadzi render() co klatkę) -->
   <div id="startov"><button id="bstart">Start</button></div>
+  <!-- v0.3.22 (zgłoszenie Ciby — iPhone: pełny ekran w pionie, auto-obracanie
+       nie działa): Safari na iPhonie nie ma element-FS ani orientation.lock —
+       poziomu nie wymusi żadna strona; gra przerysowuje się natychmiast po
+       obrocie (fit + resize/orientationchange/RO, próby ponawiane — v0.3.0/07).
+       Chip tylko w MENU na telefonie w pionie (dotyk, krótki bok ≤540):
+       dyskretna sugestia obrotu; pointer-events:none; po START i w poziomie
+       gaśnie — pion pozostaje pełnoprawnym trybem gry (czułość v0.3.9). -->
+  <div id="rot" aria-hidden="true">Rotate phone for landscape</div>
   <!-- v0.3.19 (poprawka życzenia Ciby — „nie tak, bez pauzy w górnych
        narożnikach liczoną na żywo no i klawisz trzeb zmienić na ‚t’ bo ‚p’
        jest zajęty prze pauzę”): HUD P(trafienia) w GÓRNYCH NAROŻNIKACH
-       (3×T zał./wył.); wypełnia go updateEggs() CO KLATKĘ — AI: model błędu
-       celowania (na żywo z długością wymiany), człowiek: realne odbicia/
-       piłki z tej partii; pointer-events:none, gra biegnie DALEJ (bez pauzy) -->
+       (3×T zał./wył.); wypełnia go updateEggs() CO KLATKĘ — od v0.3.21
+       liczba = P(trafienia) NASTĘPNEJ piłki: AI — model jej błędu ±AI_ERR(h)
+       dla KOLEJNEJ próby (rośnie z wymianą; nr próby w notce), człowiek —
+       szacunek z empirii partii; pointer-events:none, gra biegnie DALEJ
+       (bez pauzy) -->
   <div id="eggs" aria-hidden="true">
     <div class="egg" id="egg0"><small></small><b></b><span></span></div>
     <div class="egg" id="egg1"><small></small><b></b><span></span></div>
@@ -658,6 +725,7 @@ const G = {
   overTimer: 0,
   fields: 0,                 // licznik pól (testy/kalibracja T1–T7)
   aiErr: 0, aiComing: false, // błąd celowania AI / czy piłka leci w jego stronę
+  aiRally: 0,               // v0.3.21: seria trafień AI w bieżącej wymianie — nr NASTĘPNEJ piłki = aiRally+1
   paused: false,              // v0.3.15: PAUZA — zamrożenie symulacji (przycisk/klawisz P)
   returns: [0, 0],            // v0.3.18: easter egg — odbicia stron (empiria P(trafienia); od v0.3.19 na żywo w narożnikach)
   misses: [0, 0],             // v0.3.18: easter egg — pudła stron (piłka minęła paletkę; od v0.3.19 na żywo w narożnikach)
@@ -804,8 +872,8 @@ function drawScore(side) {                     // jedności lustrzane wokół si
   if (sc >= 10) drawDigit(1, tens, 16);        // dziesiątki: tylko „1" (7448 gasi zero)
   drawDigit(sc % 10, units, 16);
 }
-const VERSION = "0.3.20";     // jedno źródło prawdy o wersji — nagłówek,
-const RELEASE = "2026-11-11"; // tytuł karty, meta, version.json, postMessage
+const VERSION = "0.3.22";     // jedno źródło prawdy o wersji — nagłówek,
+const RELEASE = "2026-11-12"; // tytuł karty, meta, version.json, postMessage
 /* v0.3.10 (życzenie Ciby — „ten dolny komunikat jest niepotrzebny”):
    drawVersion() — nr wersji małymi 7-seg. na dole kortu (od v0.3.1,
    rysowany przy odliczaniu i po końcu gry) — USUNIĘTY. Wersję pokazuje
@@ -859,6 +927,12 @@ function render() {
   /* v0.3.17: menu startowe — START pośrodku sceny; render woła to co klatkę,
      więc zmiana stanu (klik/test/handler) od razu odwzorowuje się w DOM */
   $("startov").classList.toggle("on", G.state === "menu");
+  /* v0.3.22: chip „ROTATE PHONE FOR LANDSCAPE” — tylko MENU + telefon w pionie
+     (dotyk, krótki bok ≤540). iOS nie ma element-FS/orientation.lock, więc
+     strony nie wymuszą poziomu — hint delikatnie sugeruje obrót telefonu.
+     Co klatkę (jak startov): obrót/powrót do menu reaguje natychmiast;
+     pointer-events:none — nic nie chwyta. Pion = pełnoprawny tryb gry. */
+  $("rot").classList.toggle("on", G.state === "menu" && phonePortrait());
   /* v0.3.19/20: HUD P(trafienia) — NA ŻYWO co klatkę (także w menu; w pauzie
      liczby stoją razem z grą — to ta sama zamrożona symulacja); DOM pisany
      tylko przy zmianie tekstu (cache EGGC — bez ciągłego ubijania layoutu) */
@@ -960,6 +1034,8 @@ function stepBall() {
     G.aiComing = (b.vx > 0) === (aiIdx() === 1);   // w stronę AI? (v0.3.0)
     if (G.aiComing && !wasComing)              // nowa piłka leci w stronę AI
       G.aiErr = (Math.random() * 2 - 1) * AI_ERR(G.hits);
+    else if (wasComing && !G.aiComing)         // v0.3.21: AI właśnie odbiła —
+      G.aiRally++;                            // seria rośnie: narożnik świeci nr KOLEJNEGO trafienia
 
     /* pudło: HVID wchodzi w blanking poziomy (krawędź ekranu) */
     if (b.x <= 0 || b.x >= VIS_W - BALL) {
@@ -970,6 +1046,7 @@ function stepBall() {
       G.serveDir = missedLeft ? -1 : 1;       // serw do gracza, który spudłował
       G.serveVy = b.vy;                        // prędkość pionowa zachowana
       G.hits = 0;                              // reset prędkości poziomej (MISS)
+      G.aiRally = 0;                           // v0.3.21: seria AI od zera — nowa wymiana od następnego serwisu
       snd(SND_SCORE);
       if (G.score[winner] >= G.target) {       // STOPG → koniec partii
         G.state = "gameover"; G.overTimer = GAMEOVER_FIELDS;
@@ -983,6 +1060,7 @@ function stepBall() {
 
 function startCountdown() {                    // v0.3.0: rozgrywka startuje od 3-2-1
   G.score = [0, 0]; G.hits = 0; G.serveVy = 0;
+  G.aiRally = 0;                               // v0.3.21: seria AI od zera — następna partia = trafienie nr 1
   G.returns = [0, 0]; G.misses = [0, 0];       // v0.3.18: nowa partia = czysta empiria P(trafienia) (HUD ZOSTAJE — liczby startują od zera)
   G.serveDir = Math.random() < .5 ? -1 : 1;
   G.state = "count"; G.countF = COUNT_FIELDS;
@@ -1360,14 +1438,35 @@ $("bpauze").onclick = () => { unlock(); togglePause(); };
    pauzie — liczby stoją razem z grą, i w menu — świeci bazę 100,0%/„—”);
    DOM pisany tylko przy ZMIANIE tekstu (cache EGGC — bez ciągłego
    ubijania layoutu). Nowa partia: statystyki zerują się w
-   startCountdown, HUD zostaje. */
+   startCountdown, HUD zostaje.
+   v0.3.21 (poprawka Ciby — „ziom ale ty mi liczysz prawdopodobieństwo
+   trafienia dla już odbitych piłek a mnie chodzi o nastepną. pamietasz
+   ai gry ma lagorytm który podobno powoduje, że każde kolejne trafienie
+   jest dla ai trudniejsze.”): liczba = P(trafienia) NASTĘPNEJ piłki —
+   notka mówi to wprost: „NASTĘPNEJ · nr X · błąd ±E (rośnie)/(cap)”.
+   X = nr KOLEJNEGO trafienia AI w wymianie (G.aiRally: ++ gdy AI odbije,
+   reset przy pudle/nowej partii), E = amplituda błędu TEJ próby — rośnie
+   z każdym odbiciem wymiany, więc każde kolejne trafienie AI trudniejsze
+   (efekt widać na %: 100,0 → 95,0 → 85,5 → 77,7 na suficie). h liczone
+   też w stanie serve (z G.serveDir — serw do gracza: +1 za jego odbicie).
+   Empiria „odbite X z Y” zniknęła z notki AI (statystyka JUŻ ODBITYCH
+   piłek); człowiek: szacunek na NASTĘPNĄ z empirii partii. */
 const EGG = { n: 0, t: -1e9, WIN: 1000, on: false };  // licznik 3×T (okno 1 s)
 const EGGC = ["", ""];                                // cache tekstów narożników
 function aiMissModel() {              // model z JEJ programu (stepPads) — patrz komentarz wyżej
-  const h = G.hits + (G.state === "play" && !G.aiComing ? 1 : 0);  // której wymiany dotyczy następny rzut błędu
+  /* v0.3.21: h ZAWSZE dotyczy piłki, którą AI DOPiero odbije (nigdy już
+     odbitej): piłka w locie w stronę AI → błąd TEJ piłki (losowany przy jej
+     wystrzale, z G.hits po odbiciu wystrzeliwującym); piłka odlatuje /
+     serwis → błąd KOLEJNEJ próby AI (+1 za odbicie, które ją wystrzeli;
+     w serve kierunek zna G.serveDir); menu/count/gameover → seria od
+     zera (h = G.hits). */
+  let h;
+  if (G.state === "play")       h = G.hits + (G.aiComing ? 0 : 1);
+  else if (G.state === "serve") h = G.hits + (((G.serveDir > 0) === (aiIdx() === 1)) ? 0 : 1);
+  else                           h = G.hits;
   const E = AI_ERR(h);                // amplituda błędu celowania (±(2+h)/0,9, cap ±12,22)
   const reach = (PAD_H + BALL) / 2;   // 9,5 linii — |błąd| mniejszy = paletka jeszcze łapie
-  return { h, E, reach,
+  return { h, E, reach, n: G.aiRally + 1,   // n = NR KOLEJNEGO trafienia AI w wymianie (seria+1)
            miss: E > reach ? (E - reach) / E : 0,   // P(pudło)  = (E−9,5)/E
            hit:  E > reach ? reach / E       : 1 }; // P(trafienia) = 9,5/E — v0.3.20: TO świeci w narożniku
 }
@@ -1379,7 +1478,7 @@ function humanMissRate(i) {           // empiria gracza i z bieżącej partii
 }
 const fmtPct = p => p == null ? "—" :
   (p * 100).toLocaleString("pl-PL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
-function eggTexts() {                 // [lewy, prawy] — P(trafienia): etykieta / % / notka (NA ŻYWO)
+function eggTexts() {                 // [lewy, prawy] — P(trafienia) NASTĘPNEJ: etykieta / % / notka (NA ŻYWO)
   const ai = G.mode === 1 ? aiIdx() : -1;
   const m = aiMissModel();
   const out = [];
@@ -1390,14 +1489,15 @@ function eggTexts() {                 // [lewy, prawy] — P(trafienia): etykiet
                   : (i === 0 ? "LEWY · GRACZ" : "PRAWY · GRACZ"));
     const emp = humanMissRate(i);
     let pct, sub;
-    if (i === ai) {                   // AI: P(trafi) z modelu jej celowania; empiria w notce
-      pct = m.hit;
-      sub = "P(trafienia) · model ±" + m.E.toLocaleString("pl-PL", { maximumFractionDigits: 2 })
-           + (emp.faced ? " · partia: odbite " + emp.returns + " z " + emp.faced : "");
-    } else {                          // człowiek: realne odbicia z tej partii
+    if (i === ai) {                   // v0.3.21: AI — P(trafi) NASTĘPNĄ piłkę, z modelu jej programu;
+      pct = m.hit;                     // empiria partii ZNIKNĘŁA z notki (statystyka już odbitych piłek)
+      sub = "P(trafienia) NASTĘPNEJ · nr " + m.n + " · błąd ±"
+          + m.E.toLocaleString("pl-PL", { maximumFractionDigits: 2 })
+          + (m.h >= 9 ? " (cap)" : " (rośnie)");
+    } else {                          // v0.3.21: człowiek — szacunek na NASTĘPNĄ piłkę z empirii partii
       pct = emp.hit;
-      sub = emp.faced ? "P(trafienia) · partia: odbite " + emp.returns + " z " + emp.faced
-                      : "P(trafienia) · jeszcze bez piłki";
+      sub = emp.faced ? "P(trafienia) NASTĘPNEJ · szacunek z partii: " + emp.returns + " z " + emp.faced
+                      : "P(trafienia) NASTĘPNEJ · jeszcze bez piłki";
     }
     out.push(who + "\n" + fmtPct(pct) + "\n" + sub);
   }
@@ -1626,6 +1726,10 @@ const stage = document.getElementById("stage");
 function isPhoneLandscape() {                  // telefon w poziomie (dotyk + krótki bok ≤540)
   return matchMedia("(pointer: coarse)").matches
       && innerWidth > innerHeight && Math.min(innerWidth, innerHeight) <= 540;
+}
+function phonePortrait() {                    // v0.3.22: telefon w PIONIE (dotyk + krótki bok ≤540) —
+  return matchMedia("(pointer: coarse)").matches   // → chip „rotate for landscape” w menu
+      && innerHeight > innerWidth && Math.min(innerWidth, innerHeight) <= 540;
 }
 function courtCyclesFor(ar) {                  // ar = proporcje dostępnego miejsca
   if (FORCE_CLASSIC) return CY_MIN;
