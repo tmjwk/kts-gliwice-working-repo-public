@@ -1,34 +1,7 @@
 {
-  "wygenerowano": "2026-11-11T02:13:45.774Z",
+  "wygenerowano": "2026-11-11T09:33:45.402Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-11-02T01:00:29.139Z",
-      "czasS": 20,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": false,
-      "zmiany": "bez zmian",
-      "blad": null,
-      "retry": null,
-      "skladyOdczyt": null,
-      "korekty": [
-        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
-        "2026-11-05 KTS II Gliwice–KTS Olimpijczyk Zawiercie: źródło 19:15 → korekta 19:00",
-        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
-        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
-        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
-      ],
-      "most": {
-        "kanal": "most",
-        "sloty": [
-          "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-          "",
-          "",
-          ""
-        ]
-      }
-    },
     {
       "start": "2026-11-02T06:22:15.249Z",
       "czasS": 26,
@@ -1286,6 +1259,32 @@
     {
       "start": "2026-11-11T02:13:28.242Z",
       "czasS": 18,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": false,
+      "zmiany": "bez zmian",
+      "blad": null,
+      "retry": null,
+      "skladyOdczyt": null,
+      "korekty": [
+        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
+        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
+        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
+        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
+      ],
+      "most": {
+        "kanal": "most",
+        "sloty": [
+          "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    {
+      "start": "2026-11-11T09:33:28.325Z",
+      "czasS": 17,
       "szts": "ok",
       "pzts": "ok",
       "zmieniono": false,
