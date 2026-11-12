@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-11T23:00:14.518Z",
+  "wygenerowano": "2026-11-12T22:26:11.442Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "9:71"
         }
       ],
-      "zaktualizowano": "2026-11-11T23:00:14.518Z"
+      "zaktualizowano": "2026-11-12T22:26:11.442Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-11T23:00:14.518Z"
+      "zaktualizowano": "2026-11-12T22:26:11.442Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "8:52"
         }
       ],
-      "zaktualizowano": "2026-11-11T23:00:14.518Z"
+      "zaktualizowano": "2026-11-12T22:26:11.442Z"
     },
     {
       "klucz": "18/144",
@@ -433,9 +433,9 @@
         {
           "pozycja": 2,
           "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 4,
-          "punkty": 6,
-          "stosunek": "23:17"
+          "mecze": 5,
+          "punkty": 8,
+          "stosunek": "29:21"
         },
         {
           "pozycja": 3,
@@ -454,9 +454,9 @@
         {
           "pozycja": 5,
           "nazwa": "TKKF Aut Łagisza Będzin",
-          "mecze": 4,
+          "mecze": 5,
           "punkty": 4,
-          "stosunek": "21:19"
+          "stosunek": "25:25"
         },
         {
           "pozycja": 6,
@@ -494,7 +494,7 @@
           "stosunek": "15:25"
         }
       ],
-      "zaktualizowano": "2026-11-11T23:00:14.518Z"
+      "zaktualizowano": "2026-11-12T22:26:11.442Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-12T22:26:11.442Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-12T22:26:11.442Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-11T23:00:14.518Z",
-    "pzts": "2026-11-11T23:00:14.518Z"
+    "szts": "2026-11-12T22:26:11.442Z",
+    "pzts": "2026-11-12T22:26:11.442Z"
   },
   "zrodla": {
     "szts": "ok",
