@@ -1,33 +1,7 @@
 {
-  "wygenerowano": "2026-11-13T17:51:09.518Z",
+  "wygenerowano": "2026-11-13T22:09:12.842Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-11-04T00:49:21.789Z",
-      "czasS": 15,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": false,
-      "zmiany": "bez zmian",
-      "blad": null,
-      "retry": null,
-      "skladyOdczyt": null,
-      "korekty": [
-        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
-        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
-        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
-        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
-      ],
-      "most": {
-        "kanal": "most",
-        "sloty": [
-          "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-          "",
-          "",
-          ""
-        ]
-      }
-    },
     {
       "start": "2026-11-04T02:25:06.462Z",
       "czasS": 16,
@@ -1286,6 +1260,32 @@
       "blad": null,
       "retry": null,
       "skladyOdczyt": null,
+      "korekty": [
+        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
+        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
+        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
+        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
+      ],
+      "most": {
+        "kanal": "most",
+        "sloty": [
+          "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    {
+      "start": "2026-11-13T22:08:48.597Z",
+      "czasS": 24,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "+1 wynik (ŚZTS) · przesunięte terminy (ŚZTS): 2026-11-20→2026-11-19 KTS KA Krokus VII Gliwice–ATS Ligota Łabędzka · tabele: 18/136, 18/144 · stan drużyn · składy (statystyki)",
+      "blad": null,
+      "retry": null,
+      "skladyOdczyt": "2026-11-13T22:08:48.600Z",
       "korekty": [
         "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
         "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",

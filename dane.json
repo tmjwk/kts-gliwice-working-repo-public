@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-12T22:26:11.442Z",
+  "wygenerowano": "2026-11-13T22:08:48.600Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -24,7 +24,7 @@
       "nazwa": "KTS III",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "16. miejsce · 0 pkt",
+      "stan": "15. miejsce · 2 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/",
       "tabela": "18/136",
       "wiersz": "KTS III Gliwice"
@@ -167,9 +167,9 @@
         {
           "pozycja": 13,
           "nazwa": "LUKS Węgierska Górka",
-          "mecze": 8,
+          "mecze": 9,
           "punkty": 4,
-          "stosunek": "23:57"
+          "stosunek": "26:64"
         },
         {
           "pozycja": 14,
@@ -180,20 +180,20 @@
         },
         {
           "pozycja": 15,
+          "nazwa": "KTS III Gliwice",
+          "mecze": 9,
+          "punkty": 2,
+          "stosunek": "16:74"
+        },
+        {
+          "pozycja": 16,
           "nazwa": "LUKS GK Logistics Bodzanów",
           "mecze": 8,
           "punkty": 0,
           "stosunek": "11:69"
-        },
-        {
-          "pozycja": 16,
-          "nazwa": "KTS III Gliwice",
-          "mecze": 8,
-          "punkty": 0,
-          "stosunek": "9:71"
         }
       ],
-      "zaktualizowano": "2026-11-12T22:26:11.442Z"
+      "zaktualizowano": "2026-11-13T22:08:48.600Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-12T22:26:11.442Z"
+      "zaktualizowano": "2026-11-13T22:08:48.600Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "8:52"
         }
       ],
-      "zaktualizowano": "2026-11-12T22:26:11.442Z"
+      "zaktualizowano": "2026-11-13T22:08:48.600Z"
     },
     {
       "klucz": "18/144",
@@ -467,34 +467,34 @@
         },
         {
           "pozycja": 7,
+          "nazwa": "UKS Huragan I Sosnowiec",
+          "mecze": 5,
+          "punkty": 4,
+          "stosunek": "21:29"
+        },
+        {
+          "pozycja": 8,
           "nazwa": "UKS Ikar Mierzęcice",
           "mecze": 5,
           "punkty": 3,
           "stosunek": "24:26"
         },
         {
-          "pozycja": 8,
+          "pozycja": 9,
           "nazwa": "Speed Team 43 Stolarzowice",
           "mecze": 4,
           "punkty": 3,
           "stosunek": "18:22"
         },
         {
-          "pozycja": 9,
-          "nazwa": "AKS Mikołów",
-          "mecze": 4,
-          "punkty": 3,
-          "stosunek": "15:25"
-        },
-        {
           "pozycja": 10,
-          "nazwa": "UKS Huragan I Sosnowiec",
-          "mecze": 4,
-          "punkty": 2,
-          "stosunek": "15:25"
+          "nazwa": "AKS Mikołów",
+          "mecze": 5,
+          "punkty": 3,
+          "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-12T22:26:11.442Z"
+      "zaktualizowano": "2026-11-13T22:08:48.600Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-12T22:26:11.442Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -882,8 +882,8 @@
       "kolejka": 10,
       "gospodarz": "KTS III Gliwice",
       "gosc": "LUKS Węgierska Górka",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "7:3",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS III"
@@ -1543,7 +1543,7 @@
       ]
     },
     {
-      "dataMeczu": "2026-11-20",
+      "dataMeczu": "2026-11-19",
       "godzina": "19:00",
       "kolejka": 7,
       "gospodarz": "KTS KA Krokus VII Gliwice",
@@ -1843,7 +1843,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-12T22:26:11.442Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -1930,7 +1930,7 @@
     {
       "zespol": "KTS II",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1480/kts-ii-gliwice/",
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "zawodnicy": [
         {
           "nazwisko": "Bartosz Kwodawski",
@@ -2037,16 +2037,16 @@
     {
       "zespol": "KTS III",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "zawodnicy": [
         {
           "nazwisko": "Michał Rosiek",
           "licencja": "08894",
           "narodowosc": "Polska",
           "rok": 1995,
-          "zwyciestwa": 4,
+          "zwyciestwa": 6,
           "porazki": 8,
-          "punkty": "8:16",
+          "punkty": "12:16",
           "skutecznosc": null
         },
         {
@@ -2054,19 +2054,19 @@
           "licencja": "08882",
           "narodowosc": "Polska",
           "rok": 2003,
-          "zwyciestwa": 3,
-          "porazki": 13,
-          "punkty": "6:30",
+          "zwyciestwa": 4,
+          "porazki": 14,
+          "punkty": "8:32",
           "skutecznosc": null
         },
         {
-          "nazwisko": "Rafał Adach",
-          "licencja": "08881",
+          "nazwisko": "Jakub Dąbrowski",
+          "licencja": "08885",
           "narodowosc": "Polska",
-          "rok": 1995,
-          "zwyciestwa": 0,
-          "porazki": 2,
-          "punkty": "0:4",
+          "rok": 2001,
+          "zwyciestwa": 2,
+          "porazki": 14,
+          "punkty": "6:42",
           "skutecznosc": null
         },
         {
@@ -2074,9 +2074,9 @@
           "licencja": "08896",
           "narodowosc": "Polska",
           "rok": 1994,
-          "zwyciestwa": 0,
-          "porazki": 14,
-          "punkty": "0:42",
+          "zwyciestwa": 1,
+          "porazki": 15,
+          "punkty": "3:45",
           "skutecznosc": null
         },
         {
@@ -2090,13 +2090,13 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Jakub Dąbrowski",
-          "licencja": "08885",
+          "nazwisko": "Rafał Adach",
+          "licencja": "08881",
           "narodowosc": "Polska",
-          "rok": 2001,
+          "rok": 1995,
           "zwyciestwa": 0,
-          "porazki": 14,
-          "punkty": "0:42",
+          "porazki": 2,
+          "punkty": "0:4",
           "skutecznosc": null
         }
       ]
@@ -2104,7 +2104,7 @@
     {
       "zespol": "KTS IV",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "zawodnicy": [
         {
           "nazwisko": "Piotr Zemła",
@@ -2191,7 +2191,7 @@
     {
       "zespol": "KTS V",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1557/kts-v-gliwice/",
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "zawodnicy": [
         {
           "nazwisko": "Grzegorz Machał",
@@ -2268,7 +2268,7 @@
     {
       "zespol": "KTS VI",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "zawodnicy": [
         {
           "nazwisko": "Wojciech Wieczorek",
@@ -2345,7 +2345,7 @@
     {
       "zespol": "KA Krokus VII",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1558/kts-ka-krokus-vii-gliwice/",
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "zawodnicy": [
         {
           "nazwisko": "Łukasz Francka",
@@ -2422,7 +2422,7 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-11-11T23:00:14.518Z",
+      "zaktualizowano": "2026-11-13T22:08:48.600Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
@@ -2528,8 +2528,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-12T22:26:11.442Z",
-    "pzts": "2026-11-12T22:26:11.442Z"
+    "szts": "2026-11-13T22:08:48.600Z",
+    "pzts": "2026-11-13T22:08:48.600Z"
   },
   "zrodla": {
     "szts": "ok",
