@@ -25,6 +25,21 @@
  * Uruchomienie:  bun scripts/sync_statyczny.ts
  *   (z katalogu głównego repo; wymaga bun albo: npx tsx scripts/sync_statyczny.ts)
  *
+ * v2.0 (14.11.2026 — „nowa metoda” jako podstawowa, decyzja właściciela):
+ *  - ŚZTS: kanałem GŁÓWNYM staje się MOST KTS→SLZTS (Google Apps Script
+ *    v1.7.x, arkusz publiczny — kanał gviz CSV, moduł ./most-szts.ts):
+ *    tabele, terminarze, mecze, stany i składy w jednym odczycie, z Puls
+ *    jako strażnikiem świeżości (Zarządca tyka co 15 min). Scraping
+ *    bezpośredni (ten plik, v1.x) zostaje fallbackiem 1:1 — włączenie
+ *    jednym env: KANAL_SZTS=scrape (albo „shadow” = scraping publikuje,
+ *    most tylko porównywany — diff w runs.json).
+ *  - PZTS: przed starym mostem formułowym wchodzi ten sam nowy most
+ *    (zakładka „PZTS 1LM”: tabela Z–R–P + terminarz + skład ze
+ *    Skutecznością z „Zawodników”). Kolejność: wklejka PZTS_MECZE →
+ *    NOWY most → stary most (formuły) → czytnik jina → zachowano.
+ *  - Okres obserwacji: do meczu PZTS 1LM z 27.11.2026 (kryterium końca
+ *    testu — dane z tego meczu mają przyjść na stronę nową metodą).
+ *
  * Od v1.5.2: KAŻDE uruchomienie (także puste, bez zmian danych) dopisuje
  * wpis do runs.json — dziennik przebiegów dla panelu na stronie:
  *   szts:"ok"    = dane odczytane (sukces, również „bez zmian"),
@@ -68,6 +83,13 @@ import {
   KOREKTY_ZASTOSOWANE,
   type MeczLigi,
 } from "./szts-core";
+import {
+  czytajMostSzts,
+  czytajMostPzts,
+  mapujNaDaneSzts,
+  porownajZMostem,
+  type MapaMostu,
+} from "./most-szts";
 
 // ====== KONFIGURACJA SEZONU 2026/27 (edytuj przy nowym sezonie) ======
 const SEZON = "2026/27";
@@ -91,6 +113,15 @@ const ZESPOLY = [
 ];
 
 const WYJSCIE = process.env.DANE_WYJSCIE ?? "dane.json";
+
+// ====== v2.0 (14.11): KANAŁ ŚZTS — „nowa metoda” (most arkuszowy) ======
+// most    — most KTS→SLZTS jako ŹRÓDŁO GŁÓWNE (tabele+terminarze+mecze+
+//           stany+składy jednym odczytem gviz; Puls = strażnik świeżości),
+//           scraping bezpośredni = fallback automatyczny;
+// shadow  — publikuje scraping, most tylko porównywany (diff w runs.json);
+// scrape  — wymusza stary kanał (plan awaryjny: jedna zmienna, zero kodu).
+// Domyślnie „most” — okres obserwacji nowej metody (do meczu PZTS 27.11).
+const KANAL_SZTS = (process.env.KANAL_SZTS ?? "most").toLowerCase();
 
 // ====== Dziennik przebiegów (runs.json) — panel „Automat: ✓/✗" na stronie ======
 const RUNY_WYJSCIE = process.env.RUNY_WYJSCIE ?? "runs.json";
@@ -118,10 +149,11 @@ interface WpisRunu {
    *  nawet przebieg bez commita dane.json). null = jeszcze nie czytano. */
   skladyOdczyt?: string | null;
   /** v1.8: diagnostyka mostu Google Sheets — kanał, który obsłużył PZTS
-   *  (most/czytnik/recznie/zachowano/brak), sloty drużyn ze Skanu oraz
-   *  alarm o nowej drużynie (slot 2+ niepusty — dopóki import nie zostanie
-   *  rozszerzony, alarm powtarza się jawnie w każdym wpisie). */
-  most?: { kanal: string; sloty: string[]; uwaga?: string };
+   *  (most-nowy | most | czytnik | recznie | zachowano | brak), sloty
+   *  drużyn ze Skanu starego mostu oraz alarm o nowej drużynie; v2.0:
+   *  + kanalSzts — kanał, który faktycznie obsłużył ŚZTS (most | scrape |
+   *  „most→scrape” | shadow) — panel obserwacji nowej metody. */
+  most?: { kanal: string; sloty: string[]; uwaga?: string; kanalSzts?: string };
 }
 
 // ====== Typy danych wyjściowych (kontrakt dla strony statycznej) ======
@@ -466,15 +498,22 @@ export function parsujSkladGviz(wiersze: string[][]): ZawodnikSkladu[] {
 }
 
 // v1.8: stan mostu dla runs.json (wpis.most — wstecznie zgodne, pole opcjonalne)
-let MOST_KANAL: string = "brak"; // most | czytnik | recznie | zachowano | brak
+let MOST_KANAL: string = "brak"; // most-nowy | most | czytnik | recznie | zachowano | brak
 let MOST_SLOTY: string[] = [];
 let MOST_UWAGA: string | undefined;
+// v2.0: kanał ŚZTS faktycznie użyty w tym runie + mapa mostu dla trybu shadow
+let KANAL_SZTS_UZYTY = "scrape"; // most | scrape | „most→scrape” | shadow
+let MOST_SHADOW: MapaMostu | null = null;
 // v1.9: zegar TTL składów (modułowo — widoczny też w wrapperze błędów;
 // ustawiany w main() po ≥1 udanym odczycie składu)
 let SKLADY_ODCZYT_TS: string | null = null;
 
-function opiszMost(): { kanal: string; sloty: string[]; uwaga?: string } {
-  const o: { kanal: string; sloty: string[]; uwaga?: string } = { kanal: MOST_KANAL, sloty: MOST_SLOTY };
+function opiszMost(): { kanal: string; sloty: string[]; uwaga?: string; kanalSzts?: string } {
+  const o: { kanal: string; sloty: string[]; uwaga?: string; kanalSzts?: string } = {
+    kanal: MOST_KANAL,
+    sloty: MOST_SLOTY,
+    kanalSzts: KANAL_SZTS_UZYTY,
+  };
   if (MOST_UWAGA) o.uwaga = MOST_UWAGA;
   return o;
 }
@@ -711,6 +750,63 @@ async function main(): Promise<WynikRunu> {
   for (const s of staryPlik?.sklady ?? []) skladyStare.set(s.zespol, s);
   const skladyNowe = new Map<string, SkladDruzyny | null>();
 
+  // ===== 1a. v2.0: MOST KTS→SLZTS — kanał główny ŚZTS (nowa metoda) =====
+  // Jeden odczyt gviz (Puls + Drużyny + 4 ligi + Mecze KTS + Zawodnicy)
+  // zamiast ~13 zapytań scrapingowych; strażnik świeżości na Puls (Zarządca
+  // tyka co 15 min). Porażka = cichy fallback na 1b (scraping, bez zmian).
+  if (KANAL_SZTS !== "scrape") {
+    try {
+      const odczyt = await czytajMostSzts(LIGI_SZTS, { swiezoscMinut: 60 });
+      const mapa = mapujNaDaneSzts(
+        odczyt,
+        ZESPOLY.map((z) => ({ karta: z.nazwa, liga: z.liga, ligaKlucz: z.ligaKlucz })),
+        { teraz, stareSklady: skladyStare },
+      );
+      if (KANAL_SZTS === "shadow") {
+        MOST_SHADOW = mapa; // publikuje poniższy scraping; diff po jego sukcesie
+        KANAL_SZTS_UZYTY = "shadow";
+        console.log(`ŚZTS (shadow): most przeczytany (${mapa.mecze.length} meczów) — diff po scrapingu`);
+      } else {
+        tabele = mapa.tabele.map((t) => ({ ...t, zaktualizowano: teraz }));
+        meczeSzts = mapa.mecze as MeczSzts[];
+        stany.clear();
+        for (const [k, v] of mapa.stany) stany.set(k, v);
+        WIERSZE_NASZE.clear();
+        for (const [k, v] of mapa.wierszeNasze) WIERSZE_NASZE.set(k, v);
+        sztsSync = teraz;
+        KANAL_SZTS_UZYTY = "most";
+        // składy ŚZTS z karty „Zawodnicy” (karty bez danych = trzymamy stare;
+        // most odświeża swoje składy z własnym TTL 12 h — tu 1 zapytanie)
+        for (const z of ZESPOLY) {
+          if (z.ligaKlucz === null || z.ligaKlucz.startsWith("pzts")) continue;
+          const s = mapa.sklady.get(z.nazwa);
+          skladyNowe.set(z.nazwa, s ?? skladyStare.get(z.nazwa) ?? null);
+        }
+        if (mapa.sklady.size > 0) SKLADY_ODCZYT_TS = teraz; // zegar TTL tyka
+        if (odczyt.skladyUwaga) console.warn(`MOST: ${odczyt.skladyUwaga}`);
+        for (const u of mapa.uwagi) console.warn(`MOST: ${u}`);
+        console.log(
+          `ŚZTS: MOST arkuszowy OK (Puls ${odczyt.puls.tykniecieRaw} · v${odczyt.puls.wersja}) — ` +
+            `${mapa.tabele.length} tabele, ${mapa.mecze.length} meczów, ${mapa.sklady.size} składów` +
+            (odczyt.liczbaMeczyPzts > 0
+              ? `, ${odczyt.liczbaMeczyPzts} meczów PZTS płynie własnym kanałem`
+              : ""),
+        );
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      KANAL_SZTS_UZYTY = "most→scrape";
+      console.warn(
+        `ŚZTS: most arkuszowy niedostępny (${msg}) — ` +
+          (KANAL_SZTS === "shadow"
+            ? "shadow bez porównania"
+            : "fallback na scraping bezpośredni (stary kanał)"),
+      );
+    }
+  }
+
+  // ===== 1b. Scraping bezpośredni — fallback v1.x (kod bez zmian) =====
+  if (KANAL_SZTS_UZYTY !== "most")
   try {
     const tabeleNowe: Dane["tabele"] = [];
     const meczeMap = new Map<string, MeczSzts>();
@@ -795,6 +891,20 @@ async function main(): Promise<WynikRunu> {
     console.warn(`ŚZTS: awaria odczytu (${sztsBlad}) — przytrzymuję dane z poprzedniego pliku`);
   }
 
+  // ===== 1c. v2.0: shadow — diff most ↔ scraping (bez publikacji mostu) =====
+  if (MOST_SHADOW && KANAL_SZTS === "shadow" && !sztsBlad) {
+    const d = porownajZMostem(MOST_SHADOW, {
+      tabele: tabele.map((t) => ({ klucz: t.klucz, wiersze: t.wiersze })),
+      meczeSzts,
+      sklady: [...skladyNowe.values()].filter((s): s is SkladDruzyny => s !== null),
+    });
+    const txt =
+      `shadow: tabele różne ${d.tabeleRozne}/${LIGI_SZTS.length} · mecze różne ${d.meczeRozne} · ` +
+      `tylko scraping ${d.meczeTylkoDirect} · tylko most ${d.meczeTylkoMost} · składy różne ${d.skladyRozne}`;
+    console.log(`ŚZTS ${txt}`);
+    MOST_UWAGA = MOST_UWAGA ? `${MOST_UWAGA}; ${txt}` : txt;
+  }
+
   // ===== 2. PZTS — kolejność: wklej (env) → czytnik (jina) → stary stan =====
   FAZA_RUNU = "pzts";
   let meczePzts: MeczPzts[] = [];
@@ -841,7 +951,48 @@ async function main(): Promise<WynikRunu> {
     przyjmijMecze(zEnv, "zmienna PZTS_MECZE — wklejka ręczna", "recznie");
     MOST_KANAL = "recznie";
   } else {
-    // (b) MOST GOOGLE SHEETS (gviz) — kanał główny v1.8
+    // (b0) v2.0 — NOWY MOST KTS→SLZTS (Apps Script v1.7.x): ten sam arkusz
+    // co kanał ŚZTS 1a (strażnik świeżości na Puls), zakładka „PZTS 1LM”
+    // (tabela Z–R–P + terminarz) + skład 1. drużyny z „Zawodników” (ze
+    // Skutecznością — stary kanał jej nie znosił z formuł). Stary most
+    // formułowy (b) i czytnik (c) zostają fallbackami.
+    try {
+      const pzts = await czytajMostPzts({ kartaPzts: "KTS Gliwice I" });
+      const nasi = pzts.terminarz.filter(
+        (m) => m.gospodarz.includes("KTS Gliwice") || m.gosc.includes("KTS Gliwice"),
+      );
+      if (nasi.length === 0) throw new Error("most: brak meczów KTS w zakładce „PZTS 1LM”");
+      // Ochrona przed partial read — jak w starym moście (liczba meczów
+      // drużyny w sezonie nie maleje).
+      if (staryPlik?.meczePzts && nasi.length < staryPlik.meczePzts.length) {
+        throw new Error(`most oddał mniej meczów niż znamy (${nasi.length} < ${staryPlik.meczePzts.length}) — przeliczanie w trakcie`);
+      }
+      przyjmijMecze(nasi, `most KTS→SLZTS: ${pzts.terminarz.length} meczów, ${nasi.length} naszych`, "ok");
+      MOST_KANAL = "most-nowy";
+      const my = pzts.tabela.find((w) => w.nazwa.includes("KTS Gliwice"));
+      if (my && Number.isFinite(my.pozycja) && Number.isFinite(my.punkty)) {
+        stanPztsTabela = `${my.pozycja}. miejsce · ${my.punkty} pkt`;
+        WIERSZE_NASZE.set("KTS Gliwice I", my.nazwa);
+        tabelaPzts = zbudujTabelePzts(pzts.tabela, teraz);
+        console.log(`PZTS: tabela ligowa z NOWEGO mostu OK (${pzts.tabela.length} drużyn) — KTS: ${stanPztsTabela}`);
+      }
+      if (pzts.sklad && pzts.sklad.length > 0) {
+        skladPzts = {
+          zespol: "KTS Gliwice I",
+          zrodlo: "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
+          zaktualizowano: teraz,
+          zawodnicy: pzts.sklad,
+        };
+        console.log(`PZTS: skład z NOWEGO mostu OK (${pzts.sklad.length} zawodników — skuteczność płynie)`);
+      }
+      if (pzts.skladUwaga) console.warn(`PZTS: ${pzts.skladUwaga}`);
+    } catch (err) {
+      console.warn(`MOST NOWY: niedostępny (${err instanceof Error ? err.message : String(err)}) — próbuję starego mostu (formuły)`);
+    }
+
+    // (b) STARY MOST GOOGLE SHEETS (formuły IMPORTXML) — fallback v1.8,
+    //     tylko gdy nowy most nie odpowiedział
+    if (meczePzts.length === 0)
     try {
       const skan = await pobierzZakladkeMostu("Skan");
       MOST_SLOTY = slotyZSkanu(skan);
@@ -898,6 +1049,7 @@ async function main(): Promise<WynikRunu> {
     } catch (err) {
       console.warn(`MOST: gviz zawiódł (${err instanceof Error ? err.message : String(err)}) — fallback na czytnik r.jina.ai`);
     }
+    // koniec if (meczePzts.length === 0) — stary most tylko gdy nowy nie odpowiedział
 
     // (c) czytnik r.jina.ai — fallback, gdy most nie odpowiedział
     if (meczePzts.length === 0) {
