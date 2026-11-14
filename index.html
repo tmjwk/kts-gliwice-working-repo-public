@@ -392,9 +392,14 @@
            organizacji zamiast domen i przypisania lig; znacznik czasu
            nadal doklejany przez js/app.js z dane.json (ostatniSync —
            nowszy z odczytów PZTS/ŚZTS), szczegóły po obu źródłach
-           w title po hover. -->
+           w title po hover.
+           1.34.0 (14.11): po znaczniku czasu doklejany jest KANAŁ
+           poboru danych (js/app.js z runs.json) — „źródło: arkusz
+           mostu” (nowa metoda v2.0) albo „strony lig” (fallback).
+           Pusty = brak danych w runs.json (stary format) — stopka
+           wraca wtedy do wyglądu sprzed 1.34.0. -->
       <p class="footer-bottom t-small">
-        <span class="footer-zrodla">Źródła: PZTS, ŚlZTS — synchronizacja: <span class="t-nums" id="zrodla-stopki">—</span></span>
+        <span class="footer-zrodla">Źródła: PZTS, ŚlZTS — synchronizacja: <span class="t-nums" id="zrodla-stopki">—</span><span id="kanal-danych"></span></span>
         Wdrożenie testowe (hosting statyczny, auto-sync wyników) · KTS Gliwice 2026
         · <span class="t-nums" id="wersja-strony">wersja —</span>
       </p>
