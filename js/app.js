@@ -1556,7 +1556,7 @@ function sledzSystemowyTryb() {
    komunikat i sprawdź natychmiast (nie częściej niż co 45 s).
 */
 
-const WERSJA_KODU = "1.34.0";
+const WERSJA_KODU = "1.34.1";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
@@ -1833,7 +1833,7 @@ function pilnujSwiezosci() {
    statusem awarii innego źródła. Szczegóły techniczne pozostają w runs.json. */
 async function pokazPrzebiegiSyncu() {
   const el = $("#cron-aktywnosc");
-  const elKanal = $("#kanal-danych"); // 1.34.0: kanał poboru danych w stopce
+  const elKanal = $("#kanal-danych"); // 1.34.0, etykiety od 1.34.1: kanał poboru w stopce
   if (!el && !elKanal) return;
   let runs = null;
   try {
@@ -1842,21 +1842,23 @@ async function pokazPrzebiegiSyncu() {
   } catch (e) { /* sieć — sekcja milczy */ }
 
   /* 1.34.0 (14.11): STOPKA — skąd automat pobrał dane w ostatnim przebiegu
-     (runs.json, pole „most”). „arkusz mostu” = nowa metoda v2.0 (sync czyta
-     arkusz Google mostu KTS→SLZTS), „strony lig” = stary scraping (fallback).
-     Brak pola (wpisy sprzed v2.0) albo awaria sieci = pusty łańcuch —
-     stopka wraca do wyglądu sprzed 1.34.0, bez wiszącego „·”. */
+     (runs.json, pole „most”). 1.34.1: kanał „most” nazywa się „Engine
+     Swap - 2.0” (nazwa właściciela z 14.11; wcześniej „arkusz mostu /
+     nowa metoda v2.0” — sync czyta arkusz Google mostu KTS→SLZTS jednym
+     pakietem gviz), „strony lig” = stary scraping (fallback). Brak pola
+     (wpisy sprzed v2.0) albo awaria sieci = pusty łańcuch — stopka wraca
+     do wyglądu sprzed 1.34.0, bez wiszącego „·”. */
   if (elKanal) {
     const m = runs?.[runs.length - 1]?.most;
     const ETYKIETY_SZTS = {
-      most: "arkusz mostu",
+      most: "Engine Swap - 2.0",
       scrape: "strony lig",
-      "most→scrape": "arkusz → strony lig (awaryjnie)",
-      shadow: "strony lig (arkusz w tle)",
+      "most→scrape": "Engine Swap - 2.0 → strony lig (awaryjnie)",
+      shadow: "strony lig (Engine Swap w tle)",
     };
     const ETYKIETY_PZTS = {
-      "most-nowy": "arkusz mostu",
-      most: "arkusz mostu",
+      "most-nowy": "Engine Swap - 2.0",
+      most: "Engine Swap - 2.0",
       czytnik: "czytnik pzts.pl",
       recznie: "wklejka",
     };
@@ -1869,7 +1871,7 @@ async function pokazPrzebiegiSyncu() {
       title =
         "Kanał poboru danych w ostatnim przebiegu automatu — ŚZTS: " + szts +
         (pzts ? "; PZTS: " + pzts : "") +
-        ". „Arkusz mostu” = nowe połączenie arkusz→strona (v2.0); przy awarii " +
+        ". „Engine Swap - 2.0” = nowe połączenie arkusz→strona (v2.0); przy awarii " +
         "automat sam wraca na strony lig.";
     }
     elKanal.textContent = tekst;
