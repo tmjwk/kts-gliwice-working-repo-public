@@ -1556,7 +1556,7 @@ function sledzSystemowyTryb() {
    komunikat i sprawdź natychmiast (nie częściej niż co 45 s).
 */
 
-const WERSJA_KODU = "1.33.0";
+const WERSJA_KODU = "1.34.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
@@ -1833,12 +1833,51 @@ function pilnujSwiezosci() {
    statusem awarii innego źródła. Szczegóły techniczne pozostają w runs.json. */
 async function pokazPrzebiegiSyncu() {
   const el = $("#cron-aktywnosc");
-  if (!el) return;
+  const elKanal = $("#kanal-danych"); // 1.34.0: kanał poboru danych w stopce
+  if (!el && !elKanal) return;
   let runs = null;
   try {
     const res = await fetch("runs.json", { cache: "no-cache" });
     if (res.ok) runs = (await res.json())?.runs ?? null;
   } catch (e) { /* sieć — sekcja milczy */ }
+
+  /* 1.34.0 (14.11): STOPKA — skąd automat pobrał dane w ostatnim przebiegu
+     (runs.json, pole „most”). „arkusz mostu” = nowa metoda v2.0 (sync czyta
+     arkusz Google mostu KTS→SLZTS), „strony lig” = stary scraping (fallback).
+     Brak pola (wpisy sprzed v2.0) albo awaria sieci = pusty łańcuch —
+     stopka wraca do wyglądu sprzed 1.34.0, bez wiszącego „·”. */
+  if (elKanal) {
+    const m = runs?.[runs.length - 1]?.most;
+    const ETYKIETY_SZTS = {
+      most: "arkusz mostu",
+      scrape: "strony lig",
+      "most→scrape": "arkusz → strony lig (awaryjnie)",
+      shadow: "strony lig (arkusz w tle)",
+    };
+    const ETYKIETY_PZTS = {
+      "most-nowy": "arkusz mostu",
+      most: "arkusz mostu",
+      czytnik: "czytnik pzts.pl",
+      recznie: "wklejka",
+    };
+    let tekst = "";
+    let title = "";
+    if (m?.kanalSzts) {
+      const szts = ETYKIETY_SZTS[m.kanalSzts] ?? m.kanalSzts;
+      const pzts = m.kanal ? (ETYKIETY_PZTS[m.kanal] ?? m.kanal) : null;
+      tekst = " · źródło: " + szts + (pzts && pzts !== szts ? " + " + pzts : "");
+      title =
+        "Kanał poboru danych w ostatnim przebiegu automatu — ŚZTS: " + szts +
+        (pzts ? "; PZTS: " + pzts : "") +
+        ". „Arkusz mostu” = nowe połączenie arkusz→strona (v2.0); przy awarii " +
+        "automat sam wraca na strony lig.";
+    }
+    elKanal.textContent = tekst;
+    if (title) elKanal.title = title;
+    else elKanal.removeAttribute("title");
+  }
+
+  if (!el) return; // panel „Automat” usunięty z widocznej strony (1.9.0)
   if (!runs || !runs.length) {
     el.textContent = "Automat: czekam na pierwszy zapis przebiegu…";
     el.title =
