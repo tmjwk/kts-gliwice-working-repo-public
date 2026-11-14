@@ -239,7 +239,7 @@ function ustawIkoneTrybu() {
    wzorzec strony głównej z wynikami. „Odśwież stronę” omija cache
    przeglądarki (GitHub Pages trzyma pliki ~10 min) — dociąga HTML,
    skrypty i styl, dopiero potem przeładowuje. */
-const WERSJA_KODU = "1.33.0";
+const WERSJA_KODU = "1.34.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie)? Jak app.js. */
 function nowszaWersja(a, b) {
