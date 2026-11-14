@@ -37,6 +37,10 @@ on:
         description: "Opcjonalnie: JSON z meczami PZTS 1. ligi (wklej z warsztatu)"
         required: false
         default: ""
+      kanal_szts:
+        description: "Kanał ŚZTS (v2.0): most (domyślnie) | shadow | scrape"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -64,6 +68,12 @@ jobs:
         env:
           PZTS_MECZE: ${{ inputs.pzts_mecze }}
           JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
+          # v2.0 (14.11): kanał ŚZTS — most arkuszowy jako podstawowy („nowa
+          # metoda”, okres obserwacji do meczu PZTS 27.11). Przełączenie awaryjne
+          # BEZ zmiany kodu: zmienna repo KANAL_SZTS=scrape (Settings → Actions
+          # → Variables); ręczny dispatch może nadpisać inputem kanal_szts.
+          # „shadow” = scraping publikuje, most tylko porównywany (diff w runs).
+          KANAL_SZTS: ${{ inputs.kanal_szts || vars.KANAL_SZTS || 'most' }}
 
       # 1.16.0: licznik zdjęć CAŁEJ galerii FB (badge sekcji Galeria na
       # stronie głównej — decyzja właściciela: „ile zdjęć w całej galerii,
