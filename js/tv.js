@@ -28,9 +28,15 @@
 (function () {
   "use strict";
 
-  var ARKUSZ_TV = "1rY47XRc41XO-hUoLW91JgoOALDr-5ywXSahEkgI-oBI";
-  var GVIZ = "https://docs.google.com/spreadsheets/d/" + ARKUSZ_TV +
-    "/gviz/tq?tqx=out:csv&headers=0&sheet=TV_Transmisje";
+  /* 1.35.1: PRYWATNOŚĆ — warstwa przeglądarkowa czyta WYŁĄCZNIE wersję
+   * OPUBLIKOWANĄ arkusza (pub?gid=191595212). Publikacja „na internet”
+   * obejmuje tylko zakładkę TV_Transmisje — reszta (e-maile zgłaszających,
+   * logi) nigdy nie jest częścią pub, więc nie może wyciec do przeglądarki.
+   * CORS: Google odpowiada ACAO:* (zweryfikowane 17.11). Gdy właściciel
+   * opublikuje arkusz od nowa, zmieni się URL — wtedy ten gid do poprawki. */
+  var PUB_TV = "https://docs.google.com/spreadsheets/d/e/" +
+    "2PACX-1vShni3KQFw-viXRvO_qoTGKX4_2OUxJzs4DZrVYchM2P71d7ynhxuAjQQgj8Ho0123G4C5bpoJrF4lI" +
+    "/pub?gid=191595212&single=true&output=csv";
   var CO_ILE_S = 90; // odświeżenie warstwy gviz (sekundy)
 
   var scena, meta, statusEl, archiwum, archiwumLista, archiwumCount,
@@ -352,7 +358,7 @@
 
   /** Warstwa 2: co 90 s próbuje gviz; sukces → nadpisuje scenę. */
   function odswiezGviz() {
-    fetch(GVIZ + "&_cb=" + Date.now(), { cache: "no-store" })
+    fetch(PUB_TV + "&_cb=" + Date.now(), { cache: "no-store" })
       .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
       .then(function (csv) {
         var tr = gvizNaTransmisje(csv);
