@@ -1,33 +1,7 @@
 {
-  "wygenerowano": "2026-11-17T19:56:36.838Z",
+  "wygenerowano": "2026-11-17T22:28:22.651Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-11-07T20:28:24.783Z",
-      "czasS": 21,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": false,
-      "zmiany": "bez zmian",
-      "blad": null,
-      "retry": null,
-      "skladyOdczyt": null,
-      "korekty": [
-        "2026-10-22 KTS II Gliwice–GUKS Byczyna: źródło 19:15 → korekta 19:00",
-        "2026-12-03 KTS II Gliwice–MKS Skarbek II Tarnowskie Góry: źródło 19:15 → korekta 19:00",
-        "2027-01-14 KTS II Gliwice–KS Naprzód II Borucin: źródło 19:15 → korekta 19:00",
-        "2027-02-11 KTS II Gliwice–MUKS Jedynka Pszów: źródło 19:15 → korekta 19:00"
-      ],
-      "most": {
-        "kanal": "most",
-        "sloty": [
-          "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-          "",
-          "",
-          ""
-        ]
-      }
-    },
     {
       "start": "2026-11-07T21:58:09.990Z",
       "czasS": 20,
@@ -1106,6 +1080,22 @@
       "blad": null,
       "retry": null,
       "skladyOdczyt": "2026-11-17T19:56:33.044Z",
+      "most": {
+        "kanal": "most-nowy",
+        "sloty": [],
+        "kanalSzts": "most"
+      }
+    },
+    {
+      "start": "2026-11-17T22:28:20.338Z",
+      "czasS": 2,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": false,
+      "zmiany": "bez zmian",
+      "blad": null,
+      "retry": null,
+      "skladyOdczyt": "2026-11-17T22:28:20.341Z",
       "most": {
         "kanal": "most-nowy",
         "sloty": [],
