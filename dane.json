@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-14T01:59:50.931Z",
+  "wygenerowano": "2026-11-17T02:58:19.933Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "11:69"
         }
       ],
-      "zaktualizowano": "2026-11-14T01:59:50.931Z"
+      "zaktualizowano": "2026-11-17T02:58:19.933Z"
     },
     {
       "klucz": "18/138",
@@ -202,9 +202,9 @@
         {
           "pozycja": 1,
           "nazwa": "UKS Huragan Sosnowiec",
-          "mecze": 7,
-          "punkty": 12,
-          "stosunek": "46:24"
+          "mecze": 8,
+          "punkty": 14,
+          "stosunek": "53:27"
         },
         {
           "pozycja": 2,
@@ -244,9 +244,9 @@
         {
           "pozycja": 7,
           "nazwa": "KU AZS UJD Częstochowa",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 9,
-          "stosunek": "41:29"
+          "stosunek": "44:36"
         },
         {
           "pozycja": 8,
@@ -271,31 +271,31 @@
         },
         {
           "pozycja": 11,
+          "nazwa": "GLKS Lot Konopiska",
+          "mecze": 8,
+          "punkty": 6,
+          "stosunek": "28:52"
+        },
+        {
+          "pozycja": 12,
           "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
           "mecze": 7,
           "punkty": 5,
           "stosunek": "29:41"
         },
         {
-          "pozycja": 12,
+          "pozycja": 13,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 4,
-          "stosunek": "34:36"
+          "stosunek": "36:44"
         },
         {
-          "pozycja": 13,
+          "pozycja": 14,
           "nazwa": "KS Unia Kalety",
           "mecze": 7,
           "punkty": 4,
           "stosunek": "23:47"
-        },
-        {
-          "pozycja": 14,
-          "nazwa": "GLKS Lot Konopiska",
-          "mecze": 7,
-          "punkty": 4,
-          "stosunek": "20:50"
         },
         {
           "pozycja": 15,
@@ -312,7 +312,7 @@
           "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-14T01:59:50.931Z"
+      "zaktualizowano": "2026-11-17T02:58:19.933Z"
     },
     {
       "klucz": "18/142",
@@ -320,24 +320,24 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 7,
+          "punkty": 12,
+          "stosunek": "54:16"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "STS I Żernica",
           "mecze": 6,
           "punkty": 11,
           "stosunek": "45:15"
         },
         {
-          "pozycja": 2,
+          "pozycja": 3,
           "nazwa": "ATS Ligota Łabędzka",
           "mecze": 6,
           "punkty": 10,
           "stosunek": "46:14"
-        },
-        {
-          "pozycja": 3,
-          "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 6,
-          "punkty": 10,
-          "stosunek": "45:15"
         },
         {
           "pozycja": 4,
@@ -412,12 +412,12 @@
         {
           "pozycja": 14,
           "nazwa": "ULKS Pławniowice",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 0,
-          "stosunek": "8:52"
+          "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-14T01:59:50.931Z"
+      "zaktualizowano": "2026-11-17T02:58:19.933Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-14T01:59:50.931Z"
+      "zaktualizowano": "2026-11-17T02:58:19.933Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-14T01:59:50.931Z",
+      "zaktualizowano": "2026-11-17T02:58:19.933Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1174,19 +1174,6 @@
       "liga": "3. Liga Mężczyzn · gr. II",
       "zespoly": [
         "KTS IV"
-      ]
-    },
-    {
-      "dataMeczu": "2026-11-19",
-      "godzina": "18:00",
-      "kolejka": 7,
-      "gospodarz": "LKS Naprzód Świbie",
-      "gosc": "KTS V Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
-      "liga": "4. Liga Mężczyzn · gr. IV",
-      "zespoly": [
-        "KTS V"
       ]
     },
     {
@@ -1843,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-14T01:59:50.931Z",
+      "zaktualizowano": "2026-11-17T02:58:19.933Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2528,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-14T01:59:50.931Z",
-    "pzts": "2026-11-14T01:59:50.931Z"
+    "szts": "2026-11-17T02:58:19.933Z",
+    "pzts": "2026-11-17T02:58:19.933Z"
   },
   "zrodla": {
     "szts": "ok",
