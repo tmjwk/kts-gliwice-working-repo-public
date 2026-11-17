@@ -1,0 +1,130 @@
+/* ============================================================
+ * KTS TV · css/tv.css · v1.0 (wdrożenie testowe, Task 210)
+ * Styl podstrony tv.html — DOPISEK do css/style.css (ładowany po nim),
+ * używa istniejących zmiennych (--kts-*, --bg-card, --kts-line…),
+ * więc tryb dzień/noc dziedziczy automatycznie. Osobny plik = łatwe
+ * usunięcie wdrożenia próbnego (tv.html + tv.css + js/tv.js + tv.json).
+ * ============================================================ */
+
+/* ----- scena: kontener proporcji 16:9 (bez skakania layoutu) ----- */
+.tv-scena { margin-top: 1.5rem; }
+.tv-scena:empty::before {
+  content: ""; display: block; padding-top: 56.25%; /* rezerwacja 16:9 */
+  border-radius: var(--radius, 14px);
+  border: 1px dashed var(--kts-line);
+  background: var(--kts-neutral);
+}
+
+/* ----- player LIVE (plakat + przycisk; iframe dokłada js/tv.js) ----- */
+.tv-player {
+  position: relative; width: 100%; padding-top: 56.25%;
+  border-radius: var(--radius, 14px); overflow: hidden;
+  border: 2px solid var(--kts-loss, #dc2626);
+  background: #000;
+}
+.tv-player iframe, .tv-player #tv-yt {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+}
+.tv-player-plakat {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; filter: brightness(0.75);
+}
+.tv-player-btn {
+  position: absolute; inset: 0; margin: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.75rem; background: transparent; border: 0; cursor: pointer;
+  color: #fff; font: inherit;
+}
+.tv-player-btn-kolo {
+  width: 4.5rem; height: 4.5rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--kts-loss, #dc2626); color: #fff; font-size: 1.6rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s ease;
+}
+.tv-player-btn:hover .tv-player-btn-kolo { transform: scale(1.08); }
+.tv-player-btn-etykieta {
+  font-weight: 600; letter-spacing: 0.02em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+/* czerwony pasek NA ŻYWO na plakacie */
+.tv-badge-live {
+  position: absolute; top: 0.85rem; left: 0.85rem;
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.25rem 0.7rem; border-radius: 999px;
+  background: var(--kts-loss, #dc2626); color: #fff;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em;
+}
+.tv-kropka {
+  width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #fff;
+  animation: tv-puls 1.4s ease-in-out infinite;
+}
+@keyframes tv-puls {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.8); }
+}
+
+/* ----- meta pod sceną ----- */
+.tv-meta { margin-top: 1rem; display: grid; gap: 0.25rem; }
+
+/* ----- zapowiedź WKRÓTCE ----- */
+.tv-zapowiedz {
+  display: flex; gap: 1.5rem; align-items: center;
+  padding: 2rem 1.5rem; border-radius: var(--radius, 14px);
+  border: 1px solid var(--kts-line); background: var(--bg-card);
+}
+.tv-zapowiedz-ikona { font-size: 2.5rem; line-height: 1; }
+.tv-badge-wkrotce {
+  display: inline-block; padding: 0.2rem 0.65rem; border-radius: 999px;
+  border: 1px solid var(--kts-line); background: var(--kts-neutral);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+  color: var(--kts-text-muted);
+}
+
+/* ----- brak transmisji ----- */
+.tv-brak {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 3.5rem 1.5rem; border-radius: var(--radius, 14px);
+  border: 1px dashed var(--kts-line); background: var(--kts-neutral);
+}
+.tv-brak-ikona { font-size: 3rem; line-height: 1; margin-bottom: 1rem; }
+
+/* ----- listy (archiwum + mecze) ----- */
+.tv-lista { display: grid; gap: 0.75rem; }
+.tv-karta {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.85rem 1rem; border-radius: 12px;
+  border: 1px solid var(--kts-line); background: var(--bg-card);
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+a.tv-karta:hover { border-color: var(--kts-link); transform: translateY(-1px); }
+.tv-karta-miniatura {
+  flex: 0 0 auto; width: 7.5rem; border-radius: 8px; overflow: hidden;
+  aspect-ratio: 16 / 9; background: var(--kts-neutral);
+}
+.tv-karta-miniatura img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.tv-karta-tresc { display: grid; gap: 0.15rem; min-width: 0; }
+.tv-karta-tresc span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tv-karta-strzalka { margin-left: auto; color: var(--kts-text-muted); flex: 0 0 auto; }
+.tv-karta--mecz { cursor: default; }
+
+/* ----- wstążka demo ----- */
+.tv-demo-wstazka {
+  margin-top: 1rem; padding: 0.5rem 1rem; border-radius: 10px;
+  border: 1px solid rgba(220, 38, 38, 0.45); background: rgba(220, 38, 38, 0.08);
+  color: var(--kts-loss, #dc2626); font-size: 0.8rem; font-weight: 600;
+  text-align: center; letter-spacing: 0.04em;
+}
+
+/* ----- zgłoś transmisję ----- */
+.tv-zglos .card { margin-top: 0; }
+
+/* ----- mobilnie ----- */
+@media (max-width: 640px) {
+  .tv-zapowiedz { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem 1.25rem; }
+  .tv-karta { flex-wrap: wrap; }
+  .tv-karta-miniatura { width: 100%; }
+  .tv-karta-strzalka { display: none; }
+  .tv-player-btn-kolo { width: 3.5rem; height: 3.5rem; font-size: 1.25rem; }
+}
