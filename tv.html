@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>KTS TV — transmisje na żywo — KTS Gliwice</title>
+  <meta name="description" content="KTS TV — transmisje meczów KTS Gliwice na żywo, zapowiedzi i archiwum nagrań na YouTube.">
+  <!-- WERSJA TESTOWA (wdrożenie próbne na podstronie) — nie indeksować;
+       przy pełnym wdrożeniu (pasek NA ŻYWO na głównej) usunąć -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:title" content="KTS TV — transmisje na żywo — KTS Gliwice">
+  <meta property="og:description" content="Mecze KTS Gliwice na żywo, zapowiedzi transmisji i archiwum nagrań.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tmjwk.github.io/kts-gliwice-work-repo-public/tv.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tv.css">
+  <script>
+    // Tryb dzień/noc — PRZED renderowaniem (bez mignięcia jasnym tłem):
+    // wybór z localStorage, domyślnie preferencja systemu (wzór: archiwum.html)
+    (function () {
+      try {
+        var z = localStorage.getItem("kts-theme");
+        if (!z) z = window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "day";
+        document.documentElement.setAttribute("data-theme", z);
+      } catch (e) { /* prywatny tryb przeglądarki — zostaje dzienny */ }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ===== HEADER (wzór: archiwum.html) ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="KTS Gliwice — strona główna">
+        <img class="brand-logo" src="logo-klubu.svg" alt="" width="44" height="44">
+        <span class="brand-name">KTS GLIWICE</span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Główna nawigacja">
+        <a href="index.html#aktualnosci">Aktualności</a>
+        <a href="index.html#oklubie">O klubie</a>
+        <a href="index.html#druzyny-wyniki">Drużyny i wyniki</a>
+        <a href="index.html#trenerzy">Trenerzy</a>
+        <a href="index.html#galeria">Galeria</a>
+      </nav>
+      <a class="btn btn-accent btn-sm header-cta" href="index.html#kontakt">Zapisz dziecko</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Przełącz tryb nocny" title="Przełącz tryb dzień/noc">🌙</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="start">
+
+    <!-- ===== KTS TV ===== -->
+    <section class="section" id="kts-tv">
+      <div class="container">
+
+        <div class="section-head">
+          <div>
+            <h1 class="t-h2">KTS TV</h1>
+            <p class="t-small muted">Transmisje meczów KTS Gliwice na żywo · zapowiedzi · archiwum nagrań</p>
+            <p class="t-small t-nums text-primary" id="tv-status">sprawdzam arkusz transmisji…</p>
+          </div>
+          <a class="btn btn-outline" href="index.html">← Strona główna</a>
+        </div>
+
+        <!-- SCENA: tu ląduje player LIVE / kafelek zapowiedzi / komunikat
+             „brak transmisji”. Renderuje js/tv.js wg stanu z tv.json.
+             Kontener zachowuje proporcje 16:9 (padding-top hack) — bez
+             skakania layoutu przy doładowaniu playera. -->
+        <div id="tv-scena" class="tv-scena" aria-live="polite"></div>
+
+        <!-- META pod scena: tytuł, mecz, liga — wypełnia js/tv.js -->
+        <div id="tv-meta" class="tv-meta" hidden></div>
+
+        <!-- ARCHIWUM TRANSMISJI (VOD / ZAKOŃCZONE) -->
+        <div id="tv-archiwum" class="tv-archiwum" hidden>
+          <div class="section-head-row" style="margin-top: 2.5rem;">
+            <h2 class="t-h3">Archiwum transmisji</h2>
+            <span class="badge badge--match t-nums" id="tv-archiwum-count">0</span>
+          </div>
+          <div id="tv-archiwum-lista" class="tv-lista"></div>
+        </div>
+
+        <!-- NASTĘPNE MECZE (gdy nic nie gra — kontekst „kiedy najbliższa
+             transmisja”; z tv.json.mecze, nierozegrane mecze 1LM) -->
+        <div id="tv-mecze" class="tv-mecze" hidden>
+          <div class="section-head-row" style="margin-top: 2.5rem;">
+            <h2 class="t-h3">Najbliższe mecze</h2>
+            <span class="badge badge--match t-nums" id="tv-mecze-count">0</span>
+          </div>
+          <div id="tv-mecze-lista" class="tv-lista"></div>
+          <p class="t-small muted" style="margin-top: .75rem;">
+            Transmisje zależą od kanałów nadających — status pojawi się tu,
+            gdy tylko arkusz wykryje stream.
+          </p>
+        </div>
+
+        <!-- ZGŁOŚ TRANSMISJĘ: link do formularza (TV_Ustawienia →
+             formularz_url); wypełnia js/tv.js, fallback: ukryj sekcję -->
+        <div id="tv-zglos" class="tv-zglos" hidden>
+          <div class="card card-pad" style="margin-top: 2.5rem;">
+            <h2 class="t-h3">Wiesz o transmisji, której tu nie ma?</h2>
+            <p class="t-small" style="margin-top: .5rem;">
+              Znasz kanał YouTube, który będzie nadawał mecz KTS? Prześlij link —
+              zweryfikujemy go i dodamy do KTS TV.
+            </p>
+            <a id="tv-zglos-link" class="btn btn-accent" target="_blank" rel="noopener" style="margin-top: 1rem;">
+              Zgłoś transmisję na YouTube&nbsp;<span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER (wzór: archiwum.html) ===== -->
+  <footer class="footer" id="kontakt">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img class="brand-logo brand-logo-sm" src="logo-klubu.svg" alt="" width="36" height="36">
+          <span class="footer-brand-name">KTS Gliwice</span>
+        </div>
+        <p class="t-small"><a class="footer-kontakt footer-adres" href="https://www.google.com/maps/search/?api=1&amp;query=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice" data-maps-apple="https://maps.apple.com/?q=ul.%20Partyzant%C3%B3w%2025%2C%2044-113%20Gliwice" target="_blank" rel="noopener">ul. Partyzantów 25 · Gliwice</a></p>
+        <p class="t-small"><a class="footer-kontakt" href="tel:+48607442978">607 442 978</a> · <a class="footer-kontakt" href="mailto:ktsgliwice@gmail.com">ktsgliwice@gmail.com</a></p>
+      </div>
+      <nav aria-label="Stopka">
+        <p class="footer-col-title">Sekcje</p>
+        <ul class="footer-links">
+          <li><a href="index.html#aktualnosci">Aktualności</a></li>
+          <li><a href="archiwum.html">Archiwum aktualności</a></li>
+          <li><a href="index.html#oklubie">O klubie</a></li>
+          <li><a href="index.html#druzyny-wyniki">Drużyny i wyniki</a></li>
+          <li><a href="index.html#trenerzy">Trenerzy</a></li>
+          <li><a href="index.html#galeria">Galeria</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="footer-col-title">Znajdź nas</p>
+        <a class="t-small footer-fb" href="https://www.facebook.com/AkademiaTenisaStolowego" target="_blank" rel="noopener">🤝 Facebook — Akademia Tenisa Stolowego&nbsp;<span aria-hidden="true">↗</span></a>
+        <a class="t-small footer-fb" href="gra.html">🎮 Pong — gra (beta)</a>
+        <p class="t-small footer-fade">[RODO · polityka cookies — do wdrożenia]</p>
+      </div>
+    </div>
+    <div class="container">
+      <p class="footer-bottom t-small">
+        Wdrożenie testowe (hosting statyczny, auto-sync wyników) · KTS Gliwice 2026
+        · <span class="t-nums" id="wersja-strony">wersja —</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Mini-skrypt podstrony (wzór: archiwum.html) — menu mobilne,
+       tryb dzień/noc, wersja w stopce -->
+  <script>
+    (function () {
+      var h = document.getElementById("hamburger");
+      var n = document.getElementById("nav");
+      if (h && n) {
+        h.addEventListener("click", function () {
+          var open = n.classList.toggle("open");
+          h.setAttribute("aria-expanded", String(open));
+        });
+      }
+      var t = document.getElementById("theme-toggle");
+      if (t) {
+        var ikona = function () {
+          t.textContent =
+            document.documentElement.getAttribute("data-theme") === "night" ? "☀️" : "🌙";
+        };
+        ikona();
+        t.addEventListener("click", function () {
+          var z = document.documentElement.getAttribute("data-theme") === "night" ? "day" : "night";
+          document.documentElement.setAttribute("data-theme", z);
+          try { localStorage.setItem("kts-theme", z); } catch (e) { /* tryb prywatny */ }
+          ikona();
+        });
+      }
+      var WERSJA_KODU = "1.34.1";
+      var elW = document.getElementById("wersja-strony");
+      fetch("wersja.json", { cache: "no-cache" })
+        .then(function (r) { return r.json(); })
+        .then(function (w) {
+          if (elW) elW.textContent = "wersja v" + w.wersja + (w.opis ? " · " + w.opis : "");
+        })
+        .catch(function () { /* wersja niezmierzalnie istotna */ });
+    })();
+  </script>
+  <script src="js/tv.js" defer></script>
+  <script src="js/powrot-gora.js" defer></script>
+  <script src="js/kontakt-stopki.js" defer></script>
+</body>
+</html>
