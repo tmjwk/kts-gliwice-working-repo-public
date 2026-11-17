@@ -1,7 +1,22 @@
 /** ============================================================
- *  MOST KTS → SLZTS · Google Apps Script · v1.7.1
+ *  MOST KTS → SLZTS · Google Apps Script · v1.7.2
  *  (jeden plik — wklej CAŁOŚĆ do edytora Apps Script arkusza,
  *   NAD poprzednią wersją: zaznacz wszystko w edytorze → wklej → zapisz)
+ *
+ *  DOKOŃCZENIE WYNIKÓW (v1.7.2, 17.11 — naprawa luki z meczu 16.11):
+ *   · luka: wynik 8:2 (2SLA) opublikowany w ligi.slzts.pl po północy
+ *     nie zdążył w oknie Dyżuru meczowego (15:00–00:30), a następne
+ *     okno sprawdzania to dopiero Patrol 03:15 NASTĘPNEJ nocy — na
+ *     stronie „oczekiwanie” wisi cały dzień; sekcja Cfg „oczekujące:
+ *     co 2 h (7–22)” to relikt wersji 0 — przepisany v1.x Zarządca
+ *     tej logiki nie miał;
+ *   · nowy blok 3b w Zarządcy: godz. 07–22, co 2 h (OCZEK_CO_MS),
+ *     sprawdza ligi meczów z ostatnich 3 dni (OCZEK_HORYZONT_DNI)
+ *     bez wyniku — meczeOczekujace_() zbiera unikalne ligi + PZTS;
+ *   · budżet: ~6 przebiegów × 1–2 ligi = 6–12 zapytań dziennie,
+ *     tylko gdy coś realnie czeka; puste dni = zero zapytań;
+ *   · po instalacji: menu → „Zainstaluj automatyzację” (świeży
+ *     trigger; Puls pokaże wersję 1.7.2 po najbliższym ticku).
  *
  *  PULS: SEKUNDY + STATYSTYKA CZASÓW PRZEBIEGÓW (v1.7.1, 14.11 — dwie
  *  prośby właściciela po audycie v1.7.0; logika pobierania, parsowania,
