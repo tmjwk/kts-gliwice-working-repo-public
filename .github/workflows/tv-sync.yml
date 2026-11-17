@@ -1,0 +1,66 @@
+name: KTS TV — sync transmisji
+
+# Wdrożenie testowe KTS TV (Task 210): arkusz „KTS TV” (zakładka
+# TV_Transmisje) → tv.json w repo → strona statyczna (tv.html).
+#
+# CZĘSTOTLIWOŚĆ — cel: pasek „NA ŻYWO” nie może się pojawić PO meczu.
+#   · OKNA MECZOWE (wieczory): co ~15 min, 15:45–23:45 UTC = 16:45–00:45
+#     CET (zimowy). Dublowanie slotów (:04/:19/:34/:49 → celowo rzadziej:
+#     2 sloty na kwadrans) — GitHub Actions gubi 60–80% zaplanowanych
+#     uruchomień w szczycie (lekcja z sync-dane.yml v2.1), a pusty run
+#     nie commituje (0 koszt).
+#   · DZIEŃ: co 2 h — łapie zmiany stanów WKRÓTCE/VOD poza meczami.
+#   · NOC: 03:10 — poranny patrol (stan po nocnych transmisjach).
+# Run: ~20 s (3 zapytania gviz, bez buildów). Awaria arkusza = run
+# czerwienieje, tv.json w repo zostaje ostatni znany stan.
+# USUNIĘCIE WDROŻENIA: skasować ten plik + tv.html + css/tv.css +
+# js/tv.js + tv.json + scripts/sync_tv.ts.
+
+on:
+  schedule:
+    # okna meczowe: co ~15 min między 15:45 a 23:45 UTC (16:45–00:45 CET)
+    - cron: "4 16-23 * * *"
+    - cron: "19 16-23 * * *"
+    - cron: "34 16-23 * * *"
+    - cron: "49 15-23 * * *"
+    # dzień: co 2 h (zmiany WKRÓTCE/VOD)
+    - cron: "11 0-15/2 * * *"
+    # poranny patrol
+    - cron: "10 3 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  tv-sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: tv-sync
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Sync TV (arkusz → tv.json)
+        id: sync
+        run: bun scripts/sync_tv.ts
+
+      - name: Commit (tylko przy realnej zmianie)
+        if: always()
+        run: |
+          git config user.name "kts-sync-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add tv.json
+          if git diff --cached --quiet; then
+            echo "Brak zmian — transmisje aktualne."
+          else
+            if [ "${{ steps.sync.outcome }}" = "success" ]; then
+              git commit -m "tv: sync transmisji $(date -u '+%Y-%m-%d %H:%M UTC')"
+            else
+              git commit -m "tv: przebieg z błędem odczytu $(date -u '+%Y-%m-%d %H:%M UTC')"
+            fi
+            git push
+          fi
