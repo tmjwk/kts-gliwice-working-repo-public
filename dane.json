@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-17T02:58:19.933Z",
+  "wygenerowano": "2026-11-17T19:56:33.044Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -69,7 +69,7 @@
       "nazwa": "KTS Gliwice · amatorzy",
       "liga": "2. Śląska Liga Amatorów",
       "tryb": "ŚZTS · automat",
-      "stan": "3. miejsce · 6 pkt",
+      "stan": "2. miejsce · 8 pkt",
       "url": "https://ligi.slzts.pl/liga/18/144/",
       "tabela": "18/144",
       "wiersz": "KTS Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "11:69"
         }
       ],
-      "zaktualizowano": "2026-11-17T02:58:19.933Z"
+      "zaktualizowano": "2026-11-17T19:56:33.044Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-17T02:58:19.933Z"
+      "zaktualizowano": "2026-11-17T19:56:33.044Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-17T02:58:19.933Z"
+      "zaktualizowano": "2026-11-17T19:56:33.044Z"
     },
     {
       "klucz": "18/144",
@@ -432,17 +432,17 @@
         },
         {
           "pozycja": 2,
-          "nazwa": "LKS Strażak II Mikołów",
+          "nazwa": "KTS Gliwice",
           "mecze": 5,
           "punkty": 8,
           "stosunek": "29:21"
         },
         {
           "pozycja": 3,
-          "nazwa": "KTS Gliwice",
-          "mecze": 4,
-          "punkty": 6,
-          "stosunek": "21:19"
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 5,
+          "punkty": 8,
+          "stosunek": "29:21"
         },
         {
           "pozycja": 4,
@@ -482,9 +482,9 @@
         {
           "pozycja": 9,
           "nazwa": "Speed Team 43 Stolarzowice",
-          "mecze": 4,
+          "mecze": 5,
           "punkty": 3,
-          "stosunek": "18:22"
+          "stosunek": "20:30"
         },
         {
           "pozycja": 10,
@@ -494,7 +494,7 @@
           "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-17T02:58:19.933Z"
+      "zaktualizowano": "2026-11-17T19:56:33.044Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-17T02:58:19.933Z",
+      "zaktualizowano": "2026-11-17T19:56:33.044Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1143,8 +1143,8 @@
       "kolejka": 5,
       "gospodarz": "KTS Gliwice",
       "gosc": "Speed Team 43 Stolarzowice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "8:2",
+      "rozegrany": true,
       "liga": "2. Śląska Liga Amatorów",
       "zespoly": [
         "KTS Gliwice · amatorzy"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-17T02:58:19.933Z",
+      "zaktualizowano": "2026-11-17T19:56:33.044Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-17T02:58:19.933Z",
-    "pzts": "2026-11-17T02:58:19.933Z"
+    "szts": "2026-11-17T19:56:33.044Z",
+    "pzts": "2026-11-17T19:56:33.044Z"
   },
   "zrodla": {
     "szts": "ok",
