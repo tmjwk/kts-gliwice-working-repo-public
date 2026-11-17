@@ -1,0 +1,38 @@
+{
+  "aktualizacja": "2026-11-17T22:31:37.583Z",
+  "zrodlo": "arkusz KTS TV · zakładka TV_Transmisje · kanał gviz",
+  "formularz": "https://docs.google.com/forms/d/e/1FAIpQLSf94l-9wYjL3ptLZ4JSxLtIrvUCFKz9LfuGch0Cf0n-IDWy3A/viewform",
+  "transmisje": [],
+  "mecze": [
+    {
+      "data": "2026-11-27",
+      "godzina": "18:00",
+      "liga": "1LM",
+      "kolejka": "8",
+      "gospodarz": "BKS Stal Bielsko-Biała",
+      "gosc": "KTS Gliwice"
+    },
+    {
+      "data": "2026-11-28",
+      "godzina": "16:00",
+      "liga": "1LM",
+      "kolejka": "7",
+      "gospodarz": "KS Naprzód Borucin",
+      "gosc": "KTS Gliwice"
+    },
+    {
+      "data": "2026-12-12",
+      "godzina": "16:00",
+      "liga": "1LM",
+      "kolejka": "10",
+      "gospodarz": "UKS Piast Poprawa Ostrzeszów",
+      "gosc": "KTS Gliwice"
+    }
+  ],
+  "statystyka": {
+    "transmisji": 0,
+    "live": 0,
+    "wkrotce": 0,
+    "archiwum": 0
+  }
+}
