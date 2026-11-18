@@ -1,17 +1,17 @@
 /**
  * sync_tv.ts — KTS TV: arkusz „KTS TV” → tv.json dla strony statycznej.
  *
- * KANAŁY ODCZYTU (1.35.1 — prywatność):
- *   · TV_Transmisje → WERSJA OPUBLIKOWANA (pub?gid=191595212). Publikacja
- *     obejmuje wyłącznie tę zakładkę (reszta nigdy nie jest częścią pub),
- *     a ukrycie zakładek w arkuszu NIE zrywa pub — pub ignoruje ukrywanie.
- *     To jedyny kanał, którego strona NIGDY nie straci przez decyzję
- *     właściciela o ukryciu zakładek.
- *   · TV_Mecze / TV_Ustawienia → nadal surowy gviz (potrzebne kontekstu
- *     „najbliższe mecze” i URL formularza). ZOSTAWIĆ WIDOCZNE w arkuszu.
- *     Gdyby właściciel je ukrył: gviz zwróci 404 → ten sync łagodnie
- *     pomija (mecze = ostatni znany stan z tv.json, formularz = fallback),
- *     run NIE czerwienieje — strona żyje dalej.
+ * KANAŁ ODCZYTU (zamknięcie arkusza, 2026-11-18):
+ *   WYŁĄCZNIE WERSJA OPUBLIKOWANA (pub) — wszystkie 3 zakładki:
+ *     · TV_Transmisje  (gid 191595212) → transmisje
+ *     · TV_Mecze       (gid 994938779) → najbliższe mecze (kontekst)
+ *     · TV_Ustawienia  (gid 114494092) → formularz_url
+ *   Publikacja zweryfikowana: dokładnie te 3 zakładki, zero danych
+ *   osobowych, zero kluczy API (klucz YouTube siedzi w Script Properties,
+ *   których publikacja NIE obejmuje). Surowe ID arkusza zostało USUNIĘTE
+ *   z kodu — kanał gviz porzucony, więc arkusz można (i należy) zamknąć:
+ *   udostępnianie „każdy z linkiem” → wyłączone. Publikacja działa
+ *   niezależnie od ustawień udostępniania (również przy arkuszu prywatnym).
  * Zakładki TV_Zgłoszenia / TV_Zgłaszający / TV_Log zawierają dane
  * osobowe i NIE są czytane z żadnego kanału (RODO).
  *
@@ -26,34 +26,27 @@
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
-const ARKUSZ_TV = "1rY47XRc41XO-hUoLW91JgoOALDr-5ywXSahEkgI-oBI";
-const GVIZ = `https://docs.google.com/spreadsheets/d/${ARKUSZ_TV}/gviz/tq?tqx=out:csv&headers=0`;
-// Wersja opublikowana „KTS TV” → zakładka TV_Transmisje (gid z pubhtml;
-// przy NOWEJ publikacji arkusza URL się zmienia — zaktualizować).
-const PUB_TRANSMISJE = "https://docs.google.com/spreadsheets/d/e/" +
-  "2PACX-1vShni3KQFw-viXRvO_qoTGKX4_2OUxJzs4DZrVYchM2P71d7ynhxuAjQQgj8Ho0123G4C5bpoJrF4lI" +
-  "/pub?gid=191595212&single=true&output=csv";
+// Wersja opublikowana „KTS TV” — JEDYNY kanał odczytu (publikacja działa
+// niezależnie od udostępniania arkusza; przy NOWEJ publikacji URL i gid-y
+// się zmieniają — wtedy zaktualizować). Zakładki w publikacji (zweryfikowane
+// 2026-11-18, pubhtml): Transmisje 191595212 · Ustawienia 114494092 ·
+// Mecze 994938779. NIE DODAWAĆ zakładek z danymi osobowymi (Zgłoszenia,
+// Zgłaszający, Log) — publikacja ich nigdy nie obejmuje.
+const PUB_TV = "https://docs.google.com/spreadsheets/d/e/" +
+  "2PACX-1vShni3KQFw-viXRvO_qoTGKX4_2OUxJzs4DZrVYchM2P71d7ynhxuAjQQgj8Ho0123G4C5bpoJrF4lI/pub";
+const GID_TRANSMISJE = "191595212";
+const GID_MECZE = "994938779";
+const GID_USTAWIENIA = "114494092";
 const WYJSCIE = process.env.TV_WYJSCIE ?? "tv.json";
 const UA = "KTS-Gliwice-TV-Sync/1.0 (+strona: tmjwk.github.io)";
 
-/** Pobierz zakładkę jako macierz CSV (parsowanie w cudzysłowach, jak most). */
-async function gvizArkusz(nazwa: string): Promise<string[][]> {
-  const url = `${GVIZ}&sheet=${encodeURIComponent(nazwa)}&_cb=${Date.now()}`;
-  const res = await fetch(url, { headers: { "User-Agent": UA } });
-  if (!res.ok) {
-    throw new Error(`gviz ${nazwa}: HTTP ${res.status}`);
-  }
-  const tekst = await res.text();
-  return parsujCsv(tekst.replace(/^\uFEFF/, ""));
-}
-
-/** Pobierz wersję opublikowaną (CSV z przekierowaniem 307). */
-async function pubArkusz(): Promise<string[][]> {
-  const res = await fetch(`${PUB_TRANSMISJE}&_cb=${Date.now()}`, {
+/** Pobierz zakładkę z wersji opublikowanej jako macierz CSV. */
+async function pubArkusz(gid: string, nazwa: string): Promise<string[][]> {
+  const res = await fetch(`${PUB_TV}?gid=${gid}&single=true&output=csv&_cb=${Date.now()}`, {
     headers: { "User-Agent": UA }, redirect: "follow",
   });
   if (!res.ok) {
-    throw new Error(`pub TV_Transmisje: HTTP ${res.status}`);
+    throw new Error(`pub ${nazwa} (gid ${gid}): HTTP ${res.status}`);
   }
   const tekst = await res.text();
   return parsujCsv(tekst.replace(/^\uFEFF/, ""));
@@ -113,8 +106,8 @@ interface Mecz {
 }
 
 async function main() {
-  // --- TV_Transmisje (serce tv.json) — WERSJA OPUBLIKOWANA (1.35.1) ---
-  const tr = await pubArkusz();
+  // --- TV_Transmisje (serce tv.json) — wersja opublikowana ---
+  const tr = await pubArkusz(GID_TRANSMISJE, "TV_Transmisje");
   const trIdx = indeksy(tr[0] ?? []);
   const transmisje: Transmisja[] = [];
   for (const w of tr.slice(1)) {
@@ -138,15 +131,14 @@ async function main() {
   }
 
   // --- TV_Mecze (kontekst „najbliższe mecze” przy braku transmisji) ---
-  // gviz — wymaga WIDOCZNEJ zakładki; gdy właściciel ją ukryje, łagodnie
-  // pomijamy (mecze = ostatni znany stan z tv.json), bez czerwienienia runu.
+  // pub — odporny na ukrycie zakładek i na wyłączenie udostępniania.
   let mecze: Mecz[] = [];
-  let zrodloMeczy = "arkusz (TV_Mecze)";
+  let zrodloMeczy = "arkusz KTS TV · zakładka TV_Mecze · wersja opublikowana (pub)";
   const stary = existsSync(WYJSCIE)
     ? (() => { try { return JSON.parse(readFileSync(WYJSCIE, "utf8")); } catch { return null; } })()
     : null;
   try {
-    const me = await gvizArkusz("TV_Mecze");
+    const me = await pubArkusz(GID_MECZE, "TV_Mecze");
     const meIdx = indeksy(me[0] ?? []);
     const dzis = new Date().toISOString().slice(0, 10);
     for (const w of me.slice(1)) {
@@ -167,7 +159,7 @@ async function main() {
     }
     mecze.sort((a, b) => (a.data + a.godzina).localeCompare(b.data + b.godzina));
   } catch (e) {
-    // ukryta zakładka / chwilowa awaria gviz — trzymaj ostatni znany stan
+    // chwilowa awaria pub dla tej zakładki — trzymaj ostatni znany stan
     if (stary?.mecze && Array.isArray(stary.mecze)) {
       mecze = stary.mecze as Mecz[];
       zrodloMeczy = "tv.json (ostatni znany stan — zakładka niedostępna)";
@@ -176,11 +168,11 @@ async function main() {
   }
 
   // --- TV_Ustawienia: wyłącznie formularz_url (publiczny link do zgłoszeń) ---
-  // gviz — jak wyżej: ukryte → fallback z poprzedniego tv.json (lub domyślny).
+  // pub — jak wyżej: odporny na ukrycie i na zamknięcie arkusza.
   let formularz = "https://docs.google.com/forms/d/e/1FAIpQLSf94l-9wYjL3ptLZ4JSxLtIrvUCFKz9LfuGch0Cf0n-IDWy3A/viewform";
   if (stary?.formularz) formularz = String(stary.formularz);
   try {
-    const us = await gvizArkusz("TV_Ustawienia");
+    const us = await pubArkusz(GID_USTAWIENIA, "TV_Ustawienia");
     const usIdx = indeksy(us[0] ?? []);
     for (const w of us.slice(1)) {
       if ((w[usIdx["Klucz"]] ?? "").trim() === "formularz_url") {
@@ -195,7 +187,7 @@ async function main() {
   // --- montaż tv.json ---
   const json = {
     aktualizacja: new Date().toISOString(),
-    zrodlo: "arkusz KTS TV · zakładka TV_Transmisje · wersja opublikowana (pub)",
+    zrodlo: "arkusz KTS TV · 3 zakładki (Transmisje/Mecze/Ustawienia) · wersja opublikowana (pub)",
     zrodloMeczy,
     formularz,
     transmisje,
