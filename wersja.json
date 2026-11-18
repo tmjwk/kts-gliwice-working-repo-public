@@ -1,5 +1,5 @@
 {
-  "wersja": "1.37.0",
-  "data": "2026-11-18T03:40:00Z",
-  "opis": "Medalowa ramka kafelka 2.0: bez chipa tekstowego (sama ramka), grubsza (3px) i naprawdę żywa — rozbłysk świetlny okrąża ramkę jak refleks na polerowanym medalu. Nadal w pełni automatyczna z danych ligowych, z poszanowaniem prefers-reduced-motion."
+  "wersja": "1.37.1",
+  "data": "2026-11-18T22:30:00Z",
+  "opis": "Medal 2.1: rozbłysk przepisany na transform:rotate (kompatybilny z Firefoxem/Safari, gdzie @property nie animowało), ramka na tle elementu zamiast podwójnego border-box (starsze iOS), cache-busting ?v= na wszystkich zasobach."
 }
