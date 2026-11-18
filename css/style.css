@@ -429,8 +429,6 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
     linear-gradient(135deg, var(--medal-c1) 0%, var(--medal-c2) 22%,
         var(--medal-c3) 40%, var(--medal-c4) 55%, var(--medal-c5) 72%,
         var(--medal-c6) 88%, var(--medal-c1) 100%) border-box;
-  animation: medal-orbita 6s linear infinite;
-
   --medal-glow: rgba(198, 142, 74, 0.30);}
 /* srebro — 2. miejsce (dzień): chłodne stopy, rozbłysk bieli w 55% */
 .team-card.medal-2 {
@@ -485,9 +483,13 @@ html[data-theme="night"] .team-card.medal-3 {
    a jego tłem jest stożkowy gradient z jasną plamą pod kątem
    --medal-kat; animacja kręci ten kąt (rejestrowany typ <angle> w
    @property, więc przeglądarka animuje płynnie, bez klatkowania
-   cech dyskretnych). Pełne okrążenie w 6 s — dość wolno, żeby nie
-   męczyć oka. Zero JS; prefers-reduced-motion wyłącza kręcenie
-   (rozbłysk staje w pozycji startowej, metal zostaje statyczny). */
+   cech dyskretnych). PEŁNE OKRĄŻENIE W 6 S — dość wolno, żeby nie
+   męczyć oka. UWAGA techniczna (poprawka po teście live): animacja
+   siedzi na ::after, NIE na kafelku — @property z inherits: false
+   nie przepuszcza animowanej wartości do pseudoelementu, więc
+   pierwsza wersja kręciła kątem na elemencie (widocznym w inspektorze
+   jako rosnący --medal-kat), a rozbłysk stał na 0°. Zero JS;
+   prefers-reduced-motion wyłącza kręcenie (metal zostaje statyczny). */
 .team-card.medal-2::after, .team-card.medal-1::after, .team-card.medal-3::after {
   content: ""; position: absolute; inset: 0;
   border-radius: inherit; pointer-events: none;
@@ -500,6 +502,7 @@ html[data-theme="night"] .team-card.medal-3 {
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
+  animation: medal-orbita 6s linear infinite;
 }
 /* „3px ramki zamiast 1px linii” — pierścień wchodzi 2px w obszar
    kafelka (box-sizing: border-box); odragę dla treści zmniejszamy
@@ -508,7 +511,7 @@ html[data-theme="night"] .team-card.medal-3 {
 /* awaryjne hamulce: użytkownik prosił o mniej ruchu w systemie —
    rozbłysk staje, statyczny metal zostaje */
 @media (prefers-reduced-motion: reduce) {
-  .team-card.medal-2, .team-card.medal-1, .team-card.medal-3 { animation: none; }
+  .team-card.medal-2::after, .team-card.medal-1::after, .team-card.medal-3::after { animation: none; }
 }
 /* 1.37.0: HOVER NIE ZAMALOWUJE METALU — .team-klik:hover maluje
    border na granatowo (zwykłe kafelki), co przy medalu zastępowałoby
