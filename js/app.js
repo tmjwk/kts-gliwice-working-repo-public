@@ -584,9 +584,23 @@ function renderKartyDruzyn(dane, mecze) {
      u źródła zostaje (funkcja), ale bez słowa „Źródło” w treści —
      „Pełna tabela ↗” z lewej, „Szczegóły ↗” z prawej. */
   const wrap = $("#karty-druzyn");
-  wrap.innerHTML = dane.zespoly.map((z) => `
-    <article class="card team-card team-klik" data-slug="${esc(slugZespolu(z.nazwa))}" tabindex="0" role="button"
+  /* 1.36.0: MEDAL NA KAFELKU (właściciel 18.11) — pozycję z pola „stan”
+     („2. miejsce · 8 pkt”, wypełniane automatycznie z tabel ligowych)
+     zamieniamy na klasę .medal-1/2/3 → metaliczna ramka + drobny chip.
+     Subtelnie i na próbę („zobaczymy i pogadamy”): bez animacji, bez
+     zmian treści. Wykrywanie kotwiczone od początku łańcucha — „2. miejsce”
+     nie dopasuje się do „12.” ani „20.”. Spadek z podium = brak klasy
+     = zwykły kafelek, bez żadnej interwencji człowieka. */
+  const pozycjaMedalu = (stan) => {
+    const m = /^([123])\. miejsce\b/.exec(stan ?? "");
+    return m ? m[1] : null;
+  };
+  wrap.innerHTML = dane.zespoly.map((z) => {
+    const medal = pozycjaMedalu(z.stan);
+    return `
+    <article class="card team-card team-klik${medal ? ` medal-${medal}` : ""}" data-slug="${esc(slugZespolu(z.nazwa))}" tabindex="0" role="button"
              aria-label="Otwórz szczegóły drużyny: ${esc(z.nazwa)}">
+      ${medal ? `<span class="medal-chip medal-chip--${medal}">${medal}. miejsce</span>` : ""}
       <h3 class="t-h4">${esc(z.nazwa)}</h3>
       <p class="t-small">${esc(z.liga)}</p>
       <dl>
@@ -598,7 +612,8 @@ function renderKartyDruzyn(dane, mecze) {
         ${z.url ? `<a class="source-link" href="${esc(z.url)}" target="_blank" rel="noreferrer">Pełna&nbsp;tabela&nbsp;↗</a>` : ""}
         <span class="team-wiecej">Szczegóły&nbsp;↗</span>
       </div>
-    </article>`).join("");
+    </article>`;
+  }).join("");
   legendaFormy(mecze, dane.zespoly);   // 1.24.0: klucz kolorów nad kartami (CO WIDZĘ)
   wskazScrubber();   // 1.25.0: chip „przesuń palcem” pod pierwszym paskiem (raz na wizytę)
 }
@@ -1556,7 +1571,7 @@ function sledzSystemowyTryb() {
    komunikat i sprawdź natychmiast (nie częściej niż co 45 s).
 */
 
-const WERSJA_KODU = "1.35.1";
+const WERSJA_KODU = "1.36.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
