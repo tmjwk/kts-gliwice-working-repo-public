@@ -1135,8 +1135,23 @@ html[data-theme="night"] .team-card.medal-3 {
 .footer-zrodla { display: block; margin-bottom: 0.35rem; color: rgba(255,255,255,0.55); }
 
 /* ===== galeria (v1.2.0 — prototyp) ===== */
-.gal-powrot { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--kts-link); text-decoration: none; font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; }
-.gal-powrot:hover { text-decoration: underline; }
+/* 1.37.2: KANONICZNY LINK POWROTU na stronę główną (właściciel 19.11:
+   „w wielu miejscach «← Wróć na stronę główną» lub «← Strona główna»
+   — niekonsystentne; w każdym przypadku ma wyglądać tak samo”).
+   JEDNA klasa .powrot-glowna + tekst „← Wróć na stronę główną”
+   wszędzie (galeria, gra×3, tv). Wygląd przejęty z dawnego
+   .gal-powrot (najstarsza forma). Wariant --blok: link sam w
+   wierszu nad tytułem sekcji (galeria) — margines dolny jak dawniej.
+   .gra-powrot/.gal-powrot skasowane; druzyna.html (→ sekcja
+   #druzyny-wyniki, nie główna) i archiwum.html (CTA „Najnowsze”)
+   to INNE linki i świadomie nie wchodzą do kanonu. */
+.powrot-glowna {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  color: var(--kts-link); text-decoration: none;
+  font-size: 0.875rem; font-weight: 600; white-space: nowrap;
+}
+.powrot-glowna:hover { text-decoration: underline; }
+.powrot-glowna--blok { display: inline-flex; margin-bottom: 1rem; }
 
 .gal-filtry { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.25rem 0 2rem; }
 .gal-chip {
@@ -1841,11 +1856,8 @@ html[data-theme="night"] .team-card.medal-3 {
    js/gra.js) + kompaktowa stopka. Link wstopce „Znajdź nas” wszystkich
    stron. Szczegóły mechanizmu: js/gra.js. */
 .gra-header-akcje { margin-left: auto; display: flex; align-items: center; gap: 1rem; }
-.gra-powrot {
-  color: var(--kts-link); text-decoration: none; font-size: 0.9rem;
-  font-weight: 500; white-space: nowrap;
-}
-.gra-powrot:hover { text-decoration: underline; }
+/* 1.37.2: .gra-powrot skasowane — link powrotu w nagłówku gry używa
+   kanonicznej klasy .powrot-glowna (ta sama co galeria/tv/panele gry) */
 
 .gra-main { flex: 1 0 auto; display: flex; flex-direction: column; min-height: 0; }
 .gra-pasek {

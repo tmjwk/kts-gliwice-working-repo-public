@@ -1,5 +1,5 @@
 {
-  "wersja": "1.37.1",
-  "data": "2026-11-18T22:30:00Z",
-  "opis": "Medal 2.1: rozbłysk przepisany na transform:rotate (kompatybilny z Firefoxem/Safari, gdzie @property nie animowało), ramka na tle elementu zamiast podwójnego border-box (starsze iOS), cache-busting ?v= na wszystkich zasobach."
+  "wersja": "1.37.2",
+  "data": "2026-11-19T00:15:00Z",
+  "opis": "Jednolity link powrotu — wszędzie «← Wróć na stronę główną» w tym samym stylu (galeria, gra, KTS TV)."
 }
