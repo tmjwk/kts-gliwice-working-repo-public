@@ -272,7 +272,7 @@ const GRA_KATALOG = "gra";
 const GRA_PLIKI = ["pong.html", "index.html", "game/pong.html"];
 
 /* ===== wersja strony (konwencja v1.28.4) ===== */
-const WERSJA_KODU = "1.34.1";
+const WERSJA_KODU = "1.36.0";
 
 const $ = (sel) => document.querySelector(sel);
 
