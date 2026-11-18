@@ -1,5 +1,5 @@
 {
-  "wersja": "1.36.0",
-  "data": "2026-11-18T02:55:00Z",
-  "opis": "Kafelek drużyny na podium tabeli (1.–3. miejsce) dostaje subtelną metaliczną ramkę medalu — złoto, srebro lub brąz z refleksami, plus mały chip z pozycją („2. miejsce”). Wszystko automatycznie z danych ligowych: awans na podium zapala ramkę, spadek gasi. Na próbę, bez animacji."
+  "wersja": "1.37.0",
+  "data": "2026-11-18T03:40:00Z",
+  "opis": "Medalowa ramka kafelka 2.0: bez chipa tekstowego (sama ramka), grubsza (3px) i naprawdę żywa — rozbłysk świetlny okrąża ramkę jak refleks na polerowanym medalu. Nadal w pełni automatyczna z danych ligowych, z poszanowaniem prefers-reduced-motion."
 }
