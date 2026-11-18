@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-17T19:56:33.044Z",
+  "wygenerowano": "2026-11-18T19:37:50.165Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -51,7 +51,7 @@
       "nazwa": "KTS VI",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "11. miejsce · 2 pkt",
+      "stan": "12. miejsce · 2 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS VI Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "11:69"
         }
       ],
-      "zaktualizowano": "2026-11-17T19:56:33.044Z"
+      "zaktualizowano": "2026-11-18T19:37:50.165Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:57"
         }
       ],
-      "zaktualizowano": "2026-11-17T19:56:33.044Z"
+      "zaktualizowano": "2026-11-18T19:37:50.165Z"
     },
     {
       "klucz": "18/142",
@@ -390,24 +390,24 @@
         },
         {
           "pozycja": 11,
-          "nazwa": "KTS VI Gliwice",
-          "mecze": 6,
+          "nazwa": "LKS Strażak III Mikołów",
+          "mecze": 7,
           "punkty": 2,
-          "stosunek": "17:43"
+          "stosunek": "23:47"
         },
         {
           "pozycja": 12,
+          "nazwa": "KTS VI Gliwice",
+          "mecze": 7,
+          "punkty": 2,
+          "stosunek": "17:53"
+        },
+        {
+          "pozycja": 13,
           "nazwa": "STS II Żernica",
           "mecze": 6,
           "punkty": 1,
           "stosunek": "12:48"
-        },
-        {
-          "pozycja": 13,
-          "nazwa": "LKS Strażak III Mikołów",
-          "mecze": 6,
-          "punkty": 0,
-          "stosunek": "13:47"
         },
         {
           "pozycja": 14,
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-17T19:56:33.044Z"
+      "zaktualizowano": "2026-11-18T19:37:50.165Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-17T19:56:33.044Z"
+      "zaktualizowano": "2026-11-18T19:37:50.165Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-17T19:56:33.044Z",
+      "zaktualizowano": "2026-11-18T19:37:50.165Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1156,8 +1156,8 @@
       "kolejka": 7,
       "gospodarz": "LKS Strażak III Mikołów",
       "gosc": "KTS VI Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "10:0",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS VI"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-17T19:56:33.044Z",
+      "zaktualizowano": "2026-11-18T19:37:50.165Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2255,7 +2255,7 @@
     {
       "zespol": "KTS VI",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
-      "zaktualizowano": "2026-11-13T22:08:48.600Z",
+      "zaktualizowano": "2026-11-18T19:37:50.165Z",
       "zawodnicy": [
         {
           "nazwisko": "Wojciech Wieczorek",
@@ -2263,8 +2263,8 @@
           "narodowosc": "Polska",
           "rok": 2013,
           "zwyciestwa": 7,
-          "porazki": 5,
-          "punkty": "7:5",
+          "porazki": 7,
+          "punkty": "7:7",
           "skutecznosc": null
         },
         {
@@ -2273,8 +2273,8 @@
           "narodowosc": "Polska",
           "rok": 2005,
           "zwyciestwa": 3,
-          "porazki": 9,
-          "punkty": "3:9",
+          "porazki": 11,
+          "punkty": "3:11",
           "skutecznosc": null
         },
         {
@@ -2303,8 +2303,8 @@
           "narodowosc": "Polska",
           "rok": 1979,
           "zwyciestwa": 1,
-          "porazki": 11,
-          "punkty": "1:11",
+          "porazki": 12,
+          "punkty": "1:12",
           "skutecznosc": null
         },
         {
@@ -2313,8 +2313,8 @@
           "narodowosc": "Polska",
           "rok": 1986,
           "zwyciestwa": 0,
-          "porazki": 2,
-          "punkty": "0:2",
+          "porazki": 3,
+          "punkty": "0:3",
           "skutecznosc": null
         },
         {
@@ -2409,13 +2409,23 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-11-13T22:08:48.600Z",
+      "zaktualizowano": "2026-11-18T19:37:50.165Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1979,
+          "zwyciestwa": 9,
+          "porazki": 1,
+          "punkty": "9:1",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Paweł Stefanów",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1975,
           "zwyciestwa": 6,
           "porazki": 1,
           "punkty": "6:1",
@@ -2436,19 +2446,9 @@
           "licencja": null,
           "narodowosc": "Polska",
           "rok": null,
-          "zwyciestwa": 3,
-          "porazki": 9,
-          "punkty": "3:9",
-          "skutecznosc": null
-        },
-        {
-          "nazwisko": "Paweł Stefanów",
-          "licencja": null,
-          "narodowosc": "Polska",
-          "rok": 1975,
-          "zwyciestwa": 3,
-          "porazki": 1,
-          "punkty": "3:1",
+          "zwyciestwa": 4,
+          "porazki": 11,
+          "punkty": "4:11",
           "skutecznosc": null
         },
         {
@@ -2492,7 +2492,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Jarosław Kozłowski",
+          "nazwisko": "Adam Pasiński",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1975,
@@ -2502,7 +2502,7 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Adam Pasiński",
+          "nazwisko": "Jarosław Kozłowski",
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1975,
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-17T19:56:33.044Z",
-    "pzts": "2026-11-17T19:56:33.044Z"
+    "szts": "2026-11-18T19:37:50.165Z",
+    "pzts": "2026-11-18T19:37:50.165Z"
   },
   "zrodla": {
     "szts": "ok",
