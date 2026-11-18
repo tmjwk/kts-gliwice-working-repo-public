@@ -405,41 +405,54 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 
 /* ===== karty drużyn ===== */
 .team-card { padding: 1rem; gap: 0.25rem; position: relative; }
-/* 1.36.0: MEDALOWA RAMKA (właściciel 18.11, „zobaczymy i pogadamy”):
-   kafelek drużyny na podium tabeli dostaje ramkę, która wygląda jak
-   METAL, nie jak płaski kolor — dwa tła: wnętrze kafelka zwykłe
-   (padding-box), a pierścień ramki to gradient 135° z wąskimi pasmami
-   cienia i rozbłysku (border-box). Wyłącznie z klasy .medal-1/2/3,
-   którą dokłada js/app.js AUTOMATYCZNIE z pola „stan” („2. miejsce ·
-   8 pkt”) — spadek z podium = ramka znika sama w najbliższym syncu,
-   zero ręcznych ustawień do zapominania. Intencjonalnie SUBTELNE:
-   ramka 2px (jak zwykła linia), poświata ledwo wyczuwalna, brak
-   animacji. Pozycję w stylu „2.” trzyma też tekst „Stan”, więc
-   kolor nie jest jedynym nośnikiem informacji (WCAG 1.4.1). */
+/* 1.36.0→1.37.0: MEDALOWA RAMKA (właściciel 18.11, druga runda uwag):
+   kafelek drużyny na podium tabeli (1./2./3. miejsce — dowolnej drużyny,
+   klasa doklejana automatycznie z pola „stan”) dostaje ramkę, która
+   wygląda jak METAL, nie jak płaski kolor — dwa tła: wnętrze zwykłe
+   (padding-box), pierścień ramki to gradient 135° z pasmami cienia
+   i rozbłysku (border-box). 1.37.0: BEZ chipa tekstowego (ramka
+   wystarczy — pozycję wypisuje wiersz „Stan”), ramka 3px i ŻYWY
+   metal: rozbłysk świetlny okrąża ramkę (patrz .medal-run ::after
+   niżej). Spadek z podium = ramka znika sama w najbliższym syncu. */
+@keyframes medal-orbita {
+  to { --medal-kat: 1turn; }
+}
+@property --medal-kat {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0turn;
+}
 .team-card.medal-2, .team-card.medal-1, .team-card.medal-3 {
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   background:
     linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
     linear-gradient(135deg, var(--medal-c1) 0%, var(--medal-c2) 22%,
         var(--medal-c3) 40%, var(--medal-c4) 55%, var(--medal-c5) 72%,
         var(--medal-c6) 88%, var(--medal-c1) 100%) border-box;
-}
+  animation: medal-orbita 6s linear infinite;
+
+  --medal-glow: rgba(198, 142, 74, 0.30);}
 /* srebro — 2. miejsce (dzień): chłodne stopy, rozbłysk bieli w 55% */
 .team-card.medal-2 {
   --medal-c1: #7c7f86; --medal-c2: #eceef1; --medal-c3: #a6aab1;
   --medal-c4: #ffffff; --medal-c5: #8f939a; --medal-c6: #d3d6da;
+  --medal-blask: #ffffff;
   box-shadow: 0 0 12px rgba(176, 182, 194, 0.35);
-}
+
+  --medal-glow: rgba(176, 182, 194, 0.35);}
 /* złoto — 1. miejsce: ciepły rozbłysk, głęboki bursztyn na brzegach */
 .team-card.medal-1 {
   --medal-c1: #8a6a1c; --medal-c2: #f7d97a; --medal-c3: #c49b30;
   --medal-c4: #fff6d8; --medal-c5: #a37d22; --medal-c6: #e8c25a;
+  --medal-blask: #fff3c4;
   box-shadow: 0 0 12px rgba(228, 190, 92, 0.32);
-}
+
+  --medal-glow: rgba(228, 190, 92, 0.32);}
 /* brąz — 3. miejsce: miedź z kremowym rozbłyskiem */
 .team-card.medal-3 {
   --medal-c1: #6b4419; --medal-c2: #d8a35f; --medal-c3: #a06a2c;
   --medal-c4: #f3d3a0; --medal-c5: #8a5a20; --medal-c6: #c68e4a;
+  --medal-blask: #ffe9c9;
   box-shadow: 0 0 12px rgba(198, 142, 74, 0.30);
 }
 /* tryb nocny: te same prążki metalu, ale stopy przygaszone do
@@ -448,37 +461,65 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 html[data-theme="night"] .team-card.medal-2 {
   --medal-c1: #565a61; --medal-c2: #c9ccd2; --medal-c3: #83878e;
   --medal-c4: #f3f4f6; --medal-c5: #6d7178; --medal-c6: #b4b8bf;
+  --medal-blask: #ffffff;
   box-shadow: 0 0 14px rgba(160, 168, 182, 0.28);
-}
+
+  --medal-glow: rgba(160, 168, 182, 0.28);}
 html[data-theme="night"] .team-card.medal-1 {
   --medal-c1: #6e5314; --medal-c2: #e0be5e; --medal-c3: #9c7824;
   --medal-c4: #f4e3ad; --medal-c5: #7d611a; --medal-c6: #cba843;
+  --medal-blask: #fff0bd;
   box-shadow: 0 0 14px rgba(216, 178, 84, 0.26);
-}
+
+  --medal-glow: rgba(216, 178, 84, 0.26);}
 html[data-theme="night"] .team-card.medal-3 {
   --medal-c1: #573713; --medal-c2: #b5834a; --medal-c3: #7f5420;
   --medal-c4: #d9b98a; --medal-c5: #6b4419; --medal-c6: #a9783f;
+  --medal-blask: #ffe4bd;
   box-shadow: 0 0 14px rgba(180, 130, 78, 0.24);
+
+  --medal-glow: rgba(180, 130, 78, 0.24);}
+/* 1.37.0: ŻYWĄ METAL — rozbłysk świetlny OKRĄŻA ramkę (właściciel:
+   „efekt metaliczny naprawdę żywy”). Mechanizm: ::after wypełnia
+   kafelek, maskowany XOR-em do samego pierścienia ramki (mask-composite),
+   a jego tłem jest stożkowy gradient z jasną plamą pod kątem
+   --medal-kat; animacja kręci ten kąt (rejestrowany typ <angle> w
+   @property, więc przeglądarka animuje płynnie, bez klatkowania
+   cech dyskretnych). Pełne okrążenie w 6 s — dość wolno, żeby nie
+   męczyć oka. Zero JS; prefers-reduced-motion wyłącza kręcenie
+   (rozbłysk staje w pozycji startowej, metal zostaje statyczny). */
+.team-card.medal-2::after, .team-card.medal-1::after, .team-card.medal-3::after {
+  content: ""; position: absolute; inset: 0;
+  border-radius: inherit; pointer-events: none;
+  padding: 3px;
+  background:
+    conic-gradient(from var(--medal-kat, 0turn),
+      transparent 0deg, var(--medal-blask) 24deg, transparent 56deg,
+      transparent 180deg, rgba(255, 255, 255, 0.25) 204deg, transparent 240deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
 }
-/* „2px ramki zamiast 1px linii” — pierścień wchodzi 1px w obszar
+/* „3px ramki zamiast 1px linii” — pierścień wchodzi 2px w obszar
    kafelka (box-sizing: border-box); odragę dla treści zmniejszamy
-   padding o ten sam 1px, żeby nic nie „skoczyło” przy przerysowaniu */
-.team-card.medal-2, .team-card.medal-1, .team-card.medal-3 { padding: 0.9375rem; }
-/* chip „2. miejsce” — trzyma się prawego górnego rogu kafelka, ten
-   sam metal co ramka (spójność), drobny i bez wdawania się w treść */
-.team-card .medal-chip {
-  position: absolute; top: 0.55rem; right: 0.55rem;
-  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em;
-  line-height: 1; padding: 0.3rem 0.5rem; border-radius: 999px;
-  color: #2b2f38; pointer-events: none;
-  background: linear-gradient(135deg, var(--medal-c2), var(--medal-c4) 45%, var(--medal-c5));
+   padding o te 2px, żeby nic nie „skoczyło” przy przerysowaniu */
+.team-card.medal-2, .team-card.medal-1, .team-card.medal-3 { padding: 0.875rem; }
+/* awaryjne hamulce: użytkownik prosił o mniej ruchu w systemie —
+   rozbłysk staje, statyczny metal zostaje */
+@media (prefers-reduced-motion: reduce) {
+  .team-card.medal-2, .team-card.medal-1, .team-card.medal-3 { animation: none; }
 }
-.team-card .medal-chip.medal-chip--1 { color: #4d3a0e; }
-.team-card .medal-chip.medal-chip--3 { color: #4a2f12; }
-html[data-theme="night"] .team-card .medal-chip { color: #14181f; }
-/* hero nagłówek kafelka nie może wjeżdżać na chip na wąskich
-   ekranach — nazwa drużyny dostaje luz po prawej tylko w medalowych */
-.team-card.medal-2 h3, .team-card.medal-1 h3, .team-card.medal-3 h3 { padding-right: 4.6rem; }
+/* 1.37.0: HOVER NIE ZAMALOWUJE METALU — .team-klik:hover maluje
+   border na granatowo (zwykłe kafelki), co przy medalu zastępowałoby
+   pierścień gradientu płytkim kolorem; medalowe kafelki trzymają
+   transparentną ramkę, a uniesienie i cień łączą się z poświatą
+   metalu zamiast ją przykrywać (--medal-glow jak w box-shadow). */
+.team-card.medal-2:hover, .team-card.medal-1:hover, .team-card.medal-3:hover,
+.team-card.medal-2:focus-visible, .team-card.medal-1:focus-visible, .team-card.medal-3:focus-visible {
+  border-color: transparent;
+  box-shadow: 0 6px 18px rgba(15, 76, 130, 0.12), 0 0 12px var(--medal-glow, rgba(176, 182, 194, 0.35));
+}
 .team-card dl { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; }
 .team-card .row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
 .team-card dt { color: var(--kts-text-muted); font-size: 0.875rem; }
