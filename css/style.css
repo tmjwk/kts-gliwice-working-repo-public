@@ -452,23 +452,42 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 }
 /* ROZBŁYSK — ::before: wielki KWADRAT ze stożkiem światła obracany
    transformem rotate (GPU, wsparcie od 2013 — zero @property, zero
-   mask-composite). Kwadrat budowany museum-technikią width+padding-top
-   (procenty od szerokości kafelka — działa bez aspect-ratio), 
-   wyśrodkowany left/top 50% + ujemne marginesy -130%; wystaje poza
+   mask-composite). Kwadrat budowany museum-techniką width+padding-top
+   (procenty od szerokości kafelka — działa bez aspect-ratio),
+   wyśrodkowany left/top 50% + ujemne marginesy -85%; wystaje poza
    kafelek, ale .card ma overflow: hidden → widać go tylko w kafelku.
-   Bok 2,6× szerokości kafelka ≥ przekątna kafelka (do 2,4× wys.) —
-   pierścień pokryty w KAŻDEJ fazie obrotu. */
+   1.37.3 (zgłoszenie właściciela 19.11 — „na Androidzie poświata
+   nie wędruje"): bok 175% zamiast 260% — nadal zakrywa przekątną
+   kafelka (karty do ~1,42× wysokości szerokości), a tekstura warstwy
+   przy DPR 2,5–3,5 mieści się pod limitem ~2048 px starych układów
+   Mali (260% × 326 px × DPR 3 = ponad 2500 px — tam warstwa była
+   PRZycinana i Android widział martwą ramkę). will-change: transform
+   USUNIĘTE — animowany transform i tak ląduje na GPU, a dożywotnia
+   promocja gigantycznej warstwy dusiła słabsze telefony. */
 .team-card.medal-2::before, .team-card.medal-1::before, .team-card.medal-3::before {
   content: ""; position: absolute; z-index: 0;
   top: 50%; left: 50%;
-  width: 260%; padding-top: 260%;
-  margin-left: -130%; margin-top: -130%;
+  width: 175%; padding-top: 175%;
+  margin-left: -87.5%; margin-top: -87.5%;
   pointer-events: none;
   background: conic-gradient(
     transparent 0deg, var(--medal-blask) 30deg, transparent 70deg,
     transparent 200deg, rgba(255, 255, 255, 0.20) 225deg, transparent 260deg);
   animation: medal-obrot 6s linear infinite;
-  will-change: transform;
+}
+/* 1.37.3: SIEĆ BEZPIECZEŃSTWA dla silników bez conic-gradient
+   (Safari < 12.1, Chrome < 69, stare WebView na Androidzie): tam
+   cała deklaracja background powyżej jest NIEWAŻNA → rozbłysk
+   znika razem z nią. Zamiast tego pas światła z linear-gradient
+   (wsparcie uniwersalne) — pas siedzi w przestrzeni kwadratu,
+   kwadrat się obraca, więc pas SOTA po ramce dokładnie tak samo,
+   w tym samym rytmie 6 s. Hamulec prefers-reduced-motion łapie
+   oba warianty (wyłącza medal-obrot, nie tło). */
+@supports not (background: conic-gradient(red 0deg, blue 1deg)) {
+  .team-card.medal-2::before, .team-card.medal-1::before, .team-card.medal-3::before {
+    background: linear-gradient(115deg,
+      transparent 40%, var(--medal-blask) 50%, transparent 60%);
+  }
 }
 /* WNĘTRZE — ::after: przykrywka w kolorze karty, cofnięta o 3px od
    krawędzi odsłania dokładnie zewnętrzny pierścień = RAMKĘ, po której
