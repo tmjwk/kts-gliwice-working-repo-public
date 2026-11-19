@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-19T14:21:00.592Z",
+  "wygenerowano": "2026-11-19T20:46:14.464Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -33,7 +33,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "4. miejsce · 11 pkt",
+      "stan": "3. miejsce · 13 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/",
       "tabela": "18/138",
       "wiersz": "KTS IV Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "11:69"
         }
       ],
-      "zaktualizowano": "2026-11-19T14:21:00.592Z"
+      "zaktualizowano": "2026-11-19T20:46:14.464Z"
     },
     {
       "klucz": "18/138",
@@ -215,17 +215,17 @@
         },
         {
           "pozycja": 3,
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 8,
+          "punkty": 13,
+          "stosunek": "54:26"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "MKS Skarbek III Tarnowskie Góry",
           "mecze": 8,
           "punkty": 12,
           "stosunek": "52:28"
-        },
-        {
-          "pozycja": 4,
-          "nazwa": "KTS IV Gliwice",
-          "mecze": 7,
-          "punkty": 11,
-          "stosunek": "44:26"
         },
         {
           "pozycja": 5,
@@ -258,9 +258,9 @@
         {
           "pozycja": 9,
           "nazwa": "TTS Polonia II Bytom",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 7,
-          "stosunek": "32:38"
+          "stosunek": "32:48"
         },
         {
           "pozycja": 10,
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-19T14:21:00.592Z"
+      "zaktualizowano": "2026-11-19T20:46:14.464Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-19T14:21:00.592Z"
+      "zaktualizowano": "2026-11-19T20:46:14.464Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-19T14:21:00.592Z"
+      "zaktualizowano": "2026-11-19T20:46:14.464Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-19T14:21:00.592Z",
+      "zaktualizowano": "2026-11-19T20:46:14.464Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1169,8 +1169,8 @@
       "kolejka": 8,
       "gospodarz": "KTS IV Gliwice",
       "gosc": "TTS Polonia II Bytom",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "10:0",
+      "rozegrany": true,
       "liga": "3. Liga Mężczyzn · gr. II",
       "zespoly": [
         "KTS IV"
@@ -1817,7 +1817,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-19T14:21:00.592Z",
+      "zaktualizowano": "2026-11-19T20:46:14.464Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2502,8 +2502,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-19T14:21:00.592Z",
-    "pzts": "2026-11-19T14:21:00.592Z"
+    "szts": "2026-11-19T20:46:14.464Z",
+    "pzts": "2026-11-19T20:46:14.464Z"
   },
   "zrodla": {
     "szts": "ok",
