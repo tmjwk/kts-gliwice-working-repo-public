@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-19T03:48:04.899Z",
+  "wygenerowano": "2026-11-19T14:21:00.592Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -42,7 +42,7 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "6. miejsce · 8 pkt",
+      "stan": "7. miejsce · 8 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS V Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "11:69"
         }
       ],
-      "zaktualizowano": "2026-11-19T03:48:04.899Z"
+      "zaktualizowano": "2026-11-19T14:21:00.592Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-19T03:48:04.899Z"
+      "zaktualizowano": "2026-11-19T14:21:00.592Z"
     },
     {
       "klucz": "18/142",
@@ -355,24 +355,24 @@
         },
         {
           "pozycja": 6,
+          "nazwa": "ULKS Tajfun Ligota Łabędzka",
+          "mecze": 7,
+          "punkty": 9,
+          "stosunek": "38:32"
+        },
+        {
+          "pozycja": 7,
           "nazwa": "KTS V Gliwice",
           "mecze": 6,
           "punkty": 8,
           "stosunek": "36:24"
         },
         {
-          "pozycja": 7,
-          "nazwa": "ULKS Tajfun Ligota Łabędzka",
-          "mecze": 6,
-          "punkty": 7,
-          "stosunek": "32:28"
-        },
-        {
           "pozycja": 8,
           "nazwa": "LKS Młodość Rudno",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 7,
-          "stosunek": "30:30"
+          "stosunek": "34:36"
         },
         {
           "pozycja": 9,
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-19T03:48:04.899Z"
+      "zaktualizowano": "2026-11-19T14:21:00.592Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-19T03:48:04.899Z"
+      "zaktualizowano": "2026-11-19T14:21:00.592Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-19T03:48:04.899Z",
+      "zaktualizowano": "2026-11-19T14:21:00.592Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1817,7 +1817,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-19T03:48:04.899Z",
+      "zaktualizowano": "2026-11-19T14:21:00.592Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2502,8 +2502,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-19T03:48:04.899Z",
-    "pzts": "2026-11-19T03:48:04.899Z"
+    "szts": "2026-11-19T14:21:00.592Z",
+    "pzts": "2026-11-19T14:21:00.592Z"
   },
   "zrodla": {
     "szts": "ok",
