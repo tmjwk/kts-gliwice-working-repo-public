@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-19T20:46:14.464Z",
+  "wygenerowano": "2026-11-19T23:13:09.537Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "11:69"
         }
       ],
-      "zaktualizowano": "2026-11-19T20:46:14.464Z"
+      "zaktualizowano": "2026-11-19T23:13:09.537Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-19T20:46:14.464Z"
+      "zaktualizowano": "2026-11-19T23:13:09.537Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-19T20:46:14.464Z"
+      "zaktualizowano": "2026-11-19T23:13:09.537Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-19T20:46:14.464Z"
+      "zaktualizowano": "2026-11-19T23:13:09.537Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-19T20:46:14.464Z",
+      "zaktualizowano": "2026-11-19T23:13:09.537Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1229,6 +1229,19 @@
       ]
     },
     {
+      "dataMeczu": "2026-11-23",
+      "godzina": "18:00",
+      "kolejka": 7,
+      "gospodarz": "LKS Naprzód Świbie",
+      "gosc": "KTS V Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KTS V"
+      ]
+    },
+    {
       "dataMeczu": "2026-11-25",
       "godzina": "18:30",
       "kolejka": 9,
@@ -1817,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-19T20:46:14.464Z",
+      "zaktualizowano": "2026-11-19T23:13:09.537Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2502,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-19T20:46:14.464Z",
-    "pzts": "2026-11-19T20:46:14.464Z"
+    "szts": "2026-11-19T23:13:09.537Z",
+    "pzts": "2026-11-19T23:13:09.537Z"
   },
   "zrodla": {
     "szts": "ok",
