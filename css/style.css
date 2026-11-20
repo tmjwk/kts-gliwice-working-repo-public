@@ -850,6 +850,19 @@ html[data-theme="night"] .team-card.medal-3 {
    nazwy drużyn). Z nowrap szerokość wchłania kolumna „Drużyna” (nazwy
    zawijają się — to akceptowalne), liczby zawsze w jednej linii. */
 .league-table .num, .league-table th.num { white-space: nowrap; }
+/* 1.37.4 (zgłoszenie właściciela 19.11, zrzut Firefox Android): komórki
+   miały tylko padding-block, więc kolumny M|Pkt|Sety stykały się na 0px
+   i zlewały w ciąg „81453:27” (pomiar: 8/8 kafelków gap=0px). Poziomy
+   wylew 0.45rem daje 14,4px luzu między tekstami kolumn; brzegi
+   wyzerowane, żeby „Drużyna” i ostatnia kolumna trzymały się ramki
+   dialogu. Kolumna „Drużyna” dostaje overflowing-wrap:anywhere —
+   bez tego niełamliwe „Siemianowiczanka” + 3×7px paddingu wypychały
+   tabelę 8px poza kontener na 360px (3. liga). Dotyczy też sklad-table
+   (ta sama wada, 3,6px → 14,4px) i druzyna.html (ten sam styl). */
+.league-table th, .league-table td { padding-inline: 0.45rem; }
+.league-table th:first-child, .league-table td:first-child { padding-left: 0; }
+.league-table th:last-child, .league-table td:last-child { padding-right: 0; }
+.league-table td:first-child { overflow-wrap: anywhere; hyphens: auto; }
 .league-table tr.is-ours td { background: var(--kts-primary-light); color: var(--kts-link); font-weight: 600; }
 .source-note { border-top: 1px solid var(--kts-line); margin-top: 0.75rem; padding-top: 0.75rem; }
 .source-note a { color: var(--kts-link); font-weight: 600; }
@@ -1832,6 +1845,11 @@ html[data-theme="night"] .team-card.medal-3 {
 }
 .sklad-table td { padding-block: 0.45rem; border-bottom: 1px solid var(--kts-line); }
 .sklad-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+/* 1.37.4: jw. (league-table) — poziomy oddech kolumn składu */
+.sklad-table th, .sklad-table td { padding-inline: 0.45rem; }
+.sklad-table th:first-child, .sklad-table td:first-child { padding-left: 0; }
+.sklad-table th:last-child, .sklad-table td:last-child { padding-right: 0; }
+.sklad-table td:first-child { overflow-wrap: anywhere; }
 
 /* podstrona drużyny (druzyna.html) — nagłówek z badge'ami */
 .druzyna-naglowek { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin: 0.4rem 0 0.2rem; }
