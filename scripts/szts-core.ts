@@ -360,6 +360,7 @@ const NAPRAWA_IMION: Readonly<Record<string, string>> = {
   "Miros?aw Soko?owski": "Mirosław Sokołowski", // 08895
   "Pawe? Kajdrowicz": "Paweł Kajdrowicz", // 11323
   "Pawe? Stefanów": "Paweł Stefanów", // 08897
+  "Piotr Dro?dziewicz": "Piotr Drożdziewicz", // amator; pisownia wg właściciela klubu (20.11 — rejestru PZTS nie potwierdza, bo bez licencji); nieobecny w składach 2026/27 — wiersz czeka na powrót zawodnika
   "Piotr ?agowski": "Piotr Łagowski", // 08889
   "Piotr Zem?a": "Piotr Zemła", // 08899
   "Rafa? Adach": "Rafał Adach", // 08881
