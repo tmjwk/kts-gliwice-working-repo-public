@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-20T03:27:35.638Z",
+  "wygenerowano": "2026-11-20T21:51:49.792Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -15,7 +15,7 @@
       "nazwa": "KTS II",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "8. miejsce · 8 pkt",
+      "stan": "8. miejsce · 10 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/",
       "tabela": "18/136",
       "wiersz": "KTS II Gliwice"
@@ -69,7 +69,7 @@
       "nazwa": "KTS Gliwice · amatorzy",
       "liga": "2. Śląska Liga Amatorów",
       "tryb": "ŚZTS · automat",
-      "stan": "2. miejsce · 8 pkt",
+      "stan": "3. miejsce · 8 pkt",
       "url": "https://ligi.slzts.pl/liga/18/144/",
       "tabela": "18/144",
       "wiersz": "KTS Gliwice"
@@ -83,65 +83,65 @@
         {
           "pozycja": 1,
           "nazwa": "LITS Meble Anders Żywiec",
-          "mecze": 8,
+          "mecze": 9,
           "punkty": 16,
-          "stosunek": "64:16"
+          "stosunek": "68:22"
         },
         {
           "pozycja": 2,
           "nazwa": "MKS Skarbek Tarnowskie Góry",
-          "mecze": 8,
-          "punkty": 15,
-          "stosunek": "60:20"
+          "mecze": 9,
+          "punkty": 16,
+          "stosunek": "65:25"
         },
         {
           "pozycja": 3,
+          "nazwa": "MUKS Jedynka Pszów",
+          "mecze": 9,
+          "punkty": 15,
+          "stosunek": "68:22"
+        },
+        {
+          "pozycja": 4,
+          "nazwa": "MKS Czechowice Dziedzice",
+          "mecze": 9,
+          "punkty": 14,
+          "stosunek": "59:31"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "KS Mysław Mysłowice",
           "mecze": 9,
           "punkty": 14,
           "stosunek": "58:32"
         },
         {
-          "pozycja": 4,
-          "nazwa": "MUKS Jedynka Pszów",
-          "mecze": 8,
-          "punkty": 13,
-          "stosunek": "62:18"
-        },
-        {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "KS Naprzód II Borucin",
           "mecze": 9,
           "punkty": 13,
           "stosunek": "58:32"
         },
         {
-          "pozycja": 6,
-          "nazwa": "MKS Czechowice Dziedzice",
-          "mecze": 8,
-          "punkty": 12,
-          "stosunek": "51:29"
-        },
-        {
           "pozycja": 7,
           "nazwa": "LZS Chespa Żywocice",
-          "mecze": 8,
-          "punkty": 9,
-          "stosunek": "40:40"
+          "mecze": 9,
+          "punkty": 11,
+          "stosunek": "46:44"
         },
         {
           "pozycja": 8,
           "nazwa": "KTS II Gliwice",
-          "mecze": 7,
-          "punkty": 8,
-          "stosunek": "44:26"
+          "mecze": 8,
+          "punkty": 10,
+          "stosunek": "50:30"
         },
         {
           "pozycja": 9,
           "nazwa": "MKS Tajfun Kuźnia Raciborska",
-          "mecze": 8,
+          "mecze": 9,
           "punkty": 8,
-          "stosunek": "41:39"
+          "stosunek": "45:45"
         },
         {
           "pozycja": 10,
@@ -153,16 +153,16 @@
         {
           "pozycja": 11,
           "nazwa": "MKS Skarbek II Tarnowskie Góry",
-          "mecze": 8,
+          "mecze": 9,
           "punkty": 6,
-          "stosunek": "36:44"
+          "stosunek": "40:50"
         },
         {
           "pozycja": 12,
           "nazwa": "MKS II Czechowice Dziedzice",
-          "mecze": 8,
-          "punkty": 4,
-          "stosunek": "34:46"
+          "mecze": 9,
+          "punkty": 5,
+          "stosunek": "39:51"
         },
         {
           "pozycja": 13,
@@ -181,9 +181,9 @@
         {
           "pozycja": 15,
           "nazwa": "KTS III Gliwice",
-          "mecze": 9,
+          "mecze": 10,
           "punkty": 2,
-          "stosunek": "16:74"
+          "stosunek": "18:82"
         },
         {
           "pozycja": 16,
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-20T03:27:35.638Z"
+      "zaktualizowano": "2026-11-20T21:51:49.792Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-20T03:27:35.638Z"
+      "zaktualizowano": "2026-11-20T21:51:49.792Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-20T03:27:35.638Z"
+      "zaktualizowano": "2026-11-20T21:51:49.792Z"
     },
     {
       "klucz": "18/144",
@@ -432,69 +432,69 @@
         },
         {
           "pozycja": 2,
-          "nazwa": "KTS Gliwice",
-          "mecze": 5,
-          "punkty": 8,
-          "stosunek": "29:21"
-        },
-        {
-          "pozycja": 3,
           "nazwa": "LKS Strażak II Mikołów",
           "mecze": 5,
           "punkty": 8,
           "stosunek": "29:21"
         },
         {
+          "pozycja": 3,
+          "nazwa": "KTS Gliwice",
+          "mecze": 6,
+          "punkty": 8,
+          "stosunek": "31:29"
+        },
+        {
           "pozycja": 4,
+          "nazwa": "UKS Huragan I Sosnowiec",
+          "mecze": 6,
+          "punkty": 6,
+          "stosunek": "29:31"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "UKS Wolej Solver II Ruda Śląska",
           "mecze": 5,
           "punkty": 5,
           "stosunek": "27:23"
         },
         {
-          "pozycja": 5,
-          "nazwa": "TKKF Aut Łagisza Będzin",
-          "mecze": 5,
-          "punkty": 4,
-          "stosunek": "25:25"
-        },
-        {
           "pozycja": 6,
-          "nazwa": "UKS Huragan I Sosnowiec",
-          "mecze": 5,
-          "punkty": 4,
-          "stosunek": "21:29"
+          "nazwa": "TKKF Aut Łagisza Będzin",
+          "mecze": 6,
+          "punkty": 5,
+          "stosunek": "30:30"
         },
         {
           "pozycja": 7,
-          "nazwa": "UKS Wolej Solver III Ruda Śląska",
+          "nazwa": "AKS Mikołów",
           "mecze": 6,
           "punkty": 4,
           "stosunek": "24:36"
         },
         {
           "pozycja": 8,
+          "nazwa": "UKS Wolej Solver III Ruda Śląska",
+          "mecze": 6,
+          "punkty": 4,
+          "stosunek": "24:36"
+        },
+        {
+          "pozycja": 9,
           "nazwa": "UKS Ikar Mierzęcice",
           "mecze": 5,
           "punkty": 3,
           "stosunek": "24:26"
         },
         {
-          "pozycja": 9,
+          "pozycja": 10,
           "nazwa": "Speed Team 43 Stolarzowice",
           "mecze": 5,
           "punkty": 3,
           "stosunek": "20:30"
-        },
-        {
-          "pozycja": 10,
-          "nazwa": "AKS Mikołów",
-          "mecze": 5,
-          "punkty": 3,
-          "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-20T03:27:35.638Z"
+      "zaktualizowano": "2026-11-20T21:51:49.792Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-20T03:27:35.638Z",
+      "zaktualizowano": "2026-11-20T21:51:49.792Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1195,8 +1195,8 @@
       "kolejka": 9,
       "gospodarz": "KTS III Gliwice",
       "gosc": "MKS Czechowice Dziedzice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "2:8",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS III"
@@ -1208,8 +1208,8 @@
       "kolejka": 9,
       "gospodarz": "MKS Tajfun Kuźnia Raciborska",
       "gosc": "KTS II Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "4:6",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS II"
@@ -1221,8 +1221,8 @@
       "kolejka": 6,
       "gospodarz": "UKS Huragan I Sosnowiec",
       "gosc": "KTS Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "8:2",
+      "rozegrany": true,
       "liga": "2. Śląska Liga Amatorów",
       "zespoly": [
         "KTS Gliwice · amatorzy"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-20T03:27:35.638Z",
+      "zaktualizowano": "2026-11-20T21:51:49.792Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2024,7 +2024,7 @@
     {
       "zespol": "KTS III",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
-      "zaktualizowano": "2026-11-13T22:08:48.600Z",
+      "zaktualizowano": "2026-11-20T21:51:49.792Z",
       "zawodnicy": [
         {
           "nazwisko": "Michał Rosiek",
@@ -2052,8 +2052,8 @@
           "narodowosc": "Polska",
           "rok": 2001,
           "zwyciestwa": 2,
-          "porazki": 14,
-          "punkty": "6:42",
+          "porazki": 15,
+          "punkty": "6:45",
           "skutecznosc": null
         },
         {
@@ -2062,8 +2062,8 @@
           "narodowosc": "Polska",
           "rok": 1994,
           "zwyciestwa": 1,
-          "porazki": 15,
-          "punkty": "3:45",
+          "porazki": 16,
+          "punkty": "3:48",
           "skutecznosc": null
         },
         {
@@ -2409,7 +2409,7 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-11-18T19:37:50.165Z",
+      "zaktualizowano": "2026-11-20T21:51:49.792Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
@@ -2447,8 +2447,8 @@
           "narodowosc": "Polska",
           "rok": null,
           "zwyciestwa": 4,
-          "porazki": 11,
-          "punkty": "4:11",
+          "porazki": 14,
+          "punkty": "4:14",
           "skutecznosc": null
         },
         {
@@ -2459,6 +2459,16 @@
           "zwyciestwa": 2,
           "porazki": 4,
           "punkty": "2:4",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jarosław Kozłowski",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1975,
+          "zwyciestwa": 1,
+          "porazki": 2,
+          "punkty": "1:2",
           "skutecznosc": null
         },
         {
@@ -2477,18 +2487,8 @@
           "narodowosc": "Polska",
           "rok": 1970,
           "zwyciestwa": 0,
-          "porazki": 0,
-          "punkty": "0:0",
-          "skutecznosc": null
-        },
-        {
-          "nazwisko": "Mirosław Sokołowski",
-          "licencja": null,
-          "narodowosc": "Polska",
-          "rok": 1976,
-          "zwyciestwa": 0,
-          "porazki": 0,
-          "punkty": "0:0",
+          "porazki": 3,
+          "punkty": "0:3",
           "skutecznosc": null
         },
         {
@@ -2502,10 +2502,10 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Jarosław Kozłowski",
+          "nazwisko": "Mirosław Sokołowski",
           "licencja": null,
           "narodowosc": "Polska",
-          "rok": 1975,
+          "rok": 1976,
           "zwyciestwa": 0,
           "porazki": 0,
           "punkty": "0:0",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-20T03:27:35.638Z",
-    "pzts": "2026-11-20T03:27:35.638Z"
+    "szts": "2026-11-20T21:51:49.792Z",
+    "pzts": "2026-11-20T21:51:49.792Z"
   },
   "zrodla": {
     "szts": "ok",
