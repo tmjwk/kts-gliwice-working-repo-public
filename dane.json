@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-19T23:13:09.537Z",
+  "wygenerowano": "2026-11-20T03:27:35.638Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -110,17 +110,17 @@
         },
         {
           "pozycja": 5,
+          "nazwa": "KS Naprzód II Borucin",
+          "mecze": 9,
+          "punkty": 13,
+          "stosunek": "58:32"
+        },
+        {
+          "pozycja": 6,
           "nazwa": "MKS Czechowice Dziedzice",
           "mecze": 8,
           "punkty": 12,
           "stosunek": "51:29"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "KS Naprzód II Borucin",
-          "mecze": 8,
-          "punkty": 11,
-          "stosunek": "48:32"
         },
         {
           "pozycja": 7,
@@ -188,12 +188,12 @@
         {
           "pozycja": 16,
           "nazwa": "LUKS GK Logistics Bodzanów",
-          "mecze": 8,
+          "mecze": 9,
           "punkty": 0,
-          "stosunek": "11:69"
+          "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-19T23:13:09.537Z"
+      "zaktualizowano": "2026-11-20T03:27:35.638Z"
     },
     {
       "klucz": "18/138",
@@ -257,31 +257,31 @@
         },
         {
           "pozycja": 9,
+          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
+          "mecze": 8,
+          "punkty": 7,
+          "stosunek": "35:45"
+        },
+        {
+          "pozycja": 10,
           "nazwa": "TTS Polonia II Bytom",
           "mecze": 8,
           "punkty": 7,
           "stosunek": "32:48"
         },
         {
-          "pozycja": 10,
+          "pozycja": 11,
           "nazwa": "UKS Wolej Solver Ruda Śląska",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 6,
-          "stosunek": "33:37"
+          "stosunek": "37:43"
         },
         {
-          "pozycja": 11,
+          "pozycja": 12,
           "nazwa": "GLKS Lot Konopiska",
           "mecze": 8,
           "punkty": 6,
           "stosunek": "28:52"
-        },
-        {
-          "pozycja": 12,
-          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
-          "mecze": 7,
-          "punkty": 5,
-          "stosunek": "29:41"
         },
         {
           "pozycja": 13,
@@ -292,17 +292,17 @@
         },
         {
           "pozycja": 14,
-          "nazwa": "KS Unia Kalety",
-          "mecze": 7,
+          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
+          "mecze": 8,
           "punkty": 4,
-          "stosunek": "23:47"
+          "stosunek": "29:51"
         },
         {
           "pozycja": 15,
-          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
-          "mecze": 7,
-          "punkty": 2,
-          "stosunek": "23:47"
+          "nazwa": "KS Unia Kalety",
+          "mecze": 8,
+          "punkty": 4,
+          "stosunek": "27:53"
         },
         {
           "pozycja": 16,
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-19T23:13:09.537Z"
+      "zaktualizowano": "2026-11-20T03:27:35.638Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-19T23:13:09.537Z"
+      "zaktualizowano": "2026-11-20T03:27:35.638Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "19:31"
         }
       ],
-      "zaktualizowano": "2026-11-19T23:13:09.537Z"
+      "zaktualizowano": "2026-11-20T03:27:35.638Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-19T23:13:09.537Z",
+      "zaktualizowano": "2026-11-20T03:27:35.638Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-19T23:13:09.537Z",
+      "zaktualizowano": "2026-11-20T03:27:35.638Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2091,8 +2091,28 @@
     {
       "zespol": "KTS IV",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
-      "zaktualizowano": "2026-11-13T22:08:48.600Z",
+      "zaktualizowano": "2026-11-20T03:27:35.638Z",
       "zawodnicy": [
+        {
+          "nazwisko": "Krzysztof Piwowarski",
+          "licencja": "08893",
+          "narodowosc": "Polska",
+          "rok": 1979,
+          "zwyciestwa": 11,
+          "porazki": 5,
+          "punkty": "11:5",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Roman Wiża",
+          "licencja": "08898",
+          "narodowosc": "Polska",
+          "rok": 1968,
+          "zwyciestwa": 10,
+          "porazki": 6,
+          "punkty": "10:6",
+          "skutecznosc": null
+        },
         {
           "nazwisko": "Piotr Zemła",
           "licencja": "08899",
@@ -2104,33 +2124,23 @@
           "skutecznosc": null
         },
         {
-          "nazwisko": "Krzysztof Piwowarski",
-          "licencja": "08893",
-          "narodowosc": "Polska",
-          "rok": 1979,
-          "zwyciestwa": 9,
-          "porazki": 5,
-          "punkty": "9:5",
-          "skutecznosc": null
-        },
-        {
-          "nazwisko": "Roman Wiża",
-          "licencja": "08898",
-          "narodowosc": "Polska",
-          "rok": 1968,
-          "zwyciestwa": 8,
-          "porazki": 6,
-          "punkty": "8:6",
-          "skutecznosc": null
-        },
-        {
           "nazwisko": "Paweł Stefanów",
           "licencja": "08897",
           "narodowosc": "Polska",
           "rok": 1975,
-          "zwyciestwa": 8,
+          "zwyciestwa": 10,
           "porazki": 2,
-          "punkty": "8:2",
+          "punkty": "10:2",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Jarosław Kozłowski",
+          "licencja": "08887",
+          "narodowosc": "Polska",
+          "rok": 1975,
+          "zwyciestwa": 2,
+          "porazki": 3,
+          "punkty": "2:3",
           "skutecznosc": null
         },
         {
@@ -2151,16 +2161,6 @@
           "zwyciestwa": 0,
           "porazki": 0,
           "punkty": "0:0",
-          "skutecznosc": null
-        },
-        {
-          "nazwisko": "Jarosław Kozłowski",
-          "licencja": "08887",
-          "narodowosc": "Polska",
-          "rok": 1975,
-          "zwyciestwa": 0,
-          "porazki": 3,
-          "punkty": "0:3",
           "skutecznosc": null
         },
         {
@@ -2255,7 +2255,7 @@
     {
       "zespol": "KTS VI",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
-      "zaktualizowano": "2026-11-18T19:37:50.165Z",
+      "zaktualizowano": "2026-11-20T03:27:35.638Z",
       "zawodnicy": [
         {
           "nazwisko": "Wojciech Wieczorek",
@@ -2303,8 +2303,8 @@
           "narodowosc": "Polska",
           "rok": 1979,
           "zwyciestwa": 1,
-          "porazki": 12,
-          "punkty": "1:12",
+          "porazki": 13,
+          "punkty": "1:13",
           "skutecznosc": null
         },
         {
@@ -2313,8 +2313,8 @@
           "narodowosc": "Polska",
           "rok": 1986,
           "zwyciestwa": 0,
-          "porazki": 3,
-          "punkty": "0:3",
+          "porazki": 4,
+          "punkty": "0:4",
           "skutecznosc": null
         },
         {
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-19T23:13:09.537Z",
-    "pzts": "2026-11-19T23:13:09.537Z"
+    "szts": "2026-11-20T03:27:35.638Z",
+    "pzts": "2026-11-20T03:27:35.638Z"
   },
   "zrodla": {
     "szts": "ok",
