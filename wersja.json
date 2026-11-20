@@ -1,5 +1,5 @@
 {
-  "wersja": "1.37.4",
-  "data": "2026-11-20T00:30:00Z",
-  "opis": "Tabele ligowe i składy mają poziomy oddech kolumn — padding-inline 0.45rem kończy zlewanie M|Pkt|Sety w ciąg „81453:27” (zgłoszenie 19.11)."
+  "wersja": "1.37.5",
+  "data": "2026-11-20T12:30:00Z",
+  "opis": "Pasek „Ostatnie wyniki i najbliższe mecze”: strefy o różnej liczbie wpisów centrowane w pionie (justify-content:center ≥64rem) — koniec przyklejania krótszych kolumn do górnej krawędzi (zgłoszenie 20.11)."
 }

@@ -284,7 +284,13 @@ code { background: var(--kts-primary-light); color: var(--kts-link); padding: 0.
 .matchbar-zone + .matchbar-zone { border-top: 1px solid rgba(255,255,255,0.16); }
 @media (min-width: 64rem) {
   .matchbar-inner { flex-direction: row; align-items: stretch; }
-  .matchbar-zone { flex: 1 1 0; max-width: 34rem; }
+  /* 1.37.5 (20.11): strefy rozciągnięte do najwyższej (stretch) muszą
+     centrować zawartość W PIONIE — bez tego krótsze kolumny (1 wpis,
+     np. „Ostatni wynik”) siedziały przy górnej krawędzi, a pod spodem
+     zostawała pusta przestrzeń (zgłoszenie właściciela 20.11). Na
+     mobile (<64rem) strefy układają się jedna pod drugą i mają własną
+     wysokość — tam center niczego nie zmienia. */
+  .matchbar-zone { flex: 1 1 0; max-width: 34rem; justify-content: center; }
   .matchbar-zone + .matchbar-zone { border-top: 0; border-left: 1px solid rgba(255,255,255,0.16); }
 }
 .matchbar-label {
