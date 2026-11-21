@@ -239,7 +239,7 @@ function ustawIkoneTrybu() {
    wzorzec strony głównej z wynikami. „Odśwież stronę” omija cache
    przeglądarki (GitHub Pages trzyma pliki ~10 min) — dociąga HTML,
    skrypty i styl, dopiero potem przeładowuje. */
-const WERSJA_KODU = "1.37.5";
+const WERSJA_KODU = "1.38.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie)? Jak app.js. */
 function nowszaWersja(a, b) {
@@ -332,11 +332,13 @@ function zglosNowaWersje(wersja) {
   const id = new URLSearchParams(location.search).get("id") ?? "";
   const kontener = $("#druzyna-tresc");
   let dane = null;
+  // 1.38.0: dane z ARKUSZA MOSTU (gviz) — moduł js/dane-arkusz.js
+  // (wspólny z index.html); fallback na stary dane.json w środku modułu.
   try {
-    const res = await fetch("dane.json", { cache: "no-cache" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    dane = await res.json();
-  } catch (err) {
+    const wynik = await DaneArkusz.pobierz();
+    if (wynik) dane = wynik.dane;
+  } catch (err) { /* poniżej komunikat */ }
+  if (!dane) {
     kontener.innerHTML =
       `<div class="card card-pad"><p class="t-small muted">Nie udało się pobrać danych — odśwież stronę.</p></div>`;
     return;
