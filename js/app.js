@@ -1,5 +1,7 @@
 /* ============================================================
-   KTS Gliwice — strona statyczna: render danych ligowych z dane.json
+   KTS Gliwice — strona statyczna: render danych ligowych
+   1.38.0: dane prosto z ARKUSZA MOSTU (gviz, moduł js/dane-arkusz.js),
+   bez pośredniego pliku dane.json (ten zostaje tylko jako fallback).
    (wersja js warsztatu site-skeleton, przystosowana do statyki)
    ============================================================ */
 "use strict";
@@ -1571,7 +1573,7 @@ function sledzSystemowyTryb() {
    komunikat i sprawdź natychmiast (nie częściej niż co 45 s).
 */
 
-const WERSJA_KODU = "1.37.5";
+const WERSJA_KODU = "1.38.0";
 
 /** Czy wersja „a” jest STRICT nowsza od „b” (numerycznie: 1.28.10 > 1.28.9)?
  *  Odporna na różne długości i śmieci w polu (wtedy false — milczimy). */
@@ -1646,7 +1648,7 @@ async function pokazWersje() {
    (testy automatu, debugging). */
 
 const SWIEZOSC = {
-  tekst: null,            // ostatni surowy dane.json (identyczny tekst = cisza)
+  sig: null,              // 1.38.0: sygnatura treści z arkusza (identyczna = cisza)
   dane: null,             // ostatnie sparsowane dane
   wersjaZgloszona: false, // czy komunikat o nowej wersji już się pokazał (raz na życie karty)
   wToku: false,           // osłona przed równoległymi sprawdzeniami
@@ -1760,31 +1762,30 @@ async function sprawdzDane() {
   SWIEZOSC.wToku = true;
   SWIEZOSC.ostatnio = Date.now();
   try {
-    const res = await fetch("dane.json", { cache: "no-cache" });
-    if (res.ok) {
-      const tekst = await res.text();
-      if (tekst !== SWIEZOSC.tekst) {
-        let nowe = null;
-        try { nowe = JSON.parse(tekst); } catch { /* okrojony zapis — czekamy na kolejny */ }
-        if (nowe) {
-          const stare = SWIEZOSC.dane;
-          const terazWyniki = sygnaturaWynikow(nowe);
-          const byloWynikow = stare ? sygnaturaWynikow(stare) : "";
-          const terazTresc = sygnaturaWidoczna(nowe);
-          const bylaTresc = stare ? sygnaturaWidoczna(stare) : "";
-          const zmianaWidoczna = terazWyniki !== byloWynikow || terazTresc !== bylaTresc;
-          SWIEZOSC.tekst = tekst;
-          SWIEZOSC.dane = nowe;
-          przerysujDane(nowe, zmianaWidoczna);
-          // komunikat RÓŻNICUJE powód; zmiana samych znaczników czasu lub
-          // statusu źródeł (ostatniSync/zrodla) jest cicha — nic do pokazania
-          if (terazWyniki !== byloWynikow) {
-            const lista = (s) => s.split("|").filter(Boolean);
-            const ile = lista(terazWyniki).filter((x) => !lista(byloWynikow).includes(x)).length;
-            pokazToast(ile === 1 ? "Nowy wynik na stronie 🏓" : `Nowe wyniki na stronie (${ile}) 🏓`);
-          } else if (zmianaWidoczna) {
-            pokazToast("Dane zaktualizowane — terminarz lub tabela");
-          }
+    // 1.38.0: sprawdzenie = Puls arkusza (mały); pełne pobranie tylko
+    // gdy tyknięcie mostu się zmieniło (moduł dane-arkusz.js pilnuje
+    // tego w środku). Fallback na stary dane.json przy awarii arkusza.
+    const wynik = await DaneArkusz.pobierz();
+    if (wynik) {
+      const nowe = wynik.dane;
+      if (wynik.sig !== SWIEZOSC.sig) {
+        const stare = SWIEZOSC.dane;
+        const terazWyniki = sygnaturaWynikow(nowe);
+        const byloWynikow = stare ? sygnaturaWynikow(stare) : "";
+        const terazTresc = sygnaturaWidoczna(nowe);
+        const bylaTresc = stare ? sygnaturaWidoczna(stare) : "";
+        const zmianaWidoczna = terazWyniki !== byloWynikow || terazTresc !== bylaTresc;
+        SWIEZOSC.sig = wynik.sig;
+        SWIEZOSC.dane = nowe;
+        przerysujDane(nowe, zmianaWidoczna);
+        // komunikat RÓŻNICUJE powód; zmiana samych znaczników czasu lub
+        // statusu źródeł (ostatniSync/zrodla) jest cicha — nic do pokazania
+        if (terazWyniki !== byloWynikow) {
+          const lista = (s) => s.split("|").filter(Boolean);
+          const ile = lista(terazWyniki).filter((x) => !lista(byloWynikow).includes(x)).length;
+          pokazToast(ile === 1 ? "Nowy wynik na stronie 🏓" : `Nowe wyniki na stronie (${ile}) 🏓`);
+        } else if (zmianaWidoczna) {
+          pokazToast("Dane zaktualizowane — terminarz lub tabela");
         }
       }
     }
@@ -2111,15 +2112,18 @@ async function start() {
 
   let dane = null;
   let ok = false;
-  let tekstDanych = null;
+  let sigDanych = null;
+  // 1.38.0: dane z ARKUSZA MOSTU (gviz) — moduł js/dane-arkusz.js.
+  // Zwraca {dane, sig} | null; sam dba o fallback (stary dane.json
+  // w repo) i nie ściga arkusza częściej niż to ma sens (strażnik
+  // Puls). null = totalna awaria → komunikat i odzysk w tle.
   try {
-    const res = await fetch("dane.json", { cache: "no-cache" });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    tekstDanych = await res.text(); // 1.7.5: surowy tekst = punkt porównania odświeżania
-    dane = JSON.parse(tekstDanych);
-    ok = true;
+    const wynik = await DaneArkusz.pobierz();
+    if (wynik) { dane = wynik.dane; sigDanych = wynik.sig; ok = true; }
   } catch (err) {
-    console.error("Błąd ładowania dane.json:", err);
+    console.error("Błąd ładowania danych z arkusza:", err);
+  }
+  if (!ok) {
     $("#ostatni-wynik").textContent = "Błąd ładowania danych — odśwież stronę";
     $("#najblizszy-mecz").textContent = "";
     const elD = $("#wyniki-w-drodze");
@@ -2149,7 +2153,10 @@ async function start() {
   renderBadges(dane ?? {}, ok);
   // 1.7.5: pętla świeżości rusza ZAWSZE — także po błędzie startu
   // (pierwsze udane sprawdzenie naprawia stronę bez odświeżania karty)
-  SWIEZOSC.tekst = ok ? tekstDanych : null;
+  // 1.38.0: punktem porównania jest sygnatura treści bez znaczników
+  // czasu (moduł dane-arkusz.js) — ten sam skutek co dawne porównanie
+  // surowego tekstu dane.json: zmiana samych zegarów = cisza.
+  SWIEZOSC.sig = ok ? sigDanych : null;
   SWIEZOSC.dane = ok ? dane : null;
   pilnujSwiezosci();
 }
