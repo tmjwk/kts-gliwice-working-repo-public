@@ -1,5 +1,5 @@
 {
-  "wersja": "1.37.5",
-  "data": "2026-11-20T12:30:00Z",
-  "opis": "Pasek „Ostatnie wyniki i najbliższe mecze”: strefy o różnej liczbie wpisów centrowane w pionie (justify-content:center ≥64rem) — koniec przyklejania krótszych kolumn do górnej krawędzi (zgłoszenie 20.11)."
+  "wersja": "1.38.0",
+  "data": "2026-11-21T06:40:00Z",
+  "opis": "Dane ligowe prosto z arkusza mostu (gviz) w przeglądarce — bez pośredniego dane.json, tokenów i crona ligowego. Nowy moduł js/dane-arkusz.js: strażnik Puls (pełne pobranie tylko po tyknięciu mostu), fallback na dane.json przy awarii arkusza."
 }
