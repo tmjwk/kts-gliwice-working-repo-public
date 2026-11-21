@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-21T12:46:33.785Z",
+  "wygenerowano": "2026-11-21T18:13:50.228Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-21T12:46:33.785Z"
+      "zaktualizowano": "2026-11-21T18:13:50.228Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-21T12:46:33.785Z"
+      "zaktualizowano": "2026-11-21T18:13:50.228Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-21T12:46:33.785Z"
+      "zaktualizowano": "2026-11-21T18:13:50.228Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "20:30"
         }
       ],
-      "zaktualizowano": "2026-11-21T12:46:33.785Z"
+      "zaktualizowano": "2026-11-21T18:13:50.228Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-21T12:46:33.785Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-21T12:46:33.785Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -1917,16 +1917,16 @@
     {
       "zespol": "KTS II",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1480/kts-ii-gliwice/",
-      "zaktualizowano": "2026-11-13T22:08:48.600Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "zawodnicy": [
         {
           "nazwisko": "Bartosz Kwodawski",
           "licencja": "01592",
           "narodowosc": "Polska",
           "rok": 1980,
-          "zwyciestwa": 11,
+          "zwyciestwa": 13,
           "porazki": 3,
-          "punkty": "33:9",
+          "punkty": "39:9",
           "skutecznosc": null
         },
         {
@@ -1934,9 +1934,9 @@
           "licencja": "01593",
           "narodowosc": "Polska",
           "rok": 1981,
-          "zwyciestwa": 8,
+          "zwyciestwa": 10,
           "porazki": 6,
-          "punkty": "20:18",
+          "punkty": "26:18",
           "skutecznosc": null
         },
         {
@@ -1945,8 +1945,8 @@
           "narodowosc": "Polska",
           "rok": 1978,
           "zwyciestwa": 7,
-          "porazki": 7,
-          "punkty": "14:14",
+          "porazki": 9,
+          "punkty": "14:18",
           "skutecznosc": null
         },
         {
@@ -1955,8 +1955,8 @@
           "narodowosc": "Polska",
           "rok": 1981,
           "zwyciestwa": 5,
-          "porazki": 5,
-          "punkty": "10:10",
+          "porazki": 7,
+          "punkty": "10:14",
           "skutecznosc": null
         },
         {
@@ -2024,7 +2024,7 @@
     {
       "zespol": "KTS III",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
-      "zaktualizowano": "2026-11-21T02:36:42.822Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "zawodnicy": [
         {
           "nazwisko": "Michał Rosiek",
@@ -2091,7 +2091,7 @@
     {
       "zespol": "KTS IV",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
-      "zaktualizowano": "2026-11-20T03:27:35.638Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
@@ -2178,7 +2178,7 @@
     {
       "zespol": "KTS V",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1557/kts-v-gliwice/",
-      "zaktualizowano": "2026-11-13T22:08:48.600Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "zawodnicy": [
         {
           "nazwisko": "Grzegorz Machał",
@@ -2255,7 +2255,7 @@
     {
       "zespol": "KTS VI",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1564/kts-vi-gliwice/",
-      "zaktualizowano": "2026-11-20T03:27:35.638Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "zawodnicy": [
         {
           "nazwisko": "Wojciech Wieczorek",
@@ -2332,26 +2332,26 @@
     {
       "zespol": "KA Krokus VII",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1558/kts-ka-krokus-vii-gliwice/",
-      "zaktualizowano": "2026-11-13T22:08:48.600Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "zawodnicy": [
-        {
-          "nazwisko": "Łukasz Francka",
-          "licencja": "11324",
-          "narodowosc": "Polska",
-          "rok": 1986,
-          "zwyciestwa": 9,
-          "porazki": 3,
-          "punkty": "9:3",
-          "skutecznosc": null
-        },
         {
           "nazwisko": "Andrzej Żamojda",
           "licencja": "11334",
           "narodowosc": "Polska",
           "rok": 1962,
-          "zwyciestwa": 9,
+          "zwyciestwa": 11,
           "porazki": 3,
-          "punkty": "9:3",
+          "punkty": "11:3",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Łukasz Francka",
+          "licencja": "11324",
+          "narodowosc": "Polska",
+          "rok": 1986,
+          "zwyciestwa": 10,
+          "porazki": 4,
+          "punkty": "10:4",
           "skutecznosc": null
         },
         {
@@ -2360,8 +2360,8 @@
           "narodowosc": "Polska",
           "rok": 1973,
           "zwyciestwa": 8,
-          "porazki": 4,
-          "punkty": "8:4",
+          "porazki": 6,
+          "punkty": "8:6",
           "skutecznosc": null
         },
         {
@@ -2370,8 +2370,8 @@
           "narodowosc": "Polska",
           "rok": 1960,
           "zwyciestwa": 2,
-          "porazki": 6,
-          "punkty": "2:6",
+          "porazki": 8,
+          "punkty": "2:8",
           "skutecznosc": null
         },
         {
@@ -2409,7 +2409,7 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-11-20T21:51:49.792Z",
+      "zaktualizowano": "2026-11-21T18:13:50.228Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-21T12:46:33.785Z",
-    "pzts": "2026-11-21T12:46:33.785Z"
+    "szts": "2026-11-21T18:13:50.228Z",
+    "pzts": "2026-11-21T18:13:50.228Z"
   },
   "zrodla": {
     "szts": "ok",
