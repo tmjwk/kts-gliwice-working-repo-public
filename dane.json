@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-20T21:51:49.792Z",
+  "wygenerowano": "2026-11-21T02:36:42.822Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-20T21:51:49.792Z"
+      "zaktualizowano": "2026-11-21T02:36:42.822Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-20T21:51:49.792Z"
+      "zaktualizowano": "2026-11-21T02:36:42.822Z"
     },
     {
       "klucz": "18/142",
@@ -327,24 +327,24 @@
         },
         {
           "pozycja": 2,
+          "nazwa": "ATS Ligota Łabędzka",
+          "mecze": 7,
+          "punkty": 12,
+          "stosunek": "52:18"
+        },
+        {
+          "pozycja": 3,
           "nazwa": "STS I Żernica",
           "mecze": 6,
           "punkty": 11,
           "stosunek": "45:15"
         },
         {
-          "pozycja": 3,
-          "nazwa": "ATS Ligota Łabędzka",
-          "mecze": 6,
-          "punkty": 10,
-          "stosunek": "46:14"
-        },
-        {
           "pozycja": 4,
           "nazwa": "KTS KA Krokus VII Gliwice",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 10,
-          "stosunek": "36:24"
+          "stosunek": "40:30"
         },
         {
           "pozycja": 5,
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-20T21:51:49.792Z"
+      "zaktualizowano": "2026-11-21T02:36:42.822Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "20:30"
         }
       ],
-      "zaktualizowano": "2026-11-20T21:51:49.792Z"
+      "zaktualizowano": "2026-11-21T02:36:42.822Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-20T21:51:49.792Z",
+      "zaktualizowano": "2026-11-21T02:36:42.822Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1182,8 +1182,8 @@
       "kolejka": 7,
       "gospodarz": "KTS KA Krokus VII Gliwice",
       "gosc": "ATS Ligota Łabędzka",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "4:6",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KA Krokus VII"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-20T21:51:49.792Z",
+      "zaktualizowano": "2026-11-21T02:36:42.822Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2024,7 +2024,7 @@
     {
       "zespol": "KTS III",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/136/1481/kts-iii-gliwice/",
-      "zaktualizowano": "2026-11-20T21:51:49.792Z",
+      "zaktualizowano": "2026-11-21T02:36:42.822Z",
       "zawodnicy": [
         {
           "nazwisko": "Michał Rosiek",
@@ -2032,8 +2032,8 @@
           "narodowosc": "Polska",
           "rok": 1995,
           "zwyciestwa": 6,
-          "porazki": 8,
-          "punkty": "12:16",
+          "porazki": 10,
+          "punkty": "12:20",
           "skutecznosc": null
         },
         {
@@ -2041,9 +2041,9 @@
           "licencja": "08882",
           "narodowosc": "Polska",
           "rok": 2003,
-          "zwyciestwa": 4,
-          "porazki": 14,
-          "punkty": "8:32",
+          "zwyciestwa": 5,
+          "porazki": 15,
+          "punkty": "10:34",
           "skutecznosc": null
         },
         {
@@ -2051,9 +2051,9 @@
           "licencja": "08885",
           "narodowosc": "Polska",
           "rok": 2001,
-          "zwyciestwa": 2,
+          "zwyciestwa": 3,
           "porazki": 15,
-          "punkty": "6:45",
+          "punkty": "9:45",
           "skutecznosc": null
         },
         {
@@ -2062,8 +2062,8 @@
           "narodowosc": "Polska",
           "rok": 1994,
           "zwyciestwa": 1,
-          "porazki": 16,
-          "punkty": "3:48",
+          "porazki": 17,
+          "punkty": "3:51",
           "skutecznosc": null
         },
         {
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-20T21:51:49.792Z",
-    "pzts": "2026-11-20T21:51:49.792Z"
+    "szts": "2026-11-21T02:36:42.822Z",
+    "pzts": "2026-11-21T02:36:42.822Z"
   },
   "zrodla": {
     "szts": "ok",
