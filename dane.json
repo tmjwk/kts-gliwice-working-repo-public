@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-23T20:19:00.098Z",
+  "wygenerowano": "2026-11-23T22:55:22.769Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-23T20:19:00.098Z"
+      "zaktualizowano": "2026-11-23T22:55:22.769Z"
     },
     {
       "klucz": "18/138",
@@ -201,17 +201,17 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "UKS Feniks Pyskowice",
+          "mecze": 9,
+          "punkty": 14,
+          "stosunek": "65:25"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "UKS Huragan Sosnowiec",
           "mecze": 8,
           "punkty": 14,
           "stosunek": "53:27"
-        },
-        {
-          "pozycja": 2,
-          "nazwa": "UKS Feniks Pyskowice",
-          "mecze": 8,
-          "punkty": 13,
-          "stosunek": "60:20"
         },
         {
           "pozycja": 3,
@@ -230,9 +230,9 @@
         {
           "pozycja": 5,
           "nazwa": "LKS Strażak Mikołów",
-          "mecze": 7,
-          "punkty": 10,
-          "stosunek": "49:21"
+          "mecze": 8,
+          "punkty": 11,
+          "stosunek": "54:26"
         },
         {
           "pozycja": 6,
@@ -250,31 +250,31 @@
         },
         {
           "pozycja": 8,
-          "nazwa": "AKS Mikołów",
-          "mecze": 7,
-          "punkty": 7,
-          "stosunek": "34:36"
+          "nazwa": "UKS Wolej Solver Ruda Śląska",
+          "mecze": 9,
+          "punkty": 8,
+          "stosunek": "44:46"
         },
         {
           "pozycja": 9,
+          "nazwa": "AKS Mikołów",
+          "mecze": 8,
+          "punkty": 7,
+          "stosunek": "37:43"
+        },
+        {
+          "pozycja": 10,
           "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
           "mecze": 8,
           "punkty": 7,
           "stosunek": "35:45"
         },
         {
-          "pozycja": 10,
+          "pozycja": 11,
           "nazwa": "TTS Polonia II Bytom",
           "mecze": 8,
           "punkty": 7,
           "stosunek": "32:48"
-        },
-        {
-          "pozycja": 11,
-          "nazwa": "UKS Wolej Solver Ruda Śląska",
-          "mecze": 8,
-          "punkty": 6,
-          "stosunek": "37:43"
         },
         {
           "pozycja": 12,
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-23T20:19:00.098Z"
+      "zaktualizowano": "2026-11-23T22:55:22.769Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-23T20:19:00.098Z"
+      "zaktualizowano": "2026-11-23T22:55:22.769Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "20:30"
         }
       ],
-      "zaktualizowano": "2026-11-23T20:19:00.098Z"
+      "zaktualizowano": "2026-11-23T22:55:22.769Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-23T20:19:00.098Z",
+      "zaktualizowano": "2026-11-23T22:55:22.769Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-23T20:19:00.098Z",
+      "zaktualizowano": "2026-11-23T22:55:22.769Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-23T20:19:00.098Z",
-    "pzts": "2026-11-23T20:19:00.098Z"
+    "szts": "2026-11-23T22:55:22.769Z",
+    "pzts": "2026-11-23T22:55:22.769Z"
   },
   "zrodla": {
     "szts": "ok",
