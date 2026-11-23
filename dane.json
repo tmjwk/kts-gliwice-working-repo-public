@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-22T02:19:01.367Z",
+  "wygenerowano": "2026-11-23T20:19:00.098Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -60,7 +60,7 @@
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "4. miejsce · 10 pkt",
+      "stan": "5. miejsce · 10 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS KA Krokus VII Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-22T02:19:01.367Z"
+      "zaktualizowano": "2026-11-23T20:19:00.098Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-22T02:19:01.367Z"
+      "zaktualizowano": "2026-11-23T20:19:00.098Z"
     },
     {
       "klucz": "18/142",
@@ -334,24 +334,24 @@
         },
         {
           "pozycja": 3,
+          "nazwa": "LKS Naprzód Świbie",
+          "mecze": 7,
+          "punkty": 11,
+          "stosunek": "53:17"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "STS I Żernica",
           "mecze": 6,
           "punkty": 11,
           "stosunek": "45:15"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "KTS KA Krokus VII Gliwice",
           "mecze": 7,
           "punkty": 10,
           "stosunek": "40:30"
-        },
-        {
-          "pozycja": 5,
-          "nazwa": "LKS Naprzód Świbie",
-          "mecze": 6,
-          "punkty": 9,
-          "stosunek": "45:15"
         },
         {
           "pozycja": 6,
@@ -363,9 +363,9 @@
         {
           "pozycja": 7,
           "nazwa": "KTS V Gliwice",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 8,
-          "stosunek": "36:24"
+          "stosunek": "38:32"
         },
         {
           "pozycja": 8,
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-22T02:19:01.367Z"
+      "zaktualizowano": "2026-11-23T20:19:00.098Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "20:30"
         }
       ],
-      "zaktualizowano": "2026-11-22T02:19:01.367Z"
+      "zaktualizowano": "2026-11-23T20:19:00.098Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-22T02:19:01.367Z",
+      "zaktualizowano": "2026-11-23T20:19:00.098Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1234,8 +1234,8 @@
       "kolejka": 7,
       "gospodarz": "LKS Naprzód Świbie",
       "gosc": "KTS V Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "8:2",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS V"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-22T02:19:01.367Z",
+      "zaktualizowano": "2026-11-23T20:19:00.098Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2178,16 +2178,16 @@
     {
       "zespol": "KTS V",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/142/1557/kts-v-gliwice/",
-      "zaktualizowano": "2026-11-21T18:13:50.228Z",
+      "zaktualizowano": "2026-11-23T20:19:00.098Z",
       "zawodnicy": [
         {
           "nazwisko": "Grzegorz Machał",
           "licencja": "08890",
           "narodowosc": "Polska",
           "rok": 1982,
-          "zwyciestwa": 9,
-          "porazki": 2,
-          "punkty": "9:2",
+          "zwyciestwa": 10,
+          "porazki": 3,
+          "punkty": "10:3",
           "skutecznosc": null
         },
         {
@@ -2195,9 +2195,9 @@
           "licencja": "08895",
           "narodowosc": "Polska",
           "rok": 1976,
-          "zwyciestwa": 8,
-          "porazki": 4,
-          "punkty": "8:4",
+          "zwyciestwa": 9,
+          "porazki": 5,
+          "punkty": "9:5",
           "skutecznosc": null
         },
         {
@@ -2206,8 +2206,8 @@
           "narodowosc": "Polska",
           "rok": 2007,
           "zwyciestwa": 6,
-          "porazki": 6,
-          "punkty": "6:6",
+          "porazki": 8,
+          "punkty": "6:8",
           "skutecznosc": null
         },
         {
@@ -2236,8 +2236,8 @@
           "narodowosc": "Polska",
           "rok": 2011,
           "zwyciestwa": 1,
-          "porazki": 2,
-          "punkty": "1:2",
+          "porazki": 4,
+          "punkty": "1:4",
           "skutecznosc": null
         },
         {
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-22T02:19:01.367Z",
-    "pzts": "2026-11-22T02:19:01.367Z"
+    "szts": "2026-11-23T20:19:00.098Z",
+    "pzts": "2026-11-23T20:19:00.098Z"
   },
   "zrodla": {
     "szts": "ok",
