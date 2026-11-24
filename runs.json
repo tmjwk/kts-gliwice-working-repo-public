@@ -1,23 +1,7 @@
 {
-  "wygenerowano": "2026-11-24T04:57:21.088Z",
+  "wygenerowano": "2026-11-24T15:45:25.090Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-11-19T22:25:17.951Z",
-      "czasS": 5,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": false,
-      "zmiany": "bez zmian",
-      "blad": null,
-      "retry": null,
-      "skladyOdczyt": "2026-11-19T22:25:17.954Z",
-      "most": {
-        "kanal": "most-nowy",
-        "sloty": [],
-        "kanalSzts": "most"
-      }
-    },
     {
       "start": "2026-11-19T23:13:09.533Z",
       "czasS": 2,
@@ -884,6 +868,22 @@
       "blad": null,
       "retry": null,
       "skladyOdczyt": "2026-11-24T04:57:17.272Z",
+      "most": {
+        "kanal": "most-nowy",
+        "sloty": [],
+        "kanalSzts": "most"
+      }
+    },
+    {
+      "start": "2026-11-24T15:45:22.519Z",
+      "czasS": 3,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": false,
+      "zmiany": "bez zmian",
+      "blad": null,
+      "retry": null,
+      "skladyOdczyt": "2026-11-24T15:45:22.521Z",
       "most": {
         "kanal": "most-nowy",
         "sloty": [],
