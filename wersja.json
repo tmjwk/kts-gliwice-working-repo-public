@@ -1,5 +1,5 @@
 {
-  "wersja": "1.38.0",
-  "data": "2026-11-21T06:40:00Z",
-  "opis": "Dane ligowe prosto z arkusza mostu (gviz) w przeglądarce — bez pośredniego dane.json, tokenów i crona ligowego. Nowy moduł js/dane-arkusz.js: strażnik Puls (pełne pobranie tylko po tyknięciu mostu), fallback na dane.json przy awarii arkusza."
+  "wersja": "1.38.1",
+  "data": "2026-11-24T19:10:00Z",
+  "opis": "Porządki — usunięty baner i sekcja ankiety wersji testowej."
 }

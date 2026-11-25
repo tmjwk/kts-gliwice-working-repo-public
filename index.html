@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=1.38.0">
+  <link rel="stylesheet" href="css/style.css?v=1.38.1">
   <script>
     // Tryb dzień/noc — PRZED renderowaniem (bez mignięcia jasnym tłem):
     // wybór z localStorage, domyślnie preferencja systemu.
@@ -323,26 +323,6 @@
         <div class="sponsors-row"></div>
       </div>
     </section>
-
-    <!-- ===== PODZIEL SIĘ OPINIĄ (etap projektowy — z wersją finalną usunąć) ===== -->
-    <section class="section opinia" id="opinia">
-      <div class="container center">
-        <h2 class="t-h4">Podziel się opinią</h2>
-        <p class="opinia-desc">
-          Ta strona jest wciąż w budowie — to, co widzisz, to kierunek, nie
-          produkt końcowy. Powiedz nam, co działa, a co zmienić: układ,
-          treści, galeria, wyniki. Każda odpowiedź trafia bezpośrednio do
-          zespołu projektowego i kształtuje kolejne wersje.
-        </p>
-        <div class="opinia-cta">
-          <a class="btn btn-accent btn-lg" href="https://forms.gle/aLCxD2VHf7XfN6W86"
-             target="_blank" rel="noopener">Wypełnij ankietę <span aria-hidden="true">→</span></a>
-        </div>
-        <p class="t-small muted opinia-nota">
-          Otwiera się w nowej karcie (Google Forms) · ok. 3 minuty · dla członków zarządu i klubu
-        </p>
-      </div>
-    </section>
   </main>
 
   <!-- ===== FOOTER ===== -->
@@ -442,17 +422,17 @@
   </svg>
 
   <!-- 1.15.0: wspólny silnik lustra galerii FB (używa go też teaser na tej stronie) -->
-  <script src="js/galeria-fb-core.js?v=1.38.0"></script>
+  <script src="js/galeria-fb-core.js?v=1.38.1"></script>
   <!-- 1.38.0: dane ligowe prosto z arkusza mostu (gviz) — zero tokenów,
        zero crona ligowego; fallback na stary dane.json przy awarii arkusza -->
-  <script src="js/dane-arkusz.js?v=1.38.0"></script>
-  <script src="js/app.js?v=1.38.0"></script>
-  <script src="js/lustro-fb.js?v=1.38.0" defer></script>
-  <script src="js/powrot-gora.js?v=1.38.0" defer></script>
-  <script src="js/kontakt-stopki.js?v=1.38.0" defer></script>
-  <script src="js/sponsorzy.js?v=1.38.0" defer></script>
+  <script src="js/dane-arkusz.js?v=1.38.1"></script>
+  <script src="js/app.js?v=1.38.1"></script>
+  <script src="js/lustro-fb.js?v=1.38.1" defer></script>
+  <script src="js/powrot-gora.js?v=1.38.1" defer></script>
+  <script src="js/kontakt-stopki.js?v=1.38.1" defer></script>
+  <script src="js/sponsorzy.js?v=1.38.1" defer></script>
   <!-- 1.19.0: O klubie — lustro dokumentu Google (pierwszy akapit + trójkącik) -->
-  <script src="js/o-klubie.js?v=1.38.0"></script>
+  <script src="js/o-klubie.js?v=1.38.1"></script>
 
   <!-- ===== DIALOG: pełny wpis z Facebooka (1.10.1) =====
        Klik w kafelek → powiększenie na środku ekranu; klik w zdjęcie/
@@ -499,15 +479,5 @@
       </div>
     </article>
   </dialog>
-
-  <!-- ===== PASEK ANKIETY (etap projektowy — z wersją finalną usunąć wraz z sekcją #opinia) ===== -->
-  <aside class="pasek-ankiety" aria-label="Ankieta dotycząca wersji testowej strony">
-    <p class="pasek-ankiety-info">
-      <span class="pasek-ankiety-badge">WERSJA TESTOWA</span>
-      <span>Twoja opinia buduje tę stronę.</span>
-    </p>
-    <a class="btn btn-accent btn-sm" href="https://forms.gle/aLCxD2VHf7XfN6W86"
-       target="_blank" rel="noopener">Wypełnij ankietę <span aria-hidden="true">→</span></a>
-  </aside>
 </body>
 </html>
