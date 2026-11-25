@@ -1,23 +1,7 @@
 {
-  "wygenerowano": "2026-11-24T21:32:11.865Z",
+  "wygenerowano": "2026-11-25T01:03:29.436Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-11-20T03:42:03.593Z",
-      "czasS": 2,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": false,
-      "zmiany": "bez zmian",
-      "blad": null,
-      "retry": null,
-      "skladyOdczyt": "2026-11-20T03:42:03.596Z",
-      "most": {
-        "kanal": "most-nowy",
-        "sloty": [],
-        "kanalSzts": "most"
-      }
-    },
     {
       "start": "2026-11-20T13:07:21.381Z",
       "czasS": 4,
@@ -884,6 +868,22 @@
       "blad": null,
       "retry": null,
       "skladyOdczyt": "2026-11-24T21:32:09.828Z",
+      "most": {
+        "kanal": "most-nowy",
+        "sloty": [],
+        "kanalSzts": "most"
+      }
+    },
+    {
+      "start": "2026-11-25T01:03:27.730Z",
+      "czasS": 2,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "przesunięte terminy (ŚZTS): 2026-11-25→2026-12-16 STS I Żernica–KTS KA Krokus VII Gliwice · tabele: 18/144",
+      "blad": null,
+      "retry": null,
+      "skladyOdczyt": "2026-11-25T01:03:27.733Z",
       "most": {
         "kanal": "most-nowy",
         "sloty": [],

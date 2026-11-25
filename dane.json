@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-23T22:55:22.769Z",
+  "wygenerowano": "2026-11-25T01:03:27.733Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-23T22:55:22.769Z"
+      "zaktualizowano": "2026-11-25T01:03:27.733Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-23T22:55:22.769Z"
+      "zaktualizowano": "2026-11-25T01:03:27.733Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-23T22:55:22.769Z"
+      "zaktualizowano": "2026-11-25T01:03:27.733Z"
     },
     {
       "klucz": "18/144",
@@ -433,9 +433,9 @@
         {
           "pozycja": 2,
           "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 5,
-          "punkty": 8,
-          "stosunek": "29:21"
+          "mecze": 6,
+          "punkty": 10,
+          "stosunek": "35:25"
         },
         {
           "pozycja": 3,
@@ -446,24 +446,24 @@
         },
         {
           "pozycja": 4,
+          "nazwa": "UKS Wolej Solver II Ruda Śląska",
+          "mecze": 6,
+          "punkty": 7,
+          "stosunek": "33:27"
+        },
+        {
+          "pozycja": 5,
+          "nazwa": "TKKF Aut Łagisza Będzin",
+          "mecze": 7,
+          "punkty": 7,
+          "stosunek": "37:33"
+        },
+        {
+          "pozycja": 6,
           "nazwa": "UKS Huragan I Sosnowiec",
           "mecze": 6,
           "punkty": 6,
           "stosunek": "29:31"
-        },
-        {
-          "pozycja": 5,
-          "nazwa": "UKS Wolej Solver II Ruda Śląska",
-          "mecze": 5,
-          "punkty": 5,
-          "stosunek": "27:23"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "TKKF Aut Łagisza Będzin",
-          "mecze": 6,
-          "punkty": 5,
-          "stosunek": "30:30"
         },
         {
           "pozycja": 7,
@@ -475,26 +475,26 @@
         {
           "pozycja": 8,
           "nazwa": "UKS Wolej Solver III Ruda Śląska",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 4,
-          "stosunek": "24:36"
+          "stosunek": "27:43"
         },
         {
           "pozycja": 9,
           "nazwa": "UKS Ikar Mierzęcice",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 3,
-          "stosunek": "24:26"
+          "stosunek": "28:32"
         },
         {
           "pozycja": 10,
           "nazwa": "Speed Team 43 Stolarzowice",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 3,
-          "stosunek": "20:30"
+          "stosunek": "24:36"
         }
       ],
-      "zaktualizowano": "2026-11-23T22:55:22.769Z"
+      "zaktualizowano": "2026-11-25T01:03:27.733Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-23T22:55:22.769Z",
+      "zaktualizowano": "2026-11-25T01:03:27.733Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1256,19 +1256,6 @@
     },
     {
       "dataMeczu": "2026-11-25",
-      "godzina": "17:30",
-      "kolejka": 8,
-      "gospodarz": "STS I Żernica",
-      "gosc": "KTS KA Krokus VII Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
-      "liga": "4. Liga Mężczyzn · gr. IV",
-      "zespoly": [
-        "KA Krokus VII"
-      ]
-    },
-    {
-      "dataMeczu": "2026-11-25",
       "godzina": "18:30",
       "kolejka": 7,
       "gospodarz": "AKS Mikołów",
@@ -1474,6 +1461,19 @@
       "liga": "2. Śląska Liga Amatorów",
       "zespoly": [
         "KTS Gliwice · amatorzy"
+      ]
+    },
+    {
+      "dataMeczu": "2026-12-16",
+      "godzina": "17:30",
+      "kolejka": 8,
+      "gospodarz": "STS I Żernica",
+      "gosc": "KTS KA Krokus VII Gliwice",
+      "wynik": "-:-",
+      "rozegrany": false,
+      "liga": "4. Liga Mężczyzn · gr. IV",
+      "zespoly": [
+        "KA Krokus VII"
       ]
     },
     {
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-23T22:55:22.769Z",
+      "zaktualizowano": "2026-11-25T01:03:27.733Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-23T22:55:22.769Z",
-    "pzts": "2026-11-23T22:55:22.769Z"
+    "szts": "2026-11-25T01:03:27.733Z",
+    "pzts": "2026-11-25T01:03:27.733Z"
   },
   "zrodla": {
     "szts": "ok",
