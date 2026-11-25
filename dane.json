@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-25T01:03:27.733Z",
+  "wygenerowano": "2026-11-25T20:40:48.332Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -33,7 +33,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "3. miejsce · 13 pkt",
+      "stan": "4. miejsce · 13 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/",
       "tabela": "18/138",
       "wiersz": "KTS IV Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-25T01:03:27.733Z"
+      "zaktualizowano": "2026-11-25T20:40:48.332Z"
     },
     {
       "klucz": "18/138",
@@ -201,31 +201,31 @@
       "wiersze": [
         {
           "pozycja": 1,
+          "nazwa": "UKS Huragan Sosnowiec",
+          "mecze": 9,
+          "punkty": 16,
+          "stosunek": "61:29"
+        },
+        {
+          "pozycja": 2,
           "nazwa": "UKS Feniks Pyskowice",
           "mecze": 9,
           "punkty": 14,
           "stosunek": "65:25"
         },
         {
-          "pozycja": 2,
-          "nazwa": "UKS Huragan Sosnowiec",
-          "mecze": 8,
-          "punkty": 14,
-          "stosunek": "53:27"
-        },
-        {
           "pozycja": 3,
-          "nazwa": "KTS IV Gliwice",
-          "mecze": 8,
-          "punkty": 13,
-          "stosunek": "54:26"
+          "nazwa": "MKS Skarbek III Tarnowskie Góry",
+          "mecze": 9,
+          "punkty": 14,
+          "stosunek": "61:29"
         },
         {
           "pozycja": 4,
-          "nazwa": "MKS Skarbek III Tarnowskie Góry",
-          "mecze": 8,
-          "punkty": 12,
-          "stosunek": "52:28"
+          "nazwa": "KTS IV Gliwice",
+          "mecze": 9,
+          "punkty": 13,
+          "stosunek": "55:35"
         },
         {
           "pozycja": 5,
@@ -272,9 +272,9 @@
         {
           "pozycja": 11,
           "nazwa": "TTS Polonia II Bytom",
-          "mecze": 8,
+          "mecze": 9,
           "punkty": 7,
-          "stosunek": "32:48"
+          "stosunek": "34:56"
         },
         {
           "pozycja": 12,
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-25T01:03:27.733Z"
+      "zaktualizowano": "2026-11-25T20:40:48.332Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-25T01:03:27.733Z"
+      "zaktualizowano": "2026-11-25T20:40:48.332Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "24:36"
         }
       ],
-      "zaktualizowano": "2026-11-25T01:03:27.733Z"
+      "zaktualizowano": "2026-11-25T20:40:48.332Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-25T01:03:27.733Z",
+      "zaktualizowano": "2026-11-25T20:40:48.332Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1247,8 +1247,8 @@
       "kolejka": 9,
       "gospodarz": "MKS Skarbek III Tarnowskie Góry",
       "gosc": "KTS IV Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "9:1",
+      "rozegrany": true,
       "liga": "3. Liga Mężczyzn · gr. II",
       "zespoly": [
         "KTS IV"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-25T01:03:27.733Z",
+      "zaktualizowano": "2026-11-25T20:40:48.332Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-25T01:03:27.733Z",
-    "pzts": "2026-11-25T01:03:27.733Z"
+    "szts": "2026-11-25T20:40:48.332Z",
+    "pzts": "2026-11-25T20:40:48.332Z"
   },
   "zrodla": {
     "szts": "ok",
