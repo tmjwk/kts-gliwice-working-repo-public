@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-25T20:40:48.332Z",
+  "wygenerowano": "2026-11-26T00:30:01.209Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-25T20:40:48.332Z"
+      "zaktualizowano": "2026-11-26T00:30:01.209Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-25T20:40:48.332Z"
+      "zaktualizowano": "2026-11-26T00:30:01.209Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-25T20:40:48.332Z"
+      "zaktualizowano": "2026-11-26T00:30:01.209Z"
     },
     {
       "klucz": "18/144",
@@ -440,9 +440,9 @@
         {
           "pozycja": 3,
           "nazwa": "KTS Gliwice",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 8,
-          "stosunek": "31:29"
+          "stosunek": "33:37"
         },
         {
           "pozycja": 4,
@@ -468,9 +468,9 @@
         {
           "pozycja": 7,
           "nazwa": "AKS Mikołów",
-          "mecze": 6,
-          "punkty": 4,
-          "stosunek": "24:36"
+          "mecze": 7,
+          "punkty": 6,
+          "stosunek": "32:38"
         },
         {
           "pozycja": 8,
@@ -494,7 +494,7 @@
           "stosunek": "24:36"
         }
       ],
-      "zaktualizowano": "2026-11-25T20:40:48.332Z"
+      "zaktualizowano": "2026-11-26T00:30:01.209Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-25T20:40:48.332Z",
+      "zaktualizowano": "2026-11-26T00:30:01.209Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1260,8 +1260,8 @@
       "kolejka": 7,
       "gospodarz": "AKS Mikołów",
       "gosc": "KTS Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "8:2",
+      "rozegrany": true,
       "liga": "2. Śląska Liga Amatorów",
       "zespoly": [
         "KTS Gliwice · amatorzy"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-25T20:40:48.332Z",
+      "zaktualizowano": "2026-11-26T00:30:01.209Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2091,16 +2091,16 @@
     {
       "zespol": "KTS IV",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/138/1518/kts-iv-gliwice/",
-      "zaktualizowano": "2026-11-21T18:13:50.228Z",
+      "zaktualizowano": "2026-11-26T00:30:01.209Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
           "licencja": "08893",
           "narodowosc": "Polska",
           "rok": 1979,
-          "zwyciestwa": 11,
-          "porazki": 5,
-          "punkty": "11:5",
+          "zwyciestwa": 12,
+          "porazki": 6,
+          "punkty": "12:6",
           "skutecznosc": null
         },
         {
@@ -2109,8 +2109,8 @@
           "narodowosc": "Polska",
           "rok": 1968,
           "zwyciestwa": 10,
-          "porazki": 6,
-          "punkty": "10:6",
+          "porazki": 8,
+          "punkty": "10:8",
           "skutecznosc": null
         },
         {
@@ -2129,8 +2129,8 @@
           "narodowosc": "Polska",
           "rok": 1975,
           "zwyciestwa": 10,
-          "porazki": 2,
-          "punkty": "10:2",
+          "porazki": 4,
+          "punkty": "10:4",
           "skutecznosc": null
         },
         {
@@ -2139,8 +2139,8 @@
           "narodowosc": "Polska",
           "rok": 1975,
           "zwyciestwa": 2,
-          "porazki": 3,
-          "punkty": "2:3",
+          "porazki": 5,
+          "punkty": "2:5",
           "skutecznosc": null
         },
         {
@@ -2409,7 +2409,7 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-11-21T18:13:50.228Z",
+      "zaktualizowano": "2026-11-26T00:30:01.209Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
@@ -2447,8 +2447,8 @@
           "narodowosc": "Polska",
           "rok": null,
           "zwyciestwa": 4,
-          "porazki": 14,
-          "punkty": "4:14",
+          "porazki": 17,
+          "punkty": "4:17",
           "skutecznosc": null
         },
         {
@@ -2456,6 +2456,16 @@
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1982,
+          "zwyciestwa": 3,
+          "porazki": 5,
+          "punkty": "3:5",
+          "skutecznosc": null
+        },
+        {
+          "nazwisko": "Rafał Opozda",
+          "licencja": null,
+          "narodowosc": "Polska",
+          "rok": 1974,
           "zwyciestwa": 2,
           "porazki": 4,
           "punkty": "2:4",
@@ -2466,16 +2476,6 @@
           "licencja": null,
           "narodowosc": "Polska",
           "rok": 1975,
-          "zwyciestwa": 1,
-          "porazki": 2,
-          "punkty": "1:2",
-          "skutecznosc": null
-        },
-        {
-          "nazwisko": "Rafał Opozda",
-          "licencja": null,
-          "narodowosc": "Polska",
-          "rok": 1974,
           "zwyciestwa": 1,
           "porazki": 2,
           "punkty": "1:2",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-25T20:40:48.332Z",
-    "pzts": "2026-11-25T20:40:48.332Z"
+    "szts": "2026-11-26T00:30:01.209Z",
+    "pzts": "2026-11-26T00:30:01.209Z"
   },
   "zrodla": {
     "szts": "ok",
