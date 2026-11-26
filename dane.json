@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-26T00:30:01.209Z",
+  "wygenerowano": "2026-11-26T11:01:44.445Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -33,7 +33,7 @@
       "nazwa": "KTS IV",
       "liga": "3. Liga Mężczyzn · gr. II",
       "tryb": "ŚZTS · automat",
-      "stan": "4. miejsce · 13 pkt",
+      "stan": "5. miejsce · 13 pkt",
       "url": "https://ligi.slzts.pl/liga/18/138/",
       "tabela": "18/138",
       "wiersz": "KTS IV Gliwice"
@@ -42,7 +42,7 @@
       "nazwa": "KTS V",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "7. miejsce · 8 pkt",
+      "stan": "8. miejsce · 8 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS V Gliwice"
@@ -60,7 +60,7 @@
       "nazwa": "KA Krokus VII",
       "liga": "4. Liga Mężczyzn · gr. IV",
       "tryb": "ŚZTS · automat",
-      "stan": "5. miejsce · 10 pkt",
+      "stan": "6. miejsce · 10 pkt",
       "url": "https://ligi.slzts.pl/liga/18/142/",
       "tabela": "18/142",
       "wiersz": "KTS KA Krokus VII Gliwice"
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-26T00:30:01.209Z"
+      "zaktualizowano": "2026-11-26T11:01:44.445Z"
     },
     {
       "klucz": "18/138",
@@ -222,24 +222,24 @@
         },
         {
           "pozycja": 4,
+          "nazwa": "LKS Strażak Mikołów",
+          "mecze": 9,
+          "punkty": 13,
+          "stosunek": "63:27"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "KTS IV Gliwice",
           "mecze": 9,
           "punkty": 13,
           "stosunek": "55:35"
         },
         {
-          "pozycja": 5,
-          "nazwa": "LKS Strażak Mikołów",
-          "mecze": 8,
-          "punkty": 11,
-          "stosunek": "54:26"
-        },
-        {
           "pozycja": 6,
           "nazwa": "KS Mysław II Mysłowice",
-          "mecze": 8,
-          "punkty": 10,
-          "stosunek": "47:33"
+          "mecze": 9,
+          "punkty": 12,
+          "stosunek": "53:37"
         },
         {
           "pozycja": 7,
@@ -257,17 +257,17 @@
         },
         {
           "pozycja": 9,
-          "nazwa": "AKS Mikołów",
-          "mecze": 8,
-          "punkty": 7,
-          "stosunek": "37:43"
-        },
-        {
-          "pozycja": 10,
           "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
           "mecze": 8,
           "punkty": 7,
           "stosunek": "35:45"
+        },
+        {
+          "pozycja": 10,
+          "nazwa": "AKS Mikołów",
+          "mecze": 9,
+          "punkty": 7,
+          "stosunek": "38:52"
         },
         {
           "pozycja": 11,
@@ -286,9 +286,9 @@
         {
           "pozycja": 13,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
-          "mecze": 8,
+          "mecze": 9,
           "punkty": 4,
-          "stosunek": "36:44"
+          "stosunek": "40:50"
         },
         {
           "pozycja": 14,
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-26T00:30:01.209Z"
+      "zaktualizowano": "2026-11-26T11:01:44.445Z"
     },
     {
       "klucz": "18/142",
@@ -320,17 +320,17 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "LKS Strażak II Mikołów",
-          "mecze": 7,
-          "punkty": 12,
-          "stosunek": "54:16"
+          "nazwa": "ATS Ligota Łabędzka",
+          "mecze": 8,
+          "punkty": 14,
+          "stosunek": "58:22"
         },
         {
           "pozycja": 2,
-          "nazwa": "ATS Ligota Łabędzka",
-          "mecze": 7,
+          "nazwa": "LKS Strażak II Mikołów",
+          "mecze": 8,
           "punkty": 12,
-          "stosunek": "52:18"
+          "stosunek": "58:22"
         },
         {
           "pozycja": 3,
@@ -348,38 +348,38 @@
         },
         {
           "pozycja": 5,
+          "nazwa": "ULKS Tajfun Ligota Łabędzka",
+          "mecze": 8,
+          "punkty": 11,
+          "stosunek": "46:34"
+        },
+        {
+          "pozycja": 6,
           "nazwa": "KTS KA Krokus VII Gliwice",
           "mecze": 7,
           "punkty": 10,
           "stosunek": "40:30"
         },
         {
-          "pozycja": 6,
-          "nazwa": "ULKS Tajfun Ligota Łabędzka",
+          "pozycja": 7,
+          "nazwa": "ULKS Ruch Pniów",
           "mecze": 7,
-          "punkty": 9,
-          "stosunek": "38:32"
+          "punkty": 8,
+          "stosunek": "45:25"
         },
         {
-          "pozycja": 7,
+          "pozycja": 8,
           "nazwa": "KTS V Gliwice",
           "mecze": 7,
           "punkty": 8,
           "stosunek": "38:32"
         },
         {
-          "pozycja": 8,
+          "pozycja": 9,
           "nazwa": "LKS Młodość Rudno",
           "mecze": 7,
           "punkty": 7,
           "stosunek": "34:36"
-        },
-        {
-          "pozycja": 9,
-          "nazwa": "ULKS Ruch Pniów",
-          "mecze": 6,
-          "punkty": 6,
-          "stosunek": "37:23"
         },
         {
           "pozycja": 10,
@@ -391,9 +391,9 @@
         {
           "pozycja": 11,
           "nazwa": "LKS Strażak III Mikołów",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 2,
-          "stosunek": "23:47"
+          "stosunek": "25:55"
         },
         {
           "pozycja": 12,
@@ -405,9 +405,9 @@
         {
           "pozycja": 13,
           "nazwa": "STS II Żernica",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 1,
-          "stosunek": "16:54"
+          "stosunek": "18:62"
         },
         {
           "pozycja": 14,
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-26T00:30:01.209Z"
+      "zaktualizowano": "2026-11-26T11:01:44.445Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "24:36"
         }
       ],
-      "zaktualizowano": "2026-11-26T00:30:01.209Z"
+      "zaktualizowano": "2026-11-26T11:01:44.445Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-26T00:30:01.209Z",
+      "zaktualizowano": "2026-11-26T11:01:44.445Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-26T00:30:01.209Z",
+      "zaktualizowano": "2026-11-26T11:01:44.445Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-26T00:30:01.209Z",
-    "pzts": "2026-11-26T00:30:01.209Z"
+    "szts": "2026-11-26T11:01:44.445Z",
+    "pzts": "2026-11-26T11:01:44.445Z"
   },
   "zrodla": {
     "szts": "ok",
