@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-27T04:18:57.698Z",
+  "wygenerowano": "2026-11-27T20:19:25.518Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -138,17 +138,17 @@
         },
         {
           "pozycja": 9,
+          "nazwa": "MKS Tajfun Kuźnia Raciborska",
+          "mecze": 10,
+          "punkty": 10,
+          "stosunek": "54:46"
+        },
+        {
+          "pozycja": 10,
           "nazwa": "KTS Olimpijczyk Zawiercie",
           "mecze": 8,
           "punkty": 8,
           "stosunek": "43:37"
-        },
-        {
-          "pozycja": 10,
-          "nazwa": "MKS Tajfun Kuźnia Raciborska",
-          "mecze": 9,
-          "punkty": 8,
-          "stosunek": "45:45"
         },
         {
           "pozycja": 11,
@@ -174,9 +174,9 @@
         {
           "pozycja": 14,
           "nazwa": "GUKS Byczyna",
-          "mecze": 9,
+          "mecze": 10,
           "punkty": 2,
-          "stosunek": "23:67"
+          "stosunek": "24:76"
         },
         {
           "pozycja": 15,
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-27T04:18:57.698Z"
+      "zaktualizowano": "2026-11-27T20:19:25.518Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-27T04:18:57.698Z"
+      "zaktualizowano": "2026-11-27T20:19:25.518Z"
     },
     {
       "klucz": "18/142",
@@ -398,26 +398,26 @@
         {
           "pozycja": 12,
           "nazwa": "KTS VI Gliwice",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 2,
-          "stosunek": "17:53"
+          "stosunek": "20:60"
         },
         {
           "pozycja": 13,
+          "nazwa": "ULKS Pławniowice",
+          "mecze": 8,
+          "punkty": 2,
+          "stosunek": "16:64"
+        },
+        {
+          "pozycja": 14,
           "nazwa": "STS II Żernica",
           "mecze": 8,
           "punkty": 1,
           "stosunek": "18:62"
-        },
-        {
-          "pozycja": 14,
-          "nazwa": "ULKS Pławniowice",
-          "mecze": 7,
-          "punkty": 0,
-          "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-27T04:18:57.698Z"
+      "zaktualizowano": "2026-11-27T20:19:25.518Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "30:40"
         }
       ],
-      "zaktualizowano": "2026-11-27T04:18:57.698Z"
+      "zaktualizowano": "2026-11-27T20:19:25.518Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-27T04:18:57.698Z",
+      "zaktualizowano": "2026-11-27T20:19:25.518Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1286,8 +1286,8 @@
       "kolejka": 8,
       "gospodarz": "ULKS Pławniowice",
       "gosc": "KTS VI Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "7:3",
+      "rozegrany": true,
       "liga": "4. Liga Mężczyzn · gr. IV",
       "zespoly": [
         "KTS VI"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-27T04:18:57.698Z",
+      "zaktualizowano": "2026-11-27T20:19:25.518Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-27T04:18:57.698Z",
-    "pzts": "2026-11-27T04:18:57.698Z"
+    "szts": "2026-11-27T20:19:25.518Z",
+    "pzts": "2026-11-27T20:19:25.518Z"
   },
   "zrodla": {
     "szts": "ok",
