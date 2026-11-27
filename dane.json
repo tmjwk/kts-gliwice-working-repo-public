@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-26T11:01:44.445Z",
+  "wygenerowano": "2026-11-27T00:47:06.686Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -97,29 +97,29 @@
         {
           "pozycja": 3,
           "nazwa": "MUKS Jedynka Pszów",
-          "mecze": 9,
+          "mecze": 10,
           "punkty": 15,
-          "stosunek": "68:22"
+          "stosunek": "71:29"
         },
         {
           "pozycja": 4,
+          "nazwa": "KS Naprzód II Borucin",
+          "mecze": 10,
+          "punkty": 15,
+          "stosunek": "65:35"
+        },
+        {
+          "pozycja": 5,
           "nazwa": "MKS Czechowice Dziedzice",
           "mecze": 9,
           "punkty": 14,
           "stosunek": "59:31"
         },
         {
-          "pozycja": 5,
+          "pozycja": 6,
           "nazwa": "KS Mysław Mysłowice",
           "mecze": 9,
           "punkty": 14,
-          "stosunek": "58:32"
-        },
-        {
-          "pozycja": 6,
-          "nazwa": "KS Naprzód II Borucin",
-          "mecze": 9,
-          "punkty": 13,
           "stosunek": "58:32"
         },
         {
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-26T11:01:44.445Z"
+      "zaktualizowano": "2026-11-27T00:47:06.686Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-26T11:01:44.445Z"
+      "zaktualizowano": "2026-11-27T00:47:06.686Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-26T11:01:44.445Z"
+      "zaktualizowano": "2026-11-27T00:47:06.686Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "24:36"
         }
       ],
-      "zaktualizowano": "2026-11-26T11:01:44.445Z"
+      "zaktualizowano": "2026-11-27T00:47:06.686Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -503,20 +503,20 @@
         {
           "pozycja": 1,
           "nazwa": "UKS Piast Poprawa Ostrzeszów",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 12,
-          "stosunek": "6-0-0"
+          "stosunek": "6-0-1"
         },
         {
           "pozycja": 2,
-          "nazwa": "MATS UR Rzeszów",
-          "mecze": 5,
-          "punkty": 8,
-          "stosunek": "4-0-1"
+          "nazwa": "BKS Stal Bielsko-Biała",
+          "mecze": 6,
+          "punkty": 10,
+          "stosunek": "5-0-1"
         },
         {
           "pozycja": 3,
-          "nazwa": "BKS Stal Bielsko-Biała",
+          "nazwa": "MATS UR Rzeszów",
           "mecze": 5,
           "punkty": 8,
           "stosunek": "4-0-1"
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-26T11:01:44.445Z",
+      "zaktualizowano": "2026-11-27T00:47:06.686Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-26T11:01:44.445Z",
+      "zaktualizowano": "2026-11-27T00:47:06.686Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-26T11:01:44.445Z",
-    "pzts": "2026-11-26T11:01:44.445Z"
+    "szts": "2026-11-27T00:47:06.686Z",
+    "pzts": "2026-11-27T00:47:06.686Z"
   },
   "zrodla": {
     "szts": "ok",
