@@ -1,23 +1,7 @@
 {
-  "wygenerowano": "2026-11-27T20:19:27.670Z",
+  "wygenerowano": "2026-11-27T22:45:14.107Z",
   "przechowuje": 50,
   "runs": [
-    {
-      "start": "2026-11-22T10:16:16.537Z",
-      "czasS": 4,
-      "szts": "ok",
-      "pzts": "ok",
-      "zmieniono": false,
-      "zmiany": "bez zmian",
-      "blad": null,
-      "retry": null,
-      "skladyOdczyt": "2026-11-22T10:16:16.539Z",
-      "most": {
-        "kanal": "most-nowy",
-        "sloty": [],
-        "kanalSzts": "most"
-      }
-    },
     {
       "start": "2026-11-22T13:16:32.629Z",
       "czasS": 3,
@@ -796,6 +780,22 @@
       "blad": null,
       "retry": null,
       "skladyOdczyt": "2026-11-27T20:19:25.518Z",
+      "most": {
+        "kanal": "most-nowy",
+        "sloty": [],
+        "kanalSzts": "most"
+      }
+    },
+    {
+      "start": "2026-11-27T22:45:11.344Z",
+      "czasS": 3,
+      "szts": "ok",
+      "pzts": "ok",
+      "zmieniono": true,
+      "zmiany": "+1 wynik (ŚZTS) · tabele: 18/136 · stan drużyn",
+      "blad": null,
+      "retry": null,
+      "skladyOdczyt": "2026-11-27T22:45:11.346Z",
       "most": {
         "kanal": "most-nowy",
         "sloty": [],

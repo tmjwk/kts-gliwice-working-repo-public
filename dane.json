@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-27T20:19:25.518Z",
+  "wygenerowano": "2026-11-27T22:45:11.346Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -15,7 +15,7 @@
       "nazwa": "KTS II",
       "liga": "2. Liga Mężczyzn",
       "tryb": "ŚZTS · automat",
-      "stan": "8. miejsce · 10 pkt",
+      "stan": "7. miejsce · 12 pkt",
       "url": "https://ligi.slzts.pl/liga/18/136/",
       "tabela": "18/136",
       "wiersz": "KTS II Gliwice"
@@ -83,37 +83,37 @@
         {
           "pozycja": 1,
           "nazwa": "LITS Meble Anders Żywiec",
-          "mecze": 9,
-          "punkty": 16,
-          "stosunek": "68:22"
+          "mecze": 10,
+          "punkty": 18,
+          "stosunek": "77:23"
         },
         {
           "pozycja": 2,
           "nazwa": "MKS Skarbek Tarnowskie Góry",
-          "mecze": 9,
-          "punkty": 16,
-          "stosunek": "65:25"
+          "mecze": 10,
+          "punkty": 18,
+          "stosunek": "71:29"
         },
         {
           "pozycja": 3,
+          "nazwa": "MKS Czechowice Dziedzice",
+          "mecze": 10,
+          "punkty": 16,
+          "stosunek": "67:33"
+        },
+        {
+          "pozycja": 4,
           "nazwa": "MUKS Jedynka Pszów",
           "mecze": 10,
           "punkty": 15,
           "stosunek": "71:29"
         },
         {
-          "pozycja": 4,
+          "pozycja": 5,
           "nazwa": "KS Naprzód II Borucin",
           "mecze": 10,
           "punkty": 15,
           "stosunek": "65:35"
-        },
-        {
-          "pozycja": 5,
-          "nazwa": "MKS Czechowice Dziedzice",
-          "mecze": 9,
-          "punkty": 14,
-          "stosunek": "59:31"
         },
         {
           "pozycja": 6,
@@ -124,17 +124,17 @@
         },
         {
           "pozycja": 7,
-          "nazwa": "LZS Chespa Żywocice",
+          "nazwa": "KTS II Gliwice",
           "mecze": 9,
-          "punkty": 11,
-          "stosunek": "46:44"
+          "punkty": 12,
+          "stosunek": "56:34"
         },
         {
           "pozycja": 8,
-          "nazwa": "KTS II Gliwice",
-          "mecze": 8,
-          "punkty": 10,
-          "stosunek": "50:30"
+          "nazwa": "LZS Chespa Żywocice",
+          "mecze": 10,
+          "punkty": 11,
+          "stosunek": "50:50"
         },
         {
           "pozycja": 9,
@@ -153,16 +153,16 @@
         {
           "pozycja": 11,
           "nazwa": "MKS Skarbek II Tarnowskie Góry",
-          "mecze": 9,
+          "mecze": 10,
           "punkty": 6,
-          "stosunek": "40:50"
+          "stosunek": "42:58"
         },
         {
           "pozycja": 12,
           "nazwa": "MKS II Czechowice Dziedzice",
-          "mecze": 9,
+          "mecze": 10,
           "punkty": 5,
-          "stosunek": "39:51"
+          "stosunek": "43:57"
         },
         {
           "pozycja": 13,
@@ -188,12 +188,12 @@
         {
           "pozycja": 16,
           "nazwa": "LUKS GK Logistics Bodzanów",
-          "mecze": 9,
+          "mecze": 10,
           "punkty": 0,
-          "stosunek": "11:79"
+          "stosunek": "12:88"
         }
       ],
-      "zaktualizowano": "2026-11-27T20:19:25.518Z"
+      "zaktualizowano": "2026-11-27T22:45:11.346Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-27T20:19:25.518Z"
+      "zaktualizowano": "2026-11-27T22:45:11.346Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "18:62"
         }
       ],
-      "zaktualizowano": "2026-11-27T20:19:25.518Z"
+      "zaktualizowano": "2026-11-27T22:45:11.346Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "30:40"
         }
       ],
-      "zaktualizowano": "2026-11-27T20:19:25.518Z"
+      "zaktualizowano": "2026-11-27T22:45:11.346Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-27T20:19:25.518Z",
+      "zaktualizowano": "2026-11-27T22:45:11.346Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1273,8 +1273,8 @@
       "kolejka": 10,
       "gospodarz": "MKS II Czechowice Dziedzice",
       "gosc": "KTS II Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "4:6",
+      "rozegrany": true,
       "liga": "2. Liga Mężczyzn",
       "zespoly": [
         "KTS II"
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-27T20:19:25.518Z",
+      "zaktualizowano": "2026-11-27T22:45:11.346Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-27T20:19:25.518Z",
-    "pzts": "2026-11-27T20:19:25.518Z"
+    "szts": "2026-11-27T22:45:11.346Z",
+    "pzts": "2026-11-27T22:45:11.346Z"
   },
   "zrodla": {
     "szts": "ok",
