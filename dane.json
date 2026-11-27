@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-27T00:47:06.686Z",
+  "wygenerowano": "2026-11-27T04:18:57.698Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "11:79"
         }
       ],
-      "zaktualizowano": "2026-11-27T00:47:06.686Z"
+      "zaktualizowano": "2026-11-27T04:18:57.698Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-27T00:47:06.686Z"
+      "zaktualizowano": "2026-11-27T04:18:57.698Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "9:61"
         }
       ],
-      "zaktualizowano": "2026-11-27T00:47:06.686Z"
+      "zaktualizowano": "2026-11-27T04:18:57.698Z"
     },
     {
       "klucz": "18/144",
@@ -474,27 +474,27 @@
         },
         {
           "pozycja": 8,
+          "nazwa": "Speed Team 43 Stolarzowice",
+          "mecze": 7,
+          "punkty": 5,
+          "stosunek": "32:38"
+        },
+        {
+          "pozycja": 9,
           "nazwa": "UKS Wolej Solver III Ruda Śląska",
           "mecze": 7,
           "punkty": 4,
           "stosunek": "27:43"
         },
         {
-          "pozycja": 9,
-          "nazwa": "UKS Ikar Mierzęcice",
-          "mecze": 6,
-          "punkty": 3,
-          "stosunek": "28:32"
-        },
-        {
           "pozycja": 10,
-          "nazwa": "Speed Team 43 Stolarzowice",
-          "mecze": 6,
+          "nazwa": "UKS Ikar Mierzęcice",
+          "mecze": 7,
           "punkty": 3,
-          "stosunek": "24:36"
+          "stosunek": "30:40"
         }
       ],
-      "zaktualizowano": "2026-11-27T00:47:06.686Z"
+      "zaktualizowano": "2026-11-27T04:18:57.698Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-27T00:47:06.686Z",
+      "zaktualizowano": "2026-11-27T04:18:57.698Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-27T00:47:06.686Z",
+      "zaktualizowano": "2026-11-27T04:18:57.698Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2409,7 +2409,7 @@
     {
       "zespol": "KTS Gliwice · amatorzy",
       "zrodlo": "https://ligi.slzts.pl/druzyna/18/144/1582/kts-gliwice/",
-      "zaktualizowano": "2026-11-26T00:30:01.209Z",
+      "zaktualizowano": "2026-11-27T04:18:57.698Z",
       "zawodnicy": [
         {
           "nazwisko": "Krzysztof Piwowarski",
@@ -2457,8 +2457,8 @@
           "narodowosc": "Polska",
           "rok": 1982,
           "zwyciestwa": 3,
-          "porazki": 5,
-          "punkty": "3:5",
+          "porazki": 6,
+          "punkty": "3:6",
           "skutecznosc": null
         },
         {
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-27T00:47:06.686Z",
-    "pzts": "2026-11-27T00:47:06.686Z"
+    "szts": "2026-11-27T04:18:57.698Z",
+    "pzts": "2026-11-27T04:18:57.698Z"
   },
   "zrodla": {
     "szts": "ok",
