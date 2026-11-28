@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-27T22:45:11.346Z",
+  "wygenerowano": "2026-11-28T00:13:28.245Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -193,7 +193,7 @@
           "stosunek": "12:88"
         }
       ],
-      "zaktualizowano": "2026-11-27T22:45:11.346Z"
+      "zaktualizowano": "2026-11-28T00:13:28.245Z"
     },
     {
       "klucz": "18/138",
@@ -312,7 +312,7 @@
           "stosunek": "13:67"
         }
       ],
-      "zaktualizowano": "2026-11-27T22:45:11.346Z"
+      "zaktualizowano": "2026-11-28T00:13:28.245Z"
     },
     {
       "klucz": "18/142",
@@ -417,7 +417,7 @@
           "stosunek": "18:62"
         }
       ],
-      "zaktualizowano": "2026-11-27T22:45:11.346Z"
+      "zaktualizowano": "2026-11-28T00:13:28.245Z"
     },
     {
       "klucz": "18/144",
@@ -494,7 +494,7 @@
           "stosunek": "30:40"
         }
       ],
-      "zaktualizowano": "2026-11-27T22:45:11.346Z"
+      "zaktualizowano": "2026-11-28T00:13:28.245Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -502,17 +502,17 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "UKS Piast Poprawa Ostrzeszów",
+          "nazwa": "BKS Stal Bielsko-Biała",
           "mecze": 7,
           "punkty": 12,
           "stosunek": "6-0-1"
         },
         {
           "pozycja": 2,
-          "nazwa": "BKS Stal Bielsko-Biała",
-          "mecze": 6,
-          "punkty": 10,
-          "stosunek": "5-0-1"
+          "nazwa": "UKS Piast Poprawa Ostrzeszów",
+          "mecze": 7,
+          "punkty": 12,
+          "stosunek": "6-0-1"
         },
         {
           "pozycja": 3,
@@ -524,9 +524,9 @@
         {
           "pozycja": 4,
           "nazwa": "KTS Gliwice",
-          "mecze": 6,
+          "mecze": 7,
           "punkty": 7,
-          "stosunek": "3-1-2"
+          "stosunek": "3-1-3"
         },
         {
           "pozycja": 5,
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-27T22:45:11.346Z",
+      "zaktualizowano": "2026-11-28T00:13:28.245Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1798,8 +1798,8 @@
       "kolejka": 8,
       "gospodarz": "BKS Stal Bielsko-Biała",
       "gosc": "KTS Gliwice",
-      "wynik": "-:-",
-      "rozegrany": false,
+      "wynik": "9:1",
+      "rozegrany": true,
       "liga": "1. Liga Mężczyzn · gr. południowa",
       "zespol": "KTS Gliwice I"
     },
@@ -1830,17 +1830,17 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-27T22:45:11.346Z",
+      "zaktualizowano": "2026-11-28T00:13:28.245Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
           "licencja": "1597",
           "narodowosc": "Ukraina",
           "rok": null,
-          "zwyciestwa": 9,
-          "porazki": 3,
+          "zwyciestwa": 10,
+          "porazki": 4,
           "punkty": null,
-          "skutecznosc": "75%"
+          "skutecznosc": "71%"
         },
         {
           "nazwisko": "Białek Artur",
@@ -1848,9 +1848,9 @@
           "narodowosc": "Polska",
           "rok": null,
           "zwyciestwa": 7,
-          "porazki": 5,
+          "porazki": 7,
           "punkty": null,
-          "skutecznosc": "58%"
+          "skutecznosc": "50%"
         },
         {
           "nazwisko": "Tomicki Jarosław",
@@ -1858,9 +1858,9 @@
           "narodowosc": "Polska",
           "rok": null,
           "zwyciestwa": 6,
-          "porazki": 6,
+          "porazki": 8,
           "punkty": null,
-          "skutecznosc": "50%"
+          "skutecznosc": "43%"
         },
         {
           "nazwisko": "Szary Piotr",
@@ -1868,9 +1868,9 @@
           "narodowosc": "Polska",
           "rok": null,
           "zwyciestwa": 4,
-          "porazki": 8,
+          "porazki": 10,
           "punkty": null,
-          "skutecznosc": "33%"
+          "skutecznosc": "29%"
         },
         {
           "nazwisko": "Kwodawski Bartosz",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-27T22:45:11.346Z",
-    "pzts": "2026-11-27T22:45:11.346Z"
+    "szts": "2026-11-28T00:13:28.245Z",
+    "pzts": "2026-11-28T00:13:28.245Z"
   },
   "zrodla": {
     "szts": "ok",
