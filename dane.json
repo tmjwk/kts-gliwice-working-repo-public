@@ -1,5 +1,5 @@
 {
-  "wygenerowano": "2026-11-28T00:13:28.245Z",
+  "wygenerowano": "2026-11-28T08:00:01.793Z",
   "sezon": "2026/27",
   "zespoly": [
     {
@@ -118,9 +118,9 @@
         {
           "pozycja": 6,
           "nazwa": "KS Mysław Mysłowice",
-          "mecze": 9,
+          "mecze": 10,
           "punkty": 14,
-          "stosunek": "58:32"
+          "stosunek": "61:39"
         },
         {
           "pozycja": 7,
@@ -138,17 +138,17 @@
         },
         {
           "pozycja": 9,
+          "nazwa": "KTS Olimpijczyk Zawiercie",
+          "mecze": 9,
+          "punkty": 10,
+          "stosunek": "50:40"
+        },
+        {
+          "pozycja": 10,
           "nazwa": "MKS Tajfun Kuźnia Raciborska",
           "mecze": 10,
           "punkty": 10,
           "stosunek": "54:46"
-        },
-        {
-          "pozycja": 10,
-          "nazwa": "KTS Olimpijczyk Zawiercie",
-          "mecze": 8,
-          "punkty": 8,
-          "stosunek": "43:37"
         },
         {
           "pozycja": 11,
@@ -193,7 +193,7 @@
           "stosunek": "12:88"
         }
       ],
-      "zaktualizowano": "2026-11-28T00:13:28.245Z"
+      "zaktualizowano": "2026-11-28T08:00:01.793Z"
     },
     {
       "klucz": "18/138",
@@ -244,9 +244,9 @@
         {
           "pozycja": 7,
           "nazwa": "KU AZS UJD Częstochowa",
-          "mecze": 8,
-          "punkty": 9,
-          "stosunek": "44:36"
+          "mecze": 9,
+          "punkty": 11,
+          "stosunek": "51:39"
         },
         {
           "pozycja": 8,
@@ -257,62 +257,62 @@
         },
         {
           "pozycja": 9,
-          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
-          "mecze": 8,
-          "punkty": 7,
-          "stosunek": "35:45"
+          "nazwa": "GLKS Lot Konopiska",
+          "mecze": 9,
+          "punkty": 8,
+          "stosunek": "35:55"
         },
         {
           "pozycja": 10,
-          "nazwa": "AKS Mikołów",
+          "nazwa": "UKS Dąbrowiak Dąbrowa Górnicza",
           "mecze": 9,
           "punkty": 7,
           "stosunek": "38:52"
         },
         {
           "pozycja": 11,
+          "nazwa": "AKS Mikołów",
+          "mecze": 9,
+          "punkty": 7,
+          "stosunek": "38:52"
+        },
+        {
+          "pozycja": 12,
           "nazwa": "TTS Polonia II Bytom",
           "mecze": 9,
           "punkty": 7,
           "stosunek": "34:56"
         },
         {
-          "pozycja": 12,
-          "nazwa": "GLKS Lot Konopiska",
-          "mecze": 8,
+          "pozycja": 13,
+          "nazwa": "KS Unia Kalety",
+          "mecze": 9,
           "punkty": 6,
-          "stosunek": "28:52"
+          "stosunek": "36:54"
         },
         {
-          "pozycja": 13,
+          "pozycja": 14,
           "nazwa": "MUKSTS Czerwionka Leszczyny",
           "mecze": 9,
           "punkty": 4,
           "stosunek": "40:50"
         },
         {
-          "pozycja": 14,
-          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
-          "mecze": 8,
-          "punkty": 4,
-          "stosunek": "29:51"
-        },
-        {
           "pozycja": 15,
-          "nazwa": "KS Unia Kalety",
-          "mecze": 8,
+          "nazwa": "MKS Siemianowiczanka Siemianowice Śl.",
+          "mecze": 9,
           "punkty": 4,
-          "stosunek": "27:53"
+          "stosunek": "32:58"
         },
         {
           "pozycja": 16,
           "nazwa": "LKS Ciężkowianka Jaworzno",
-          "mecze": 8,
+          "mecze": 9,
           "punkty": 0,
-          "stosunek": "13:67"
+          "stosunek": "14:76"
         }
       ],
-      "zaktualizowano": "2026-11-28T00:13:28.245Z"
+      "zaktualizowano": "2026-11-28T08:00:01.793Z"
     },
     {
       "klucz": "18/142",
@@ -321,9 +321,9 @@
         {
           "pozycja": 1,
           "nazwa": "ATS Ligota Łabędzka",
-          "mecze": 8,
-          "punkty": 14,
-          "stosunek": "58:22"
+          "mecze": 9,
+          "punkty": 16,
+          "stosunek": "64:26"
         },
         {
           "pozycja": 2,
@@ -335,9 +335,9 @@
         {
           "pozycja": 3,
           "nazwa": "LKS Naprzód Świbie",
-          "mecze": 7,
+          "mecze": 8,
           "punkty": 11,
-          "stosunek": "53:17"
+          "stosunek": "57:23"
         },
         {
           "pozycja": 4,
@@ -417,7 +417,7 @@
           "stosunek": "18:62"
         }
       ],
-      "zaktualizowano": "2026-11-28T00:13:28.245Z"
+      "zaktualizowano": "2026-11-28T08:00:01.793Z"
     },
     {
       "klucz": "18/144",
@@ -426,9 +426,9 @@
         {
           "pozycja": 1,
           "nazwa": "Bartek II Siemianowice",
-          "mecze": 6,
-          "punkty": 10,
-          "stosunek": "42:18"
+          "mecze": 7,
+          "punkty": 12,
+          "stosunek": "51:19"
         },
         {
           "pozycja": 2,
@@ -460,17 +460,17 @@
         },
         {
           "pozycja": 6,
-          "nazwa": "UKS Huragan I Sosnowiec",
-          "mecze": 6,
-          "punkty": 6,
-          "stosunek": "29:31"
-        },
-        {
-          "pozycja": 7,
           "nazwa": "AKS Mikołów",
           "mecze": 7,
           "punkty": 6,
           "stosunek": "32:38"
+        },
+        {
+          "pozycja": 7,
+          "nazwa": "UKS Huragan I Sosnowiec",
+          "mecze": 7,
+          "punkty": 6,
+          "stosunek": "30:40"
         },
         {
           "pozycja": 8,
@@ -494,7 +494,7 @@
           "stosunek": "30:40"
         }
       ],
-      "zaktualizowano": "2026-11-28T00:13:28.245Z"
+      "zaktualizowano": "2026-11-28T08:00:01.793Z"
     },
     {
       "klucz": "pzts/1lm",
@@ -502,14 +502,14 @@
       "wiersze": [
         {
           "pozycja": 1,
-          "nazwa": "BKS Stal Bielsko-Biała",
-          "mecze": 7,
-          "punkty": 12,
-          "stosunek": "6-0-1"
+          "nazwa": "UKS Piast Poprawa Ostrzeszów",
+          "mecze": 8,
+          "punkty": 14,
+          "stosunek": "7-0-1"
         },
         {
           "pozycja": 2,
-          "nazwa": "UKS Piast Poprawa Ostrzeszów",
+          "nazwa": "BKS Stal Bielsko-Biała",
           "mecze": 7,
           "punkty": 12,
           "stosunek": "6-0-1"
@@ -531,9 +531,9 @@
         {
           "pozycja": 5,
           "nazwa": "KS Naprzód Borucin",
-          "mecze": 5,
+          "mecze": 6,
           "punkty": 6,
-          "stosunek": "3-0-2"
+          "stosunek": "3-0-3"
         },
         {
           "pozycja": 6,
@@ -571,7 +571,7 @@
           "stosunek": "0-0-6"
         }
       ],
-      "zaktualizowano": "2026-11-28T00:13:28.245Z",
+      "zaktualizowano": "2026-11-28T08:00:01.793Z",
       "kolumna4": "Z–R–P"
     }
   ],
@@ -1830,7 +1830,7 @@
     {
       "zespol": "KTS Gliwice I",
       "zrodlo": "https://pzts.pl/rozgrywki-ligowe/druzyna/960/",
-      "zaktualizowano": "2026-11-28T00:13:28.245Z",
+      "zaktualizowano": "2026-11-28T08:00:01.793Z",
       "zawodnicy": [
         {
           "nazwisko": "Yunchyk Valentyn",
@@ -2515,8 +2515,8 @@
     }
   ],
   "ostatniSync": {
-    "szts": "2026-11-28T00:13:28.245Z",
-    "pzts": "2026-11-28T00:13:28.245Z"
+    "szts": "2026-11-28T08:00:01.793Z",
+    "pzts": "2026-11-28T08:00:01.793Z"
   },
   "zrodla": {
     "szts": "ok",
