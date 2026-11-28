@@ -1,18 +1,10 @@
 {
-  "aktualizacja": "2026-11-18T00:45:19.223Z",
+  "aktualizacja": "2026-11-28T00:06:50.528Z",
   "zrodlo": "arkusz KTS TV · 3 zakładki (Transmisje/Mecze/Ustawienia) · wersja opublikowana (pub)",
   "zrodloMeczy": "arkusz KTS TV · zakładka TV_Mecze · wersja opublikowana (pub)",
   "formularz": "https://docs.google.com/forms/d/e/1FAIpQLSf94l-9wYjL3ptLZ4JSxLtIrvUCFKz9LfuGch0Cf0n-IDWy3A/viewform",
   "transmisje": [],
   "mecze": [
-    {
-      "data": "2026-11-27",
-      "godzina": "18:00",
-      "liga": "1LM",
-      "kolejka": "8",
-      "gospodarz": "BKS Stal Bielsko-Biała",
-      "gosc": "KTS Gliwice"
-    },
     {
       "data": "2026-11-28",
       "godzina": "16:00",
